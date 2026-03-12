@@ -238,10 +238,14 @@ impl JacNode.edges_to_nodes(
         # --- SAM/GTI fast path (only when persistence index is active) ---
         # Pure type filters compile to the type class itself, so we can
         # extract the name directly via MRO without any compiler help.
-        target_type_name = (destination.nd.__module__ + '.' + destination.nd.__name__)
+        target_type_name = (
+            destination.nd.__module__ + '.' + destination.nd.__name__
+        )
             if isinstance(destination.nd, type)
             else None;
-        edge_type_name = (destination.edge.__module__ + '.' + destination.edge.__name__)
+        edge_type_name = (
+            destination.edge.__module__ + '.' + destination.edge.__name__
+        )
             if isinstance(destination.edge, type)
             else None;
         use_index = (
@@ -264,11 +268,19 @@ impl JacNode.edges_to_nodes(
                     # SAM miss — populate both from GTI
                     if _scale is not None {
                         (redis_client, _) = _scale;
-                        gt_n = gti_query_targets_redis(redis_client, nanch.id, None, target_type_name);
-                        gt_e = gti_query_targets_redis(redis_client, nanch.id, edge_type_name, None);
+                        gt_n = gti_query_targets_redis(
+                            redis_client, nanch.id, None, target_type_name
+                        );
+                        gt_e = gti_query_targets_redis(
+                            redis_client, nanch.id, edge_type_name, None
+                        );
                     } else {
-                        gt_n = gti_query_targets(ctx.mem, nanch.id, None, target_type_name);
-                        gt_e = gti_query_targets(ctx.mem, nanch.id, edge_type_name, None);
+                        gt_n = gti_query_targets(
+                            ctx.mem, nanch.id, None, target_type_name
+                        );
+                        gt_e = gti_query_targets(
+                            ctx.mem, nanch.id, edge_type_name, None
+                        );
                     }
                     if gt_n is not None {
                         sam_populate_from_gti(nanch.id, [(t, n_col) for t in gt_n]);
@@ -297,7 +309,9 @@ impl JacNode.edges_to_nodes(
                         );
                     }
                     if gt_ids is not None {
-                        sam_populate_from_gti(nanch.id, [(tid, n_col) for tid in gt_ids]);
+                        sam_populate_from_gti(
+                            nanch.id, [(tid, n_col) for tid in gt_ids]
+                        );
                         target_ids = gt_ids;
                     }
                 }
@@ -313,10 +327,14 @@ impl JacNode.edges_to_nodes(
                             redis_client, nanch.id, edge_type_name, None
                         );
                     } else {
-                        gt_ids = gti_query_targets(ctx.mem, nanch.id, edge_type_name, None);
+                        gt_ids = gti_query_targets(
+                            ctx.mem, nanch.id, edge_type_name, None
+                        );
                     }
                     if gt_ids is not None {
-                        sam_populate_from_gti(nanch.id, [(tid, e_col) for tid in gt_ids]);
+                        sam_populate_from_gti(
+                            nanch.id, [(tid, e_col) for tid in gt_ids]
+                        );
                         target_ids = gt_ids;
                     }
                 }
@@ -335,7 +353,8 @@ impl JacNode.edges_to_nodes(
                     }
                     for anchor in mongo_backend.find_bulk(uuids) {
                         ctx.mem.__mem__[anchor.id] = anchor;
-                        if anchor.archetype and JacRuntimeInterface.check_read_access(anchor) {
+                        if anchor.archetype
+                        and JacRuntimeInterface.check_read_access(anchor) {
                             nodes[anchor] = anchor.archetype;
                         }
                     }
@@ -1649,10 +1668,7 @@ impl JacBasics.build_edge(
         }
         `edge = ct() if isinstance(ct, `type) else ct;
         eanch = `edge.__jac__=EdgeAnchor(
-            archetype=`edge,
-            source=source,
-            target=target,
-            is_undirected=is_undirected
+            archetype=`edge, source=source, target=target, is_undirected=is_undirected
         );
         source.edges.append(eanch);
         target.edges.append(eanch);
