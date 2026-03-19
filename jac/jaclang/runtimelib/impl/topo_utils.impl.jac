@@ -229,49 +229,12 @@ impl plan_query(path: Any) -> (set[UUID] | None) {
     return idx.resolve_chain(origin_ids, chain);
 }
 
-"""Load nodes by UUID set, preserving edge-list order from origin nodes.
-
-Walks each origin node's edges in their natural order and yields targets
-whose ID is in the planned set. This preserves the same traversal order
-as the non-indexed edges_to_nodes path.
-"""
-impl batch_load_nodes(node_ids: set[UUID], origin: (list | None) = None) -> list[Any] {
+"""Load nodes by UUID set."""
+impl batch_load_nodes(node_ids: set[UUID]) -> list[Any] {
     import from jaclang { JacRuntimeInterface as Jac }
     ctx = Jac.get_context();
     import from jaclang.jac0core.archetype { NodeAnchor }
 
-    if origin {
-        # Walk edges in order, only load targets in the planned set
-        seen: set = set();
-        result = [];
-        for nd in origin {
-            nanch = nd.__jac__;
-            for eanch in nanch.edges {
-                tgt = eanch.target;
-                if tgt and tgt.id in node_ids and tgt.id not in seen {
-                    seen.add(tgt.id);
-                    anchor = ctx.mem.get(tgt.id);
-                    if isinstance(anchor, NodeAnchor) and anchor.archetype {
-                        result.append(anchor.archetype);
-                    }
-                }
-                src = eanch.source;
-                if src
-                and src.id in node_ids
-                and src.id != nanch.id
-                and src.id not in seen {
-                    seen.add(src.id);
-                    anchor = ctx.mem.get(src.id);
-                    if isinstance(anchor, NodeAnchor) and anchor.archetype {
-                        result.append(anchor.archetype);
-                    }
-                }
-            }
-        }
-        return result;
-    }
-
-    # Fallback: no origin, just load by ID (unordered)
     result = [];
     for nid in node_ids {
         anchor = ctx.mem.get(nid);
