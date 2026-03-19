@@ -1,7 +1,12 @@
 """Topology utils implementation."""
 
-"""Check if topology_index is enabled in config."""
+"""Check if topology_index is enabled. Env var JAC_INDEX_ENABLED overrides config."""
 impl _is_enabled -> bool {
+    import os;
+    env = os.environ.get("JAC_INDEX_ENABLED");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes");
+    }
     try {
         import from jaclang.project.config { get_config }
         cfg = get_config();
