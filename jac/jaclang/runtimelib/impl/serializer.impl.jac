@@ -77,6 +77,14 @@ impl Serializer._serialize_value(
         }
         if isinstance(val, NodeAnchor) {
             result['edges'] = [str(e.id) for e in val.edges];
+            # Persist topology index bytes (encode from cache if live, else use stored bytes)
+            if val._topology_index_cache is not None {
+                import from base64 { b64encode }
+                result['topology_index_data'] = b64encode(val._topology_index_cache.encode()).decode('ascii');
+            } elif val.topology_index_data is not None {
+                import from base64 { b64encode }
+                result['topology_index_data'] = b64encode(val.topology_index_data).decode('ascii');
+            }
         }
         if isinstance(val, EdgeAnchor) {
             result |= {
@@ -228,6 +236,11 @@ impl Serializer._deserialize_anchor(data: dict[str, object]) -> (Anchor | None) 
                     }
                 }
                 anchor.edges = edges;
+            }
+            # Restore topology index bytes
+            if (topo_b64 := data.get('topology_index_data')) {
+                import from base64 { b64decode }
+                anchor.topology_index_data = b64decode(topo_b64);
             }
         }
         if isinstance(anchor, EdgeAnchor) {
