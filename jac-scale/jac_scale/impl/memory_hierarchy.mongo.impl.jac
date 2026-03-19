@@ -186,6 +186,27 @@ impl MongoBackend.sync -> None {
 # No-op: MongoDB writes are immediate
 }
 
+"""Bulk get anchors by ID set. Uses single $in query."""
+impl MongoBackend.bulk_get(ids: set[UUID]) -> dict[UUID, Anchor] {
+    result: dict[UUID, Anchor] = {};
+    if self.client is None or not ids {
+        return result;
+    }
+    try {
+        id_strs = [str(to_uuid(id)) for id in ids];
+        cursor = self.collection.find({'_id': {'$in': id_strs}});
+        for doc in cursor {
+            if (anchor := self._load_anchor(doc)) {
+                uid = UUID(doc['_id']);
+                result[uid] = anchor;
+            }
+        }
+    } except Exception as e {
+        logger.debug(f"MongoDB bulk_get failed: {e}");
+    }
+    return result;
+}
+
 """Bulk store multiple anchors."""
 impl MongoBackend.bulk_put(anchors: Iterable[Anchor]) -> None {
     if self.client is None {

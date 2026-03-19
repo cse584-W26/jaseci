@@ -1337,13 +1337,8 @@ impl JacBasics.refs(
         planned_ids = plan_query(path);
         if planned_ids is not None {
             # Index resolved which nodes survive type filters.
-            # For single-hop, preserve edge-list order via origin walk.
-            # For multi-hop, load by ID (order not guaranteed by edges_to_nodes either).
-            destinations = path.destinations[:-1]
-                if path.edge_only
-                else path.destinations;
-            use_origin = path.origin if len(destinations) <= 1 else None;
-            nodes = batch_load_nodes(planned_ids, origin=use_origin);
+            # Bulk fetch only matching nodes (no edge walk needed).
+            nodes = batch_load_nodes(planned_ids);
             destinations = path.destinations;
             if destinations {
                 last_dest = destinations[-1];

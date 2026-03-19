@@ -1,7 +1,12 @@
 """Topology utils implementation."""
 
-"""Check if topology_index is enabled in config."""
+"""Check if topology_index is enabled. Env var JAC_INDEX_ENABLED overrides config."""
 impl _is_enabled -> bool {
+    import os;
+    env = os.environ.get("JAC_INDEX_ENABLED");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes");
+    }
     try {
         import from jaclang.project.config { get_config }
         cfg = get_config();
@@ -207,53 +212,19 @@ impl plan_query(path: Any) -> (set[UUID] | None) {
     return idx.resolve_chain(origin_ids, chain);
 }
 
-"""Load nodes by UUID set, preserving edge-list order when origin is given."""
-impl batch_load_nodes(node_ids: set[UUID], origin: (list | None) = None) -> list[Any] {
+"""Load nodes by UUID set via bulk fetch. Only loads matching nodes."""
+impl batch_load_nodes(node_ids: set[UUID]) -> list[Any] {
     import from jaclang { JacRuntimeInterface as Jac }
     ctx = Jac.get_context();
     import from jaclang.jac0core.archetype { NodeAnchor }
 
-    if origin {
-        seen: set = set();
-        result = [];
-        for nd in origin {
-            nanch = nd.__jac__;
-            for eanch in nanch.edges {
-                tgt = eanch.target;
-                if tgt and tgt.id in node_ids and tgt.id not in seen {
-                    seen.add(tgt.id);
-                    anchor = ctx.mem.get(tgt.id);
-                    if (
-                        isinstance(anchor, NodeAnchor)
-                        and anchor.archetype
-                        and Jac.check_read_access(anchor)
-                    ) {
-                        result.append(anchor.archetype);
-                    }
-                }
-                src = eanch.source;
-                if src and src.id in node_ids and src.id not in seen {
-                    seen.add(src.id);
-                    anchor = ctx.mem.get(src.id);
-                    if (
-                        isinstance(anchor, NodeAnchor)
-                        and anchor.archetype
-                        and Jac.check_read_access(anchor)
-                    ) {
-                        result.append(anchor.archetype);
-                    }
-                }
-            }
-        }
-        return result;
-    }
+    # Bulk fetch only the matching anchors (single SQL query for L3)
+    anchors = ctx.mem.bulk_get(node_ids);
 
     result = [];
-    for nid in node_ids {
-        anchor = ctx.mem.get(nid);
+    for (nid, anchor) in anchors.items() {
         if (
-            anchor
-            and isinstance(anchor, NodeAnchor)
+            isinstance(anchor, NodeAnchor)
             and anchor.archetype
             and Jac.check_read_access(anchor)
         ) {

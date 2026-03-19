@@ -42,5 +42,5 @@ the type-only filters in a path chain. Returns set of target UUIDs
 if planning succeeded, or None to fall back to normal approach."""
 def plan_query(path: Any) -> (set[UUID] | None);
 
-"""Load nodes by UUID set via direct fetch."""
-def batch_load_nodes(node_ids: set[UUID], origin: (list | None) = None) -> list[Any];
+"""Load nodes by UUID set via bulk fetch."""
+def batch_load_nodes(node_ids: set[UUID]) -> list[Any];

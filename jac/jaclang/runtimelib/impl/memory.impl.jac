@@ -125,6 +125,17 @@ impl VolatileMemory.commit(anchor: (Anchor | None) = None) -> None {
 # No persistence, nothing to commit
 }
 
+"""Bulk get anchors by ID set from memory."""
+impl VolatileMemory.bulk_get(ids: set[UUID]) -> dict[UUID, Anchor] {
+    result: dict[UUID, Anchor] = {};
+    for id in ids {
+        if (anchor := self.__mem__.get(id)) {
+            result[id] = anchor;
+        }
+    }
+    return result;
+}
+
 # =============================================================================
 # LocalCacheMemory Implementation (L2)
 # Inherits all Memory interface methods from VolatileMemory.
@@ -435,6 +446,52 @@ impl SqliteMemory.sync -> None {
     self.__conn__.commit();
 }
 
+"""Bulk get anchors by ID set. Uses single SELECT ... WHERE id IN (...) query."""
+impl SqliteMemory.bulk_get(ids: set[UUID]) -> dict[UUID, Anchor] {
+    import from _pickle { UnpicklingError }
+    result: dict[UUID, Anchor] = {};
+    remaining: set[UUID] = set();
+    # Check in-memory cache first
+    for id in ids {
+        if (anchor := self.__mem__.get(id)) {
+            result[id] = anchor;
+        } else {
+            remaining.add(id);
+        }
+    }
+    if not remaining {
+        return result;
+    }
+    # Lazily connect if DB file exists
+    if not self.__conn__ and os.path.exists(self.path) {
+        self._ensure_connection();
+    }
+    if self.__conn__ {
+        # Batch fetch from SQLite with single query
+        id_strs = [str(id) for id in remaining];
+        placeholders = ",".join(["?"] * len(id_strs));
+        cursor = self.__conn__.execute(
+            f"SELECT id, data FROM anchors WHERE id IN ({placeholders})",
+            id_strs
+        );
+        for row in cursor.fetchall() {
+            try {
+                self.l3_fetch_count += 1;
+                anchor = loads(row[1]);
+                uid = UUID(row[0]);
+                self.__mem__[uid] = anchor;
+                result[uid] = anchor;
+            } except (UnpicklingError, ModuleNotFoundError, AttributeError) {
+                self.__conn__.execute("DELETE FROM anchors WHERE id = ?", (row[0], ));
+            }
+        }
+        if cursor.rowcount and cursor.rowcount < 0 {
+            self.__conn__.commit();
+        }
+    }
+    return result;
+}
+
 """Bulk store multiple anchors."""
 impl SqliteMemory.bulk_put(anchors: Iterable[Anchor]) -> None {
     for anchor in anchors {
@@ -510,6 +567,47 @@ impl TieredMemory.get(id: UUID) -> (Anchor | None) {
         return anchor;
     }
     return None;
+}
+
+"""Bulk get anchors: L1 first, then batch fetch remaining from L2/L3."""
+impl TieredMemory.bulk_get(ids: set[UUID]) -> dict[UUID, Anchor] {
+    result: dict[UUID, Anchor] = {};
+    remaining: set[UUID] = set();
+    # L1 hits
+    for id in ids {
+        if (anchor := self.__mem__.get(id)) {
+            result[id] = anchor;
+        } else {
+            remaining.add(id);
+        }
+    }
+    if not remaining {
+        return result;
+    }
+    # L2 bulk fetch with promotion to L1
+    if self.l2 {
+        l2_results = self.l2.bulk_get(remaining);
+        for (id, anchor) in l2_results.items() {
+            self.__mem__[id] = anchor;
+            result[id] = anchor;
+        }
+        remaining = remaining - set(l2_results.keys());
+    }
+    if not remaining {
+        return result;
+    }
+    # L3 bulk fetch with promotion to L1 (and L2 if enabled)
+    if self.l3 {
+        l3_results = self.l3.bulk_get(remaining);
+        for (id, anchor) in l3_results.items() {
+            self.__mem__[id] = anchor;
+            if self.l2 {
+                self.l2.put(anchor);
+            }
+            result[id] = anchor;
+        }
+    }
+    return result;
 }
 
 """Put anchor with write-through: L1 always, L2/L3 with access control."""

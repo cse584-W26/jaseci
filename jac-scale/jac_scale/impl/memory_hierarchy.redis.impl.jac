@@ -158,6 +158,35 @@ impl RedisBackend.find_one(
     return None;
 }
 
+"""Bulk get anchors by ID set. Uses Redis MGET for single round-trip."""
+impl RedisBackend.bulk_get(ids: set[UUID]) -> dict[UUID, Anchor] {
+    result: dict[UUID, Anchor] = {};
+    if self.redis_client is None or not ids {
+        return result;
+    }
+    try {
+        id_list = list(ids);
+        keys = [storage_key(to_uuid(id)) for id in id_list];
+        values = self.redis_client.mget(keys);
+        for (id, raw) in zip(id_list, values) {
+            if raw {
+                try {
+                    data = json.loads(raw);
+                    anchor = Serializer.deserialize(data);
+                    if anchor {
+                        result[id] = anchor;
+                    }
+                } except Exception as e {
+                    logger.debug(f"Redis bulk_get deserialize failed for {id}: {e}");
+                }
+            }
+        }
+    } except Exception as e {
+        logger.debug(f"Redis bulk_get failed: {e}");
+    }
+    return result;
+}
+
 """Commit - no-op for cache."""
 impl RedisBackend.commit(anchor: (Anchor | None) = None) -> None {
 # No-op: cache doesn't need commit
