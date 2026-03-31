@@ -233,3 +233,143 @@ impl batch_load_nodes(node_ids: set[UUID]) -> list[Any] {
     }
     return result;
 }
+
+"""Extract a QueryFilter from a filter lambda by walking back to the UniIR AST."""
+impl extract_query_filter(filt: (Callable | None)) -> Any {
+    if filt is None {
+        return None;
+    }
+    try {
+        import from jaclang.runtimelib.query_filter {
+            CompareOp, Predicate, QueryFilter
+        }
+
+        # Map Token.name strings to CompareOp enum values
+        op_map = {
+            'EE': CompareOp.EQ,
+            'NE': CompareOp.NE,
+            'LT': CompareOp.LT,
+            'GT': CompareOp.GT,
+            'LTE': CompareOp.LE,
+            'GTE': CompareOp.GE,
+            'KW_IN': CompareOp.IN,
+            'KW_NIN': CompareOp.NOT_IN
+        };
+
+        code = getattr(filt, '__code__', None);
+        if code is None {
+            return None;
+        }
+        filename = code.co_filename;
+        first_line = code.co_firstlineno;
+
+        # Access the UniIR module hub at runtime
+        import from jaclang.jac0core.runtime { JacRuntime }
+        program = JacRuntime.get_program();
+        if program is None or program.mod is None {
+            return None;
+        }
+        hub = program.mod.hub;
+        if filename not in hub {
+            return None;
+        }
+        module = hub[filename];
+
+        # Find the FilterCompr node at the matching source line
+        import from jaclang.jac0core.unitree { FilterCompr }
+        filter_nodes = module.get_all_sub_nodes(FilterCompr);
+        target_fc = None;
+        for fc in filter_nodes {
+            if fc.loc.first_line == first_line {
+                target_fc = fc;
+                break;
+            }
+        }
+        if target_fc is None {
+            return None;
+        }
+
+        # Extract type name from f_type
+        type_name: (str | None) = None;
+        if target_fc.f_type is not None {
+            import from jaclang.jac0core.unitree { Name }
+            if isinstance(target_fc.f_type, Name) {
+                type_name = target_fc.f_type.value;
+            }
+        }
+
+        # Extract predicates from compares
+        predicates: list = [];
+        import from jaclang.jac0core.unitree {
+            CompareExpr, Name as NameNode, Int, Float, String, Bool, Null
+        }
+        for cmp in target_fc.compares {
+            if not isinstance(cmp, CompareExpr) {
+                continue;
+            }
+            # left must be a simple Name (field reference)
+            if not isinstance(cmp.left, NameNode) {
+                continue;
+            }
+            field_name = cmp.left.value;
+
+            # Must have at least one op and one right-hand value
+            if not cmp.ops or not cmp.rights {
+                continue;
+            }
+            op_token = cmp.ops[0];
+            right_expr = cmp.rights[0];
+
+            # Map the operator token to CompareOp
+            op = op_map.get(op_token.name, None);
+            if op is None {
+                continue;
+            }
+
+            # Right-hand side must be a literal
+            if isinstance(right_expr, (Int, Float, String, Bool, Null)) {
+                value = right_expr.lit_value;
+            } else {
+                # Non-literal RHS — skip this predicate
+                continue;
+            }
+
+            predicates.append(Predicate(field_name=field_name, op=op, value=value));
+        }
+
+        if not type_name and not predicates {
+            return None;
+        }
+
+        return QueryFilter(type_name=type_name, predicates=predicates);
+    } except Exception {
+        # Any failure → graceful fallback
+        return None;
+    }
+}
+
+"""Load nodes with predicate pushdown — uses filtered_bulk_get when predicates available."""
+impl filtered_batch_load_nodes(node_ids: set[UUID], query_filter: Any = None) -> list[Any] {
+    import from jaclang { JacRuntimeInterface as Jac }
+    ctx = Jac.get_context();
+    import from jaclang.jac0core.archetype { NodeAnchor }
+
+    # Use filtered_bulk_get if we have predicates to push down
+    if query_filter is not None and query_filter.predicates {
+        anchors = ctx.mem.filtered_bulk_get(node_ids, query_filter.predicates);
+    } else {
+        anchors = ctx.mem.bulk_get(node_ids);
+    }
+
+    result = [];
+    for (nid, anchor) in anchors.items() {
+        if (
+            isinstance(anchor, NodeAnchor)
+            and anchor.archetype
+            and Jac.check_read_access(anchor)
+        ) {
+            result.append(anchor.archetype);
+        }
+    }
+    return result;
+}

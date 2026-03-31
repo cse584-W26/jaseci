@@ -113,6 +113,7 @@ obj MongoBackend(PersistentMemory) {
 
     def commit(anchor: (Anchor | None) = None) -> None;
     def bulk_get(ids: set[UUID]) -> dict[UUID, Anchor];
+    def filtered_bulk_get(ids: set[UUID], predicates: list = []) -> dict[UUID, Anchor];
     # PersistentMemory-specific
     def sync -> None;
     def bulk_put(anchors: Iterable[Anchor]) -> None;

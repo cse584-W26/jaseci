@@ -67,6 +67,7 @@ obj Memory {
 
     def commit(anchor: (Anchor | None) = None) -> None abs;
     def bulk_get(ids: set[UUID]) -> dict[UUID, Anchor];
+    def filtered_bulk_get(ids: set[UUID], predicates: list = []) -> dict[UUID, Anchor];
 }
 
 """Cache Memory Interface.
@@ -184,6 +185,7 @@ obj SqliteMemory(PersistentMemory) {
 
     def commit(anchor: (Anchor | None) = None) -> None;
     def bulk_get(ids: set[UUID]) -> dict[UUID, Anchor];
+    def filtered_bulk_get(ids: set[UUID], predicates: list = []) -> dict[UUID, Anchor];
     # PersistentMemory interface
     def sync -> None;
     def bulk_put(anchors: Iterable[Anchor]) -> None;
@@ -216,6 +218,7 @@ obj TieredMemory(VolatileMemory) {
     # Override only methods that need tiering logic
     def get(id: UUID) -> (Anchor | None);
     def bulk_get(ids: set[UUID]) -> dict[UUID, Anchor];
+    def filtered_bulk_get(ids: set[UUID], predicates: list = []) -> dict[UUID, Anchor];
     def put(anchor: Anchor) -> None;
     def delete(id: UUID) -> None;
     def close -> None;

@@ -1333,13 +1333,25 @@ impl JacBasics.refs(
     }
     # Try topology index optimization for non-edge-only queries
     if not path.edge_only {
-        import from jaclang.runtimelib.topo_utils { plan_query, batch_load_nodes }
+        import from jaclang.runtimelib.topo_utils {
+            plan_query, batch_load_nodes, extract_query_filter,
+            filtered_batch_load_nodes
+        }
         planned_ids = plan_query(path);
         if planned_ids is not None {
             # Index resolved which nodes survive type filters.
-            # Bulk fetch only matching nodes (no edge walk needed).
-            nodes = batch_load_nodes(planned_ids);
+            # Extract data predicates for pushdown to storage layer.
             destinations = path.destinations;
+            query_filter = None;
+            if destinations {
+                last_dest = destinations[-1];
+                if last_dest.nd {
+                    query_filter = extract_query_filter(last_dest.nd);
+                }
+            }
+            # Bulk fetch with predicate pushdown (fewer deserializations).
+            nodes = filtered_batch_load_nodes(planned_ids, query_filter);
+            # Lambda still applied as safety net.
             if destinations {
                 last_dest = destinations[-1];
                 if last_dest.nd {

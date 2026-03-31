@@ -61,6 +61,30 @@ impl MongoBackend.get(id: UUID) -> (Anchor | None) {
     return None;
 }
 
+"""Extract scalar properties from an anchor's archetype for indexing."""
+def _extract_props(anchor: Anchor) -> dict[str, Any] {
+    import from jaclang.jac0core.archetype { NodeAnchor }
+    props: dict[str, Any] = {};
+    if not isinstance(anchor, NodeAnchor) or not anchor.archetype {
+        return props;
+    }
+    _SCALAR_TYPES = (str, int, float, bool, type(None));
+    try {
+        fields = vars(anchor.archetype);
+    } except TypeError {
+        return props;
+    }
+    for (fname, fval) in fields.items() {
+        if fname.startswith('_') {
+            continue;
+        }
+        if isinstance(fval, _SCALAR_TYPES) {
+            props[f"props.{fname}"] = fval;
+        }
+    }
+    return props;
+}
+
 """Store anchor in MongoDB."""
 impl MongoBackend.put(anchor: Anchor) -> None {
     if self.client is None or not anchor.persistent {
@@ -69,9 +93,12 @@ impl MongoBackend.put(anchor: Anchor) -> None {
     _id = to_uuid(anchor.id);
     try {
         data = Serializer.serialize(anchor, include_type=True);
+        set_fields: dict[str, Any] = {'data': data, 'type': type(anchor).__name__};
+        # Store scalar archetype fields for predicate pushdown
+        set_fields.update(_extract_props(anchor));
         self.collection.update_one(
             {'_id': str(_id)},
-            {'$set': {'data': data, 'type': type(anchor).__name__}},
+            {'$set': set_fields},
             upsert=True
         );
     } except Exception as e {
@@ -207,6 +234,58 @@ impl MongoBackend.bulk_get(ids: set[UUID]) -> dict[UUID, Anchor] {
     return result;
 }
 
+"""Filtered bulk get — pushes predicates to MongoDB query."""
+impl MongoBackend.filtered_bulk_get(ids: set[UUID], predicates: list = []) -> dict[UUID, Anchor] {
+    if not predicates {
+        return self.bulk_get(ids);
+    }
+    result: dict[UUID, Anchor] = {};
+    if self.client is None or not ids {
+        return result;
+    }
+    try {
+        import from jaclang.runtimelib.query_filter { CompareOp }
+        id_strs = [str(to_uuid(id)) for id in ids];
+        mongo_query: dict[str, Any] = {'_id': {'$in': id_strs}};
+
+        # Translate predicates to MongoDB query operators
+        _MONGO_OPS: dict[CompareOp, (str | None)] = {
+            CompareOp.EQ: None,
+            CompareOp.NE: "$ne",
+            CompareOp.LT: "$lt",
+            CompareOp.LE: "$lte",
+            CompareOp.GT: "$gt",
+            CompareOp.GE: "$gte",
+            CompareOp.IN: "$in",
+            CompareOp.NOT_IN: "$nin"
+        };
+
+        for pred in predicates {
+            field_path = f"props.{pred.field_name}";
+            mongo_op = _MONGO_OPS.get(pred.op, None);
+            if pred.op == CompareOp.EQ {
+                # Direct equality
+                mongo_query[field_path] = pred.value;
+            } elif mongo_op is not None {
+                mongo_query[field_path] = {mongo_op: pred.value};
+            }
+        }
+
+        cursor = self.collection.find(mongo_query);
+        for doc in cursor {
+            if (anchor := self._load_anchor(doc)) {
+                uid = UUID(doc['_id']);
+                result[uid] = anchor;
+            }
+        }
+    } except Exception as e {
+        logger.debug(f"MongoDB filtered_bulk_get failed: {e}");
+        # Fallback to unfiltered bulk_get
+        return self.bulk_get(ids);
+    }
+    return result;
+}
+
 """Bulk store multiple anchors."""
 impl MongoBackend.bulk_put(anchors: Iterable[Anchor]) -> None {
     if self.client is None {
@@ -220,10 +299,12 @@ impl MongoBackend.bulk_put(anchors: Iterable[Anchor]) -> None {
         _id = to_uuid(anchor.id);
         try {
             data = Serializer.serialize(anchor, include_type=True);
+            set_fields: dict[str, Any] = {'data': data, 'type': type(anchor).__name__};
+            set_fields.update(_extract_props(anchor));
             ops.append(
                 UpdateOne(
                     {'_id': str(_id)},
-                    {'$set': {'data': data, 'type': type(anchor).__name__}},
+                    {'$set': set_fields},
                     upsert=True
                 )
             );

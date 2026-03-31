@@ -44,3 +44,10 @@ def plan_query(path: Any) -> (set[UUID] | None);
 
 """Load nodes by UUID set via bulk fetch."""
 def batch_load_nodes(node_ids: set[UUID]) -> list[Any];
+
+"""Extract structured predicates from a filter lambda via UniIR AST introspection.
+Returns a QueryFilter with extracted predicates, or None if extraction fails."""
+def extract_query_filter(filt: (Callable | None)) -> Any;
+
+"""Load nodes by UUID set with predicate pushdown to storage layer."""
+def filtered_batch_load_nodes(node_ids: set[UUID], query_filter: Any = None) -> list[Any];

@@ -136,6 +136,11 @@ impl VolatileMemory.bulk_get(ids: set[UUID]) -> dict[UUID, Anchor] {
     return result;
 }
 
+"""Default filtered_bulk_get — ignores predicates, delegates to bulk_get."""
+impl VolatileMemory.filtered_bulk_get(ids: set[UUID], predicates: list = []) -> dict[UUID, Anchor] {
+    return self.bulk_get(ids);
+}
+
 # =============================================================================
 # LocalCacheMemory Implementation (L2)
 # Inherits all Memory interface methods from VolatileMemory.
@@ -193,6 +198,24 @@ impl SqliteMemory._ensure_connection -> None {
             id TEXT PRIMARY KEY,
             data BLOB NOT NULL
         )
+    """
+    );
+    # Secondary index table for predicate pushdown
+    self.__conn__.execute(
+        """
+        CREATE TABLE IF NOT EXISTS node_properties (
+            anchor_id TEXT NOT NULL,
+            field_name TEXT NOT NULL,
+            field_value TEXT,
+            field_type TEXT,
+            PRIMARY KEY (anchor_id, field_name)
+        )
+    """
+    );
+    self.__conn__.execute(
+        """
+        CREATE INDEX IF NOT EXISTS idx_np_field_value
+        ON node_properties(field_name, field_value)
     """
     );
     self.__conn__.commit();
@@ -347,6 +370,47 @@ impl SqliteMemory.find_one(
     return None;
 }
 
+"""Extract scalar fields from a NodeAnchor's archetype and upsert into node_properties."""
+def _upsert_node_properties(conn: sqlite3.Connection, anchor_id: str, archetype: object) -> None {
+    _SCALAR_TYPES = (str, int, float, bool, type(None));
+    # Delete existing properties for this anchor
+    conn.execute("DELETE FROM node_properties WHERE anchor_id = ?", (anchor_id, ));
+    # Extract and insert scalar fields
+    try {
+        fields = vars(archetype);
+    } except TypeError {
+        return;
+    }
+    for (fname, fval) in fields.items() {
+        if fname.startswith('_') {
+            continue;
+        }
+        if not isinstance(fval, _SCALAR_TYPES) {
+            continue;
+        }
+        if fval is None {
+            field_type = "none";
+            field_value = None;
+        } elif isinstance(fval, bool) {
+            field_type = "bool";
+            field_value = str(fval);
+        } elif isinstance(fval, int) {
+            field_type = "int";
+            field_value = str(fval);
+        } elif isinstance(fval, float) {
+            field_type = "float";
+            field_value = str(fval);
+        } else {
+            field_type = "str";
+            field_value = str(fval);
+        }
+        conn.execute(
+            "INSERT OR REPLACE INTO node_properties (anchor_id, field_name, field_value, field_type) VALUES (?, ?, ?, ?)",
+            (anchor_id, fname, field_value, field_type)
+        );
+    }
+}
+
 """Sync memory to database with access control checks."""
 impl SqliteMemory.sync -> None {
     import from jaclang { JacRuntimeInterface as Jac }
@@ -361,7 +425,9 @@ impl SqliteMemory.sync -> None {
     self._ensure_connection();
     # Handle garbage collected anchors (deletions)
     for anchor in self.__gc__ {
-        self.__conn__.execute("DELETE FROM anchors WHERE id = ?", (str(anchor.id), ));
+        anchor_id_str = str(anchor.id);
+        self.__conn__.execute("DELETE FROM anchors WHERE id = ?", (anchor_id_str, ));
+        self.__conn__.execute("DELETE FROM node_properties WHERE anchor_id = ?", (anchor_id_str, ));
     }
     self.__gc__.clear();
     # Sync memory to database with access control
@@ -423,6 +489,10 @@ impl SqliteMemory.sync -> None {
                         "INSERT OR REPLACE INTO anchors (id, data) VALUES (?, ?)",
                         (key, dumps(stored))
                     );
+                    # Update node_properties for predicate pushdown
+                    if isinstance(stored, NodeAnchor) and stored.archetype {
+                        _upsert_node_properties(self.__conn__, key, stored.archetype);
+                    }
                 }
             } else {
                 # No stored or stored is a stub - save anchor if valid
@@ -436,6 +506,10 @@ impl SqliteMemory.sync -> None {
                         "INSERT OR REPLACE INTO anchors (id, data) VALUES (?, ?)",
                         (key, dumps(anchor))
                     );
+                    # Update node_properties for predicate pushdown
+                    if isinstance(anchor, NodeAnchor) and anchor.archetype {
+                        _upsert_node_properties(self.__conn__, key, anchor.archetype);
+                    }
                 }
             }
         } except (PicklingError, AttributeError, ModuleNotFoundError) {
@@ -487,6 +561,85 @@ impl SqliteMemory.bulk_get(ids: set[UUID]) -> dict[UUID, Anchor] {
         }
         if cursor.rowcount and cursor.rowcount < 0 {
             self.__conn__.commit();
+        }
+    }
+    return result;
+}
+
+"""Filtered bulk get — uses node_properties table to narrow results before deserialization."""
+impl SqliteMemory.filtered_bulk_get(ids: set[UUID], predicates: list = []) -> dict[UUID, Anchor] {
+    if not predicates {
+        return self.bulk_get(ids);
+    }
+    import from _pickle { UnpicklingError }
+    import from jaclang.runtimelib.query_filter { CompareOp }
+    result: dict[UUID, Anchor] = {};
+    remaining: set[UUID] = set();
+    # Check in-memory cache first
+    for id in ids {
+        if (anchor := self.__mem__.get(id)) {
+            result[id] = anchor;
+        } else {
+            remaining.add(id);
+        }
+    }
+    if not remaining {
+        return result;
+    }
+    if not self.__conn__ and os.path.exists(self.path) {
+        self._ensure_connection();
+    }
+    if self.__conn__ {
+        # Build SQL query with predicate pushdown via node_properties
+        id_strs = [str(id) for id in remaining];
+        placeholders = ",".join(["?"] * len(id_strs));
+        sql = f"SELECT a.id, a.data FROM anchors a WHERE a.id IN ({placeholders})";
+        params: list = list(id_strs);
+
+        # Add EXISTS subquery for each predicate
+        _COMPARE_SQL = {
+            CompareOp.EQ: "= ?",
+            CompareOp.NE: "!= ?",
+            CompareOp.LT: "< ?",
+            CompareOp.LE: "<= ?",
+            CompareOp.GT: "> ?",
+            CompareOp.GE: ">= ?"
+        };
+        for pred in predicates {
+            cmp_sql = _COMPARE_SQL.get(pred.op, None);
+            if cmp_sql is None {
+                continue;
+            }
+            # Use CAST for numeric comparisons
+            if pred.op in (CompareOp.LT, CompareOp.LE, CompareOp.GT, CompareOp.GE)
+            and isinstance(pred.value, (int, float)) {
+                sql += (
+                    " AND EXISTS (SELECT 1 FROM node_properties np"
+                    " WHERE np.anchor_id = a.id"
+                    f" AND np.field_name = ? AND CAST(np.field_value AS REAL) {cmp_sql})"
+                );
+            } else {
+                sql += (
+                    " AND EXISTS (SELECT 1 FROM node_properties np"
+                    " WHERE np.anchor_id = a.id"
+                    f" AND np.field_name = ? AND np.field_value {cmp_sql})"
+                );
+            }
+            params.append(pred.field_name);
+            params.append(str(pred.value) if pred.value is not None else None);
+        }
+
+        cursor = self.__conn__.execute(sql, params);
+        for row in cursor.fetchall() {
+            try {
+                self.l3_fetch_count += 1;
+                anchor = loads(row[1]);
+                uid = UUID(row[0]);
+                self.__mem__[uid] = anchor;
+                result[uid] = anchor;
+            } except (UnpicklingError, ModuleNotFoundError, AttributeError) {
+                self.__conn__.execute("DELETE FROM anchors WHERE id = ?", (row[0], ));
+            }
         }
     }
     return result;
@@ -599,6 +752,38 @@ impl TieredMemory.bulk_get(ids: set[UUID]) -> dict[UUID, Anchor] {
     # L3 bulk fetch with promotion to L1 (and L2 if enabled)
     if self.l3 {
         l3_results = self.l3.bulk_get(remaining);
+        for (id, anchor) in l3_results.items() {
+            self.__mem__[id] = anchor;
+            if self.l2 {
+                self.l2.put(anchor);
+            }
+            result[id] = anchor;
+        }
+    }
+    return result;
+}
+
+"""Filtered bulk get: L1 first, then push predicates to L3."""
+impl TieredMemory.filtered_bulk_get(ids: set[UUID], predicates: list = []) -> dict[UUID, Anchor] {
+    if not predicates {
+        return self.bulk_get(ids);
+    }
+    result: dict[UUID, Anchor] = {};
+    remaining: set[UUID] = set();
+    # L1 hits (no filter — already in memory, cheap)
+    for id in ids {
+        if (anchor := self.__mem__.get(id)) {
+            result[id] = anchor;
+        } else {
+            remaining.add(id);
+        }
+    }
+    if not remaining {
+        return result;
+    }
+    # Skip L2 for filtered queries — push predicates directly to L3
+    if self.l3 {
+        l3_results = self.l3.filtered_bulk_get(remaining, predicates);
         for (id, anchor) in l3_results.items() {
             self.__mem__[id] = anchor;
             if self.l2 {
