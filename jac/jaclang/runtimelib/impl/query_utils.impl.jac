@@ -68,6 +68,17 @@ impl _filter_has_predicates(filt: (Callable[[Archetype], bool] | None)) -> bool 
 }
 
 
+impl _extract_field_predicates(filt: (Callable[[Archetype], bool] | None)) -> dict {
+    if filt is None {
+        return {};
+    }
+    # The compiler tags value-filtered comprehensions with their lifted
+    # predicates at codegen (see `attach_field_predicates`); just read the tag.
+    preds = getattr(filt, '__jac_field_predicates__', None);
+    return preds if isinstance(preds, dict) else {};
+}
+
+
 impl _materialize_ids(
     mem: Memory,
     ids: list[UUID],

@@ -4,8 +4,31 @@ import from jaclang.runtimelib.query_utils {
     _trace_enabled,
     _filter_type_name,
     _filter_has_predicates,
+    _extract_field_predicates,
     _materialize_ids,
     _path_root_anchor
+}
+
+
+"""Whether an unsliced traversal's final hop preserves canonical edge-insertion
+order. The `JAC_ORDERED_TRAVERSAL` env var overrides the `[run] ordered_traversal`
+toml flag (truthy: 1 / true / yes / on, case-insensitive). Default off -- the
+planner returns the faster unordered set-narrowing result; set it on to restore
+canonical edge-insertion order. Slices are ordered regardless of this (decided
+by the caller), so this only governs the unsliced single-hop case."""
+def _ordered_traversal_enabled -> bool {
+    import os;
+    env = os.environ.get("JAC_ORDERED_TRAVERSAL");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes", "on");
+    }
+    try {
+        import from jaclang.project.config { get_config }
+        cfg = get_config();
+        return cfg is not None and cfg.run.ordered_traversal;
+    } except Exception {
+        return False;
+    }
 }
 
 
@@ -103,6 +126,81 @@ def _hop_via_walk_ordered(
     next_nodes = JacRuntimeInterface.edges_to_nodes(archetypes, dest);
     ordered: list[UUID] = [cast(UUID, n.__jac__.id) for n in next_nodes];
     return ordered[slc];
+}
+
+
+"""Predicate-pushdown fast path for a value-filtered final hop.
+
+The in-process walk (`_hop_via_walk`) materializes *every* neighbor just to
+apply a `where`-style field comparison. When the backend can filter archetype
+fields natively (`field_pushdown`) we can instead:
+
+  1. narrow to the type-matching candidate set via the topology index — pure
+     UUIDs, no node loads — exactly as the type-only hop does; then
+  2. hand the backend `{_id IN narrowed} AND {field predicates}` so it returns
+     only the rows that already pass the comparison.
+
+Returns the materialized anchors, or None to signal "couldn't push down —
+use the walk". Bails (None) whenever pushdown would be unsafe or unhelpful:
+no capable backend, an edge-side predicate (filters the edge row, not the
+node), a slice (ordering/limit interacts with the retained post-filter), no
+usable index, foreign-root inputs, or nothing extractable from the lambda.
+
+The original node filter is retained as the plan's `post_filter`, so even a
+*partial* extraction stays correct — the backend pre-narrows, the lambda has
+the final say (including the `isinstance` type guard and any comparison we
+could not lift). `node_type_final` is deliberately left unset: the index
+already narrowed by type with MRO/subclass fan-out, and a literal
+`arch_type` equality would wrongly drop subclass instances."""
+def _try_field_pushdown(
+    mem: Memory,
+    current_ids: set[UUID],
+    last_hop: ChainHop,
+    idx: (TopologyIndex | None),
+    root_anchor: (NodeAnchor | None),
+    slc: (slice | None)
+) -> (list[NodeAnchor] | None) {
+    if slc is not None or idx is None or root_anchor is None {
+        return None;
+    }
+    caps = mem.capabilities();
+    if 'field_pushdown' not in caps or 'id_in' not in caps {
+        return None;
+    }
+    # Edge-side predicates filter the edge archetype, which execute_plan does
+    # not see — leave the whole hop to the walk so they're applied correctly.
+    if _filter_has_predicates(last_hop.dest.`edge) {
+        return None;
+    }
+    field_preds = _extract_field_predicates(last_hop.dest.nd);
+    if not field_preds {
+        return None;
+    }
+    # The index can only resolve hops whose every input ID it owns.
+    import from jaclang.runtimelib.topology_index { SELF_ROOT }
+    if not all(
+        (lid := idx.node_to_lid.get(uid)) is not None
+        and idx.node_table[lid][2] == SELF_ROOT for uid in current_ids
+    ) {
+        return None;
+    }
+    triple = (last_hop.edge_type, last_hop.node_type, last_hop.direction);
+    narrowed = idx.resolve_chain(current_ids, [triple]);
+    if narrowed is None {
+        return None;
+    }
+    plan = QueryPlan(
+        root_id=root_anchor.id,
+        chain=[],
+        field_predicates=field_preds,
+        id_in=narrowed,
+        post_filter=last_hop.dest.node_filter,
+    );
+    if not (plan.needs() <= caps) {
+        return None;
+    }
+    _trace_final('field-pushdown', len(narrowed), f"preds={field_preds}");
+    return _try_pushdown(mem, plan);
 }
 
 
@@ -227,10 +325,22 @@ impl resolve_path_anchors(
     }
     last_hop = chain[-1];
     last_has_post_filter = _filter_has_predicates(last_hop.dest.nd);
+    # Predicate pushdown: when the final hop carries a field comparison and the
+    # backend can filter fields natively, narrow by type via the index and push
+    # the comparison down to the backend instead of loading every neighbor to
+    # filter it. None means "not eligible" — fall through to the walk below.
+    if last_has_post_filter {
+        pushed = _try_field_pushdown(mem, current, last_hop, idx, root_anchor, slc);
+        if pushed is not None {
+            return pushed;
+        }
+    }
     post_filter: (Callable[[Archetype], bool] | None) = (
         last_hop.dest.node_filter if last_has_post_filter else None
     );
-    use_ordered = (not last_has_post_filter) and (slc is not None or len(chain) == 1);
+    use_ordered = (not last_has_post_filter) and (
+        slc is not None or (len(chain) == 1 and _ordered_traversal_enabled())
+    );
     effective_slc: (slice | None) = None;
     if use_ordered {
         effective_slc = slc if slc is not None else slice(None, None, None);

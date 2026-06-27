@@ -3520,23 +3520,117 @@ impl PyastGenPass.exit_filter_compr(nd: uni.FilterCompr) -> None {
                 else comprs[0] if comprs else None
         )
     ) {
+        lam = self.sync(
+            ast3.Lambda(
+                args=self.sync(
+                    ast3.arguments(
+                        posonlyargs=[],
+                        args=[self.sync(ast3.arg(arg=iter_name))],
+                        kwonlyargs=[],
+                        kw_defaults=[],
+                        defaults=[]
+                    )
+                ),
+                body=body
+            )
+        );
+        # Lift `i.<field> <op> <literal>` comparisons into a declarative
+        # predicate dict and tag the filter with it via `attach_field_predicates`
+        # so the runtime can push them down to capable backends. The lambda is
+        # untouched (still the in-process post-filter); only literal-valued,
+        # single-op comparisons on a bare field are lifted -- anything else is
+        # left to the post-filter, so a partial lift stays correct.
+        preds_ast = self.filter_field_predicates_ast(nd);
         nd.gen.py_ast = [
             self.sync(
-                ast3.Lambda(
-                    args=self.sync(
-                        ast3.arguments(
-                            posonlyargs=[],
-                            args=[self.sync(ast3.arg(arg=iter_name))],
-                            kwonlyargs=[],
-                            kw_defaults=[],
-                            defaults=[]
-                        )
-                    ),
-                    body=body
+                ast3.Call(
+                    func=self.jaclib_obj('attach_field_predicates'),
+                    args=[cast(ast3.expr, lam), cast(ast3.expr, preds_ast)],
+                    keywords=[]
                 )
             )
+                if preds_ast is not None
+                else lam
         ];
     }
+}
+
+"""Build the declarative `{field: {op: literal}}` dict AST the compiler lifts
+from a FilterCompr's comparisons, or None when nothing is pushdown-eligible.
+Operator strings match the cross-backend set the storage backends consume
+(`$eq/$ne/$lt/$lte/$gt/$gte/$in/$nin`). Reconstructs fresh literal nodes so no
+AST node is shared between the lambda body and this dict."""
+impl PyastGenPass.filter_field_predicates_ast(
+    nd: uni.FilterCompr
+) -> (ast3.expr | None) {
+    op_map = {
+        ast3.Eq: '$eq',
+        ast3.NotEq: '$ne',
+        ast3.Lt: '$lt',
+        ast3.LtE: '$lte',
+        ast3.Gt: '$gt',
+        ast3.GtE: '$gte',
+        ast3.In: '$in',
+        ast3.NotIn: '$nin'
+    };
+    order: list[str] = [];
+    by_field: dict = {};
+    for x in nd.compares {
+        cval = self.py_ast_val(x);
+        if (
+            not isinstance(cval, ast3.Compare)
+            or not isinstance(cval.left, ast3.Name)
+            or len(cval.ops) != 1
+            or len(cval.comparators) != 1
+        ) {
+            continue;
+        }
+        op_s = op_map.get(`type(cval.ops[0]), None);
+        if op_s is None {
+            continue;
+        }
+        rhs = cval.comparators[0];
+        val_node = None;
+        if op_s in ['$in', '$nin'] {
+            if (
+                isinstance(rhs, (ast3.List, ast3.Tuple))
+                and all(isinstance(e, ast3.Constant) for e in rhs.elts)
+            ) {
+                val_node = self.sync(
+                    ast3.List(
+                        elts=[
+                            cast(ast3.expr, self.sync(ast3.Constant(e.value)))
+                            for e in rhs.elts
+                        ],
+                        ctx=self.sync(ast3.Load())
+                    )
+                );
+            }
+        } elif isinstance(rhs, ast3.Constant) {
+            val_node = self.sync(ast3.Constant(rhs.value));
+        }
+        if val_node is None {
+            continue;
+        }
+        fld = cval.left.id;
+        if fld not in by_field {
+            by_field[fld] = ([], []);
+            order.append(fld);
+        }
+        by_field[fld][0].append(self.sync(ast3.Constant(op_s)));
+        by_field[fld][1].append(cast(ast3.expr, val_node));
+    }
+    if not order {
+        return None;
+    }
+    outer_keys: list = [];
+    outer_vals: list = [];
+    for fld in order {
+        (ks, vs) = by_field[fld];
+        outer_keys.append(cast(ast3.expr, self.sync(ast3.Constant(fld))));
+        outer_vals.append(cast(ast3.expr, self.sync(ast3.Dict(keys=ks, values=vs))));
+    }
+    return self.sync(ast3.Dict(keys=outer_keys, values=outer_vals));
 }
 
 impl PyastGenPass.exit_assign_compr(nd: uni.AssignCompr) -> None {

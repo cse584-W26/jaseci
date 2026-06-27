@@ -19,6 +19,7 @@ glob logger = logging.getLogger(__name__),
          '_trace_enabled',
          '_filter_type_name',
          '_filter_has_predicates',
+         '_extract_field_predicates',
          '_materialize_ids',
          '_path_root_anchor'
      ];
@@ -75,6 +76,24 @@ def _filter_type_name(filt: (Callable[[Archetype], bool] | None)) -> (str | None
 
 
 def _filter_has_predicates(filt: (Callable[[Archetype], bool] | None)) -> bool;
+
+
+"""Read the declarative field predicates the compiler lifted from a filter
+comprehension. The Jac->Python codegen tags every value-filtered comprehension
+lambda with a `__jac_field_predicates__` dict (via `attach_field_predicates` in
+`jaclang.jac0core.jaclib`); this just returns it. Because the dict is a baked-in
+constant of the generated code, it survives JIR/bytecode caching with no runtime
+AST lookup. Format is the backend pushdown shape consumed by
+`QueryPlan`/`Memory.execute_plan` — per-field operator dicts over the
+cross-backend `$eq/$ne/$lt/$lte/$gt/$gte/$in/$nin` set:
+
+    {field_name: {'$eq': literal}}         # equality
+    {field_name: {'$lt': v, '$gte': w}}    # range / multiple operators
+
+Returns `{}` when the filter is None or untagged (type-only filters, or
+comparisons the compiler judged not pushdown-eligible -- the original lambda
+still post-filters those)."""
+def _extract_field_predicates(filt: (Callable[[Archetype], bool] | None)) -> dict;
 
 
 def _materialize_ids(

@@ -42,6 +42,15 @@ obj RunConfig {
         cache: bool = True,
         autonative: bool = False,
         topology_index: bool = True,
+        # Preserve canonical edge-insertion order for the result-producing hop
+        # of an unsliced traversal (e.g. `[node -->]`). Off by default: the
+        # planner returns the faster unordered set-narrowing result, since most
+        # traversals don't observe order. Set true to restore canonical
+        # edge-insertion order for unsliced hops. Sliced traversals
+        # (`[...][a:b]`) stay ordered regardless of this flag, since a slice
+        # over an unordered set would be nondeterministic. Override per process
+        # with the `JAC_ORDERED_TRAVERSAL` env var.
+        ordered_traversal: bool = False,
         diagnostics: str = "error";
 }
 

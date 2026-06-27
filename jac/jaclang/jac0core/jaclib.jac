@@ -8,7 +8,28 @@ import from jaclang.jac0core.constructs { JsxElement }
 import from jaclang.jac0core.constructs { NodeArchetype as Node }
 import from jaclang.jac0core.constructs { WalkerArchetype as Walker }
 import from jaclang.jac0core.runtime { JacRuntimeInterface }
+
+
+"""Tag a generated filter-comprehension lambda with the declarative field
+predicates the compiler lifted from its comparisons, then return the same
+callable. The runtime's query planner reads `__jac_field_predicates__` to push
+those predicates down to capable storage backends; the lambda itself is
+unchanged, so it still works verbatim as the in-process post-filter. Kept here
+(not on `JacRuntimeInterface`) because the Jac->Python codegen emits a direct
+`attach_field_predicates(<lambda>, {...})` call around every value-filtered
+comprehension."""
+def attach_field_predicates(`func: any, preds: dict) -> any {
+    try {
+        `func.__jac_field_predicates__ = preds;
+    } except Exception {
+        ;
+    }
+    return `func;
+}
+
+
 glob __all__ = [
+         'attach_field_predicates',
          'Node',
          'Edge',
          'Walker',

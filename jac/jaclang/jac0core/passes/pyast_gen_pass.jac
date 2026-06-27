@@ -119,6 +119,7 @@ obj PyastGenPass(BaseAstGenPass[ast3.AST]) {
 
     def _gen_py_boundary_stub_class(class_name: str, info: BoundaryTypeInfo) -> str;
     def jaclib_obj(obj_name: str) -> ast3.Name;
+    def filter_field_predicates_ast(nd: uni.FilterCompr) -> (ast3.expr | None);
     def builtin_name(name: str) -> ast3.Name;
     def _is_edge_ref_target(target: uni.UniNode) -> bool;
     def _add_preamble_once(key: str, nd: ast3.AST) -> None;
