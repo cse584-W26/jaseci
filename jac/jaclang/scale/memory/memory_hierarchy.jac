@@ -56,6 +56,7 @@ obj RedisBackend(CacheMemory) {
     def reset_counters -> None;
     def get(id: UUID) -> (Anchor | None);
     def put(anchor: Anchor) -> None;
+    def batch_put(anchors: list[Anchor]) -> None;
     def delete(id: UUID) -> None;
     def close -> None;
     def `has(id: UUID) -> bool;

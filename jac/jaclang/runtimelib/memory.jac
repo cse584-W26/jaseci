@@ -60,6 +60,10 @@ obj CacheMemory(Memory) {
     def exists(id: UUID) -> bool abs;
     def put_if_exists(anchor: Anchor) -> bool abs;
     def invalidate(id: UUID) -> None abs;
+    # Write-through a batch of anchors. Default loops `put`; backends with a
+    # native pipeline (e.g. Redis) override this to a single round-trip, which
+    # matters when materializing large query results into L2.
+    def batch_put(anchors: list[Anchor]) -> None;
 }
 
 obj PersistentMemory(Memory) {

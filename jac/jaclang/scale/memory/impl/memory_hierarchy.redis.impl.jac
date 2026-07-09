@@ -103,6 +103,39 @@ impl RedisBackend.put(anchor: Anchor) -> None {
     }
 }
 
+impl RedisBackend.batch_put(anchors: list[Anchor]) -> None {
+    # Single pipelined round-trip for the whole batch, with one span for the
+    # batch instead of per-anchor. This is the hot path when a query
+    # materializes many rows into L2; per-anchor `put` there is dominated by
+    # Redis round-trip + tracing overhead.
+    if self.redis_client is None or not anchors {
+        return;
+    }
+    span = start_memory_span(
+        "memory.batch_put redis",
+        {"db.system": "redis", "mem.tier": "L2", "mem.op": "batch_put"}
+    );
+    try {
+        ttl = _get_db_config().get('redis_default_ttl', 0);
+        pipe = self.redis_client.pipeline(transaction=False);
+        for anchor in anchors {
+            payload = json.dumps(Serializer.serialize(anchor, include_type=True));
+            key = storage_key(anchor.id);
+            if ttl > 0 {
+                pipe.setex(key, ttl, payload);
+            } else {
+                pipe.set(key, payload);
+            }
+        }
+        pipe.execute();
+        self.put_count += len(anchors);
+    } except Exception as e {
+        logger.debug(f"Redis batch_put failed: {e}");
+    } finally {
+        end_memory_span(span);
+    }
+}
+
 impl RedisBackend.delete(id: UUID) -> None {
     if self.redis_client is None {
         return;

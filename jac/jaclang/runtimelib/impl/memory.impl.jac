@@ -48,6 +48,13 @@ impl Memory.capabilities -> set[str] {
     return set();
 }
 
+impl CacheMemory.batch_put(anchors: list[Anchor]) -> None {
+    # Default: one put per anchor. Pipelined backends (Redis) override this.
+    for anchor in anchors {
+        self.put(anchor);
+    }
+}
+
 impl Memory.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None] {
     if self.capabilities() {
         logger.debug(
@@ -1971,17 +1978,24 @@ impl TieredMemory.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None]
     if self.l3 is None {
         return;
     }
+    # Promote to L1 as we stream, but batch the L2 write-through into a single
+    # pipelined round-trip at the end -- per-anchor l2.put here dominates the
+    # cost of materializing a large query result.
+    to_l2: list[Anchor] = [];
     for anchor in self.l3.execute_plan(plan) {
         existing = self.__mem__.get(anchor.id);
         if existing is None {
             self.__mem__[anchor.id] = anchor;
-            if self.l2 {
-                self.l2.put(anchor);
+            if self.l2 is not None {
+                to_l2.append(anchor);
             }
             yield anchor;
         } else {
             yield existing;
         }
+    }
+    if self.l2 is not None and to_l2 {
+        self.l2.batch_put(to_l2);
     }
 }
 
@@ -1996,14 +2010,18 @@ impl TieredMemory.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
         }
     }
     if missing_ids and self.l3 {
+        to_l2: list[Anchor] = [];
         for mid in missing_ids {
             if (anchor := self.l3.get(mid)) {
                 self.__mem__[anchor.id] = anchor;
-                if self.l2 {
-                    self.l2.put(anchor);
+                if self.l2 is not None {
+                    to_l2.append(anchor);
                 }
                 result[anchor.id] = anchor;
             }
+        }
+        if self.l2 is not None and to_l2 {
+            self.l2.batch_put(to_l2);
         }
     }
     return result;
