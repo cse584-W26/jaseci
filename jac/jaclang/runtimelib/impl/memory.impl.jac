@@ -1003,6 +1003,10 @@ impl SqliteMemory._merge_write(conn: sqlite3.Connection, intent: WriteIntent) ->
             and anchor.topology_index_data != stored_anchor.topology_index_data
         ) {
             stored_anchor.topology_index_data = anchor.topology_index_data;
+            # This refreshes the blob in place (not via set/deserialize), so the
+            # decoded-index cache on the reused anchor must be dropped or it
+            # would serve the previous index.
+            stored_anchor._topology_index_cache = None;
             changed = True;
         }
         if _canonical_json(stored_anchor.access) != _canonical_json(anchor.access) {

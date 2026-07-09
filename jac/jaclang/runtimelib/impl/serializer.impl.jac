@@ -590,6 +590,9 @@ impl Serializer._deserialize_anchor(data: dict[str, object]) -> (Anchor | None) 
             anchor.version = data.get('version', 0);
 
             anchor.topology_index_data = None;
+            # Drop any decoded-index cache so a reused/refreshed anchor re-decodes
+            # from the freshly loaded blob rather than serving a stale index.
+            anchor._topology_index_cache = None;
             if isinstance(anchor.__dict__.get('archetype'), Root) {
                 if (topo_b64 := data.get('topology_index_data')) {
                     import from base64 { b64decode }

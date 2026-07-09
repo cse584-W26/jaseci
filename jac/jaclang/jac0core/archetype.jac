@@ -91,6 +91,11 @@ obj NodeAnchor(Anchor) {
     has archetype: NodeArchetype,
         edges: list[EdgeAnchor],
         topology_index_data: (bytes | None) = None,
+        # Transient (not serialized) cache of the decoded topology index so
+        # repeat `get_topology_index()` calls don't re-decode the blob every
+        # query -- decode is O(edges). Kept coherent with `topology_index_data`
+        # by `set_topology_index`, and cleared on deserialize.
+        _topology_index_cache: any = None,
         version: int = 0;
 
     def __getstate__ -> dict[(str, object)];
