@@ -1,4 +1,19 @@
 impl JacScaleUserManager.postinit -> None {
+    # Base UserManager sqlite plumbing. This postinit OVERRIDES the base one,
+    # but the base's reset_root/_ensure_connection (exercised when identity is
+    # not Mongo, e.g. a postgres-L3 boot) require these attributes - without
+    # them every walker request 500s with `'JacScaleUserManager' object has no
+    # attribute '_lock'`.
+    import os;
+    import threading;
+    data_path_override = os.environ.get('JAC_DATA_PATH');
+    effective_data_path = data_path_override or self.base_path;
+    data_dir = os.path.join(effective_data_path, ".jac", "data");
+    os.makedirs(data_dir, exist_ok=True);
+    self._db_path = os.path.join(data_dir, "main.db");
+    self._conn = None;
+    self._lock = threading.RLock();
+
     sso_config = get_scale_config().get_sso_config();
     for platform in Platforms {
         key = platform.value.lower();
