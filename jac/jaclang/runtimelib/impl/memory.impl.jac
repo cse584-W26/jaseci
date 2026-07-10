@@ -49,7 +49,6 @@ impl Memory.capabilities -> set[str] {
 }
 
 impl CacheMemory.batch_put(anchors: list[Anchor]) -> None {
-    # Default: one put per anchor. Pipelined backends (Redis) override this.
     for anchor in anchors {
         self.put(anchor);
     }
@@ -1010,9 +1009,7 @@ impl SqliteMemory._merge_write(conn: sqlite3.Connection, intent: WriteIntent) ->
             and anchor.topology_index_data != stored_anchor.topology_index_data
         ) {
             stored_anchor.topology_index_data = anchor.topology_index_data;
-            # This refreshes the blob in place (not via set/deserialize), so the
-            # decoded-index cache on the reused anchor must be dropped or it
-            # would serve the previous index.
+
             stored_anchor._topology_index_cache = None;
             changed = True;
         }
@@ -1978,9 +1975,7 @@ impl TieredMemory.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None]
     if self.l3 is None {
         return;
     }
-    # Promote to L1 as we stream, but batch the L2 write-through into a single
-    # pipelined round-trip at the end -- per-anchor l2.put here dominates the
-    # cost of materializing a large query result.
+
     to_l2: list[Anchor] = [];
     for anchor in self.l3.execute_plan(plan) {
         existing = self.__mem__.get(anchor.id);
@@ -1999,6 +1994,20 @@ impl TieredMemory.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None]
     }
 }
 
+def _batch_l3_enabled -> bool {
+    env = os.environ.get("JAC_BATCH_L3");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes", "on");
+    }
+    try {
+        import from jaclang.project.config { get_config }
+        cfg = get_config();
+        return cfg is not None and cfg.run.batch_l3;
+    } except Exception {
+        return False;
+    }
+}
+
 impl TieredMemory.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
     result: dict[UUID, Anchor] = {};
     missing_ids: list[UUID] = [];
@@ -2011,13 +2020,24 @@ impl TieredMemory.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
     }
     if missing_ids and self.l3 {
         to_l2: list[Anchor] = [];
-        for mid in missing_ids {
-            if (anchor := self.l3.get(mid)) {
+        if _batch_l3_enabled() {
+            fetched = self.l3.batch_get(missing_ids);
+            for (aid, anchor) in fetched.items() {
                 self.__mem__[anchor.id] = anchor;
                 if self.l2 is not None {
                     to_l2.append(anchor);
                 }
                 result[anchor.id] = anchor;
+            }
+        } else {
+            for mid in missing_ids {
+                if (anchor := self.l3.get(mid)) {
+                    self.__mem__[anchor.id] = anchor;
+                    if self.l2 is not None {
+                        to_l2.append(anchor);
+                    }
+                    result[anchor.id] = anchor;
+                }
             }
         }
         if self.l2 is not None and to_l2 {
