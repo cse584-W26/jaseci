@@ -176,8 +176,7 @@ impl validate_rules(rules: SchemaRules, cls: type) -> None {
 
 
 impl repair_mode -> str {
-    val = os.environ.get('JAC_SCHEMA_REPAIR', 'repair').strip().lower();
-    return val if val in ('repair', 'detect', 'off') else 'repair';
+    return _parse_repair_mode(os.environ.get('JAC_SCHEMA_REPAIR', 'repair'));
 }
 
 
