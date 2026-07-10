@@ -19,6 +19,8 @@ impl JacScaleConfig.get_default_config(self: JacScaleConfig) -> dict[str, any] {
         },
         'database': {
             'type': None,
+            'backend': 'auto',
+            'postgresql_uri': None,
             'mongodb_uri': None,
             'redis_url': None,
             'project_id': None,
@@ -200,6 +202,11 @@ impl JacScaleConfig.get_database_config(self: JacScaleConfig) -> dict[str, any] 
     db_config = config.get('database', {});
     return {
         'type': db_config.get('type'),
+        # L3 backend selector, read by ScaleTieredMemory.postinit. env wins.
+        'backend': os.environ.get('JAC_SCALE_BACKEND') or db_config.get('backend'),
+        # Postgres L3 DSN (TCP URI: postgresql://user@host:5432/db). env wins.
+        'postgresql_uri': os.environ.get('POSTGRESQL_URI')
+        or db_config.get('postgresql_uri'),
         'mongodb_uri': os.environ.get('MONGODB_URI') or db_config.get('mongodb_uri'),
         'redis_url': os.environ.get('REDIS_URL') or db_config.get('redis_url'),
         'project_id': resolve_firebase_project_id(

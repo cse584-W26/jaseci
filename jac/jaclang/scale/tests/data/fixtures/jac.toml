@@ -1,0 +1,21 @@
+[project]
+name = "pg-e2e-fixture"
+version = "1.0.0"
+description = "e2e fixture project root for the postgres L3 cold-restart test"
+
+# Bounds `jac start`'s project scan to THIS dir. Without a nearest jac.toml the
+# scan root climbs to jac/jac.toml (the whole jaclang source tree); discovery
+# then auto-detects the ~24 service fixtures scattered under jac/tests/** and
+# `jac start` enters microservice mode, spawning subprocess servers + a client
+# build that never converge -- the server "hangs" and never serves /healthz.
+# Mirrors tests/fixtures/jac.toml (the reference serve-test fixture), which
+# bounds discovery for exactly this reason.
+#
+# [dev] is required here (unlike the reference fixture): the e2e drives a
+# `jac start` SUBPROCESS that must run THIS worktree's jaclang (the new
+# PostgresBackend), but dev-source resolves to the NEAREST jac.toml (see
+# jac/_jac_finder.py). A nearest toml without the stanza would fall back to the
+# binary's baked/bundled jaclang, which has no PostgresBackend. Points at jac/
+# (the dir containing jaclang/), five levels up from here.
+[dev]
+jaclang_source = "../../../../.."

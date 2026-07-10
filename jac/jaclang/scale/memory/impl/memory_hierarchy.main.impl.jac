@@ -33,45 +33,111 @@ impl ScaleTieredMemory.postinit -> None {
         logger.debug("Redis not available, running without distributed cache");
     }
 
-    hooked_l3 = None;
-    try {
-        import from jaclang { JacRuntimeInterface as Jac }
-        hooked_l3 = Jac.get_persistent_memory(
-            {'base_path': self.base_path, 'target_path': self.target_path}
-        );
-    } except Exception as e {
-        logger.debug(f"get_persistent_memory hook failed: {e}");
-    }
-    if hooked_l3 is not None {
-        self.l3 = hooked_l3;
-        if isinstance(hooked_l3, MongoBackend) {
-            hooked_l3.set_cache_ref(self.l2);
-            hooked_l3.set_l1_id(self._l1_id);
-            self._persistence_type = PersistenceType.MONGODB;
-        } else {
-            self._persistence_type = PersistenceType.SQLITE;
+    # L3 selection. An explicit `backend` flag is read FIRST and is fail-loud:
+    # a benchmark that believes it's on Postgres while silently on sqlite is
+    # poison, so 'postgres'/'mongodb' RAISE when unavailable rather than fall
+    # back. 'auto' (the default, None too) is byte-for-byte the historical
+    # hook->mongo->sqlite path.
+    backend = get_scale_config().get_database_config().get('backend') or 'auto';
+    if backend in (None, 'auto') {
+        hooked_l3 = None;
+        try {
+            import from jaclang { JacRuntimeInterface as Jac }
+            hooked_l3 = Jac.get_persistent_memory(
+                {'base_path': self.base_path, 'target_path': self.target_path}
+            );
+        } except Exception as e {
+            logger.debug(f"get_persistent_memory hook failed: {e}");
         }
-        logger.debug("Using get_persistent_memory plugin backend for persistence");
-    } elif (mongo_backend := MongoBackend()).is_available() {
+        if hooked_l3 is not None {
+            self.l3 = hooked_l3;
+            if isinstance(hooked_l3, MongoBackend) {
+                hooked_l3.set_cache_ref(self.l2);
+                hooked_l3.set_l1_id(self._l1_id);
+                self._persistence_type = PersistenceType.MONGODB;
+            } elif isinstance(hooked_l3, PostgresBackend) {
+                self._persistence_type = PersistenceType.POSTGRES;
+            } else {
+                self._persistence_type = PersistenceType.SQLITE;
+            }
+            logger.debug("Using get_persistent_memory plugin backend for persistence");
+        } elif (mongo_backend := MongoBackend()).is_available() {
+            self.l3 = mongo_backend;
+            mongo_backend.set_cache_ref(self.l2);
+            mongo_backend.set_l1_id(self._l1_id);
+            self._persistence_type = PersistenceType.MONGODB;
+            logger.debug("MongoDB persistence backend initialized");
+            try {
+                import from jaclang.cli.console { console }
+                logger.debug("  ✔ Using MongoDB for persistence", style="muted");
+            } except Exception { }
+        } else {
+            self.l3 = SqliteMemory(
+                path=get_scale_config().get_database_config()['shelf_db_path']
+            );
+            self._persistence_type = PersistenceType.SQLITE;
+            logger.debug("MongoDB not available, using SqliteMemory for persistence");
+            try {
+                import from jaclang.cli.console { console }
+                logger.debug("  ✔ Using SQLite for persistence", style="muted");
+            } except Exception { }
+        }
+    } elif backend == 'postgres' {
+        db_config = get_scale_config().get_database_config();
+        # Fail loud on missing URI: ConnectionPool(None) would fall back to
+        # libpq ambient env defaults (PGHOST/PGDATABASE/OS-user db) and could
+        # silently create jac tables in an unconfigured database.
+        if not db_config.get('postgresql_uri') {
+            raise RuntimeError(
+                "backend='postgres' requires postgresql_uri "
+                "(set POSTGRESQL_URI or [scale.database].postgresql_uri)"
+            );
+        }
+        import from jaclang.scale._optdeps.psycopg { HAS_PSYCOPG }
+        if not HAS_PSYCOPG {
+            raise RuntimeError(
+                "backend='postgres' selected but psycopg is not installed "
+                "(add the data.postgres capability and run 'jac install')"
+            );
+        }
+        try {
+            pg_backend = PostgresBackend(
+                dsn=cast(str, db_config.get('postgresql_uri'))
+            );
+            if not pg_backend.is_available() {
+                raise RuntimeError("PostgresBackend reported not available");
+            }
+        } except Exception as e {
+            raise RuntimeError(
+                f"backend='postgres' selected but Postgres is unavailable: {e}"
+            );
+        }
+        self.l3 = pg_backend;
+        self._persistence_type = PersistenceType.POSTGRES;
+        logger.debug("Postgres persistence backend initialized");
+    } elif backend == 'mongodb' {
+        mongo_backend = MongoBackend();
+        if not mongo_backend.is_available() {
+            raise RuntimeError("backend='mongodb' selected but MongoDB is unavailable");
+        }
         self.l3 = mongo_backend;
         mongo_backend.set_cache_ref(self.l2);
         mongo_backend.set_l1_id(self._l1_id);
         self._persistence_type = PersistenceType.MONGODB;
-        logger.debug("MongoDB persistence backend initialized");
-        try {
-            import from jaclang.cli.console { console }
-            logger.debug("  ✔ Using MongoDB for persistence", style="muted");
-        } except Exception { }
-    } else {
+        logger.debug("MongoDB persistence backend initialized (explicit)");
+    } elif backend == 'sqlite' {
         self.l3 = SqliteMemory(
             path=get_scale_config().get_database_config()['shelf_db_path']
         );
         self._persistence_type = PersistenceType.SQLITE;
-        logger.debug("MongoDB not available, using SqliteMemory for persistence");
-        try {
-            import from jaclang.cli.console { console }
-            logger.debug("  ✔ Using SQLite for persistence", style="muted");
-        } except Exception { }
+        logger.debug("SQLite persistence backend initialized (explicit)");
+    } else {
+        # Unknown backend value (e.g. a typo like 'postgress'): fail loud
+        # instead of silently falling through to a fallback.
+        raise RuntimeError(
+            f"unknown backend '{backend}' (expected 'postgres', 'mongodb', "
+            "'sqlite', or 'auto')"
+        );
     }
 }
 
