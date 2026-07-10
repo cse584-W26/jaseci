@@ -39,6 +39,27 @@ def with_topo_index(fn: callable) {
     }
 }
 
+"""Force both the topology-index optimizer and the cross-root fast path on
+for the duration of `fn`."""
+def with_cross_root(fn: callable) {
+    keys = ["JAC_TOPOLOGY_INDEX", "JAC_CROSS_ROOT_RESOLVE"];
+    prev = {k: os.environ.get(k) for k in keys};
+    for k in keys {
+        os.environ[k] = "1";
+    }
+    try {
+        fn();
+    } finally {
+        for k in keys {
+            if prev[k] is None {
+                del os.environ[k];
+            } else {
+                os.environ[k] = prev[k];
+            }
+        }
+    }
+}
+
 """Pull the first report value from a JacTestClient response."""
 def first_report(response: any) -> any {
     data = response.data;
@@ -76,6 +97,36 @@ test "cross-root forward chain returns followed user's tweets" {
         }
     }
     with_topo_index(_body);
+}
+
+test "cross-root fast path matches the walk on the forward chain" {
+    # Same graph and query as the walk test above, but with the cross-root
+    # topology-index fast path enabled (`resolve_chain_cross_root`). It must
+    # return the identical answer: the fast path hops into bob's index instead
+    # of walking his Post edges, and must not under- or over-count.
+    def _body {
+        client = JacTestClient.from_file(FIXTURE, base_path=mkdtemp());
+        try {
+            client.register_user("bob", "secret123");
+            client.login("bob", "secret123");
+            bob_profile_id = first_report(
+                client.post("/walker/setup_profile_only", json={"username": "bob"})
+            );
+            client.post("/walker/post_tweet", json={"content": "hello world"});
+            client.post("/walker/post_tweet", json={"content": "second tweet"});
+
+            client.register_user("alice", "secret123");
+            client.login("alice", "secret123");
+            client.post("/walker/setup_profile_only", json={"username": "alice"});
+            client.post("/walker/follow_target", json={"target_id": bob_profile_id});
+
+            count = first_report(client.post("/walker/query_follow_chain", json={}));
+            assert count == 2 , f"Expected 2 reachable tweets, got {count!r}";
+        } finally {
+            client.close();
+        }
+    }
+    with_cross_root(_body);
 }
 
 test "cross-root reverse query counts members across roots" {

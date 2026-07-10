@@ -42,6 +42,12 @@ obj RunConfig {
         cache: bool = True,
         autonative: bool = False,
         topology_index: bool = True,
+        # Resolve multi-hop chains that cross user/root boundaries by hopping
+        # between per-root topology indices, instead of bailing to the edge
+        # walk at the first foreign node. Off by default: it decodes foreign
+        # roots' topology indices (graph structure, not data) on the planner
+        # fast path. Override per process with `JAC_CROSS_ROOT_RESOLVE`.
+        cross_root_resolve: bool = False,
         # Preserve canonical edge-insertion order for the result-producing hop
         # of an unsliced traversal (e.g. `[node -->]`). Off by default: the
         # planner returns the faster unordered set-narrowing result, since most

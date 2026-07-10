@@ -32,6 +32,27 @@ def _ordered_traversal_enabled -> bool {
 }
 
 
+"""Whether multi-hop chains crossing root boundaries should stay on the
+topology-index fast path (hopping between per-root indices) instead of bailing
+to the edge walk. The `JAC_CROSS_ROOT_RESOLVE` env var overrides the
+`[run] cross_root_resolve` toml flag (truthy: 1 / true / yes / on). Default
+off."""
+def _cross_root_resolve_enabled -> bool {
+    import os;
+    env = os.environ.get("JAC_CROSS_ROOT_RESOLVE");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes", "on");
+    }
+    try {
+        import from jaclang.project.config { get_config }
+        cfg = get_config();
+        return cfg is not None and cfg.run.cross_root_resolve;
+    } except Exception {
+        return False;
+    }
+}
+
+
 def _trace_hop(
     strategy: str,
     hop_idx: int,
@@ -320,6 +341,40 @@ impl resolve_path_anchors(
 
     idx = _get_usable_index(root_anchor);
     current: set[UUID] = {cast(UUID, nd.__jac__.id) for nd in path.origin};
+    # Cross-root fast path: resolve the whole multi-hop chain across root
+    # boundaries by hopping between per-root topology indices, rather than
+    # bailing to the edge walk at the first foreign node. Only engages for
+    # unfiltered, unsliced multi-hop chains; predicates, ordering, slicing and
+    # field pushdown are left to the per-hop path below. A None result means a
+    # foreign root failed to load -- fall through to the correct (slower) walk.
+    if (
+        idx is not None
+        and len(chain) > 1
+        and slc is None
+        and _cross_root_resolve_enabled()
+        and not any(
+            _filter_has_predicates(h.dest.nd) or _filter_has_predicates(h.dest.`edge)
+            for h in chain
+        )
+    ) {
+        triples = [(h.edge_type, h.node_type, h.direction) for h in chain];
+        crossed = idx.resolve_chain_cross_root(mem, current, triples);
+        if crossed is not None {
+            _trace_final('cross-root', len(crossed));
+            if root_anchor is not None {
+                plan = QueryPlan(
+                    root_id=root_anchor.id,
+                    chain=[],
+                    id_in=crossed,
+                    post_filter=None,
+                );
+                if plan.needs() <= mem.capabilities() {
+                    return _try_pushdown(mem, plan);
+                }
+            }
+            return _materialize_ids(mem, list(crossed));
+        }
+    }
     if len(chain) > 1 {
         current = _resolve_prefix(mem, current, chain[:-1], idx);
     }
