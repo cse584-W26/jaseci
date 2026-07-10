@@ -523,6 +523,12 @@ def _pg_merge_write(conn: any, intent: WriteIntent) -> None {
             and anchor.topology_index_data != stored_anchor.topology_index_data
         ) {
             stored_anchor.topology_index_data = anchor.topology_index_data;
+            # Parity with SqliteMemory._merge_write (upstream 46ed1cb12): the
+            # blob is refreshed in place, so drop any decoded-index cache.
+            # Benign today (deserialize returns a fresh anchor with the cache
+            # already cleared) but load-bearing if the serializer ever reuses
+            # identity-mapped anchors.
+            stored_anchor._topology_index_cache = None;
             changed = True;
         }
         if _pg_canonical_json(stored_anchor.access) != _pg_canonical_json(
