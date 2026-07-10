@@ -10,12 +10,6 @@ import from jaclang.runtimelib.query_utils {
 }
 
 
-"""Whether an unsliced traversal's final hop preserves canonical edge-insertion
-order. The `JAC_ORDERED_TRAVERSAL` env var overrides the `[run] ordered_traversal`
-toml flag (truthy: 1 / true / yes / on, case-insensitive). Default off -- the
-planner returns the faster unordered set-narrowing result; set it on to restore
-canonical edge-insertion order. Slices are ordered regardless of this (decided
-by the caller), so this only governs the unsliced single-hop case."""
 def _ordered_traversal_enabled -> bool {
     import os;
     env = os.environ.get("JAC_ORDERED_TRAVERSAL");
@@ -29,6 +23,72 @@ def _ordered_traversal_enabled -> bool {
     } except Exception {
         return False;
     }
+}
+
+
+def _cross_root_enabled -> bool {
+    import os;
+    env = os.environ.get("JAC_CROSS_ROOT_RESOLVE");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes", "on");
+    }
+    try {
+        import from jaclang.project.config { get_config }
+        cfg = get_config();
+        return cfg is not None and cfg.run.cross_root_resolve;
+    } except Exception {
+        return False;
+    }
+}
+
+
+def _resolve_hop_cross_root(
+    mem: Memory, current_ids: set[UUID], hop: ChainHop, idx: TopologyIndex
+) -> (set[UUID] | None) {
+    cross_map = idx.get_cross_root_ids(current_ids);
+    if not cross_map {
+        return None;
+    }
+    import from jaclang.runtimelib.topology_index { SELF_ROOT }
+    triple = (hop.edge_type, hop.node_type, hop.direction);
+    result: set[UUID] = set();
+
+    foreign_union: set[UUID] = set();
+    for node_ids in cross_map.values() {
+        foreign_union |= node_ids;
+    }
+    local_ids = current_ids - foreign_union;
+    if local_ids {
+        if not all(
+            (lid := idx.node_to_lid.get(uid)) is not None
+            and idx.node_table[lid][2] == SELF_ROOT for uid in local_ids
+        ) {
+            return None;
+        }
+        loc = idx.resolve_chain(local_ids, [triple]);
+        if loc is None {
+            return None;
+        }
+        result |= loc;
+    }
+
+    roots = mem.batch_get(list(cross_map.keys()));
+    for (root_id, node_ids) in cross_map.items() {
+        ra = roots.get(root_id);
+        if not isinstance(ra, NodeAnchor) {
+            return None;
+        }
+        fidx = ra.get_topology_index();
+        if not isinstance(fidx, TopologyIndex) or len(fidx) == 0 {
+            return None;
+        }
+        hr = fidx.resolve_chain(node_ids, [triple]);
+        if hr is None {
+            return None;
+        }
+        result |= hr;
+    }
+    return result;
 }
 
 
@@ -129,29 +189,6 @@ def _hop_via_walk_ordered(
 }
 
 
-"""Predicate-pushdown fast path for a value-filtered final hop.
-
-The in-process walk (`_hop_via_walk`) materializes *every* neighbor just to
-apply a `where`-style field comparison. When the backend can filter archetype
-fields natively (`field_pushdown`) we can instead:
-
-  1. narrow to the type-matching candidate set via the topology index — pure
-     UUIDs, no node loads — exactly as the type-only hop does; then
-  2. hand the backend `{_id IN narrowed} AND {field predicates}` so it returns
-     only the rows that already pass the comparison.
-
-Returns the materialized anchors, or None to signal "couldn't push down —
-use the walk". Bails (None) whenever pushdown would be unsafe or unhelpful:
-no capable backend, an edge-side predicate (filters the edge row, not the
-node), a slice (ordering/limit interacts with the retained post-filter), no
-usable index, foreign-root inputs, or nothing extractable from the lambda.
-
-The original node filter is retained as the plan's `post_filter`, so even a
-*partial* extraction stays correct — the backend pre-narrows, the lambda has
-the final say (including the `isinstance` type guard and any comparison we
-could not lift). `node_type_final` is deliberately left unset: the index
-already narrowed by type with MRO/subclass fan-out, and a literal
-`arch_type` equality would wrongly drop subclass instances."""
 def _try_field_pushdown(
     mem: Memory,
     current_ids: set[UUID],
@@ -167,8 +204,7 @@ def _try_field_pushdown(
     if 'field_pushdown' not in caps or 'id_in' not in caps {
         return None;
     }
-    # Edge-side predicates filter the edge archetype, which execute_plan does
-    # not see — leave the whole hop to the walk so they're applied correctly.
+
     if _filter_has_predicates(last_hop.dest.`edge) {
         return None;
     }
@@ -176,7 +212,7 @@ def _try_field_pushdown(
     if not field_preds {
         return None;
     }
-    # The index can only resolve hops whose every input ID it owns.
+
     import from jaclang.runtimelib.topology_index { SELF_ROOT }
     if not all(
         (lid := idx.node_to_lid.get(uid)) is not None
@@ -271,6 +307,14 @@ impl resolve_hop(
                 return narrowed;
             }
         }
+
+        if slc is None and _cross_root_enabled() {
+            xr = _resolve_hop_cross_root(mem, current_ids, hop, idx);
+            if xr is not None {
+                _trace_hop('index:cross-root', hop_idx, in_count, len(xr), hop);
+                return xr;
+            }
+        }
     }
 
     if slc is not None {
@@ -325,10 +369,7 @@ impl resolve_path_anchors(
     }
     last_hop = chain[-1];
     last_has_post_filter = _filter_has_predicates(last_hop.dest.nd);
-    # Predicate pushdown: when the final hop carries a field comparison and the
-    # backend can filter fields natively, narrow by type via the index and push
-    # the comparison down to the backend instead of loading every neighbor to
-    # filter it. None means "not eligible" — fall through to the walk below.
+
     if last_has_post_filter {
         pushed = _try_field_pushdown(mem, current, last_hop, idx, root_anchor, slc);
         if pushed is not None {
@@ -338,9 +379,8 @@ impl resolve_path_anchors(
     post_filter: (Callable[[Archetype], bool] | None) = (
         last_hop.dest.node_filter if last_has_post_filter else None
     );
-    use_ordered = (not last_has_post_filter) and (
-        slc is not None or (len(chain) == 1 and _ordered_traversal_enabled())
-    );
+    use_ordered = (not last_has_post_filter)
+    and (slc is not None or (len(chain) == 1 and _ordered_traversal_enabled()));
     effective_slc: (slice | None) = None;
     if use_ordered {
         effective_slc = slc if slc is not None else slice(None, None, None);
