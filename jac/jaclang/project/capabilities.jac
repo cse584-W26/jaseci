@@ -21,6 +21,10 @@ glob CAPABILITY_SPECS: dict[str, dict[str, any]] = {
              }
          },
          "data.mongo": {"context": "runtime", "deps": {"pymongo": ">=4.15.4,<5.0.0"}},
+         "data.postgres": {
+             "context": "runtime",
+             "deps": {"psycopg[binary,pool]": ">=3.3.0,<4.0.0"}
+         },
          "data.redis": {"context": "runtime", "deps": {"redis": ">=7.1.0,<8.0.0"}},
          "data.sql": {"context": "runtime", "deps": {"sqlalchemy": ">=2.0.0,<3.0.0"}},
          "env": {"context": "runtime", "deps": {"python-dotenv": ">=1.2.1,<2.0.0"}},
@@ -93,6 +97,8 @@ glob INTENT_RULES: list[dict[str, any]] = [
              "values": {
                  "mongo": "data.mongo",
                  "mongodb": "data.mongo",
+                 "postgres": "data.postgres",
+                 "postgresql": "data.postgres",
                  "redis": "data.redis"
              }
          },
@@ -224,7 +230,7 @@ def derive_capabilities(
     if (
         ("serve" in caps)
         and (intent or "deploy.k8s" in caps)
-        and not ({"data.mongo", "data.redis"} & caps)
+        and not ({"data.mongo", "data.redis", "data.postgres"} & caps)
     ) {
         caps.add("data.mongo");
     }
