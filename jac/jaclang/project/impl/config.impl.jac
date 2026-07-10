@@ -746,6 +746,7 @@ impl _parse_toml_data(
             topology_index=run_data.get("topology_index", True),
             cross_root_resolve=run_data.get("cross_root_resolve", False),
             batch_l3=run_data.get("batch_l3", False),
+            read_only=run_data.get("read_only", False),
             diagnostics=run_data.get("diagnostics", "error")
         );
     }

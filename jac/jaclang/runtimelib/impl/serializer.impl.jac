@@ -1,3 +1,19 @@
+def _read_only_enabled -> bool {
+    import os;
+    env = os.environ.get("JAC_READ_ONLY");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes", "on");
+    }
+    try {
+        import from jaclang.project.config { get_config }
+        cfg = get_config();
+        return cfg is not None and cfg.run.read_only;
+    } except Exception {
+        return False;
+    }
+}
+
+
 impl Serializer._type_info(`obj: object, `include: bool) -> dict[str, object] {
     return {'__type__': type(`obj).__name__, '__module__': type(`obj).__module__}
         if `include
@@ -590,8 +606,7 @@ impl Serializer._deserialize_anchor(data: dict[str, object]) -> (Anchor | None) 
             anchor.version = data.get('version', 0);
 
             anchor.topology_index_data = None;
-            # Drop any decoded-index cache so a reused/refreshed anchor re-decodes
-            # from the freshly loaded blob rather than serving a stale index.
+
             anchor._topology_index_cache = None;
             if isinstance(anchor.__dict__.get('archetype'), Root) {
                 if (topo_b64 := data.get('topology_index_data')) {
@@ -611,7 +626,9 @@ impl Serializer._deserialize_anchor(data: dict[str, object]) -> (Anchor | None) 
             }
         }
 
-        anchor.hash = Serializer._compute_hash(anchor);
+        if not _read_only_enabled() {
+            anchor.hash = Serializer._compute_hash(anchor);
+        }
         return anchor;
     } except Exception as e {
         logger.error(f"Failed to deserialize anchor: {e}");

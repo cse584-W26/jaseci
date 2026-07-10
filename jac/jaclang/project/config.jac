@@ -45,6 +45,7 @@ obj RunConfig {
         ordered_traversal: bool = False,
         cross_root_resolve: bool = False,
         batch_l3: bool = False,
+        read_only: bool = False,
         diagnostics: str = "error";
 }
 
