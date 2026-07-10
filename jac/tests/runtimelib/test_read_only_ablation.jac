@@ -24,8 +24,14 @@ import from tempfile { mkdtemp }
 import jaclang;
 import from tests.support { JAC_ROOT }
 import from jaclang.runtimelib.testing { JacTestClient }
-import from jaclang.runtimelib.changeset { snapshot_field_hashes }
+import from jaclang.runtimelib.changeset { snapshot_field_hashes, ChangeSet }
 import from jaclang.runtimelib.serializer { Serializer }
+import from pathlib { Path }
+import from tempfile { TemporaryDirectory }
+import from jaclang.jac0core.archetype { EdgeAnchor, GenericEdge, Root }
+import from jaclang.jac0core.runtime { JacRuntime }
+import from jaclang.runtimelib.context { ExecutionContext }
+import from jaclang.runtimelib.memory { TieredMemory }
 
 glob FIXTURE = os.path.join(
          JAC_ROOT, "tests", "runtimelib", "fixtures", "cross_root_topo_index.jac"
@@ -173,6 +179,66 @@ test "deserialize skips whole-anchor hash when read_only is on (pass 1)" {
             }
         } else {
             os.environ["JAC_READ_ONLY"] = prev;
+        }
+    }
+}
+
+
+test "read_only gates the commit dirty-scan so nothing is staged (the write-back bug)" {
+    # Regression for the `_sv_on_complete` write-back: read_only skipped the
+    # hashes but an ungated commit still ran `_collect_into`, which then saw
+    # every hash-less anchor as brand-new and staged a full write-back on a
+    # READ request. The fix gates `_collect_into` itself (the shared choke
+    # point every commit caller routes through), so it stages NOTHING when on.
+    prev = os.environ.get("JAC_READ_ONLY");
+    with TemporaryDirectory() as tmpdir {
+        target = str(Path(tmpdir) / "ro_app.jac");
+        ctx = ExecutionContext(base_path_dir=tmpdir, full_target_path=target);
+        old_ctx = JacRuntime.exec_ctx;
+        JacRuntime.exec_ctx = ctx;
+        try {
+            mem = ctx.mem;
+            assert isinstance(mem, TieredMemory);
+            # Seed a persistent root ++> item into L1 (hash-less, i.e. dirty).
+            ranch = Root().__jac__;
+            ranch.persistent = True;
+            ianch = RoItem(name="victim").__jac__;
+            ianch.persistent = True;
+            eanch = EdgeAnchor(
+                archetype=GenericEdge(), source=ranch, target=ianch, is_undirected=False
+            );
+            eanch.persistent = True;
+            ranch.edges.append(eanch);
+            ianch.edges.append(eanch);
+            mem.put(ranch);
+            mem.put(ianch);
+            mem.put(eanch);
+
+            # OFF: the scan detects the unpersisted anchors -> NOT empty.
+            _set_flag("JAC_READ_ONLY", False);
+            cs_off = ChangeSet();
+            mem._collect_into(cs_off);
+            assert not cs_off.is_empty() , (
+                "scan should stage the new anchors when the flag is off"
+            );
+
+            # ON: the gate returns before scanning -> EMPTY (no write-back).
+            _set_flag("JAC_READ_ONLY", True);
+            cs_on = ChangeSet();
+            mem._collect_into(cs_on);
+            assert cs_on.is_empty() , (
+                "read_only must stage nothing (guards the _sv_on_complete "
+                "phantom write-back)"
+            );
+        } finally {
+            JacRuntime.exec_ctx = old_ctx;
+            if prev is None {
+                if "JAC_READ_ONLY" in os.environ {
+                    del os.environ["JAC_READ_ONLY"];
+                }
+            } else {
+                os.environ["JAC_READ_ONLY"] = prev;
+            }
         }
     }
 }
