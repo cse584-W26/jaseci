@@ -447,6 +447,7 @@ impl TopologyIndex.resolve_chain_cross_root(
     }
     import logging;
     import from jaclang.jac0core.archetype { NodeAnchor }
+    import from jaclang.runtimelib.memory { TieredMemory }
     _logger = logging.getLogger(__name__);
     # Current frontier: per-index groups of node ids to advance. Start with all
     # origins on `self`; foreign nodes fan out to their owner root's index.
@@ -484,14 +485,28 @@ impl TopologyIndex.resolve_chain_cross_root(
         if is_last {
             return result_ids;
         }
-        # Load each foreign root's index once and enqueue its nodes.
-        for (foreign_root_id, foreign_node_ids) in pending_foreign.items() {
-            try {
-                root_anchor = mem.get(foreign_root_id);
+        # Load every foreign root's anchor in ONE batched fetch (Redis MGET /
+        # Mongo `$in`) rather than a round-trip per followed root. The fan-out
+        # here is O(distinct foreign roots) -- for a feed query, the number of
+        # followed users -- so batching collapses it to a single request per
+        # hop. Any load failure (missing root, non-NodeAnchor, decode error)
+        # bails to None so the caller falls back to the complete edge walk.
+        loaded_roots: dict[UUID, any] = {};
+        try {
+            root_ids = list(pending_foreign.keys());
+            if isinstance(mem, TieredMemory) {
+                loaded_roots = mem.batch_get(root_ids);
+            } else {
+                loaded_roots = {
+                    rid: a for rid in root_ids if (a := mem.get(rid)) is not None
+                };
+            }
+            for (foreign_root_id, foreign_node_ids) in pending_foreign.items() {
+                root_anchor = loaded_roots.get(foreign_root_id);
                 if not isinstance(root_anchor, NodeAnchor) {
                     _logger.warning(
-                        f"cross-root resolve: root {foreign_root_id} is not a "
-                        f"NodeAnchor, falling back to edge walk"
+                        f"cross-root resolve: root {foreign_root_id} missing or "
+                        "not a NodeAnchor, falling back to edge walk"
                     );
                     return None;
                 }
@@ -499,13 +514,13 @@ impl TopologyIndex.resolve_chain_cross_root(
                 if foreign_idx is not None and len(foreign_idx) > 0 {
                     next_frontier.append((foreign_idx, foreign_node_ids));
                 }
-            } except Exception as exc {
-                _logger.warning(
-                    f"cross-root resolve: failed to load root {foreign_root_id} "
-                    f"({exc}), falling back to edge walk"
-                );
-                return None;
             }
+        } except Exception as exc {
+            _logger.warning(
+                "cross-root resolve: batched load of foreign roots failed "
+                f"({exc}), falling back to edge walk"
+            );
+            return None;
         }
         frontier = next_frontier;
         if not frontier {
