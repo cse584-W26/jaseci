@@ -143,7 +143,63 @@ obj MongoBackend(PersistentMemory) {
     async def aput(anchor: Anchor) -> None;
 }
 
-enum PersistenceType { NONE, MONGODB, SQLITE }
+obj PostgresBackend(PersistentMemory) {
+    has dsn: str,
+        # Pool bounds are per server process. Keep these matched with the
+        # baseline engines' pools for fair cross-engine benchmarks; budget
+        # PG max_connections >= pool_max * replicas.
+        pool_min: int = 5,
+        pool_max: int = 15,
+        __pool__: any by postinit,
+        # L3 keeps no in-process working set (its store is the DB); this stays
+        # empty and only backs get_mem()'s documented dict shape.
+        __mem__: dict[UUID, Anchor] by postinit,
+        # Counts SQL round-trips on read paths (NOT ids); keeps
+        # TieredMemory.get_l3_fetch_count attr-compatible.
+        l3_fetch_count: int by postinit;
+
+    def postinit -> None;
+    def is_available -> bool;
+    def get(id: UUID) -> (Anchor | None);
+    def put(anchor: Anchor) -> None;
+    def delete(id: UUID) -> None;
+    def close -> None;
+    def `has(id: UUID) -> bool;
+    def query(
+        filter: (Callable[[Anchor], bool] | None) = None
+    ) -> Generator[Anchor, None, None];
+
+    def get_roots -> Generator[Root, None, None];
+    def find(
+        ids: (UUID | Iterable[UUID]), filter: (Callable[[Anchor], Anchor] | None) = None
+    ) -> Generator[Anchor, None, None];
+
+    def find_one(
+        ids: (UUID | Iterable[UUID]), filter: (Callable[[Anchor], Anchor] | None) = None
+    ) -> (Anchor | None);
+
+    def commit(anchor: (Anchor | None) = None) -> None;
+    def get_mem -> dict[UUID, Anchor];
+    # Load-bearing (not abstract): single round-trip for N ids.
+    def batch_get(ids: list[UUID]) -> dict[UUID, Anchor];
+    def apply(changeset: ChangeSet) -> ApplyReport;
+    def inspect_summary -> dict;
+    def list_quarantined(limit: int = 50) -> list;
+    def show_quarantined(id_prefix: str) -> (dict | None);
+    def recover_one(id_prefix: str) -> tuple;
+    def recover_all -> tuple;
+    def list_aliases -> list;
+    def add_alias(old_name: str, new_name: str) -> None;
+    def remove_alias(old_name: str) -> bool;
+    def quarantine_dangling(
+        missing_id: UUID, referrer_id: (UUID | None), kind: str
+    ) -> None;
+
+    def is_recoverable_quarantine(id: UUID) -> bool;
+    def fsck(repair: bool = False) -> dict;
+}
+
+enum PersistenceType { NONE, MONGODB, SQLITE, POSTGRES }
 
 obj ScaleTieredMemory(TieredMemory) {
     has _cache_available: bool = False,
