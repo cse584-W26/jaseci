@@ -280,6 +280,20 @@ impl resolve_hop(
         _filter_has_predicates(hop.dest.nd) or _filter_has_predicates(hop.dest.`edge)
     );
     in_count = len(current_ids);
+
+    if not has_pred and current_ids and 'topology_sql' in mem.capabilities() {
+        sql_backend = mem?.l3 or mem;
+        sql_fn = sql_backend?.resolve_hop_sql;
+        if sql_fn is not None {
+            sql_res = sql_fn(
+                current_ids, hop.edge_type, hop.node_type, hop.direction, slc
+            );
+            if sql_res is not None {
+                _trace_hop('sql', hop_idx, in_count, len(sql_res), hop);
+                return sql_res;
+            }
+        }
+    }
     if not has_pred and idx is not None {
         import from jaclang.runtimelib.topology_index { SELF_ROOT }
         if all(

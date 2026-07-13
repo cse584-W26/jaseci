@@ -11,13 +11,18 @@ gates can run `-f "rows"` etc.
 """
 
 import os;
+import shutil;
 import psycopg;
+import from tempfile { mkdtemp }
 import from uuid { UUID, uuid4 }
 import from psycopg.types.json { Jsonb }
 
 import from jaclang.jac0core.archetype { Root, GenericEdge, EdgeAnchor, NodeAnchor }
+import from jaclang.jac0core.runtime { JacRuntime }
+import from jaclang.runtimelib.context { ExecutionContext }
 import from jaclang.runtimelib.changeset { ChangeSet, WriteOp, ApplyReport }
 import from jaclang.runtimelib.serializer { Serializer }
+import from jaclang.project.config { JacConfig, set_config }
 import from jaclang.scale.memory.memory_hierarchy { PostgresRelBackend }
 
 glob _DSN = os.environ.get('POSTGRESQL_REL_URI', 'postgresql:///jactest_rel'),
@@ -409,6 +414,90 @@ test "hop: empty frontier and unknown type return empty not None" {
     assert be.resolve_hop_sql(set(), 'RelKnows', None, 2, None) == set();
     assert be.resolve_hop_sql(set(), 'RelKnows', None, 2, slice(None, None)) == [];
     assert be.resolve_hop_sql({g['a'].id}, 'NoSuchEdge', None, 2, None) == set();
+    be.close();
+}
+
+
+# ===========================================================================
+# seam phase -- resolver dispatch through a live runtime context
+# ===========================================================================
+"""Run body() inside a runtime context whose TieredMemory L3 is the rel
+backend and GTI is OFF (topology_index=False) -- proving SQL hops need no
+blob. Returns (backend, traversal_result_names)."""
+def _with_rel_ctx(be: any) -> tuple {
+    tmpdir = mkdtemp();
+    orig_base = JacRuntime.get_base_path_dir();
+    names: any = None;
+    try {
+        cfg = JacConfig();
+        cfg.run.topology_index = False;
+        set_config(cfg);
+        JacRuntime.set_base_path(tmpdir);
+        ctx = ExecutionContext();
+        JacRuntime.set_context(ctx);
+        mem: any = ctx.mem;
+        mem.l3 = be;
+
+        r = root;
+        for i in range(3) {
+            r +>:RelKnows:+> RelPerson(name=f"p{i}");
+        }
+        r_any: any = r;
+        ra: any = r_any.__jac__;
+        cs: any = ChangeSet();
+        cs.record_create(ra);
+        for e in ra.edges {
+            ea: any = e;
+            cs.record_create(ea);
+            cs.record_create(ea.target);
+        }
+        rep: any = be.apply(cs);
+        assert rep.ok();
+
+        found = [r->:RelKnows:->];
+        names = sorted([p.name for p in found]);
+        ctx.close();
+    } finally {
+        JacRuntime.set_base_path(orig_base);
+        set_config(JacConfig());
+        shutil.rmtree(tmpdir, ignore_errors=True);
+    }
+    return (be, names);
+}
+
+
+test "seam: resolve_hop routes through SQL with GTI off" {
+    be: any = _fresh();
+    prior: any = os.environ.pop('JAC_TOPOLOGY_SQL', None);
+    try {
+        (be2, names) = _with_rel_ctx(be);
+        assert names == ['p0', 'p1', 'p2'];
+        assert be.rel_hop_count > 0 , "hop must have been answered by SQL";
+        assert be.rel_hop_fallback_count == 0;
+    } finally {
+        if prior is not None {
+            os.environ['JAC_TOPOLOGY_SQL'] = prior;
+        }
+    }
+    be.close();
+}
+
+
+test "seam: JAC_TOPOLOGY_SQL=0 falls back to walk, same result" {
+    be: any = _fresh();
+    prior: any = os.environ.pop('JAC_TOPOLOGY_SQL', None);
+    os.environ['JAC_TOPOLOGY_SQL'] = '0';
+    try {
+        (be2, names) = _with_rel_ctx(be);
+        assert names == ['p0', 'p1', 'p2'];
+        assert be.rel_hop_count == 0 , "SQL path must be disabled";
+    } finally {
+        if prior is None {
+            os.environ.pop('JAC_TOPOLOGY_SQL', None);
+        } else {
+            os.environ['JAC_TOPOLOGY_SQL'] = prior;
+        }
+    }
     be.close();
 }
 
