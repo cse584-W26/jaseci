@@ -147,6 +147,17 @@ impl PostgresRelBackend._apply_intent(conn: Any, intent: WriteIntent) -> None {
 }
 
 
+"""Answer one hop from the edges table. Returns None on any failure so the
+resolver falls back to the blob/walk ladder (never raises into a request).
+
+direction uses EdgeDir ints (IN=1, OUT=2, ANY=3). Directed rows traverse
+source->target; undirected rows traverse both ways (GTI parity: topo_utils
+writes two adjacency entries for them). Result order is first-seen creation
+order (GROUP BY endpoint ORDER BY MIN(seq)), matching
+TopologyIndex.resolve_chain_ordered's adj_list walk; the slice is applied
+here. Type filters are exact-match: edge_type is parity with GTI (no MRO
+fan-out there either), node_type diverges for superclass filters (ledgered
+in PORT_NOTES_REL.md)."""
 impl PostgresRelBackend.resolve_hop_sql(
     current_ids: set[UUID],
     edge_type: (str | None),
@@ -154,5 +165,63 @@ impl PostgresRelBackend.resolve_hop_sql(
     direction: int,
     slc: (slice | None) = None
 ) -> (set[UUID] | list[UUID] | None) {
-    return None;
+    if not current_ids {
+        return [] if slc is not None else set();
+    }
+    ids = [str(u) for u in current_ids];
+    etype_pred = " AND e.edge_type = %s" if edge_type is not None else "";
+
+    # (src_col, dst_col, undirected_only) legs UNION ALL'd per direction.
+    if direction == 2 {
+        legs = [('source', 'target', False), ('target', 'source', True)];
+    } elif direction == 1 {
+        legs = [('target', 'source', False), ('source', 'target', True)];
+    } else {
+        legs = [('source', 'target', False), ('target', 'source', False)];
+    }
+    parts: list[str] = [];
+    params: list = [];
+    for (src_col, dst_col, undirected_only) in legs {
+        upred = " AND e.is_undirected" if undirected_only else "";
+        parts.append(
+            f"SELECT e.{dst_col} AS out_id, e.seq AS seq FROM edges e "
+            f"WHERE e.{src_col} = ANY(%s){etype_pred}{upred}"
+        );
+        params.append(ids);
+        if edge_type is not None {
+            params.append(edge_type);
+        }
+    }
+    inner = " UNION ALL ".join(parts);
+    type_join = "";
+    if node_type is not None {
+        type_join = " JOIN anchors a ON a.id = dst.out_id AND a.arch_type = %s";
+        params.append(node_type);
+    }
+    sql = (
+        f"SELECT dst.out_id FROM ({inner}) dst{type_join} "
+        "GROUP BY dst.out_id ORDER BY MIN(dst.seq)"
+    );
+    try {
+        conn: any = self.__pool__.getconn();
+        try {
+            conn.autocommit = True;
+            rows: any = conn.execute(sql, tuple(params)).fetchall();
+        } finally {
+            conn.autocommit = False;
+            self.__pool__.putconn(conn);
+        }
+        self.rel_hop_count += 1;
+        ordered = [UUID(r[0]) for r in rows];
+        if slc is not None {
+            return ordered[slc];
+        }
+        return set(ordered);
+    } except Exception as e {
+        self.rel_hop_fallback_count += 1;
+        logger.debug(
+            f"PostgresRelBackend.resolve_hop_sql fell back: " f"{type(e).__name__}: {e}"
+        );
+        return None;
+    }
 }
