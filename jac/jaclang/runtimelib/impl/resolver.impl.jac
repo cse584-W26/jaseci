@@ -26,6 +26,16 @@ def _ordered_traversal_enabled -> bool {
 }
 
 
+def _chain_sql_enabled -> bool {
+    import os;
+    env = os.environ.get("JAC_TOPOLOGY_SQL_CHAIN");
+    if env is not None {
+        return env.lower() not in ("0", "false", "no", "off");
+    }
+    return True;
+}
+
+
 def _cross_root_enabled -> bool {
     import os;
     env = os.environ.get("JAC_CROSS_ROOT_RESOLVE");
@@ -378,18 +388,8 @@ impl resolve_path_anchors(
 
     idx = _get_usable_index(root_anchor);
     current: set[UUID] = {cast(UUID, nd.__jac__.id) for nd in path.origin};
-    if len(chain) > 1 {
-        current = _resolve_prefix(mem, current, chain[:-1], idx);
-    }
     last_hop = chain[-1];
     last_has_post_filter = _filter_has_predicates(last_hop.dest.nd);
-
-    if last_has_post_filter {
-        pushed = _try_field_pushdown(mem, current, last_hop, idx, root_anchor, slc);
-        if pushed is not None {
-            return pushed;
-        }
-    }
     post_filter: (Callable[[Archetype], bool] | None) = (
         last_hop.dest.node_filter if last_has_post_filter else None
     );
@@ -399,7 +399,44 @@ impl resolve_path_anchors(
     if use_ordered {
         effective_slc = slc if slc is not None else slice(None, None, None);
     }
-    result = resolve_hop(mem, current, last_hop, idx, len(chain) - 1, effective_slc);
+
+    result: (set[UUID] | list[UUID] | None) = None;
+    if (
+        len(chain) > 1
+        and current
+        and not last_has_post_filter
+        and _chain_sql_enabled()
+        and 'topology_sql' in mem.capabilities()
+        and not any(
+            _filter_has_predicates(h.dest.nd) or _filter_has_predicates(h.dest.`edge)
+            for h in chain
+        )
+    ) {
+        sql_backend = mem?.l3 or mem;
+        chain_fn = sql_backend?.resolve_chain_sql;
+        if chain_fn is not None {
+            triples = [(h.edge_type, h.node_type, h.direction) for h in chain];
+            result = chain_fn(current, triples, effective_slc);
+            if result is not None {
+                _trace_final('chain-sql', len(result), f"hops={len(chain)}");
+            }
+        }
+    }
+
+    if result is None {
+        if len(chain) > 1 {
+            current = _resolve_prefix(mem, current, chain[:-1], idx);
+        }
+        if last_has_post_filter {
+            pushed = _try_field_pushdown(mem, current, last_hop, idx, root_anchor, slc);
+            if pushed is not None {
+                return pushed;
+            }
+        }
+        result = resolve_hop(
+            mem, current, last_hop, idx, len(chain) - 1, effective_slc
+        );
+    }
     if isinstance(result, list) {
         return _materialize_ids(mem, result);
     }

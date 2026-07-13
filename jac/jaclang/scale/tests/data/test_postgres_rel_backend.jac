@@ -446,6 +446,67 @@ test "hop: empty frontier and unknown type return empty not None" {
 
 
 # ===========================================================================
+# chain phase -- resolve_chain_sql (whole traversal, one round-trip)
+# ===========================================================================
+test "chain: two-hop OUT resolves in one round-trip" {
+    be: any = _fresh();
+    g: any = _seed_graph(be);
+    p2: any = _node(RelPet(name="P2"), g['r']);
+    e6: any = _tedge(RelLikes(), g['b'], p2);
+    assert not _link(be, e6, [p2]).failed;
+    before: any = be.rel_chain_count;
+    res: any = be.resolve_chain_sql(
+        {g['a'].id}, [('RelKnows', 'RelPerson', 2), ('RelLikes', 'RelPet', 2)]
+    );
+    # a -Knows-> {b,c,u}; only b -Likes-> p2.
+    assert res == {p2.id};
+    assert be.rel_chain_count == before + 1;
+    be.close();
+}
+
+
+test "chain: direction mix and dead mid-frontier" {
+    be: any = _fresh();
+    g: any = _seed_graph(be);
+    # IN then OUT: b <-Knows- a, then a -Likes-> p.
+    res: any = be.resolve_chain_sql(
+        {g['b'].id}, [('RelKnows', None, 1), ('RelLikes', 'RelPet', 2)]
+    );
+    assert res == {g['p'].id};
+    # Unknown edge type mid-chain -> empty set, not None.
+    res2: any = be.resolve_chain_sql(
+        {g['a'].id}, [('NoSuchEdge', None, 2), ('RelLikes', None, 2)]
+    );
+    assert res2 == set();
+    # Empty chain -> None (caller falls back).
+    assert be.resolve_chain_sql({g['a'].id}, []) is None;
+    be.close();
+}
+
+
+test "chain: order pushdown on final hop returns ordered list" {
+    be: any = _fresh();
+    g: any = _seed_graph(be);
+    prior: any = os.environ.pop('JAC_ORDER_PUSHDOWN', None);
+    try {
+        os.environ['JAC_ORDER_PUSHDOWN'] = 'RelPerson:name:desc';
+        # d -Knows-> a, then a -Knows-> {b,c,u}: desc by name = [u, c, b].
+        res: any = be.resolve_chain_sql(
+            {g['d'].id}, [('RelKnows', 'RelPerson', 2), ('RelKnows', 'RelPerson', 2)]
+        );
+        assert res == [g['u'].id, g['c'].id, g['b'].id];
+    } finally {
+        if prior is None {
+            os.environ.pop('JAC_ORDER_PUSHDOWN', None);
+        } else {
+            os.environ['JAC_ORDER_PUSHDOWN'] = prior;
+        }
+    }
+    be.close();
+}
+
+
+# ===========================================================================
 # seam phase -- resolver dispatch through a live runtime context
 # ===========================================================================
 """Run body() inside a runtime context whose TieredMemory L3 is the rel
@@ -524,6 +585,75 @@ test "seam: JAC_TOPOLOGY_SQL=0 falls back to walk, same result" {
         } else {
             os.environ['JAC_TOPOLOGY_SQL'] = prior;
         }
+    }
+    be.close();
+}
+
+
+test "seam: two-hop traversal collapses into one chain SQL call" {
+    be: any = _fresh();
+    tmpdir = mkdtemp();
+    orig_base = JacRuntime.get_base_path_dir();
+    prior: any = os.environ.pop('JAC_TOPOLOGY_SQL_CHAIN', None);
+    try {
+        cfg = JacConfig();
+        cfg.run.topology_index = False;
+        set_config(cfg);
+        JacRuntime.set_base_path(tmpdir);
+        ctx = ExecutionContext();
+        JacRuntime.set_context(ctx);
+        mem: any = ctx.mem;
+        mem.l3 = be;
+
+        r = root;
+        ps: list = [];
+        for i in range(3) {
+            p = RelPerson(name=f"p{i}");
+            r +>:RelKnows:+> p;
+            ps.append(p);
+        }
+        deep = RelPerson(name="deep");
+        p0: any = ps[0];
+        p0 +>:RelKnows:+> deep;
+
+        r_any: any = r;
+        ra: any = r_any.__jac__;
+        cs: any = ChangeSet();
+        cs.record_create(ra);
+        for e in ra.edges {
+            ea: any = e;
+            cs.record_create(ea);
+            cs.record_create(ea.target);
+        }
+        p0a: any = p0.__jac__;
+        deep_e: any = p0a.edges[-1];
+        cs.record_create(deep_e);
+        cs.record_create(deep_e.target);
+        rep: any = be.apply(cs);
+        assert not rep.failed;
+
+        found = [r->:RelKnows:->[?:RelPerson]->:RelKnows:->[?:RelPerson]];
+        names = sorted([p.name for p in found]);
+        assert names == ['deep'];
+        assert be.rel_chain_count == 1 , "two-hop must be ONE chain SQL call";
+
+        # Kill switch: same traversal, per-hop path, same answer.
+        os.environ['JAC_TOPOLOGY_SQL_CHAIN'] = '0';
+        hops_before: any = be.rel_hop_count;
+        found2 = [r->:RelKnows:->[?:RelPerson]->:RelKnows:->[?:RelPerson]];
+        assert sorted([p.name for p in found2]) == ['deep'];
+        assert be.rel_chain_count == 1;
+        assert be.rel_hop_count >= hops_before + 2 , "per-hop path must dispatch per hop";
+        ctx.close();
+    } finally {
+        if prior is None {
+            os.environ.pop('JAC_TOPOLOGY_SQL_CHAIN', None);
+        } else {
+            os.environ['JAC_TOPOLOGY_SQL_CHAIN'] = prior;
+        }
+        JacRuntime.set_base_path(orig_base);
+        set_config(JacConfig());
+        shutil.rmtree(tmpdir, ignore_errors=True);
     }
     be.close();
 }

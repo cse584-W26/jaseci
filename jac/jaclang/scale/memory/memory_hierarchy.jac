@@ -209,6 +209,7 @@ obj PostgresRelBackend(PostgresBackend) {
     # this subclass adds the edges index table + a SQL hop resolver the
     # traversal resolver dispatches to via the 'topology_sql' capability.
     has rel_hop_count: int = 0,
+        rel_chain_count: int = 0,
         rel_hop_fallback_count: int = 0;
 
     def postinit -> None;
@@ -221,6 +222,10 @@ obj PostgresRelBackend(PostgresBackend) {
         node_type: (str | None),
         direction: int,
         slc: (slice | None) = None
+    ) -> (set[UUID] | list[UUID] | None);
+
+    def resolve_chain_sql(
+        origin_ids: set[UUID], chain: list[tuple], slc: (slice | None) = None
     ) -> (set[UUID] | list[UUID] | None);
 }
 

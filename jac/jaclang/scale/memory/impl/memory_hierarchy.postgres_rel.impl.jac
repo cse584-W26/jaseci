@@ -171,6 +171,114 @@ impl PostgresRelBackend._apply_intent(conn: Any, intent: WriteIntent) -> None {
 }
 
 
+"""Answer a WHOLE hop-chain in one SQL round-trip: one CTE per hop, each
+joining the edges table against the previous hop's frontier and deduping
+via GROUP BY (prevents fan-out blowup). Node-type filters join anchors
+per hop (edges-side cast, see resolve_hop_sql). Final hop: creation-order
+(MIN seq) with the slice applied Python-side; JAC_ORDER_PUSHDOWN applies
+to the final hop's node type. None on failure/empty-chain -> caller falls
+back to the per-hop ladder. This is what turns k hops into 1 round-trip
+(the depth-slope lever); Mongo has no equivalent join to push into."""
+impl PostgresRelBackend.resolve_chain_sql(
+    origin_ids: set[UUID], chain: list[tuple], slc: (slice | None) = None
+) -> (set[UUID] | list[UUID] | None) {
+    if not chain {
+        return None;
+    }
+    if not origin_ids {
+        return [] if slc is not None else set();
+    }
+    n = len(chain);
+    (_, last_node_type, _) = chain[-1];
+    order_cfg = _order_pushdown_cfg(last_node_type);
+    ctes: list[str] = ["h0 AS (SELECT unnest(%s::uuid[]) AS out_id)"];
+    params: list = [list(origin_ids)];
+    for (i, hop) in enumerate(chain) {
+        (edge_type, node_type, direction) = hop;
+        etype_pred = " AND e.edge_type = %s" if edge_type is not None else "";
+        if direction == 2 {
+            legs = [('source', 'target', False), ('target', 'source', True)];
+        } elif direction == 1 {
+            legs = [('target', 'source', False), ('source', 'target', True)];
+        } else {
+            legs = [('source', 'target', False), ('target', 'source', False)];
+        }
+        parts: list[str] = [];
+        leg_params: list = [];
+        for (src_col, dst_col, undirected_only) in legs {
+            upred = " AND e.is_undirected" if undirected_only else "";
+            parts.append(
+                f"SELECT e.{dst_col} AS out_id, e.seq AS seq FROM edges e "
+                f"JOIN h{i} p ON e.{src_col} = p.out_id "
+                f"WHERE TRUE{etype_pred}{upred}"
+            );
+            if edge_type is not None {
+                leg_params.append(edge_type);
+            }
+        }
+        inner = " UNION ALL ".join(parts);
+        type_join = "";
+        if node_type is not None {
+            type_join = (
+                f" JOIN anchors a{i} ON a{i}.id = dst.out_id::text "
+                f"AND a{i}.arch_type = %s"
+            );
+        }
+        is_last = i == n - 1;
+        if is_last and order_cfg is not None {
+            # Order key carried out of the final CTE for the outer ORDER BY.
+            # Params bind by placeholder position in the CTE TEXT: the ordkey
+            # %s sits in the SELECT list, BEFORE the FROM-subquery leg params
+            # and the arch_type join predicate.
+            ctes.append(
+                f"h{i + 1} AS (SELECT dst.out_id, MIN(dst.seq) AS seq, "
+                f"MAX(a{i}.data->'archetype'->>%s) AS ordkey "
+                f"FROM ({inner}) dst{type_join} GROUP BY dst.out_id)"
+            );
+            params.append(order_cfg[1]);
+            params.extend(leg_params);
+        } else {
+            ctes.append(
+                f"h{i + 1} AS (SELECT dst.out_id, MIN(dst.seq) AS seq "
+                f"FROM ({inner}) dst{type_join} GROUP BY dst.out_id)"
+            );
+            params.extend(leg_params);
+        }
+        if node_type is not None {
+            params.append(node_type);
+        }
+    }
+    order_by = f"ordkey {order_cfg[2]}" if order_cfg is not None else "seq";
+    sql = f"WITH {', '.join(ctes)} SELECT out_id FROM h{n} ORDER BY {order_by}";
+    try {
+        conn: any = self.__pool__.getconn();
+        try {
+            conn.autocommit = True;
+            rows: any = conn.execute(sql, tuple(params)).fetchall();
+        } finally {
+            conn.autocommit = False;
+            self.__pool__.putconn(conn);
+        }
+        self.rel_chain_count += 1;
+        ordered = [r[0] for r in rows];
+        if slc is not None {
+            return ordered[slc];
+        }
+        if order_cfg is not None {
+            return ordered;
+        }
+        return set(ordered);
+    } except Exception as e {
+        self.rel_hop_fallback_count += 1;
+        logger.debug(
+            f"PostgresRelBackend.resolve_chain_sql fell back: "
+            f"{type(e).__name__}: {e}"
+        );
+        return None;
+    }
+}
+
+
 """Answer one hop from the edges table. Returns None on any failure so the
 resolver falls back to the blob/walk ladder (never raises into a request).
 
