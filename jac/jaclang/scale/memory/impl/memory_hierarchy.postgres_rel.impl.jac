@@ -55,6 +55,28 @@ impl PostgresRelBackend.postinit -> None {
 }
 
 
+"""EXPERIMENT FLAG (default off): JAC_ORDER_PUSHDOWN="NodeType:field:desc"
+pushes result ordering into PG for hops whose node filter matches NodeType,
+ordering by that archetype JSON field. Returns (type, field, 'ASC'|'DESC')
+or None. Perf probe for sort-in-PG-vs-python; the durable home for this is
+ordered-traversal language syntax later (see PORT_NOTES_REL.md)."""
+def _order_pushdown_cfg(node_type: (str | None)) -> (tuple | None) {
+    if node_type is None {
+        return None;
+    }
+    raw = os.environ.get("JAC_ORDER_PUSHDOWN");
+    if not raw {
+        return None;
+    }
+    parts = raw.split(":");
+    if len(parts) != 3 or parts[0] != node_type or not parts[1] {
+        return None;
+    }
+    direction = 'DESC' if parts[2].lower() == 'desc' else 'ASC';
+    return (parts[0], parts[1], direction);
+}
+
+
 """Advertise SQL topology. JAC_TOPOLOGY_SQL=0 turns the resolver dispatch off
 while keeping rel storage (ablation axis: rel-storage-with-GTI-hops vs
 rel-storage-with-SQL-hops)."""
@@ -202,10 +224,23 @@ impl PostgresRelBackend.resolve_hop_sql(
         type_join = " JOIN anchors a ON a.id = dst.out_id::text AND a.arch_type = %s";
         params.append(node_type);
     }
-    sql = (
-        f"SELECT dst.out_id FROM ({inner}) dst{type_join} "
-        "GROUP BY dst.out_id ORDER BY MIN(dst.seq)"
-    );
+    order_cfg = _order_pushdown_cfg(node_type);
+    if order_cfg is not None {
+        # Field ordering in PG (experiment flag). ISO timestamps sort
+        # correctly as text; MAX() satisfies GROUP BY (data is functionally
+        # dependent on out_id but PG wants an aggregate).
+        sql = (
+            f"SELECT dst.out_id FROM ({inner}) dst{type_join} "
+            f"GROUP BY dst.out_id "
+            f"ORDER BY MAX(a.data->'archetype'->>%s) {order_cfg[2]}"
+        );
+        params.append(order_cfg[1]);
+    } else {
+        sql = (
+            f"SELECT dst.out_id FROM ({inner}) dst{type_join} "
+            "GROUP BY dst.out_id ORDER BY MIN(dst.seq)"
+        );
+    }
     try {
         conn: any = self.__pool__.getconn();
         try {
@@ -219,6 +254,11 @@ impl PostgresRelBackend.resolve_hop_sql(
         ordered = [r[0] for r in rows];  # UUID column -> uuid.UUID objects
         if slc is not None {
             return ordered[slc];
+        }
+        if order_cfg is not None {
+            # Ordered list result: the resolver materializes lists in order,
+            # so PG's ORDER BY survives into the walker's visit sequence.
+            return ordered;
         }
         return set(ordered);
     } except Exception as e {

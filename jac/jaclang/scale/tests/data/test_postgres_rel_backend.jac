@@ -409,6 +409,32 @@ test "hop: ordered slice returns creation order with first-seen dedup" {
 }
 
 
+test "hop: JAC_ORDER_PUSHDOWN orders by archetype field in PG" {
+    be: any = _fresh();
+    g: any = _seed_graph(be);
+    prior: any = os.environ.pop('JAC_ORDER_PUSHDOWN', None);
+    try {
+        os.environ['JAC_ORDER_PUSHDOWN'] = 'RelPerson:name:asc';
+        res: any = be.resolve_hop_sql({g['a'].id}, 'RelKnows', 'RelPerson', 2, None);
+        # Flag match -> ordered LIST (asc by name: B, C, U), not a set.
+        assert res == [g['b'].id, g['c'].id, g['u'].id];
+        os.environ['JAC_ORDER_PUSHDOWN'] = 'RelPerson:name:desc';
+        res2: any = be.resolve_hop_sql({g['a'].id}, 'RelKnows', 'RelPerson', 2, None);
+        assert res2 == [g['u'].id, g['c'].id, g['b'].id];
+        # Non-matching node type -> untouched set semantics.
+        res3: any = be.resolve_hop_sql({g['a'].id}, None, 'RelPet', 2, None);
+        assert res3 == {g['p'].id};
+    } finally {
+        if prior is None {
+            os.environ.pop('JAC_ORDER_PUSHDOWN', None);
+        } else {
+            os.environ['JAC_ORDER_PUSHDOWN'] = prior;
+        }
+    }
+    be.close();
+}
+
+
 test "hop: empty frontier and unknown type return empty not None" {
     be: any = _fresh();
     g: any = _seed_graph(be);
