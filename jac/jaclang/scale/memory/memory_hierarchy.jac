@@ -183,6 +183,9 @@ obj PostgresBackend(PersistentMemory) {
     # Load-bearing (not abstract): single round-trip for N ids.
     def batch_get(ids: list[UUID]) -> dict[UUID, Anchor];
     def apply(changeset: ChangeSet) -> ApplyReport;
+    # Per-intent dispatch seam: subclasses extend the flush unit (e.g. the
+    # rel backend's edge-row maintenance) without copying apply()'s ladder.
+    def _apply_intent(conn: Any, intent: WriteIntent) -> None;
     def inspect_summary -> dict;
     def list_quarantined(limit: int = 50) -> list;
     def show_quarantined(id_prefix: str) -> (dict | None);
@@ -199,7 +202,29 @@ obj PostgresBackend(PersistentMemory) {
     def fsck(repair: bool = False) -> dict;
 }
 
-enum PersistenceType { NONE, MONGODB, SQLITE, POSTGRES }
+obj PostgresRelBackend(PostgresBackend) {
+    # Relational-topology variant: edges as rows answered by indexed SQL
+    # instead of per-root GTI blob decode (see ARCH_REL.md). Anchor storage,
+    # OCC merge-write, quarantine, fsck are inherited from PostgresBackend;
+    # this subclass adds the edges index table + a SQL hop resolver the
+    # traversal resolver dispatches to via the 'topology_sql' capability.
+    has rel_hop_count: int = 0,
+        rel_hop_fallback_count: int = 0;
+
+    def postinit -> None;
+    def capabilities -> set[str];
+    def put(anchor: Anchor) -> None;
+    def _apply_intent(conn: Any, intent: WriteIntent) -> None;
+    def resolve_hop_sql(
+        current_ids: set[UUID],
+        edge_type: (str | None),
+        node_type: (str | None),
+        direction: int,
+        slc: (slice | None) = None
+    ) -> (set[UUID] | list[UUID] | None);
+}
+
+enum PersistenceType { NONE, MONGODB, SQLITE, POSTGRES, POSTGRES_REL }
 
 obj ScaleTieredMemory(TieredMemory) {
     has _cache_available: bool = False,

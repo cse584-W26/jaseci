@@ -576,6 +576,14 @@ def _pg_apply_one(conn: any, intent: WriteIntent) -> None {
 }
 
 
+"""Per-intent dispatch seam for apply()'s ladder. Subclasses (PostgresRelBackend)
+extend the flush unit here -- e.g. edge-row maintenance in the same
+transaction -- without copying apply()'s error/rollback machinery."""
+impl PostgresBackend._apply_intent(conn: Any, intent: WriteIntent) -> None {
+    _pg_apply_one(conn, intent);
+}
+
+
 # =============================================================================
 # Operator-surface helpers — quarantine recovery / aliases / fsck (P4)
 # =============================================================================
@@ -1008,7 +1016,7 @@ impl PostgresBackend.apply(changeset: ChangeSet) -> ApplyReport {
                         continue;
                     }
                     try {
-                        _pg_apply_one(conn, intent);
+                        self._apply_intent(conn, intent);
                         apply_report.applied.append(intent.anchor.id);
                     } except WriteConflict as wc {
                         # OCC miss: poison like any failed write (skips
