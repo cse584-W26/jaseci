@@ -296,7 +296,10 @@ test "rows: conflicted unit rolls back edge rows" {
     b: any = g['b'];
     # New edge + a doomed CAS delta in the same unit: apply() rolls the whole
     # unit back on conflict, so the new edge row must vanish with it.
+    # _pg_merge_write's populated path derives the delta from edge_delta()
+    # (initial-ids snapshot), not intent.edges_added -- snapshot before append.
     e6: any = _tedge(RelKnows(), b, a);
+    b._initial_edge_ids = frozenset({ed.id for ed in b.edges});
     cs: any = ChangeSet();
     cs.record_create(e6);
     b.edges.append(e6);
