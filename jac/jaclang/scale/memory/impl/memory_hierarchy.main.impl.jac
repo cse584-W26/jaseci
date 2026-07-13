@@ -115,6 +115,36 @@ impl ScaleTieredMemory.postinit -> None {
         self.l3 = pg_backend;
         self._persistence_type = PersistenceType.POSTGRES;
         logger.debug("Postgres persistence backend initialized");
+    } elif backend == 'postgres-rel' {
+        db_config = get_scale_config().get_database_config();
+        if not db_config.get('postgresql_uri') {
+            raise RuntimeError(
+                "backend='postgres-rel' requires postgresql_uri "
+                "(set POSTGRESQL_URI or [scale.database].postgresql_uri)"
+            );
+        }
+        import from jaclang.scale._optdeps.psycopg { HAS_PSYCOPG }
+        if not HAS_PSYCOPG {
+            raise RuntimeError(
+                "backend='postgres-rel' selected but psycopg is not installed "
+                "(add the data.postgres capability and run 'jac install')"
+            );
+        }
+        try {
+            rel_backend = PostgresRelBackend(
+                dsn=cast(str, db_config.get('postgresql_uri'))
+            );
+            if not rel_backend.is_available() {
+                raise RuntimeError("PostgresRelBackend reported not available");
+            }
+        } except Exception as e {
+            raise RuntimeError(
+                f"backend='postgres-rel' selected but Postgres is unavailable: {e}"
+            );
+        }
+        self.l3 = rel_backend;
+        self._persistence_type = PersistenceType.POSTGRES_REL;
+        logger.debug("Postgres-rel persistence backend initialized");
     } elif backend == 'mongodb' {
         mongo_backend = MongoBackend();
         if not mongo_backend.is_available() {
@@ -135,8 +165,8 @@ impl ScaleTieredMemory.postinit -> None {
         # Unknown backend value (e.g. a typo like 'postgress'): fail loud
         # instead of silently falling through to a fallback.
         raise RuntimeError(
-            f"unknown backend '{backend}' (expected 'postgres', 'mongodb', "
-            "'sqlite', or 'auto')"
+            f"unknown backend '{backend}' (expected 'postgres', 'postgres-rel', "
+            "'mongodb', 'sqlite', or 'auto')"
         );
     }
 }
