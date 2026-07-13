@@ -109,7 +109,10 @@ Subclass overrides the per-intent handler to add, inside the SAME transaction:
 - `EDGE_DELETE` / `is_delete()` on an edge → parent deletes anchor row; we also `DELETE FROM edges WHERE edge_id=%s`.
 - `NODE_DELETE` → parent deletes node row; we also `DELETE FROM edges WHERE source=%s OR target=%s`
   (defensive sweep; Python cascade usually staged the edge deletes already).
-- `delete(id)` override (the eager out-of-txn path, D6): parent row delete + edges sweep.
+- ~~`delete(id)` override~~ CORRECTED at build time: `PostgresBackend.delete(id)` is a
+  deliberate NO-OP (issue #6587; durable deletes flow only through apply intents), so the
+  eager out-of-txn path from D6 does not exist on PG and no override is needed. Sweeps live
+  in the apply path; `put()` (seeding) also maintains the edge row.
 - Everything else (merge-write, OCC, quarantine, INERROR guard) inherited untouched.
 
 Source/target/type read from the EdgeAnchor in the intent (serializer keys `source`, `target`,

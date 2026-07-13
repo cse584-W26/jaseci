@@ -4,8 +4,15 @@
 
 | Env var | Effect |
 |---|---|
-| `JAC_SCALE_BACKEND` | `auto` (default, untouched historical hook→Mongo→Sqlite path) \| `postgres` \| `mongodb` \| `sqlite`. Unknown value or unavailable backend on a non-`auto` value **raises** - no silent fallback. |
-| `POSTGRESQL_URI` | libpq connection string. Required when `JAC_SCALE_BACKEND=postgres` - missing URI raises (never falls back to ambient libpq env like `PGHOST`). |
+| `JAC_SCALE_BACKEND` | `auto` (default, untouched historical hook→Mongo→Sqlite path) \| `postgres` \| `postgres-rel` \| `mongodb` \| `sqlite`. Unknown value or unavailable backend on a non-`auto` value **raises** - no silent fallback. |
+| `POSTGRESQL_URI` | libpq connection string. Required when `JAC_SCALE_BACKEND=postgres` or `postgres-rel` - missing URI raises (never falls back to ambient libpq env like `PGHOST`). |
+| `JAC_TOPOLOGY_SQL` | `postgres-rel` only: `0`/`false` disables the SQL hop resolver (rel storage stays, hops go back to GTI blob/walk). Default on. Ablation control - see `PORT_NOTES_REL.md`. |
+
+`postgres-rel` = the edges-as-rows backend (KV anchor store + `edges` index table answering
+hops via indexed SQL; works with `JAC_TOPOLOGY_INDEX=0`, i.e. no GTI blobs at all). Seed through
+it (walkers/apply or put) - a KV-seeded database has NO edge rows, so selecting postgres-rel on
+one yields empty traversals. Rel test suites use database `jactest_rel` (`POSTGRESQL_REL_URI`),
+disjoint from the KV suites' `jactest`.
 
 Env wins over `jac.toml`'s `[scale.database]` table (`backend`, `postgresql_uri` keys - top-level
 `[scale]`, **not** `[plugins.scale]`).
