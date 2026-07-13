@@ -217,8 +217,9 @@ test "rows: EDGE_CREATE inserts edge row in same unit" {
     raw: any = _raw();
     rows: any = _edge_rows(raw, "edge_id = %s", (str(e.id), ));
     assert len(rows) == 1;
-    assert rows[0][1] == str(a.id);
-    assert rows[0][2] == str(b.id);
+    # UUID columns: psycopg returns uuid.UUID objects.
+    assert rows[0][1] == a.id;
+    assert rows[0][2] == b.id;
     assert rows[0][3] == 'RelKnows';
     assert rows[0][4] is False;
     anch: any = raw.execute(

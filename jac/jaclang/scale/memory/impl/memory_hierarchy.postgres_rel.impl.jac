@@ -21,9 +21,9 @@ glob _pgrel_schema_lock = threading.Lock(),
 glob _REL_SCHEMA_SQL: list[str] = [
          """
     CREATE TABLE IF NOT EXISTS edges (
-        edge_id       TEXT PRIMARY KEY,
-        source        TEXT NOT NULL,
-        target        TEXT NOT NULL,
+        edge_id       UUID PRIMARY KEY,
+        source        UUID NOT NULL,
+        target        UUID NOT NULL,
         edge_type     TEXT NOT NULL,
         is_undirected BOOLEAN NOT NULL DEFAULT FALSE,
         seq           BIGINT GENERATED ALWAYS AS IDENTITY
@@ -87,10 +87,12 @@ def _rel_edge_params(anchor: Anchor) -> (tuple | None) {
     or anchor.target is None {
         return None;
     }
+    # Native uuid binds (columns are UUID): psycopg adapts uuid.UUID directly;
+    # no str() round-trip on either side of the boundary.
     return (
-        str(anchor.id),
-        str(anchor.source.id),
-        str(anchor.target.id),
+        anchor.id,
+        anchor.source.id,
+        anchor.target.id,
         type(anchor.archetype).__name__,
         bool(anchor.is_undirected)
     );
@@ -131,7 +133,7 @@ parent did. Unpopulated/stub EDGE_CREATE anchors are skipped (cannot happen
 via record_create, which only stages populated edges)."""
 impl PostgresRelBackend._apply_intent(conn: Any, intent: WriteIntent) -> None {
     anchor = intent.anchor;
-    key = str(anchor.id);
+    key = anchor.id;
     if intent.op == WriteOp.NODE_DELETE {
         conn.execute("DELETE FROM edges WHERE source = %s OR target = %s", (key, key));
     } elif intent.op == WriteOp.EDGE_DELETE {
@@ -168,7 +170,7 @@ impl PostgresRelBackend.resolve_hop_sql(
     if not current_ids {
         return [] if slc is not None else set();
     }
-    ids = [str(u) for u in current_ids];
+    ids = list(current_ids);  # uuid.UUID binds straight to the UUID[] param
     etype_pred = " AND e.edge_type = %s" if edge_type is not None else "";
 
     # (src_col, dst_col, undirected_only) legs UNION ALL'd per direction.
@@ -195,7 +197,9 @@ impl PostgresRelBackend.resolve_hop_sql(
     inner = " UNION ALL ".join(parts);
     type_join = "";
     if node_type is not None {
-        type_join = " JOIN anchors a ON a.id = dst.out_id AND a.arch_type = %s";
+        # anchors.id stays TEXT (KV-shared table); cast on the edges side so
+        # the anchors PK index remains usable.
+        type_join = " JOIN anchors a ON a.id = dst.out_id::text AND a.arch_type = %s";
         params.append(node_type);
     }
     sql = (
@@ -212,7 +216,7 @@ impl PostgresRelBackend.resolve_hop_sql(
             self.__pool__.putconn(conn);
         }
         self.rel_hop_count += 1;
-        ordered = [UUID(r[0]) for r in rows];
+        ordered = [r[0] for r in rows];  # UUID column -> uuid.UUID objects
         if slc is not None {
             return ordered[slc];
         }
