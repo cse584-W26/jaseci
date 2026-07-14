@@ -791,6 +791,43 @@ impl Serializer._deserialize_archetype(
     }
 }
 
+impl Serializer.deserialize_projected(
+    anchor_id: UUID,
+    arch_module: str,
+    arch_type: str,
+    fields: dict[str, object],
+    projected: set[str]
+) -> (object | None) {
+    resolved = Serializer._get_class(arch_module, arch_type);
+    if resolved is None {
+        return None;
+    }
+    cls = cast(type, resolved);
+    try {
+        arch: object = cls.__new__(cls);
+        for f in projected {
+            if f in fields {
+                setattr(arch, f, Serializer._deserialize_value(fields[f]));
+            }
+        }
+        anchor = NodeAnchor.__new__(NodeAnchor);
+        anchor.id = anchor_id;
+        anchor.root = None;
+        anchor.persistent = True;
+        anchor.edges = [];
+        anchor.hash = 0;
+        anchor.version = 0;
+        anchor.access = Permission();
+        anchor.archetype = arch;
+        setattr(arch, '__jac__', anchor);
+        setattr(anchor, '_projected_fields', set(projected));
+        return anchor;
+    } except Exception as e {
+        logger.error(f"Failed to build projected anchor {arch_type}: {e}");
+        return None;
+    }
+}
+
 impl Serializer.serialize_fields(
     anchor: object, field_names: set[str]
 ) -> dict[str, object] {

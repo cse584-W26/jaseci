@@ -76,6 +76,14 @@ obj Serializer {
         data: dict[str, object], anchor: object
     ) -> (object | None);
 
+    static def deserialize_projected(
+        anchor_id: UUID,
+        arch_module: str,
+        arch_type: str,
+        fields: dict[str, object],
+        projected: set[str]
+    ) -> (object | None);
+
     static def _compute_hash(anchor: object) -> int;
     static def serialize_fields(
         anchor: object, field_names: set[str]
