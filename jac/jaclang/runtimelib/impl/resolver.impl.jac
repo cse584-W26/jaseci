@@ -132,6 +132,45 @@ def _trace_final(strategy: str, narrowed: int, extra: str = '') -> None {
 }
 
 
+def _projection_for(
+    mem: Memory, node_type: (str | None), has_post_filter: bool
+) -> (set[str] | None) {
+    if node_type is None or has_post_filter {
+        return None;
+    }
+    import from jaclang.runtimelib.utils { projection_cfg }
+    cfg = projection_cfg();
+    if node_type not in cfg {
+        return None;
+    }
+    import from jaclang.runtimelib.memory { _read_only_enabled }
+    if not _read_only_enabled() {
+        return None;
+    }
+    if 'projection' not in mem.capabilities() {
+        return None;
+    }
+    return cfg[node_type];
+}
+
+
+def _materialize_ids_projected(
+    mem: Memory, ids: list, node_type: (str | None), projection: set[str]
+) -> (list[NodeAnchor] | None) {
+    plan = QueryPlan(id_in=set(ids), node_type_final=node_type, projection=projection);
+    if not (plan.needs() <= mem.capabilities()) {
+        return None;
+    }
+    fetched = _try_pushdown(mem, plan);
+    by_id = {a.id: a for a in fetched};
+    return [
+        by_id[i]
+        for i in ids
+        if i in by_id
+    ];
+}
+
+
 def _try_pushdown(mem: Memory, plan: QueryPlan) -> list[NodeAnchor] {
     result: list[NodeAnchor] = [];
     for anchor in mem.execute_plan(plan) {
@@ -438,6 +477,16 @@ impl resolve_path_anchors(
         );
     }
     if isinstance(result, list) {
+        proj_b = _projection_for(mem, last_hop.node_type, False);
+        if proj_b is not None and 'topology_sql' in mem.capabilities() {
+            projected = _materialize_ids_projected(
+                mem, result, last_hop.node_type, proj_b
+            );
+            if projected is not None {
+                _trace_final('projected-ordered', len(projected));
+                return projected;
+            }
+        }
         return _materialize_ids(mem, result);
     }
 
@@ -450,6 +499,10 @@ impl resolve_path_anchors(
             slc=slc,
             post_filter=post_filter,
         );
+        proj_a = _projection_for(mem, last_hop.node_type, post_filter is not None);
+        if proj_a is not None {
+            plan.projection = proj_a;
+        }
         if plan.needs() <= mem.capabilities() {
             _trace_final('pushdown', len(result));
             return _try_pushdown(mem, plan);
