@@ -24,6 +24,20 @@ def _read_only_enabled -> bool {
     }
 }
 
+def _lean_response_enabled -> bool {
+    env = os.environ.get("JAC_API_LEAN_RESPONSE");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes", "on");
+    }
+    try {
+        import from jaclang.project.config { get_config }
+        cfg = get_config();
+        return cfg is not None and cfg.run.api_lean_response;
+    } except Exception {
+        return False;
+    }
+}
+
 impl UserManager.postinit -> None {
     import sqlite3;
     import threading;
@@ -369,11 +383,23 @@ impl ExecutionManager._finalize_call_response(
         return reports;
     }
 
+    ctx = Jac.get_context();
+    if (
+        _lean_response_enabled()
+        and isinstance(reports, list)
+        and len(reports) == 1
+        and not ctx.diagnostics
+    ) {
+        lone = Serializer.serialize(reports[0], api_mode=True);
+        if isinstance(lone, dict) {
+            return lone;
+        }
+    }
+
     envelope: dict[str, JsonValue] = {
         'result': Serializer.serialize(result, api_mode=True),
         'reports': Serializer.serialize(reports, api_mode=True)
     };
-    ctx = Jac.get_context();
     if ctx.diagnostics {
         envelope['warnings'] = [d.to_dict() for d in ctx.diagnostics];
         ctx.diagnostics.clear();

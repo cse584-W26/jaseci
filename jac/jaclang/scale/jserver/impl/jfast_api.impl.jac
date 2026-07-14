@@ -1,5 +1,20 @@
 import logging;
 
+def _lean_response_enabled -> bool {
+    import os;
+    env = os.environ.get("JAC_API_LEAN_RESPONSE");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes", "on");
+    }
+    try {
+        import from jaclang.project.config { get_config }
+        cfg = get_config();
+        return cfg is not None and cfg.run.api_lean_response;
+    } except Exception {
+        return False;
+    }
+}
+
 def _convert_transport_response_to_json_response(
     transport_response: TransportResponse
 ) -> JSONResponse {
@@ -10,6 +25,24 @@ def _convert_transport_response_to_json_response(
     status = 200 if transport_response.ok else 500;
     if transport_response.meta and transport_response.meta.extra {
         status = transport_response.meta.extra.get('http_status', status);
+    }
+
+    if (
+        _lean_response_enabled()
+        and transport_response.ok
+        and isinstance(transport_response.data, dict)
+        and isinstance(transport_response.data.get('server_total_ms'), (int, float))
+    ) {
+        # Lean mode: bare report body + timing lifted to a header, matching
+        # the baseline engines' contract (only fires on the unwrapped
+        # single-report shape, which is the only one carrying the key).
+        lean_body = dict(transport_response.data);
+        ms = lean_body.pop('server_total_ms');
+        return JSONResponse(
+            status_code=status,
+            content=lean_body,
+            headers={'x-server-total-ms': f"{ms:.3f}"}
+        );
     }
 
     response_body = {
