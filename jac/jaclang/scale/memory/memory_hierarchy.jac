@@ -22,7 +22,7 @@ import from jaclang.runtimelib.memory {
     SqliteMemory
 }
 import from jaclang.runtimelib.query_plan { QueryPlan }
-import from jaclang.runtimelib.utils { storage_key, to_uuid }
+import from jaclang.runtimelib.utils { projection_cfg, storage_key, to_uuid }
 import from jaclang.runtimelib.serializer { Serializer }
 import from jaclang.runtimelib.typecache { get_field_types }
 import from jaclang.scale.config.config_loader { get_scale_config }
@@ -211,10 +211,12 @@ obj PostgresRelBackend(PostgresBackend) {
     # traversal resolver dispatches to via the 'topology_sql' capability.
     has rel_hop_count: int = 0,
         rel_chain_count: int = 0,
-        rel_hop_fallback_count: int = 0;
+        rel_hop_fallback_count: int = 0,
+        rel_projection_count: int = 0;
 
     def postinit -> None;
     def capabilities -> set[str];
+    def execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None];
     def put(anchor: Anchor) -> None;
     def _apply_intent(conn: Any, intent: WriteIntent) -> None;
     def resolve_hop_sql(

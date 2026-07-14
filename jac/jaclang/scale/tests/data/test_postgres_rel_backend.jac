@@ -22,6 +22,7 @@ import from jaclang.jac0core.runtime { JacRuntime }
 import from jaclang.runtimelib.context { ExecutionContext }
 import from jaclang.runtimelib.changeset { ChangeSet, WriteOp, ApplyReport }
 import from jaclang.runtimelib.serializer { Serializer }
+import from jaclang.runtimelib.query_plan { QueryPlan }
 import from jaclang.project.config { JacConfig, set_config }
 import from jaclang.scale.memory.memory_hierarchy { PostgresRelBackend }
 
@@ -676,5 +677,101 @@ test "caps: topology_sql advertised; JAC_TOPOLOGY_SQL=0 empties it" {
             os.environ['JAC_TOPOLOGY_SQL'] = prior;
         }
     }
+    be.close();
+}
+
+
+# ---------------------------------------------------------------------------
+# proj: projection pushdown (execute_plan + env-gated capabilities)
+# ---------------------------------------------------------------------------
+node RelProjP {
+    has name: str = "",
+        age: int = 0,
+        tags: list[str] = [];
+}
+
+
+"""Seed one RelProjP under a fresh backend; returns (be, anchor)."""
+def _seed_proj -> tuple {
+    be: any = _fresh();
+    r: any = _root_anchor();
+    p: any = _node(RelProjP(name="ann", age=3, tags=["x", "y"]), r);
+    cs: any = ChangeSet();
+    cs.record_create(r);
+    cs.record_create(p);
+    rep: any = be.apply(cs);
+    assert not rep.failed;
+    return (be, p);
+}
+
+
+test "proj: capabilities gated on JAC_PROJECTION env" {
+    be: any = _fresh();
+    prior: any = os.environ.pop('JAC_PROJECTION', None);
+    prior_topo: any = os.environ.pop('JAC_TOPOLOGY_SQL', None);
+    try {
+        assert be.capabilities() == {'topology_sql'};
+        os.environ['JAC_PROJECTION'] = 'RelProjP:name';
+        assert be.capabilities() == {
+            'topology_sql',
+            'id_in',
+            'type_pushdown',
+            'projection'
+        };
+        os.environ['JAC_TOPOLOGY_SQL'] = '0';
+        assert be.capabilities() == {'id_in', 'type_pushdown', 'projection'} , (
+            "kill switches stay independent: TOPOLOGY_SQL=0 must not disable projection caps"
+        );
+    } finally {
+        os.environ.pop('JAC_PROJECTION', None);
+        if prior is not None {
+            os.environ['JAC_PROJECTION'] = prior;
+        }
+        if prior_topo is not None {
+            os.environ['JAC_TOPOLOGY_SQL'] = prior_topo;
+        }
+    }
+    be.close();
+}
+
+
+test "proj: execute_plan returns slim marked anchor with jsonb types" {
+    (be, p) = _seed_proj();
+    plan: any = QueryPlan(
+        id_in={p.id}, node_type_final="RelProjP", projection={"name", "tags"}
+    );
+    res: any = list(be.execute_plan(plan));
+    assert len(res) == 1;
+    assert res[0].id == p.id;
+    assert res[0]._projected_fields == {"name", "tags"};
+    assert res[0].archetype.name == "ann";
+    assert res[0].archetype.tags == ["x", "y"];
+    assert res[0].archetype.age == 0;
+    assert res[0].edges == [];
+    assert be.rel_projection_count == 1;
+    be.close();
+}
+
+
+test "proj: execute_plan arch_type filter excludes other types" {
+    (be, p) = _seed_proj();
+    plan: any = QueryPlan(
+        id_in={p.id}, node_type_final="RelPerson", projection={"name"}
+    );
+    res: any = list(be.execute_plan(plan));
+    assert res == [];
+    be.close();
+}
+
+
+test "proj: execute_plan undeclared type full-hydrates (caps-leak guard)" {
+    (be, p) = _seed_proj();
+    plan: any = QueryPlan(id_in={p.id}, node_type_final="RelProjP");
+    res: any = list(be.execute_plan(plan));
+    assert len(res) == 1;
+    assert res[0]?._projected_fields is None;
+    assert res[0].archetype.age == 3;
+    assert res[0].archetype.tags == ["x", "y"];
+    assert be.rel_projection_count == 0;
     be.close();
 }

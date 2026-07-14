@@ -81,11 +81,82 @@ def _order_pushdown_cfg(node_type: (str | None)) -> (tuple | None) {
 while keeping rel storage (ablation axis: rel-storage-with-GTI-hops vs
 rel-storage-with-SQL-hops)."""
 impl PostgresRelBackend.capabilities -> set[str] {
+    caps: set[str] = set();
     env = os.environ.get("JAC_TOPOLOGY_SQL");
-    if env is not None and env.lower() in ("0", "false", "no", "off") {
-        return set();
+    if env is None or env.lower() not in ("0", "false", "no", "off") {
+        caps.add('topology_sql');
     }
-    return {'topology_sql'};
+    if projection_cfg() {
+        # Independent of the topology kill switch: these route the final-hop
+        # QueryPlan tail through execute_plan (projection + full-hydrate
+        # fallback), which works with or without SQL hops.
+        caps |= {'id_in', 'type_pushdown', 'projection'};
+    }
+    return caps;
+}
+
+
+"""Projected payload fetch for the final-hop QueryPlan tail. plan.projection
+set -> narrow SELECT of jsonb paths -> slim marked anchors (never L1/L2
+cached, never dirty-scanned). plan.projection None -> full-hydrate fallback:
+with projection caps advertised, plans for UNDECLARED types also pass the
+needs() subset test and route here; returning empty would silently empty the
+walker's result (caps-leak guard from review)."""
+impl PostgresRelBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None] {
+    if plan.id_in is None {
+        return;
+    }
+    if plan.projection is None {
+        for anchor in self.batch_get(list(plan.id_in)).values() {
+            if (
+                plan.node_type_final is None
+                or type(anchor.__dict__.get('archetype')).__name__ == plan.node_type_final
+            ) {
+                yield anchor;
+            }
+        }
+        return;
+    }
+    fields = sorted(plan.projection);
+    cols = ", ".join(["data->'archetype'->%s"] * len(fields));
+    sql = f"SELECT id, arch_module, arch_type, {cols} FROM anchors WHERE id = ANY(%s)";
+    params: list = list(fields);  # SELECT-list binds precede WHERE binds
+    params.append([str(u) for u in plan.id_in]);
+    if plan.node_type_final is not None {
+        sql += " AND arch_type = %s";
+        params.append(plan.node_type_final);
+    }
+    try {
+        conn: any = self.__pool__.getconn();
+        try {
+            conn.autocommit = True;
+            rows: any = conn.execute(sql, tuple(params)).fetchall();
+        } finally {
+            conn.autocommit = False;
+            self.__pool__.putconn(conn);
+        }
+    } except Exception as e {
+        logger.debug(
+            f"PostgresRelBackend.execute_plan failed: {type(e).__name__}: {e}"
+        );
+        return;
+    }
+    for row in rows {
+        r: any = row;
+        fvals: dict = {};
+        for i in range(len(fields)) {
+            if r[3 + i] is not None {
+                fvals[fields[i]] = r[3 + i];
+            }
+        }
+        slim = Serializer.deserialize_projected(
+            to_uuid(r[0]), r[1] or '', r[2] or '', fvals, plan.projection
+        );
+        if slim is not None {
+            self.rel_projection_count += 1;
+            yield slim;
+        }
+    }
 }
 
 
