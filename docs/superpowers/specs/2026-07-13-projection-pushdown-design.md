@@ -1,150 +1,238 @@
-# Projection Pushdown for pg-rel -- Design Spec (NO IMPLEMENTATION YET)
+# Projection Pushdown (Mongo + PG-rel) + UUID-Intern Rider -- Final Spec
 
-Date: 2026-07-13. Status: SPEC ONLY by user directive -- ideation + decisions
-documented for review; implementation deliberately not started. Companion to
-`2026-07-13-pg-rel-backend-design.md` (edges-as-rows MVP, since built + validated).
+Date: 2026-07-13 (revised post-scout). Status: FINAL, awaiting user review.
+Supersedes the draft of the same name. Companion:
+`2026-07-13-pg-rel-backend-design.md`. All file:line refs = worktree
+`JaseciFork-pgrel` @ `feat/pg-rel-mvp` (e979b5083).
 
 ## Problem
 
-The measured read-path tail on the feed workload is hydration: serializer ~25% +
-anchor hydration ~17% of active samples (dump-loop profile, 2026-07-10), and the
-same-session A/B showed hop resolution moving to SQL leaves ~113ms p50 -- the
-remaining bill is dominated by deserializing ~2,550 full anchors per request to
-produce view objects that use a subset of each anchor's payload.
+Post pg-rel, feed p50 ~113-120ms; remaining bill is hydration: ~2,550 full
+anchors deserialized per request (serializer ~25% + hydration ~17% of active
+samples) to build views that read a subset of anchor machinery. Projection
+pushdown = fetch only needed archetype fields, skip per-anchor fixed costs.
+Bundled with the already-built ORDER+slice hop path it becomes "hydrate one
+page" (40 anchors, not 2,550) -- the 113 -> 40-70 lever. Covers BOTH engines:
+upgrades the claim from "PG trick" to "runtime query planning generalizes".
 
-Projection pushdown = fetch only the fields the walker will actually use
-(`SELECT` on JSONB paths), skip full-anchor deserialization. It is the ONLY
-open lever that touches this 42% band; chain pushdown and order pushdown do not.
+## Measured composition evidence (why bundle, never alone)
 
-## Why this is the hard one (the safety problem)
+- order-alone: **-4ms LOSS** (JSONB text-sort in PG > Timsort-on-2550).
+- chain-alone: p50 wash at depth 2.
+- projection-alone: est. +10-25ms (fixed-cost skips only; feed's TweetView
+  reads ALL 6 Tweet fields, so field-narrowing ~ 0 on this workload).
+- projection + ordered-slice (`feed_page`): the real figure -- hydrate 40.
 
-A partially-hydrated anchor is a landmine with two distinct failure modes:
+## Decision 1 -- Integration point: `QueryPlan.projection` (P1, unchanged)
 
-1. **Wrong-value reads**: walker touches an unprojected field -> gets the
-   archetype's default value silently. Worst kind of bug: no crash, wrong data.
-2. **Write-back corruption**: the commit path's dirty-scan
-   (`TieredMemory._collect_into`) hashes ALL fields via
-   `Serializer._compute_hash` / `derive_dirty_fields`; missing fields read as
-   changed -> a "clean" read request writes default values over real data.
+Add to `QueryPlan` (`runtimelib/query_plan.jac:15-27`):
+`projection: (set[str] | None) = None`. `needs()`
+(`impl/query_plan.impl.jac:11-27`) contributes `'projection'` when set, so
+the existing subset test `plan.needs() <= mem.capabilities()`
+(`resolver.impl.jac:453`) gates it with zero new negotiation machinery.
 
-Any design is therefore 20% SQL and 80% proving the walker can't observe the
-difference.
+Rejected (unchanged from draft): projecting inside `resolve_hop_sql` (wrong
+layer, returns ids); view-dict short-circuit (P3, language feature).
 
-## Decision 1 -- Integration point
+## Decision 2 -- What comes back: slim anchors, LOUD on unprojected access
 
-- **P1 (chosen): `QueryPlan.projection` through `execute_plan`.** QueryPlan
-  already carries `field_predicates`, `id_in`, `node_type_final`, `slc`, and
-  capability negotiation (`plan.needs() <= mem.capabilities()`); the resolver's
-  final-hop tail already builds a QueryPlan when the hop result is a set. Add
-  `projection: (set[str] | None)`, a `'projection'` capability string, and
-  implement `execute_plan` on PostgresRelBackend. Smallest seam, mirrors every
-  pattern this branch already shipped.
-- P2 (rejected): project inside `resolve_hop_sql`/`resolve_chain_sql`. Wrong
-  layer -- those return IDs; mixing payload fetch into topology resolution
-  couples the two pushdowns and breaks the fallback ladder's simplicity.
-- P3 (rejected for now): bypass anchors entirely -- walker-less "select"
-  reports where the runtime returns view rows straight from SQL. Biggest win,
-  but it is a new language feature (report shape inference), not a backend
-  increment. Revisit with the language team after annotations exist.
+`Serializer.deserialize_projected(...)` builds a real `NodeAnchor` via
+`__new__`: sets `id`, `persistent=True`, `edges=[]`, `hash=0`, resolves the
+archetype class, `object.__new__` the archetype, setattr ONLY projected
+fields, links `archetype.__jac__ = anchor`, stamps
+`anchor._projected_fields: set[str]`.
 
-## Decision 2 -- What comes back
+Skipped per-anchor fixed costs (measured hydration bill,
+`serializer.impl.jac:556-637` + mongo `_load_anchor:871-934`):
+access-map parse (:565), edges stubs + `_initial_edge_ids` (:586-604),
+`_compute_hash` full re-serialize (:629-631), `_mongo_persist_repairs`
+(:931), `snapshot_field_hashes` (:932).
 
-- **R1 (chosen): real NodeAnchors with partially-populated archetypes**, plus
-  a transient marker `anchor._projected_fields: set[str]`. Keeps the
-  `resolve_path_anchors -> list[NodeAnchor]` contract; walkers/`to_view` code
-  unchanged. The marker exists so guards (below) can tell partial from full.
-- R2 (rejected): lazy field-fault hydration (`__getattr__` on missing field
-  fetches on demand). Safest semantics but requires surgery on the archetype
-  attribute model (real attrs, not dict lookups) + per-access overhead on the
-  hot path; complexity lands in shared runtime code, violating the
-  attribution rule this branch has held.
-- R3 (rejected): view dicts instead of anchors -- breaks the resolver contract
-  and every downstream isinstance; that is P3 in disguise.
+**Hazard model upgrade vs draft:** unprojected fields are NEVER set, so a
+walker touching one gets `AttributeError` -- loud crash, not the draft's
+silent-default wrong value. Deliberate.
 
-## Decision 3 -- Safety mechanism (the core decision)
+**Traversal-terminal contract:** projected anchors have `edges=[]`. On
+pg-rel, hops resolve via the edges TABLE by source id, so traversal FROM a
+projected node still works; on Mongo (blob/GTI hops) it would silently
+return []. MVP contract: declare projections only for traversal-terminal
+types (Tweet in feed). Ledgered, not enforced, until walker effect inference
+(S2) can prove it.
 
-- **S-MVP (chosen): explicit projection declaration + read-only gate, both
-  required.**
-  1. The walker (or its app) declares the projection explicitly -- an
-     annotation the runtime consumes, e.g. walker-level
-     `projects: {"Tweet": {"content", "created_at", "username", ...}}`
-     surfaced through app config for the MVP (same env/config pattern as
-     JAC_ORDER_PUSHDOWN) until real syntax exists. No declaration -> no
-     projection -> full hydration. Explicit = auditable; the wrong-value
-     hazard becomes a visible contract instead of an inference.
-  2. Projection only activates when the read-only rung is active
-     (`JAC_READ_ONLY` semantics): the commit path never runs, so failure
-     mode 2 (write-back) is structurally impossible. Belt AND suspenders:
-     `_collect_into` additionally skips any anchor carrying
-     `_projected_fields` (cheap guard, protects mixed configurations).
-- S2 (successor, not MVP): compiler-derived projection -- a
-  `__jac_field_projection__` tag computed from walker-body analysis, exactly
-  parallel to the existing `__jac_field_predicates__` tagging used by filter
-  pushdown. Conservative rule: any un-analyzable access (dynamic getattr,
-  method call into non-analyzed code) -> no tag -> full hydration. This is
-  the durable home ("specialized syntax later"), and it turns the explicit
-  declaration into a compiler-verified one (declared ⊉ used = compile error).
-- S3 (rejected): trust-the-walker with no declaration (project to the view
-  fields seen in practice). Silent wrong-value reads; no.
+## Decision 3 -- Safety: explicit declaration + read-only gate (S-MVP)
 
-## Chosen design (assembled)
+Both required, unchanged from draft:
 
-1. `QueryPlan.projection: set[str] | None` + `needs()` contributes
-   `'projection'` when set.
-2. Resolver final-hop tail (already QueryPlan-shaped): attach the projection
-   for the final node type when (a) declaration exists for that type,
-   (b) read-only rung active, (c) backend advertises `'projection'`.
-   Anything missing -> today's behavior, byte-identical.
-3. `PostgresRelBackend.execute_plan(plan)`:
-   `SELECT id, type, arch_module, arch_type, data->'archetype'->>f1, ... FROM
-   anchors WHERE id = ANY(%s)` (+ `node_type_final` filter; composes with
-   `id_in` from the hop/chain result). Builds anchors via a slim constructor
-   that sets only projected archetype fields, skips edges-stub construction,
-   access-map parse, and `snapshot_field_hashes` (read-only rung = never
-   diffed), stamps `_projected_fields`.
-4. Order/limit composition: `plan.slc` + JAC_ORDER_PUSHDOWN key can ride the
-   same statement (`ORDER BY data->'archetype'->>key LIMIT n`) -- this is
-   where projection + order + slice finally becomes "hydrate one page".
-5. Fallback ladder unchanged: any error -> full `_materialize_ids` floor.
+1. **Declaration** -- RESOLVED open question 1: env-only for MVP,
+   `JAC_PROJECTION="Tweet:content,created_at,author_username,likes,comments,seed_id"`
+   (`;`-separated for multiple types). Mirrors `JAC_ORDER_PUSHDOWN` parser
+   (`memory_hierarchy.postgres_rel.impl.jac:58-77`), ~15 lines, zero toml
+   plumbing. toml surface arrives with compiler inference (S2), not before.
+   No declaration -> no projection -> byte-identical behavior.
+2. **Read-only gate**: projection attaches only when `_read_only_enabled()`
+   (`memory.impl.jac:2015-2027`) -- commit never runs
+   (`_collect_into:1788-1790` already returns early), so write-back
+   corruption is structurally impossible.
+3. **Belt + suspenders**: `_collect_into`'s anchor loop (:1792-1793)
+   additionally skips any anchor with `_projected_fields` -- protects
+   mixed/misconfigured runs.
+4. **L1/L2 rule** -- RESOLVED open question 2: projected anchors NEVER enter
+   L1 or L2. Skip points are exact: `TieredMemory.execute_plan`
+   `memory.impl.jac:1986` (L1 insert), `:1988/:1996` (L2 batch_put).
+   (`batch_get` :2045/:2054/:2062 never sees projected anchors -- floor path
+   only.) Cost: repeat access within one request; feed touches each tweet
+   once.
+
+RESOLVED open question 3 (S2 scope, recorded for
+walker-effect-inference-plan, not MVP work): method bodies on node types
+(`to_view`) ARE in scope for inference when statically resolvable;
+un-analyzable call -> no tag -> full hydration.
+
+## Decision 4 -- Composition routes (NEW; corrects the draft)
+
+Scout finding: the ordered/sliced path returns a **list** at
+`resolver.impl.jac:441` and bypasses the QueryPlan tail entirely -- the
+draft's "ORDER BY/LIMIT rides execute_plan" would never fire. Corrected
+design puts ORDER+slice where it already works (hop/chain SQL,
+`postgres_rel.impl.jac:335-371/:228-270`) and projection at
+materialization:
+
+- **Route A (set path, plain `feed`)**: final-hop tail already builds
+  QueryPlan (`resolver.impl.jac:445-453`). Attach
+  `plan.projection = cfg[node_type_final]` when declaration exists AND
+  read-only AND `'projection' in mem.capabilities()` (the caps pre-check
+  avoids regressing backends that would otherwise pass the subset test).
+  `_try_pushdown` -> `execute_plan` -> 2,550 slim anchors. This is the
+  projection-alone increment, measurable on BOTH engines.
+- **Route B (list path, `feed_page`)**: hop/chain SQL returns ordered+sliced
+  ids (already built). New branch at `:441`: when projection is licensed
+  (same three conditions), call `_materialize_ids_projected(mem, ids,
+  node_type)` -- builds `QueryPlan(id_in=set(ids), node_type_final=...,
+  projection=...)`, runs `_try_pushdown`, reorders results to the input id
+  order in Python (20-40 items, trivial). No ORDER BY/LIMIT inside
+  execute_plan at all -- ids arrive pre-sliced. Route B additionally
+  requires `'topology_sql' in caps`: on pg-rel the ordered ids come from
+  SQL without hydration, but Mongo's ordered walk hydrates candidates to
+  sort them, so a projected re-fetch there would be a net loss -- Mongo
+  keeps its existing list path.
+
+## Decision 5 -- Capability gating (NEW)
+
+- **PG-rel**: gains `execute_plan` for the first time. Caps become
+  `{'topology_sql'} | ({'id_in','type_pushdown','projection'} if projection
+  declared else {})` -- WITHOUT the flag, caps stay `{'topology_sql'}` and
+  every existing path is byte-identical (feed currently always takes the
+  `_materialize_ids` floor; that must not change un-flagged). Deliberately
+  NOT advertising `'slice'` (the `_try_pushdown` guard
+  `resolver.impl.jac:147-149` reapplies slices in Python) or
+  `'field_pushdown'` (blob-only, ledgered).
+- **Mongo**: already advertises `{'type_pushdown','field_pushdown','id_in',
+  'slice'}` (`mongo.impl.jac:486-488`) and `_try_pushdown` already fires on
+  plain feed. Add `'projection'` unconditionally -- inert unless a plan
+  carries a projection, which requires the env declaration.
+
+## Engine specifics
+
+**PG-rel `execute_plan(plan)`** (new, `postgres_rel.impl.jac`):
+
+```sql
+SELECT id, arch_module, arch_type,
+       data->'archetype'->'content', data->'archetype'->'created_at', ...
+FROM anchors WHERE id = ANY(%s) [AND arch_type = %s]
+```
+
+`->` (not `->>`) preserves JSON types (lists/dicts come back as Python
+objects via psycopg jsonb). `id` stays TEXT (KV inheritance). Rows feed
+`deserialize_projected`. Only `id_in` + `node_type_final` + `projection`
+handled; anything else in `needs()` fails the subset test upstream.
+
+**Mongo `execute_plan`** (extend `mongo.impl.jac:525-546`): when
+`plan.projection` set, pass a projection doc to the existing
+`self.collection.find(filt, projection_doc)` (:531):
+`{'type':1,'arch_type':1,'arch_module':1,'data.id':1,'data.__type__':1,
+'data.__module__':1,'data.archetype.__type__':1,'data.archetype.__module__':1}`
+
+- `{'data.archetype.<f>':1}` per field. Precedent: edge-refresh reads
+already project (:746/:758). Projected docs route to
+`deserialize_projected` instead of `_load_anchor`.
+
+## UUID-intern rider (flagless, after projection)
+
+Re-port the serializer half of orphan `feat/perf-l1-uuid` commit
+`de012d6a3` (the `pushdown_skip` half of that commit is NOT re-ported --
+superseded by this design's L1 rule):
+
+- `@lru_cache(maxsize=65536)` on `def _intern_uuid(id_str) -> UUID` in
+  `runtimelib/serializer.jac` -- body INLINE IN THE DECL (Jac impl-splitting
+  drops decorators; known trap).
+- Replace the 6 bare `UUID(` sites in `serializer.impl.jac` (verified
+  present, 2026-07-13): `_deserialize_jac_ref`, `coerce`, `_get_class` stub,
+  `_deserialize_anchor` id/root/edge-frozenset.
+- Flagless (pure value-equality perf change; precedent repair-memoize/
+  typecache). `to_uuid` (`runtimelib/utils.jac:31-36`) and its Mongo/Redis
+  hot sites stay untouched -- matches the old impl's scope.
+- A/B AFTER projection lands (projection shrinks its residual value); drop
+  if within noise.
+
+## `feed_page` workload (decision: build it; it is the headline figure)
+
+- Harness: register `feed_page` in `WORKLOADS` (`harness/run.py:97-101`) +
+  `fetch_feed_page`; oracle gets a `feed_page` parity case.
+- Baselines (USER implements; paste-ready blocks provided in plan):
+  `ORDER BY created_at DESC LIMIT 20` in `littleXs/postgres/app.py`
+  (FEED_SQL :228-235), `sqlalchemy/app.py` (`.limit(20)` ~:270),
+  `neo4j/app.py` (Cypher `LIMIT 20` ~:196), each behind a new
+  `/feed_page` endpoint (existing `/feed` untouched).
+- Jac (`littleXs/jaseci-rel/app.jac`, editable copy): new
+  `walker load_feed_page` -- both visit streams sliced
+  (`visit [...][:20]` with `JAC_ORDER_PUSHDOWN=Tweet:created_at:desc`),
+  deliver merges <=40 candidates, sorts desc, takes 20.
+- **Parity is EXACT**: each stream's contribution to the global top-20 is
+  contained in that stream's top-20, so merge-of-per-stream-top-20 = global
+  top-20. (This also retires the two-visit-stream caveat that invalidated
+  the skip-sort probe.)
+- Jac config for the run: `JAC_PROJECTION=Tweet:... JAC_ORDER_PUSHDOWN=
+  Tweet:created_at:desc JAC_READ_ONLY=1` + standard pg-rel flags
+  (`BATCH_L3=1, GTI=0, CHAIN=0`). Note: expression index on
+  `(data->'archetype'->>'created_at')` becomes worthwhile once LIMIT exists;
+  optional follow-up, measure without it first.
 
 ## Sizing (honest, UNVERIFIED until benched)
 
-Feed's TweetView consumes most Tweet fields, so the field-narrowing win is
-modest; the real savings are the per-anchor fixed costs skipped: serializer
-envelope/type resolution, edges-stub list construction, access-map parse,
-field-hash snapshotting. Estimate 10-25ms of the current ~113ms feed p50 on
-its own; combined with order+limit (hydrate ~20 instead of 2,550) it is the
-difference between ~113 and the 40-70 band. The decisive variant is
-projection+limit, not projection alone.
+Route A alone: +10-25ms est (fixed-cost skips across 2,550 anchors).
+Route B (`feed_page`): hydrate 40 not 2,550 -- the 113 -> 40-70 band. Note
+`feed_page` changes the response contract; it is a NEW workload reported
+alongside `feed`, never a replacement.
 
-## Testing plan (when implemented)
+## Testing plan
 
-- Unit: execute_plan projection SQL (fields present/absent, missing field ->
-  default + marker; node_type filter; order+slice composition).
-- Safety: dirty-scan guard test -- projected anchor in a changeset context
-  must never produce intents (marker skip), even with read-only off.
-- Seam: read-only walker with declaration -> projected path (assert marker +
-  reduced fields); same walker without declaration -> full anchors,
-  byte-identical results for fields in the view.
-- Parity: littleX feed with projection on == oracle-identical feed bytes.
-- Negative: walker touching an undeclared field in a test asserts the default
-  -- documented hazard made visible (this test is the argument for S2).
+- Unit: JAC_PROJECTION parser; `deserialize_projected` (projected fields
+  set, unprojected access raises AttributeError, `__jac__` link, marker).
+- Backend: PG-rel execute_plan SQL (id_in + arch_type + jsonb types
+  round-trip); Mongo projection doc (projected doc -> slim anchor; no
+  projection -> `_load_anchor` unchanged).
+- Safety: `_collect_into` skips marked anchor even with read-only OFF;
+  `TieredMemory.execute_plan` does not insert marked anchors into L1/L2.
+- Seam: declared + ro + caps -> Route A fires (marker present, counter);
+  any condition missing -> byte-identical full anchors. Route B: ordered
+  list path with projection -> order preserved, 20 slim anchors.
+- Parity: `feed` with projection on == oracle feed bytes; `feed_page`
+  top-20 == baseline top-20.
+- Counters: `projection_count` on both backends (bench observability,
+  matches `rel_hop_count` pattern).
+
+## Bench protocol
+
+A/B/A same-session, ratios only. Rungs: (1) feed baseline no-projection,
+(2) feed + Route A (both engines -- the "generalizes" datapoint),
+(3) feed_page jac vs feed_page baselines (headline), (4) uuid-intern on/off
+rider. Pause + notify user before any server boot.
 
 ## Out of scope
 
-Typed columns (separate design), Mongo execute_plan parity, write-path
-anything, P3 view short-circuit, L2 caching of projected anchors (projected
-anchors must NOT enter L2 write-through; MVP runs read-only where commit/L2
-write-through never fires -- note for the implementer).
-
-## Open questions for review
-
-1. Declaration surface for MVP: env/config (`JAC_PROJECTION="Tweet:content,created_at,..."`)
-   vs app jac.toml table? (Env matches the flag family; toml reads better for
-   multi-type declarations. Lean: toml `[run.projection]` table, env override.)
-2. Should projected anchors enter L1 at all? Per-request L1 makes it safe-ish
-   (same walker, same declaration), but skipping L1 insertion entirely is the
-   conservative default and costs only repeat-access within one request.
-3. Does `to_view`-style method access count as "the walker uses field X" for
-   the future compiler analysis (S2)? Method-body analysis scope decides how
-   often S2 can fire without annotations.
+Typed columns; write-path anything; P3 view short-circuit; toml declaration
+surface; `:ro`/effect inference (S2, see walker-effect-inference-plan
+memory); Mongo ordered-index feed_page (GTI ordered_traversal integration
+-- Mongo runs feed_page via its existing path, unprojected list floor, and
+that asymmetry is reported honestly); expression index on created_at
+(optional follow-up).
