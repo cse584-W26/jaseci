@@ -234,7 +234,7 @@ impl Serializer._deserialize_jac_ref(data: dict[str, object]) -> (object | None)
         return None;
     }
     try {
-        ref_uuid = UUID(id_str);
+        ref_uuid = _intern_uuid(id_str);
     } except (ValueError, AttributeError) {
         logger.error(f"Invalid UUID in $ref: {id_str}");
         return None;
@@ -464,7 +464,7 @@ impl Serializer.coerce(val: object, target_type: object) -> tuple {
             return (str(val), True);
         }
         if base is UUID and isinstance(val, str) {
-            return (UUID(val), True);
+            return (_intern_uuid(val), True);
         }
 
         if base is datetime and isinstance(val, str) {
@@ -543,7 +543,7 @@ impl Serializer._get_class(module_name: str, class_name: str) -> (type | None) {
 impl Serializer._id_to_stub(anchor_cls: type, id_str: str) -> (Anchor | None) {
     try {
         stub = anchor_cls.__new__(anchor_cls);
-        stub.id = UUID(id_str);
+        stub.id = _intern_uuid(id_str);
         return stub;
     } except Exception as e {
         logger.error(
@@ -559,8 +559,8 @@ impl Serializer._deserialize_anchor(data: dict[str, object]) -> (Anchor | None) 
     );
     try {
         anchor = anchor_cls.__new__(anchor_cls);
-        anchor.id = UUID(data['id']) if data.get('id') else None;
-        anchor.root = UUID(data['root']) if data.get('root') else None;
+        anchor.id = _intern_uuid(data['id']) if data.get('id') else None;
+        anchor.root = _intern_uuid(data['root']) if data.get('root') else None;
         anchor.persistent = data.get('persistent', False);
         anchor.access = Serializer._deserialize_permission(data.get('access'));
 
@@ -600,7 +600,7 @@ impl Serializer._deserialize_anchor(data: dict[str, object]) -> (Anchor | None) 
             setattr(
                 anchor,
                 '_initial_edge_ids',
-                frozenset(UUID(eid) for eid in (edge_ids or []))
+                frozenset(_intern_uuid(eid) for eid in (edge_ids or []))
             );
 
             anchor.version = data.get('version', 0);

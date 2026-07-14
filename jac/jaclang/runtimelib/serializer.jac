@@ -1,5 +1,6 @@
 import logging;
 import from dataclasses { fields, is_dataclass, MISSING }
+import from functools { lru_cache }
 import from datetime { date, datetime, time }
 import from enum { Enum }
 import from hashlib { sha256 }
@@ -30,6 +31,13 @@ import from jaclang.jac0core.constructs {
 
 glob logger = logging.getLogger(__name__),
      FINGERPRINT_LENGTH: int = 16;
+
+
+@lru_cache(maxsize=65536)
+def _intern_uuid(id_str: str) -> UUID {
+    return UUID(id_str);
+}
+
 
 obj Serializer {
     static has _registry: dict[str, type] = {},
