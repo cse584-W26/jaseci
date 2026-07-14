@@ -88,7 +88,8 @@ obj MongoBackend(PersistentMemory) {
         _l2_ref: (any | None) = None,
         _l1_id: (str | None) = None,
         fetch_count: int = 0,
-        put_count: int = 0;
+        put_count: int = 0,
+        projection_count: int = 0;
 
     def postinit -> None;
     def set_cache_ref(cache: (any | None)) -> None;
