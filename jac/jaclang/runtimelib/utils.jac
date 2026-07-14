@@ -1,3 +1,4 @@
+import os;
 import platform;
 import from collections.abc { Callable }
 import from pathlib { Path }
@@ -33,6 +34,27 @@ def to_uuid(id: (UUID | str)) -> UUID {
         return id;
     }
     return UUID(str(id));
+}
+
+
+def projection_cfg -> dict[str, set[str]] {
+    raw = os.environ.get("JAC_PROJECTION", "");
+    out: dict[str, set[str]] = {};
+    for part in raw.split(";") {
+        if ":" not in part {
+            continue;
+        }
+        (tname, _, flist) = part.partition(":");
+        fields = {
+            f.strip()
+            for f in flist.split(",")
+            if f.strip()
+        };
+        if tname.strip() and fields {
+            out[tname.strip()] = fields;
+        }
+    }
+    return out;
 }
 
 
