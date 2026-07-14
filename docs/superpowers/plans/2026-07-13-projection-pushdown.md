@@ -125,7 +125,7 @@ Check `utils.jac` already imports `os`; add if missing.
 - Modify: `jac/jaclang/runtimelib/serializer.jac` (decl) + `jac/jaclang/runtimelib/impl/serializer.impl.jac`
 - Test: `jac/jaclang/scale/tests/data/test_projection_slim.jac` (new; register alongside other data tests if a runner manifest exists -- check how `test_postgres_rel_backend.jac` is discovered)
 
-- [ ] **Step 1: Failing tests** (use a locally-defined `node SlimT { has a: str = ""; has b: int = 0; }` archetype as the other backend tests do):
+- [ ] **Step 1: Failing tests** (use a locally-defined `node SlimT { has a: str = ""; has b: int = 0; has c: list[str] = []; }` archetype as the other backend tests do). NOTE the loudness contract: only FACTORY-default fields (`c`) raise on unprojected access; scalar-default fields (`b`) silently answer the dataclass class default -- assert BOTH behaviors so the hazard is pinned by test:
 
 ```jac
 test slim_anchor_sets_projected_only {
@@ -138,9 +138,11 @@ test slim_anchor_sets_projected_only {
     assert anchor.archetype.a == "x";
     assert anchor.archetype.__jac__ is anchor;
     assert anchor._projected_fields == {"a"};
+    assert anchor.version == 0;
+    assert anchor.archetype.b == 0;  # scalar default = SILENT read (documented hazard)
     ok = False;
-    try { _ = anchor.archetype.b; } except AttributeError { ok = True; }
-    assert ok;  # unprojected access is LOUD (spec Decision 2)
+    try { _ = anchor.archetype.c; } except AttributeError { ok = True; }
+    assert ok;  # factory-default field = LOUD (spec Decision 2, corrected)
 }
 ```
 
@@ -163,8 +165,11 @@ impl Serializer.deserialize_projected(anchor_id: UUID, arch_module: str,
     if cls is None { return None; }
     arch = object.__new__(cls);
     for f in projected {
-        if f in fields { setattr(arch, f, fields[f]); }
-        # ponytail: absent-in-storage projected field stays unset -> loud AttributeError, same as unprojected
+        if f in fields {
+            # _deserialize_value: $ref / typed-value envelopes must decode, raw dicts are corruption
+            setattr(arch, f, Serializer._deserialize_value(fields[f]));
+        }
+        # ponytail: absent-in-storage factory field stays unset -> AttributeError; scalar falls to class default
     }
     anchor = object.__new__(NodeAnchor);
     anchor.id = anchor_id;
@@ -172,6 +177,8 @@ impl Serializer.deserialize_projected(anchor_id: UUID, arch_module: str,
     anchor.persistent = True;
     anchor.edges = [];
     anchor.hash = 0;
+    anchor.version = 0;              # read by note_traversal_reads on any refs() from this node
+    anchor.access = Permission();    # read by _check_access paths
     anchor.archetype = arch;
     arch.__jac__ = anchor;                                  # reuse: same link _deserialize_archetype makes
     anchor._projected_fields = set(projected);
@@ -179,7 +186,7 @@ impl Serializer.deserialize_projected(anchor_id: UUID, arch_module: str,
 }
 ```
 
-After writing, diff against `_deserialize_anchor` for any `has` field on `NodeAnchor` whose ABSENCE breaks `is_populated()` / `repr` (e.g. `access`, `version`, `_initial_edge_ids`) -- set the minimal safe defaults (`anchor.access = <empty Permission ctor used at :565's parse-failure path>`, `anchor.version = 0`) ONLY if a test or `is_populated()` actually reads them. Skipping access parse / edge stubs / `_compute_hash` / `snapshot_field_hashes` is the entire point (spec Decision 2).
+Field-sufficiency was VERIFIED in review: `version` + `access` are the only two extras read on the `_try_pushdown`/refs() path (`note_traversal_reads` -> `context.impl.jac:99` reads `.version`; `_check_access` reads `.access`); `_initial_edge_ids`/`topology_index_data` are unreachable given the marker skips, `__repr__` guards `f.name in self.__dict__`, `is_populated()` is satisfied by `edges`+`archetype`. Confirm the empty-`Permission` ctor name matches the one used at `serializer.impl.jac:565`'s parse-failure path. Skipping access-map parse / edge stubs / `_compute_hash` / `snapshot_field_hashes` is the entire point (spec Decision 2).
 
 - [ ] **Step 4: PASS**
 - [ ] **Step 5: Commit** `feat(serializer): deserialize_projected slim anchor constructor`
@@ -193,7 +200,7 @@ After writing, diff against `_deserialize_anchor` for any `has` field on `NodeAn
 - Modify: `jac/jaclang/runtimelib/impl/memory.impl.jac:1792-1793`
 - Test: extend the existing `_collect_into`/changeset test file (locate: `grep -rl "_collect_into\|record_update" jac/jaclang/*/tests/`)
 
-- [ ] **Step 1: Failing test** -- build a `TieredMemory` the way existing collect tests do, insert a populated persistent anchor stamped `a._projected_fields = {"a"}` into `mem.__mem__`, mutate a field, run `mem._collect_into(mem.changes)` with read-only OFF, assert NO intent recorded for that anchor.
+- [ ] **Step 1: Failing test** -- build a `TieredMemory` the way existing collect tests do, insert a populated persistent anchor into `mem.__mem__`, then BASELINE it so the dirty scan can actually see a change (a fresh `hash=0` anchor with no edges is skipped at `memory.impl.jac:1808-1814`, and an unbaselined one dies at the `_compute_hash` try/continue): `a.hash = Serializer._compute_hash(a); snapshot_field_hashes(a);` THEN stamp `a._projected_fields = {"a"}`, mutate a field, run `mem._collect_into(mem.changes)` with read-only OFF, assert NO intent recorded. Sanity: the same fixture WITHOUT the stamp must record an update (proves the test can fail).
 - [ ] **Step 2: FAIL (update intent present)**
 - [ ] **Step 3: Implement** -- in the anchor loop, extend the existing skip:
 
@@ -285,7 +292,7 @@ test mongo_execute_plan_unprojected_unchanged {
 ```jac
     proj_doc = None;
     if plan.projection is not None {
-        proj_doc = {'type': 1, 'arch_type': 1, 'arch_module': 1, 'data.id': 1};
+        proj_doc = {'type': 1, 'arch_type': 1, 'arch_module': 1};  # _id always returned by mongo
         for f in plan.projection { proj_doc[f'data.archetype.{f}'] = 1; }
     }
     cursor = self.collection.find(filt, proj_doc);
@@ -294,8 +301,9 @@ test mongo_execute_plan_unprojected_unchanged {
     for doc in cursor {
         if plan.projection is not None {
             anchor = Serializer.deserialize_projected(
-                to_uuid(doc['data']['id']), doc.get('arch_module', ''),
-                doc.get('arch_type', ''), doc['data'].get('archetype', {}),
+                to_uuid(doc['_id']), doc.get('arch_module', ''),
+                doc.get('arch_type', ''),
+                doc.get('data', {}).get('archetype', {}),
                 plan.projection);
             if anchor { self.projection_count += 1; yield anchor; }
         } elif (anchor := self._load_anchor(doc)) {
@@ -345,6 +353,15 @@ test rel_execute_plan_projected {
 test rel_execute_plan_jsonb_types_roundtrip {
     ...seed archetype with a list field, project it, assert isinstance(res list)...
 }
+
+test rel_execute_plan_undeclared_type_full_hydrates {
+    # caps-leak guard: projection None (undeclared type) must NOT return empty
+    plan = QueryPlan(id_in={aid}, node_type_final="RelPerson");
+    res = list(be.execute_plan(plan));
+    assert len(res) == 1;
+    assert getattr(res[0], '_projected_fields', None) is None;  # full anchor
+    assert res[0].archetype.age == 3;                            # all fields present
+}
 ```
 
 - [ ] **Step 2: FAIL**
@@ -362,7 +379,19 @@ NOTE: keep the two concerns independent -- `JAC_TOPOLOGY_SQL=0` must NOT disable
 
 ```jac
 impl PostgresRelBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None] {
-    if plan.projection is None or plan.id_in is None { return; }
+    if plan.id_in is None { return; }
+    if plan.projection is None {
+        # Caps-leak guard (review CRITICAL): with JAC_PROJECTION set, plans for
+        # UNDECLARED types (e.g. the Profile hop) also pass the subset test and
+        # route here. Full-hydrate them -- an empty generator = empty feed.
+        for anchor in self.batch_get(list(plan.id_in)).values() {
+            if (plan.node_type_final is None
+                    or anchor.archetype.__class__.__name__ == plan.node_type_final) {
+                yield anchor;
+            }
+        }
+        return;
+    }
     fields = sorted(plan.projection);
     cols = ", ".join(["data->'archetype'->%s"] * len(fields));
     sql = f"SELECT id, arch_module, arch_type, {cols} FROM anchors WHERE id = ANY(%s)";
@@ -382,7 +411,7 @@ impl PostgresRelBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None,
 }
 ```
 
-(`data->'archetype'->%s` with text param yields jsonb; psycopg3 decodes to Python objects, so `->` not `->>` -- lists/dicts survive. NULL jsonb -> field omitted -> loud AttributeError semantics preserved.)
+(`data->'archetype'->%s` with text param yields jsonb; psycopg3 decodes to Python objects, so `->` not `->>` -- lists/dicts survive. NULL jsonb -> field omitted -> unset-field semantics preserved. Check `PostgresBackend.batch_get` return shape before writing the fallback loop -- adapt `.values()` if it returns a list, and mirror however `_materialize_ids` consumes it at `query_utils.impl.jac:93-101`.)
 
 - [ ] **Step 4: PASS + full rel suite (23 + new) green; ALSO assert unflagged runs untouched: with env unset, `capabilities()` unchanged means resolver can never route here (Decision 5)**
 - [ ] **Step 5: Commit** `feat(pg-rel): execute_plan with projection, env-gated capabilities`
@@ -396,25 +425,30 @@ impl PostgresRelBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None,
 - Modify: `jac/jaclang/runtimelib/impl/resolver.impl.jac` (tail :445-453 + one helper)
 - Test: extend the resolver seam tests (same file/fixture style as the pg-rel seam tests: `ExecutionContext` + `ctx.mem.l3 = be`)
 
-- [ ] **Step 1: Failing seam test** -- against pg-rel backend (env `JAC_PROJECTION="RelPerson:name"`, `JAC_READ_ONLY=1`): run `[r ->:RelKnows:->]`-style single-hop resolution where the result is a set with root_anchor present; assert returned anchors carry `_projected_fields` and `be.rel_projection_count > 0`. Counter-tests: same run with `JAC_READ_ONLY` unset -> full anchors; with `JAC_PROJECTION` unset -> full anchors; against a stub backend WITHOUT `'projection'` cap but with the other caps -> plan must NOT carry projection (and must still push down as today).
+- [ ] **Step 1: Failing seam test** -- against pg-rel backend (env `JAC_PROJECTION="RelPerson:name"`, `JAC_READ_ONLY=1`): run `[r ->:RelKnows:->]`-style single-hop resolution where the result is a set with root_anchor present; assert returned anchors carry `_projected_fields` and `be.rel_projection_count > 0`. Counter-tests: same run with `JAC_READ_ONLY` unset -> full anchors; with `JAC_PROJECTION` unset -> full anchors; against a stub backend WITHOUT `'projection'` cap but with the other caps -> plan must NOT carry projection (and must still push down as today); a hop whose final filter carries field predicates (post_filter path) -> full anchors AND correct filter results.
 - [ ] **Step 2: FAIL**
 - [ ] **Step 3: Implement.** Helper near the top of resolver.impl.jac:
 
 ```jac
-def _projection_for(mem: Memory, node_type: (str | None)) -> (set[str] | None) {
-    if node_type is None { return None; }
+def _projection_for(mem: Memory, node_type: (str | None),
+        has_post_filter: bool) -> (set[str] | None) {
+    if node_type is None or has_post_filter { return None; }
+    # post_filter would run predicates against a slim archetype -> scalar
+    # class defaults answer -> silently wrong filter results (review HIGH)
     cfg = projection_cfg();
     if node_type not in cfg { return None; }
-    if not _read_only_enabled() { return None; }   # import from memory impl module; if not importable, lift the 4-line env check into utils.jac and call it from BOTH sites (no duplication)
+    if not _read_only_enabled() { return None; }
     if 'projection' not in mem.capabilities() { return None; }
     return cfg[node_type];
 }
 ```
 
-At the tail, after `plan = QueryPlan(...)` and before the `needs()` subset test:
+`_read_only_enabled` import VERIFIED working: `import from jaclang.runtimelib.memory { _read_only_enabled }` (impl-file top-level defs land in the decl module). Do NOT add another copy -- `serializer.impl.jac:1-14` already carries a private duplicate; two is the ceiling.
+
+At the tail, after `plan = QueryPlan(...)` and before the `needs()` subset test (`post_filter` is already in scope -- it was hoisted at :391-395):
 
 ```jac
-        proj = _projection_for(mem, last_hop.node_type);
+        proj = _projection_for(mem, last_hop.node_type, post_filter is not None);
         if proj is not None { plan.projection = proj; }
 ```
 
@@ -429,12 +463,12 @@ The caps pre-check inside `_projection_for` guarantees attaching can never flip 
 
 **Files:**
 
-- Modify: `jac/jaclang/runtimelib/impl/resolver.impl.jac:440-441` + `jac/jaclang/runtimelib/impl/query_utils.impl.jac` (+ decl in `query_utils.jac`)
+- Modify: `jac/jaclang/runtimelib/impl/resolver.impl.jac` only (list branch :440-441 + new private helper)
 - Test: same seam file as Task 8
 
 - [ ] **Step 1: Failing seam test** -- pg-rel, env `JAC_PROJECTION="RelPerson:name"`, `JAC_READ_ONLY=1`, `JAC_ORDER_PUSHDOWN="RelPerson:name:asc"`; sliced hop (`slc` present so hop returns ordered list); assert result anchors are marked, ORDER of returned anchors matches the hop's id order, and `rel_projection_count` incremented. Counter-test: Mongo backend same flags -> unmarked full anchors (Route B requires `'topology_sql'`).
 - [ ] **Step 2: FAIL**
-- [ ] **Step 3: Implement.** In `query_utils.impl.jac`:
+- [ ] **Step 3: Implement.** In `resolver.impl.jac` (NOT query_utils -- `resolver.impl.jac:3-9` already imports FROM query_utils, and the helper needs resolver-private `_try_pushdown`; placing it in query_utils is a guaranteed circular import):
 
 ```jac
 def _materialize_ids_projected(mem: Memory, ids: list, node_type: (str | None),
@@ -447,13 +481,11 @@ def _materialize_ids_projected(mem: Memory, ids: list, node_type: (str | None),
 }
 ```
 
-(Import/visibility: `_try_pushdown` lives in resolver.impl.jac -- if cross-module privacy bites, place `_materialize_ids_projected` in resolver.impl.jac instead; it is a resolver concern anyway. Decide by where `_materialize_ids` is imported from at :441.)
-
-At resolver tail `:440-441`:
+At resolver tail `:440-441` (ordered path never has a post filter -- `use_ordered` requires `not last_has_post_filter` at :391-396 -- so pass `False`):
 
 ```jac
     if isinstance(result, list) {
-        proj = _projection_for(mem, last_hop.node_type);
+        proj = _projection_for(mem, last_hop.node_type, False);
         if proj is not None and 'topology_sql' in mem.capabilities() {
             projected = _materialize_ids_projected(mem, result, last_hop.node_type, proj);
             if projected is not None { return projected; }
@@ -556,7 +588,7 @@ walker load_feed_page {
 }
 ```
 
-- [ ] **Step 2 (mine): verify the compiler pushes the trailing `[:20]` into `resolve_path_anchors` slc** -- library-mode seam test or counter check (`rel_chain_count`/ordered-list length 20). If the slice is NOT pushed (materialize-then-slice), STOP and report to user: feed_page depends on slc pushdown; investigate path-expression slice syntax before proceeding.
+- [ ] **Step 2 (mine): smoke-test the trailing `[:20]` -> slc pushdown** -- the mechanism is VERIFIED in code (`pyast_gen_pass.impl.jac:3049-3078` compiles a trailing range slice on an edge-ref target into a `slc=slice(...)` kwarg -> `runtime.impl.jac:1094` -> `resolve_path_anchors(..., slc)`); assert it end-to-end via counter check (`rel_chain_count` increments, ordered result length 20) in a library-mode seam test.
 - [ ] **Step 3 (user): hand over paste-ready baseline blocks** -- postgres (`FEED_PAGE_SQL` = existing `FEED_SQL` + `LIMIT 20`, new `GET /feed_page` endpoint cloned from `get_feed`), sqlalchemy (clone `get_feed` + `.limit(20)`), neo4j (clone feed Cypher + `LIMIT 20`), `run.py` (`fetch_feed_page` dispatching walker `load_feed_page` / `GET /feed_page`, register in `WORKLOADS`), oracle feed_page case (top-20 exact compare). Provide exact code in the handoff message, built from the current file contents at that moment. WAIT for user to confirm they are in.
 - [ ] **Step 4: Commit (worktree app copy only)** `feat(app): load_feed_page walker`
 

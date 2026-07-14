@@ -37,10 +37,14 @@ layer, returns ids); view-dict short-circuit (P3, language feature).
 ## Decision 2 -- What comes back: slim anchors, LOUD on unprojected access
 
 `Serializer.deserialize_projected(...)` builds a real `NodeAnchor` via
-`__new__`: sets `id`, `persistent=True`, `edges=[]`, `hash=0`, resolves the
-archetype class, `object.__new__` the archetype, setattr ONLY projected
-fields, links `archetype.__jac__ = anchor`, stamps
-`anchor._projected_fields: set[str]`.
+`__new__`: sets `id`, `persistent=True`, `edges=[]`, `hash=0`, `version=0`,
+`access=Permission()` (both READ on the refs()/access paths --
+`note_traversal_reads` reads `.version`, `_check_access` reads `.access`;
+verified), resolves the archetype class, `object.__new__` the archetype,
+setattr ONLY projected fields with values routed through
+`Serializer._deserialize_value` (raw setattr would leave `$ref`/typed
+values as dicts -- silent corruption), links `archetype.__jac__ = anchor`,
+stamps `anchor._projected_fields: set[str]`.
 
 Skipped per-anchor fixed costs (measured hydration bill,
 `serializer.impl.jac:556-637` + mongo `_load_anchor:871-934`):
@@ -48,9 +52,14 @@ access-map parse (:565), edges stubs + `_initial_edge_ids` (:586-604),
 `_compute_hash` full re-serialize (:629-631), `_mongo_persist_repairs`
 (:931), `snapshot_field_hashes` (:932).
 
-**Hazard model upgrade vs draft:** unprojected fields are NEVER set, so a
-walker touching one gets `AttributeError` -- loud crash, not the draft's
-silent-default wrong value. Deliberate.
+**Hazard model (corrected in review):** unprojected fields are never set.
+For factory-default fields (`list`/`dict`) access raises `AttributeError`
+-- loud. For scalar-default `has` fields the jac dataclass CLASS attribute
+answers instead -- SILENT default read (verified empirically:
+`object.__new__` instances resolve `has b: int = 0` to `0`). So the
+draft's silent-wrong-value hazard survives for scalars; mitigation is
+declaration completeness (declare every field the walker reads) until S2
+compiler verification. Documented, not solvable at this layer.
 
 **Traversal-terminal contract:** projected anchors have `edges=[]`. On
 pg-rel, hops resolve via the edges TABLE by source id, so traversal FROM a
@@ -101,7 +110,10 @@ materialization:
   QueryPlan (`resolver.impl.jac:445-453`). Attach
   `plan.projection = cfg[node_type_final]` when declaration exists AND
   read-only AND `'projection' in mem.capabilities()` (the caps pre-check
-  avoids regressing backends that would otherwise pass the subset test).
+  avoids regressing backends that would otherwise pass the subset test)
+  AND the final hop has NO post_filter -- `_try_pushdown` runs post
+  filters against the archetype, and a slim archetype would answer
+  scalar predicates with class defaults (silently wrong filter results).
   `_try_pushdown` -> `execute_plan` -> 2,550 slim anchors. This is the
   projection-alone increment, measurable on BOTH engines.
 - **Route B (list path, `feed_page`)**: hop/chain SQL returns ordered+sliced
@@ -122,7 +134,12 @@ materialization:
   `{'topology_sql'} | ({'id_in','type_pushdown','projection'} if projection
   declared else {})` -- WITHOUT the flag, caps stay `{'topology_sql'}` and
   every existing path is byte-identical (feed currently always takes the
-  `_materialize_ids` floor; that must not change un-flagged). Deliberately
+  `_materialize_ids` floor; that must not change un-flagged).
+  **Fallback rule (review finding):** once caps are on, plans for
+  UNDECLARED types (projection None -- e.g. the Profile hop) also pass the
+  subset test and route here; `execute_plan` must full-hydrate them
+  (`batch_get(plan.id_in)` + arch_type filter), never return empty.
+  Deliberately
   NOT advertising `'slice'` (the `_try_pushdown` guard
   `resolver.impl.jac:147-149` reapplies slices in Python) or
   `'field_pushdown'` (blob-only, ledgered).
