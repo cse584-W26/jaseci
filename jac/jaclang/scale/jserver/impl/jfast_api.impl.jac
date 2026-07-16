@@ -163,6 +163,18 @@ impl JFastApiServer.run_server(
     ms_cfg = get_scale_config().get_microservices_config();
     drain_timeout: float = float(ms_cfg.get("drain_timeout_seconds", 10));
 
+    # JAC_GC_FREEZE=1: exempt the boot-time heap (compiler, runtime modules,
+    # caches) from every future gen-2 scan. Without it, each full collection
+    # re-traverses the whole resident heap - multi-second p99 pauses every
+    # ~37 requests under anchor-heavy workloads (standard CPython large-heap
+    # practice, cf. gc.freeze docs; Instagram/Django lineage). Default off.
+    import os;
+    import gc;
+    if os.environ.get("JAC_GC_FREEZE", "").lower() in ("1", "true", "yes", "on") {
+        gc.collect();
+        gc.freeze();
+    }
+
     prebound = self?._prebound_listen_socket;
     if prebound is not None {
         config = uvicorn.Config(
