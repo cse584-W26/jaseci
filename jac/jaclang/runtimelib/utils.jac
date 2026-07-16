@@ -115,6 +115,15 @@ def lean_response_enabled -> bool {
 }
 
 
+def read_autocommit_enabled -> bool {
+    env = os.environ.get("JAC_READ_AUTOCOMMIT");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes", "on");
+    }
+    return True;
+}
+
+
 def release_arch(raw: str) -> str {
     m = raw.strip().lower();
     if m in ("arm64", "aarch64") {

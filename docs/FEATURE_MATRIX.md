@@ -38,7 +38,7 @@ Structural note: **postgres-KV is not a peer** for query-plan pushdown - empty `
 | JAC_TOPOLOGY_SQL_CHAIN | on | **none** (pure env, unlike siblings) | **yes [HK]** |
 | JAC_ACCESS_LOG | on (truthy) | `[server] access_log` (env wins) | **yes [HK]** (new this pass) |
 | JAC_SCALE_BACKEND | auto | `[scale.database].backend` | yes |
-| pg read autocommit | always-on | n/a - hardcoded, not a flag | **yes [HK]** (documented as a non-flag in ENV.md) |
+| JAC_READ_AUTOCOMMIT | on (True) | none (env-only) | **yes [HK]** (A/B ablation flag over `_read_conn`; covers postgres + postgres-rel) |
 
 # Gaps
 

@@ -15,6 +15,7 @@ import threading;
 import from contextlib { contextmanager }
 import from jaclang.scale._optdeps.psycopg { ConnectionPool, TransactionStatus, Jsonb }
 import from jaclang.runtimelib.exceptions { WriteConflict }
+import from jaclang.runtimelib.utils { read_autocommit_enabled }
 
 # Guards first-build of a process-cached pool (postinit runs in
 # asyncio.to_thread workers; an unguarded check-then-set would leak a
@@ -755,16 +756,21 @@ impl PostgresBackend.is_available -> bool {
 """Read-only connection checkout: autocommit for the read, no implicit txn,
 so the pool's return check finds the connection IDLE instead of INTRANS -
 saves a ROLLBACK round-trip per call. Restored before putconn so write
-checkouts keep their transactional default. Always-on, not a flag
-(ex-commit 5fbce338e)."""
+checkouts keep their transactional default. Default-on; JAC_READ_AUTOCOMMIT=0
+restores the pre-5fbce338e behavior for A/B ablation."""
 @contextmanager
 impl PostgresBackend._read_conn -> Any {
     conn = self.__pool__.getconn();
-    conn.autocommit = True;
+    ac = read_autocommit_enabled();
+    if ac {
+        conn.autocommit = True;
+    }
     try {
         yield conn;
     } finally {
-        conn.autocommit = False;
+        if ac {
+            conn.autocommit = False;
+        }
         self.__pool__.putconn(conn);
     }
 }

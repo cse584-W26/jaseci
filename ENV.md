@@ -32,7 +32,7 @@ Env wins over `jac.toml`'s `[scale.database]` table (`backend`, `postgresql_uri`
 | `JAC_ORDERED_TRAVERSAL` | off | The `jac.toml` `[run] ordered_traversal` mirror key is wired as of feat/housekeeping (commit c7773bb6e); env var and toml key both work now. |
 | `JAC_ACCESS_LOG` | on (truthy) | Uvicorn per-request access-log toggle; env wins over the `[server] access_log` toml key. Set `0` to silence the per-request log line for bench runs (floor-fix port, commit 1111c349a). |
 
-**Pg read-path autocommit is not a flag.** The autocommit behavior on the Postgres read path (lineage: commit `5fbce338e`, `fix/pg-l3-read-trips`) is hardcoded always-on in this branch - there is no env var or toml key to toggle it off.
+| `JAC_READ_AUTOCOMMIT` | on (truthy) | Postgres read-path autocommit (lineage: commit `5fbce338e`). Default-on: reads take connections in autocommit so the pool return check finds them IDLE, saving a ROLLBACK round trip per read. Set `0` to restore pre-fix behavior for A/B ablation. Covers both postgres and postgres-rel via `PostgresBackend._read_conn`. |
 
 ## Transport parity - TCP URI required for comparative runs
 
