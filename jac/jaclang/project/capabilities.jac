@@ -98,6 +98,7 @@ glob INTENT_RULES: list[dict[str, any]] = [
                  "mongo": "data.mongo",
                  "mongodb": "data.mongo",
                  "postgres": "data.postgres",
+                 "postgres-rel": "data.postgres",
                  "postgresql": "data.postgres",
                  "redis": "data.redis"
              }

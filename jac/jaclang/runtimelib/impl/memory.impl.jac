@@ -1793,6 +1793,9 @@ impl TieredMemory._collect_into(changes: ChangeSet) -> None {
         if not anchor.persistent or not anchor.is_populated() {
             continue;
         }
+        if anchor?._projected_fields is not None {
+            continue;
+        }
         existing = changes.intents.get(id);
         if existing is not None and existing.is_delete() {
             continue;
@@ -1981,6 +1984,10 @@ impl TieredMemory.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None]
 
     to_l2: list[Anchor] = [];
     for anchor in self.l3.execute_plan(plan) {
+        if anchor?._projected_fields is not None {
+            yield anchor;
+            continue;
+        }
         existing = self.__mem__.get(anchor.id);
         if existing is None {
             self.__mem__[anchor.id] = anchor;

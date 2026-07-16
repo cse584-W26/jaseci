@@ -19,7 +19,8 @@ obj QueryPlan {
         id_in: (set[UUID] | None) = None,
         slc: (slice | None) = None,
         node_type_final: (str | None) = None,
-        post_filter: (Callable[[Anchor], bool] | None) = None;
+        post_filter: (Callable[[Anchor], bool] | None) = None,
+        projection: (set[str] | None) = None;
 
     def is_trivial -> bool;
     def needs -> set[str];

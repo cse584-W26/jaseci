@@ -484,7 +484,7 @@ impl MongoBackend.get_roots -> Generator[Root, None, None] {
 
 
 impl MongoBackend.capabilities -> set[str] {
-    return {'type_pushdown', 'field_pushdown', 'id_in', 'slice'};
+    return {'type_pushdown', 'field_pushdown', 'id_in', 'slice', 'projection'};
 }
 
 
@@ -528,7 +528,14 @@ impl MongoBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None]
     }
     (filt, skip_n, limit_n) = _plan_to_mongo_filter(plan);
     try {
-        cursor = self.collection.find(filt);
+        proj_doc: (dict | None) = None;
+        if plan.projection is not None {
+            proj_doc = {'type': 1, 'arch_type': 1, 'arch_module': 1};
+            for f in plan.projection {
+                proj_doc[f'data.archetype.{f}'] = 1;
+            }
+        }
+        cursor = self.collection.find(filt, proj_doc);
         if skip_n {
             cursor = cursor.skip(skip_n);
         }
@@ -536,7 +543,19 @@ impl MongoBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None]
             cursor = cursor.limit(limit_n);
         }
         for doc in cursor {
-            if (anchor := self._load_anchor(doc)) {
+            if plan.projection is not None {
+                slim = Serializer.deserialize_projected(
+                    to_uuid(doc['_id']),
+                    doc.get('arch_module', ''),
+                    doc.get('arch_type', ''),
+                    doc.get('data', {}).get('archetype', {}),
+                    plan.projection
+                );
+                if slim is not None {
+                    self.projection_count += 1;
+                    yield slim;
+                }
+            } elif (anchor := self._load_anchor(doc)) {
                 yield anchor;
             }
         }

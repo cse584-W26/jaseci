@@ -22,7 +22,7 @@ import from jaclang.runtimelib.memory {
     SqliteMemory
 }
 import from jaclang.runtimelib.query_plan { QueryPlan }
-import from jaclang.runtimelib.utils { storage_key, to_uuid }
+import from jaclang.runtimelib.utils { projection_cfg, storage_key, to_uuid }
 import from jaclang.runtimelib.serializer { Serializer }
 import from jaclang.runtimelib.typecache { get_field_types }
 import from jaclang.scale.config.config_loader { get_scale_config }
@@ -88,7 +88,8 @@ obj MongoBackend(PersistentMemory) {
         _l2_ref: (any | None) = None,
         _l1_id: (str | None) = None,
         fetch_count: int = 0,
-        put_count: int = 0;
+        put_count: int = 0,
+        projection_count: int = 0;
 
     def postinit -> None;
     def set_cache_ref(cache: (any | None)) -> None;
@@ -183,6 +184,9 @@ obj PostgresBackend(PersistentMemory) {
     # Load-bearing (not abstract): single round-trip for N ids.
     def batch_get(ids: list[UUID]) -> dict[UUID, Anchor];
     def apply(changeset: ChangeSet) -> ApplyReport;
+    # Per-intent dispatch seam: subclasses extend the flush unit (e.g. the
+    # rel backend's edge-row maintenance) without copying apply()'s ladder.
+    def _apply_intent(conn: Any, intent: WriteIntent) -> None;
     def inspect_summary -> dict;
     def list_quarantined(limit: int = 50) -> list;
     def show_quarantined(id_prefix: str) -> (dict | None);
@@ -199,7 +203,36 @@ obj PostgresBackend(PersistentMemory) {
     def fsck(repair: bool = False) -> dict;
 }
 
-enum PersistenceType { NONE, MONGODB, SQLITE, POSTGRES }
+obj PostgresRelBackend(PostgresBackend) {
+    # Relational-topology variant: edges as rows answered by indexed SQL
+    # instead of per-root GTI blob decode (see ARCH_REL.md). Anchor storage,
+    # OCC merge-write, quarantine, fsck are inherited from PostgresBackend;
+    # this subclass adds the edges index table + a SQL hop resolver the
+    # traversal resolver dispatches to via the 'topology_sql' capability.
+    has rel_hop_count: int = 0,
+        rel_chain_count: int = 0,
+        rel_hop_fallback_count: int = 0,
+        rel_projection_count: int = 0;
+
+    def postinit -> None;
+    def capabilities -> set[str];
+    def execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None];
+    def put(anchor: Anchor) -> None;
+    def _apply_intent(conn: Any, intent: WriteIntent) -> None;
+    def resolve_hop_sql(
+        current_ids: set[UUID],
+        edge_type: (str | None),
+        node_type: (str | None),
+        direction: int,
+        slc: (slice | None) = None
+    ) -> (set[UUID] | list[UUID] | None);
+
+    def resolve_chain_sql(
+        origin_ids: set[UUID], chain: list[tuple], slc: (slice | None) = None
+    ) -> (set[UUID] | list[UUID] | None);
+}
+
+enum PersistenceType { NONE, MONGODB, SQLITE, POSTGRES, POSTGRES_REL }
 
 obj ScaleTieredMemory(TieredMemory) {
     has _cache_available: bool = False,

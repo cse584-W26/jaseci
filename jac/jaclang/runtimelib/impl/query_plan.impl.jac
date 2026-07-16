@@ -23,6 +23,9 @@ impl QueryPlan.needs -> set[str] {
     if self.slc is not None {
         needs.add('slice');
     }
+    if self.projection is not None {
+        needs.add('projection');
+    }
     return needs;
 }
 

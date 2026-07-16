@@ -250,7 +250,7 @@ impl Serializer._deserialize_jac_ref(data: dict[str, object]) -> (object | None)
         return None;
     }
     try {
-        ref_uuid = UUID(id_str);
+        ref_uuid = _intern_uuid(id_str);
     } except (ValueError, AttributeError) {
         logger.error(f"Invalid UUID in $ref: {id_str}");
         return None;
@@ -480,7 +480,7 @@ impl Serializer.coerce(val: object, target_type: object) -> tuple {
             return (str(val), True);
         }
         if base is UUID and isinstance(val, str) {
-            return (UUID(val), True);
+            return (_intern_uuid(val), True);
         }
 
         if base is datetime and isinstance(val, str) {
@@ -559,7 +559,7 @@ impl Serializer._get_class(module_name: str, class_name: str) -> (type | None) {
 impl Serializer._id_to_stub(anchor_cls: type, id_str: str) -> (Anchor | None) {
     try {
         stub = anchor_cls.__new__(anchor_cls);
-        stub.id = UUID(id_str);
+        stub.id = _intern_uuid(id_str);
         return stub;
     } except Exception as e {
         logger.error(
@@ -575,8 +575,8 @@ impl Serializer._deserialize_anchor(data: dict[str, object]) -> (Anchor | None) 
     );
     try {
         anchor = anchor_cls.__new__(anchor_cls);
-        anchor.id = UUID(data['id']) if data.get('id') else None;
-        anchor.root = UUID(data['root']) if data.get('root') else None;
+        anchor.id = _intern_uuid(data['id']) if data.get('id') else None;
+        anchor.root = _intern_uuid(data['root']) if data.get('root') else None;
         anchor.persistent = data.get('persistent', False);
         anchor.access = Serializer._deserialize_permission(data.get('access'));
 
@@ -616,7 +616,7 @@ impl Serializer._deserialize_anchor(data: dict[str, object]) -> (Anchor | None) 
             setattr(
                 anchor,
                 '_initial_edge_ids',
-                frozenset(UUID(eid) for eid in (edge_ids or []))
+                frozenset(_intern_uuid(eid) for eid in (edge_ids or []))
             );
 
             anchor.version = data.get('version', 0);
@@ -803,6 +803,43 @@ impl Serializer._deserialize_archetype(
         return arch;
     } except Exception as e {
         logger.error(f"Failed to deserialize archetype {type_name}: {e}");
+        return None;
+    }
+}
+
+impl Serializer.deserialize_projected(
+    anchor_id: UUID,
+    arch_module: str,
+    arch_type: str,
+    fields: dict[str, object],
+    projected: set[str]
+) -> (object | None) {
+    resolved = Serializer._get_class(arch_module, arch_type);
+    if resolved is None {
+        return None;
+    }
+    cls = cast(type, resolved);
+    try {
+        arch: object = cls.__new__(cls);
+        for f in projected {
+            if f in fields {
+                setattr(arch, f, Serializer._deserialize_value(fields[f]));
+            }
+        }
+        anchor = NodeAnchor.__new__(NodeAnchor);
+        anchor.id = anchor_id;
+        anchor.root = None;
+        anchor.persistent = True;
+        anchor.edges = [];
+        anchor.hash = 0;
+        anchor.version = 0;
+        anchor.access = Permission();
+        anchor.archetype = arch;
+        setattr(arch, '__jac__', anchor);
+        setattr(anchor, '_projected_fields', set(projected));
+        return anchor;
+    } except Exception as e {
+        logger.error(f"Failed to build projected anchor {arch_type}: {e}");
         return None;
     }
 }

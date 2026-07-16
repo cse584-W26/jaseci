@@ -1,5 +1,6 @@
 import logging;
 import from dataclasses { fields, is_dataclass, MISSING }
+import from functools { lru_cache }
 import from datetime { date, datetime, time }
 import from enum { Enum }
 import from hashlib { sha256 }
@@ -30,6 +31,13 @@ import from jaclang.jac0core.constructs {
 
 glob logger = logging.getLogger(__name__),
      FINGERPRINT_LENGTH: int = 16;
+
+
+@lru_cache(maxsize=65536)
+def _intern_uuid(id_str: str) -> UUID {
+    return UUID(id_str);
+}
+
 
 obj Serializer {
     static has _registry: dict[str, type] = {},
@@ -74,6 +82,14 @@ obj Serializer {
     static def _deserialize_access(data: object) -> object;
     static def _deserialize_archetype(
         data: dict[str, object], anchor: object
+    ) -> (object | None);
+
+    static def deserialize_projected(
+        anchor_id: UUID,
+        arch_module: str,
+        arch_type: str,
+        fields: dict[str, object],
+        projected: set[str]
     ) -> (object | None);
 
     static def _compute_hash(anchor: object) -> int;

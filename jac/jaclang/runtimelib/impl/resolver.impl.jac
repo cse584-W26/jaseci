@@ -26,6 +26,16 @@ def _ordered_traversal_enabled -> bool {
 }
 
 
+def _chain_sql_enabled -> bool {
+    import os;
+    env = os.environ.get("JAC_TOPOLOGY_SQL_CHAIN");
+    if env is not None {
+        return env.lower() not in ("0", "false", "no", "off");
+    }
+    return True;
+}
+
+
 def _cross_root_enabled -> bool {
     import os;
     env = os.environ.get("JAC_CROSS_ROOT_RESOLVE");
@@ -119,6 +129,45 @@ def _trace_final(strategy: str, narrowed: int, extra: str = '') -> None {
     }
     suffix = f" {extra}" if extra else '';
     logger.info(f"[query] final:{strategy} narrowed={narrowed}{suffix}");
+}
+
+
+def _projection_for(
+    mem: Memory, node_type: (str | None), has_post_filter: bool
+) -> (set[str] | None) {
+    if node_type is None or has_post_filter {
+        return None;
+    }
+    import from jaclang.runtimelib.utils { projection_cfg }
+    cfg = projection_cfg();
+    if node_type not in cfg {
+        return None;
+    }
+    import from jaclang.runtimelib.memory { _read_only_enabled }
+    if not _read_only_enabled() {
+        return None;
+    }
+    if 'projection' not in mem.capabilities() {
+        return None;
+    }
+    return cfg[node_type];
+}
+
+
+def _materialize_ids_projected(
+    mem: Memory, ids: list, node_type: (str | None), projection: set[str]
+) -> (list[NodeAnchor] | None) {
+    plan = QueryPlan(id_in=set(ids), node_type_final=node_type, projection=projection);
+    if not (plan.needs() <= mem.capabilities()) {
+        return None;
+    }
+    fetched = _try_pushdown(mem, plan);
+    by_id = {a.id: a for a in fetched};
+    return [
+        by_id[i]
+        for i in ids
+        if i in by_id
+    ];
 }
 
 
@@ -280,6 +329,20 @@ impl resolve_hop(
         _filter_has_predicates(hop.dest.nd) or _filter_has_predicates(hop.dest.`edge)
     );
     in_count = len(current_ids);
+
+    if not has_pred and current_ids and 'topology_sql' in mem.capabilities() {
+        sql_backend = mem?.l3 or mem;
+        sql_fn = sql_backend?.resolve_hop_sql;
+        if sql_fn is not None {
+            sql_res = sql_fn(
+                current_ids, hop.edge_type, hop.node_type, hop.direction, slc
+            );
+            if sql_res is not None {
+                _trace_hop('sql', hop_idx, in_count, len(sql_res), hop);
+                return sql_res;
+            }
+        }
+    }
     if not has_pred and idx is not None {
         import from jaclang.runtimelib.topology_index { SELF_ROOT }
         if all(
@@ -364,18 +427,8 @@ impl resolve_path_anchors(
 
     idx = _get_usable_index(root_anchor);
     current: set[UUID] = {cast(UUID, nd.__jac__.id) for nd in path.origin};
-    if len(chain) > 1 {
-        current = _resolve_prefix(mem, current, chain[:-1], idx);
-    }
     last_hop = chain[-1];
     last_has_post_filter = _filter_has_predicates(last_hop.dest.nd);
-
-    if last_has_post_filter {
-        pushed = _try_field_pushdown(mem, current, last_hop, idx, root_anchor, slc);
-        if pushed is not None {
-            return pushed;
-        }
-    }
     post_filter: (Callable[[Archetype], bool] | None) = (
         last_hop.dest.node_filter if last_has_post_filter else None
     );
@@ -385,8 +438,55 @@ impl resolve_path_anchors(
     if use_ordered {
         effective_slc = slc if slc is not None else slice(None, None, None);
     }
-    result = resolve_hop(mem, current, last_hop, idx, len(chain) - 1, effective_slc);
+
+    result: (set[UUID] | list[UUID] | None) = None;
+    if (
+        len(chain) > 1
+        and current
+        and not last_has_post_filter
+        and _chain_sql_enabled()
+        and 'topology_sql' in mem.capabilities()
+        and not any(
+            _filter_has_predicates(h.dest.nd) or _filter_has_predicates(h.dest.`edge)
+            for h in chain
+        )
+    ) {
+        sql_backend = mem?.l3 or mem;
+        chain_fn = sql_backend?.resolve_chain_sql;
+        if chain_fn is not None {
+            triples = [(h.edge_type, h.node_type, h.direction) for h in chain];
+            result = chain_fn(current, triples, effective_slc);
+            if result is not None {
+                _trace_final('chain-sql', len(result), f"hops={len(chain)}");
+            }
+        }
+    }
+
+    if result is None {
+        if len(chain) > 1 {
+            current = _resolve_prefix(mem, current, chain[:-1], idx);
+        }
+        if last_has_post_filter {
+            pushed = _try_field_pushdown(mem, current, last_hop, idx, root_anchor, slc);
+            if pushed is not None {
+                return pushed;
+            }
+        }
+        result = resolve_hop(
+            mem, current, last_hop, idx, len(chain) - 1, effective_slc
+        );
+    }
     if isinstance(result, list) {
+        proj_b = _projection_for(mem, last_hop.node_type, False);
+        if proj_b is not None and 'topology_sql' in mem.capabilities() {
+            projected = _materialize_ids_projected(
+                mem, result, last_hop.node_type, proj_b
+            );
+            if projected is not None {
+                _trace_final('projected-ordered', len(projected));
+                return projected;
+            }
+        }
         return _materialize_ids(mem, result);
     }
 
@@ -399,6 +499,10 @@ impl resolve_path_anchors(
             slc=slc,
             post_filter=post_filter,
         );
+        proj_a = _projection_for(mem, last_hop.node_type, post_filter is not None);
+        if proj_a is not None {
+            plan.projection = proj_a;
+        }
         if plan.needs() <= mem.capabilities() {
             _trace_final('pushdown', len(result));
             return _try_pushdown(mem, plan);

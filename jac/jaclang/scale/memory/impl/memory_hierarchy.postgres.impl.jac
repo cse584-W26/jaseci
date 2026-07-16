@@ -576,6 +576,14 @@ def _pg_apply_one(conn: any, intent: WriteIntent) -> None {
 }
 
 
+"""Per-intent dispatch seam for apply()'s ladder. Subclasses (PostgresRelBackend)
+extend the flush unit here -- e.g. edge-row maintenance in the same
+transaction -- without copying apply()'s error/rollback machinery."""
+impl PostgresBackend._apply_intent(conn: Any, intent: WriteIntent) -> None {
+    _pg_apply_one(conn, intent);
+}
+
+
 # =============================================================================
 # Operator-surface helpers — quarantine recovery / aliases / fsck (P4)
 # =============================================================================
@@ -748,11 +756,17 @@ set (L1/L2 own the identity map). A row that fails to load is quarantined,
 not returned. Mirrors SqliteMemory.get."""
 impl PostgresBackend.get(id: UUID) -> (Anchor | None) {
     conn = self.__pool__.getconn();
+    # autocommit for the read: no implicit txn, so the pool's return check
+    # finds the connection IDLE instead of INTRANS - saves a ROLLBACK
+    # round-trip per call. Restored before putconn so write checkouts keep
+    # their transactional default.
+    conn.autocommit = True;
     try {
         row: any = conn.execute(
             f"SELECT {_READ_COLS} FROM anchors WHERE id = %s", (str(id), )
         ).fetchone();
     } finally {
+        conn.autocommit = False;
         self.__pool__.putconn(conn);
     }
     if row is None {
@@ -826,12 +840,14 @@ impl PostgresBackend.delete(id: UUID) -> None { }
 
 impl PostgresBackend.`has(id: UUID) -> bool {
     conn = self.__pool__.getconn();
+    conn.autocommit = True;  # read-only: skip txn + return-rollback trip
     try {
         row = conn.execute(
             "SELECT 1 FROM anchors WHERE id = %s", (str(id), )
         ).fetchone();
         return row is not None;
     } finally {
+        conn.autocommit = False;
         self.__pool__.putconn(conn);
     }
 }
@@ -842,9 +858,11 @@ impl PostgresBackend.query(
     filter: (Callable[[Anchor], bool] | None) = None
 ) -> Generator[Anchor, None, None] {
     conn = self.__pool__.getconn();
+    conn.autocommit = True;  # read-only: skip txn + return-rollback trip
     try {
         rows: any = conn.execute(f"SELECT id, {_READ_COLS} FROM anchors").fetchall();
     } finally {
+        conn.autocommit = False;
         self.__pool__.putconn(conn);
     }
     for row in rows {
@@ -867,12 +885,14 @@ does issubclass() to catch those. Widen to that scan if custom root types
 appear."""
 impl PostgresBackend.get_roots -> Generator[Root, None, None] {
     conn = self.__pool__.getconn();
+    conn.autocommit = True;  # read-only: skip txn + return-rollback trip
     try {
         rows: any = conn.execute(
             f"SELECT id, {_READ_COLS} FROM anchors "
             "WHERE type = 'NodeAnchor' AND arch_type = 'Root'"
         ).fetchall();
     } finally {
+        conn.autocommit = False;
         self.__pool__.putconn(conn);
     }
     for row in rows {
@@ -936,11 +956,13 @@ impl PostgresBackend.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
     }
     str_ids = [str(id) for id in ids];
     conn = self.__pool__.getconn();
+    conn.autocommit = True;  # read-only: skip txn + return-rollback trip
     try {
         rows: any = conn.execute(
             f"SELECT id, {_READ_COLS} FROM anchors WHERE id = ANY(%s)", (str_ids, )
         ).fetchall();
     } finally {
+        conn.autocommit = False;
         self.__pool__.putconn(conn);
     }
     self.l3_fetch_count += 1;
@@ -994,7 +1016,7 @@ impl PostgresBackend.apply(changeset: ChangeSet) -> ApplyReport {
                         continue;
                     }
                     try {
-                        _pg_apply_one(conn, intent);
+                        self._apply_intent(conn, intent);
                         apply_report.applied.append(intent.anchor.id);
                     } except WriteConflict as wc {
                         # OCC miss: poison like any failed write (skips
