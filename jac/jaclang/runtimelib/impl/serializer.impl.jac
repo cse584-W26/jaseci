@@ -15,7 +15,9 @@ impl Serializer._serialize_attrs(
     _seen: (tuple[set, set] | None) = None
 ) -> dict[str, object] {
     _anchor = `obj?.__jac__;
-    projected = _anchor?._projected_fields if _anchor is not None else None;
+    projected = _anchor.__dict__.get('_projected_fields')
+        if _anchor is not None
+        else None;
     result = {
         a: Serializer._serialize_value(
             getattr(`obj, a), include_type, api_mode, ref_mode, _seen
