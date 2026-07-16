@@ -1,4 +1,4 @@
-# ENV - environment setup for feat/postgres-l3-r2
+# ENV - flag reference for bench/all-flags
 
 ## Postgres backend selection
 
@@ -16,6 +16,22 @@ disjoint from the KV suites' `jactest`.
 
 Env wins over `jac.toml`'s `[scale.database]` table (`backend`, `postgresql_uri` keys - top-level
 `[scale]`, **not** `[plugins.scale]`).
+
+## Other flags
+
+| Env var | Default | Scope / notes |
+|---|---|---|
+| `JAC_TOPOLOGY_INDEX` | on | Gates the GTI **write** hooks only (`on_edge_created/destroyed`, `on_node_saved/destroyed`) - reads always use whatever GTI blobs already exist, flag has no read-path effect. |
+| `JAC_CROSS_ROOT_RESOLVE` | off | Per-hop foreign-root GTI resolution. |
+| `JAC_BATCH_L3` | off | Collapses frontier misses into one `$in`/`ANY()` fetch instead of per-id round-trips. |
+| `JAC_READ_ONLY` | off | **WARNING**: silently drops writes at commit. A perf-isolation probe (measures read-path cost with write cost zeroed out), not a safety/dry-run mode - do not enable on anything you want persisted. |
+| `JAC_API_LEAN_RESPONSE` | off | Drops the response envelope in the API layer (serialization-size ablation). |
+| `JAC_PROJECTION` | unset | Format: `Type:f1,f2;Type2:f3`. Env-only - no `jac.toml` mirror. Supported on mongo (Route A) and postgres-rel (Routes A/B); no-op on postgres KV. |
+| `JAC_ORDER_PUSHDOWN` | unset | Format: `NodeType:field:asc|desc`.`postgres-rel` only. Experiment flag - pushes an `ORDER BY` into SQL; text-sort semantics, so only safe for lexicographically-sortable fields (e.g. ISO-8601 timestamps), not general numeric/typed ordering. |
+| `JAC_TOPOLOGY_SQL_CHAIN` | on | `postgres-rel` only, env-only (no toml mirror). Collapses a multi-hop chain into one SQL call instead of one query per hop. |
+| `JAC_ORDERED_TRAVERSAL` | off | Note: the `jac.toml` mirror key for this flag is currently dead (constructor drops it before it reaches the flag check) - env var only for now; see `PORT_NOTES_R2.md` for the toml-key fix tracking. |
+
+**Pg read-path autocommit is not a flag.** The autocommit behavior on the Postgres read path (lineage: commit `5fbce338e`, `fix/pg-l3-read-trips`) is hardcoded always-on in this branch - there is no env var or toml key to toggle it off.
 
 ## Transport parity - TCP URI required for comparative runs
 
@@ -51,11 +67,14 @@ to how the Mongo container is reached).
 
 ## HANDOFF - running the MVP on this branch
 
-Branch: `feat/postgres-l3-r2` (worktree `/home/aaron/Dev/Research/DatabaseResearch/JaseciFork-pgr2`).
+Branch: `bench/all-flags`. Worktrees: main checkout `/home/aaron/Dev/Research/DatabaseResearch/JaseciFork`
+(on `bench/all-flags`), plus `/home/aaron/Dev/Research/DatabaseResearch/JaseciFork-lean`
+(`feat/lean-response`) and `/home/aaron/Dev/Research/DatabaseResearch/JaseciFork-pgrel`
+(`feat/pg-rel-mvp`). `JaseciFork-pgr2` does not exist - superseded, do not look for it.
 
 ```bash
-cd /home/aaron/Dev/Research/DatabaseResearch/JaseciFork-pgr2   # always cd first - dev-mode
-                                                                 # source resolution is cwd-relative
+cd /home/aaron/Dev/Research/DatabaseResearch/JaseciFork   # always cd first - dev-mode
+                                                             # source resolution is cwd-relative
 
 # 1. Postgres reachable over TCP (see recipe above), then:
 export JAC_SCALE_BACKEND=postgres
@@ -70,7 +89,8 @@ jac start <your_app>.jac
 
 Sanity checks before trusting numbers:
 
-- `jac --version` / startup banner should say "compiler source at .../JaseciFork-pgr2/jac".
+- `jac --version` / startup banner should say "compiler source at .../JaseciFork/jac" (or the
+  worktree you `cd`'d into).
 - `psql "$POSTGRESQL_URI" -c 'select 1'` succeeds over TCP (not a bare `psql dbname` peer-auth
   shortcut) before starting the harness.
 - A misconfigured/unreachable Postgres with `JAC_SCALE_BACKEND=postgres` must raise at startup,

@@ -116,6 +116,10 @@ Seam tests prove the headline: 2-hop traversal resolves through SQL with
 JAC_TOPOLOGY_INDEX **off** and rel_hop_count > 0; JAC_TOPOLOGY_SQL=0 falls
 back to the walk with identical results.
 
+Addendum (2026-07-16): the 18-test count above is point-in-time.
+`test_postgres_rel_backend.jac` now contains 27 test blocks (order pushdown,
+chain, and projection tests landed after this section was written).
+
 ## Pending (gated / next)
 
 - Rel e2e (`jac start` boot, GTI off, cold restart) -- server boot gated.
