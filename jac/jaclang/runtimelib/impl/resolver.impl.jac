@@ -143,8 +143,8 @@ def _projection_for(
     if node_type not in cfg {
         return None;
     }
-    import from jaclang.runtimelib.memory { _read_only_enabled }
-    if not _read_only_enabled() {
+    import from jaclang.runtimelib.utils { read_only_enabled }
+    if not read_only_enabled() {
         return None;
     }
     if 'projection' not in mem.capabilities() {

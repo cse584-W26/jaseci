@@ -20,6 +20,7 @@ import from jaclang.runtimelib.exceptions { WriteConflict }
 import from jaclang.runtimelib.serializer { Serializer }
 import from jaclang.runtimelib.query_plan { QueryPlan }
 import from jaclang.runtimelib.typecache { get_field_types }
+import from jaclang.runtimelib.utils { read_only_enabled }
 
 glob logger = logging.getLogger(__name__),
      SQLITE_DB_FORMAT_VERSION: int = 1;
@@ -1785,7 +1786,7 @@ impl TieredMemory.commit(anchor: (Anchor | None) = None) -> None {
 }
 
 impl TieredMemory._collect_into(changes: ChangeSet) -> None {
-    if _read_only_enabled() {
+    if read_only_enabled() {
         return;
     }
     import from jaclang { JacRuntimeInterface as Jac }
@@ -2013,21 +2014,6 @@ def _batch_l3_enabled -> bool {
         import from jaclang.project.config { get_config }
         cfg = get_config();
         return cfg is not None and cfg.run.batch_l3;
-    } except Exception {
-        return False;
-    }
-}
-
-
-def _read_only_enabled -> bool {
-    env = os.environ.get("JAC_READ_ONLY");
-    if env is not None {
-        return env.lower() in ("1", "true", "yes", "on");
-    }
-    try {
-        import from jaclang.project.config { get_config }
-        cfg = get_config();
-        return cfg is not None and cfg.run.read_only;
     } except Exception {
         return False;
     }

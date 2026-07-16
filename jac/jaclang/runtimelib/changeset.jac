@@ -201,24 +201,11 @@ def field_hash(serialized: object) -> int {
 }
 
 
-def _read_only_enabled -> bool {
-    import os;
-    env = os.environ.get("JAC_READ_ONLY");
-    if env is not None {
-        return env.lower() in ("1", "true", "yes", "on");
-    }
-    try {
-        import from jaclang.project.config { get_config }
-        cfg = get_config();
-        return cfg is not None and cfg.run.read_only;
-    } except Exception {
-        return False;
-    }
-}
+import from jaclang.runtimelib.utils { read_only_enabled }
 
 
 def snapshot_field_hashes(anchor: Anchor) -> None {
-    if _read_only_enabled() {
+    if read_only_enabled() {
         return;
     }
     if not anchor.is_populated() or anchor.archetype is None {

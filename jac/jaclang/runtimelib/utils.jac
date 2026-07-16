@@ -75,6 +75,36 @@ def order_pushdown_cfg(node_type: (str | None)) -> (tuple | None) {
 }
 
 
+def read_only_enabled -> bool {
+    env = os.environ.get("JAC_READ_ONLY");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes", "on");
+    }
+    try {
+        import from jaclang.project.config { get_config }
+        cfg = get_config();
+        return cfg is not None and cfg.run.read_only;
+    } except Exception {
+        return False;
+    }
+}
+
+
+def lean_response_enabled -> bool {
+    env = os.environ.get("JAC_API_LEAN_RESPONSE");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes", "on");
+    }
+    try {
+        import from jaclang.project.config { get_config }
+        cfg = get_config();
+        return cfg is not None and cfg.run.api_lean_response;
+    } except Exception {
+        return False;
+    }
+}
+
+
 def release_arch(raw: str) -> str {
     m = raw.strip().lower();
     if m in ("arm64", "aarch64") {

@@ -1,33 +1,4 @@
-def _read_only_enabled -> bool {
-    import os;
-    env = os.environ.get("JAC_READ_ONLY");
-    if env is not None {
-        return env.lower() in ("1", "true", "yes", "on");
-    }
-    try {
-        import from jaclang.project.config { get_config }
-        cfg = get_config();
-        return cfg is not None and cfg.run.read_only;
-    } except Exception {
-        return False;
-    }
-}
-
-
-def _lean_response_enabled -> bool {
-    import os;
-    env = os.environ.get("JAC_API_LEAN_RESPONSE");
-    if env is not None {
-        return env.lower() in ("1", "true", "yes", "on");
-    }
-    try {
-        import from jaclang.project.config { get_config }
-        cfg = get_config();
-        return cfg is not None and cfg.run.api_lean_response;
-    } except Exception {
-        return False;
-    }
-}
+import from jaclang.runtimelib.utils { read_only_enabled, lean_response_enabled }
 
 
 impl Serializer._type_info(`obj: object, `include: bool) -> dict[str, object] {
@@ -205,7 +176,7 @@ impl Serializer._serialize_value(
             }
         }
         result = Serializer._type_info(val, include_type);
-        if api_mode and not _lean_response_enabled() {
+        if api_mode and not lean_response_enabled() {
             result |= {
                 '_jac_type': type(val).__name__,
                 '_jac_id': val.__jac__.id.hex if val?.__jac__ else None,
@@ -646,7 +617,7 @@ impl Serializer._deserialize_anchor(data: dict[str, object]) -> (Anchor | None) 
             }
         }
 
-        if not _read_only_enabled() {
+        if not read_only_enabled() {
             anchor.hash = Serializer._compute_hash(anchor);
         }
         return anchor;
