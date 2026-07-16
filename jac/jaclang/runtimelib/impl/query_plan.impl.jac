@@ -26,6 +26,9 @@ impl QueryPlan.needs -> set[str] {
     if self.projection is not None {
         needs.add('projection');
     }
+    if self.order is not None {
+        needs.add('order_pushdown');
+    }
     return needs;
 }
 

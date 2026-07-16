@@ -58,6 +58,23 @@ def projection_cfg -> dict[str, set[str]] {
 }
 
 
+def order_pushdown_cfg(node_type: (str | None)) -> (tuple | None) {
+    if node_type is None {
+        return None;
+    }
+    raw = os.environ.get("JAC_ORDER_PUSHDOWN");
+    if not raw {
+        return None;
+    }
+    parts = raw.split(":");
+    if len(parts) != 3 or parts[0] != node_type or not parts[1] {
+        return None;
+    }
+    direction = 'DESC' if parts[2].lower() == 'desc' else 'ASC';
+    return (parts[0], parts[1], direction);
+}
+
+
 def release_arch(raw: str) -> str {
     m = raw.strip().lower();
     if m in ("arm64", "aarch64") {

@@ -55,26 +55,10 @@ impl PostgresRelBackend.postinit -> None {
 }
 
 
-"""EXPERIMENT FLAG (default off): JAC_ORDER_PUSHDOWN="NodeType:field:desc"
-pushes result ordering into PG for hops whose node filter matches NodeType,
-ordering by that archetype JSON field. Returns (type, field, 'ASC'|'DESC')
-or None. Perf probe for sort-in-PG-vs-python; the durable home for this is
-ordered-traversal language syntax later (see PORT_NOTES_REL.md)."""
-def _order_pushdown_cfg(node_type: (str | None)) -> (tuple | None) {
-    if node_type is None {
-        return None;
-    }
-    raw = os.environ.get("JAC_ORDER_PUSHDOWN");
-    if not raw {
-        return None;
-    }
-    parts = raw.split(":");
-    if len(parts) != 3 or parts[0] != node_type or not parts[1] {
-        return None;
-    }
-    direction = 'DESC' if parts[2].lower() == 'desc' else 'ASC';
-    return (parts[0], parts[1], direction);
-}
+# JAC_ORDER_PUSHDOWN parser now lives in runtimelib.utils (shared with the
+# mongo Route-A tail); imported here so pg-rel's mid-chain SQL ordering is
+# unchanged. See utils.order_pushdown_cfg for the flag format.
+import from jaclang.runtimelib.utils { order_pushdown_cfg as _order_pushdown_cfg }
 
 
 """Advertise SQL topology. JAC_TOPOLOGY_SQL=0 turns the resolver dispatch off

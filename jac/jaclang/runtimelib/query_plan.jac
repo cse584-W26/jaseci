@@ -20,7 +20,8 @@ obj QueryPlan {
         slc: (slice | None) = None,
         node_type_final: (str | None) = None,
         post_filter: (Callable[[Anchor], bool] | None) = None,
-        projection: (set[str] | None) = None;
+        projection: (set[str] | None) = None,
+        order: (tuple | None) = None;
 
     def is_trivial -> bool;
     def needs -> set[str];

@@ -503,6 +503,14 @@ impl resolve_path_anchors(
         if proj_a is not None {
             plan.projection = proj_a;
         }
+
+        if 'order_pushdown' in mem.capabilities() {
+            import from jaclang.runtimelib.utils { order_pushdown_cfg }
+            ocfg = order_pushdown_cfg(last_hop.node_type);
+            if ocfg is not None {
+                plan.order = ocfg;
+            }
+        }
         if plan.needs() <= mem.capabilities() {
             _trace_final('pushdown', len(result));
             return _try_pushdown(mem, plan);

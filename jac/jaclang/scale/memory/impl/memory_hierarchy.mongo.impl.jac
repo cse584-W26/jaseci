@@ -484,7 +484,14 @@ impl MongoBackend.get_roots -> Generator[Root, None, None] {
 
 
 impl MongoBackend.capabilities -> set[str] {
-    return {'type_pushdown', 'field_pushdown', 'id_in', 'slice', 'projection'};
+    return {
+        'type_pushdown',
+        'field_pushdown',
+        'id_in',
+        'slice',
+        'projection',
+        'order_pushdown'
+    };
 }
 
 
@@ -536,6 +543,16 @@ impl MongoBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None]
             }
         }
         cursor = self.collection.find(filt, proj_doc);
+        # Route-A final-hop ordering: sort BEFORE skip/limit so the slice
+        # reflects post-sort positions. plan.order = (type, field, dir).
+        # Final-hop only -- mid-chain ordering needs an edges table to sort
+        # on, which mongo lacks; that stays structurally pg-rel-only.
+        if plan.order is not None {
+            (_, ofield, odir) = plan.order;
+            cursor = cursor.sort(
+                f"data.archetype.{ofield}", -1 if odir == 'DESC' else 1
+            );
+        }
         if skip_n {
             cursor = cursor.skip(skip_n);
         }
