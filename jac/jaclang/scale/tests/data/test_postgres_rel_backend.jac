@@ -712,6 +712,90 @@ test "seam: two-hop traversal collapses into one chain SQL call" {
 }
 
 
+test "seam: chain + projection compose -- sliced chain still ONE SQL call" {
+    # Coverage gap: chain pushdown (Route B feeder) and projection pushdown
+    # were only ever exercised separately. A slice on a multi-hop path makes
+    # resolve_chain_sql return an ordered list (not a set), which is exactly
+    # what resolve_path_anchors' isinstance(result, list) arm requires to
+    # route into _materialize_ids_projected (Route B) -- proving the two
+    # pushdowns compose on the same round-trip instead of one silently
+    # bypassing the other.
+    be: any = _fresh();
+    tmpdir = mkdtemp();
+    orig_base = JacRuntime.get_base_path_dir();
+    prior_proj: any = os.environ.pop('JAC_PROJECTION', None);
+    prior_ro: any = os.environ.pop('JAC_READ_ONLY', None);
+    try {
+        cfg = JacConfig();
+        cfg.run.topology_index = False;
+        set_config(cfg);
+        JacRuntime.set_base_path(tmpdir);
+        ctx = ExecutionContext();
+        JacRuntime.set_context(ctx);
+        mem: any = ctx.mem;
+        mem.l3 = be;
+
+        r = root;
+        ps: list = [];
+        for i in range(3) {
+            p = RelPerson(name=f"p{i}");
+            r +>:RelKnows:+> p;
+            ps.append(p);
+        }
+        deep = RelPerson(name="deep");
+        p0: any = ps[0];
+        p0 +>:RelKnows:+> deep;
+
+        r_any: any = r;
+        ra: any = r_any.__jac__;
+        cs: any = ChangeSet();
+        cs.record_create(ra);
+        for e in ra.edges {
+            ea: any = e;
+            cs.record_create(ea);
+            cs.record_create(ea.target);
+        }
+        p0a: any = p0.__jac__;
+        deep_e: any = p0a.edges[-1];
+        cs.record_create(deep_e);
+        cs.record_create(deep_e.target);
+        rep: any = be.apply(cs);
+        assert not rep.failed;
+
+        os.environ['JAC_PROJECTION'] = 'RelPerson:name';
+        os.environ['JAC_READ_ONLY'] = '1';
+
+        found = [r->:RelKnows:->[?:RelPerson]->:RelKnows:->[?:RelPerson]][:1];
+        names = sorted([p.name for p in found]);
+        assert names == ['deep'];
+        assert be.rel_chain_count == 1 , (
+            "sliced two-hop + projection must remain ONE chain SQL call"
+        );
+        assert be.rel_projection_count > 0 , (
+            "sliced chain result must route through projected materialization"
+        );
+        marks = [p.__jac__?._projected_fields for p in found];
+        assert all(m == {"name"} for m in marks) , (
+            f"chain-fed anchors must carry the projection marker: {marks}"
+        );
+        ctx.close();
+    } finally {
+        os.environ.pop('JAC_PROJECTION', None);
+        os.environ.pop('JAC_READ_ONLY', None);
+        if prior_proj is not None {
+            os.environ['JAC_PROJECTION'] = prior_proj;
+        }
+        if prior_ro is not None {
+            os.environ['JAC_READ_ONLY'] = prior_ro;
+        }
+        JacRuntime.set_base_path(orig_base);
+        set_config(JacConfig());
+        shutil.rmtree(tmpdir, ignore_errors=True);
+    }
+    be.close();
+}
+
+
 # ===========================================================================
 # caps phase
 # ===========================================================================

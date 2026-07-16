@@ -1420,3 +1420,91 @@ test "ops: full operator surface returns documented shapes on an empty store" {
     assert f['dangling_node_edge'] == [];
     be.close();
 }
+
+
+# ===========================================================================
+# P5 GATE — projection no-op safety (coverage gap: KV never advertises
+# 'projection', so JAC_PROJECTION must be inert here by construction)
+# ===========================================================================
+test "proj: KV backend never advertises the projection capability" {
+    be: any = _fresh();
+    prior: any = os.environ.pop('JAC_PROJECTION', None);
+    try {
+        assert be.capabilities() == set();
+        os.environ['JAC_PROJECTION'] = 'Person:name';
+        assert be.capabilities() == set() , (
+            "KV inherits the base Memory.capabilities() no-op (memory.impl.jac"
+            ":47-49) -- it must stay empty even with JAC_PROJECTION declared"
+        );
+    } finally {
+        os.environ.pop('JAC_PROJECTION', None);
+        if prior is not None {
+            os.environ['JAC_PROJECTION'] = prior;
+        }
+    }
+    be.close();
+}
+
+
+test "proj: JAC_PROJECTION + JAC_READ_ONLY on KV is a no-op -- full anchors, nothing raises" {
+    be: any = _fresh();
+    tmpdir = mkdtemp();
+    orig_base = JacRuntime.get_base_path_dir();
+    prior_proj: any = os.environ.pop('JAC_PROJECTION', None);
+    prior_ro: any = os.environ.pop('JAC_READ_ONLY', None);
+    try {
+        os.environ['JAC_PROJECTION'] = 'Person:name';
+        os.environ['JAC_READ_ONLY'] = '1';
+
+        set_config(JacConfig());
+        JacRuntime.set_base_path(tmpdir);
+        ctx = ExecutionContext();
+        JacRuntime.set_context(ctx);
+        mem: any = ctx.mem;
+        mem.l3 = be;
+
+        r = root;
+        for i in range(3) {
+            r +>:Knows:+> Person(name=f"p{i}", age=i);
+        }
+        r_any: any = r;
+        ra: any = r_any.__jac__;
+        cs: any = ChangeSet();
+        cs.record_create(ra);
+        for e in ra.edges {
+            ea: any = e;
+            cs.record_create(ea);
+            cs.record_create(ea.target);
+        }
+        rep: any = be.apply(cs);
+        assert not rep.failed;
+
+        found = [r->:Knows:->[?:Person]];
+        assert len(found) == 3;
+        names = sorted([p.name for p in found]);
+        assert names == ['p0', 'p1', 'p2'];
+        ages = sorted([p.age for p in found]);
+        assert ages == [0, 1, 2] , (
+            "KV no-op must return FULL anchors -- real field values, not "
+            "leaked defaults from a phantom projection"
+        );
+        assert all(p.__jac__?._projected_fields is None for p in found) , (
+            "no anchor may carry a projection marker -- KV never engages the "
+            "pushdown, declared or not"
+        );
+        ctx.close();
+    } finally {
+        os.environ.pop('JAC_PROJECTION', None);
+        os.environ.pop('JAC_READ_ONLY', None);
+        if prior_proj is not None {
+            os.environ['JAC_PROJECTION'] = prior_proj;
+        }
+        if prior_ro is not None {
+            os.environ['JAC_READ_ONLY'] = prior_ro;
+        }
+        JacRuntime.set_base_path(orig_base);
+        set_config(JacConfig());
+        shutil.rmtree(tmpdir, ignore_errors=True);
+    }
+    be.close();
+}
