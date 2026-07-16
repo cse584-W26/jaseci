@@ -744,6 +744,7 @@ impl _parse_toml_data(
             cache=run_data.get("cache", True),
             autonative=run_data.get("autonative", False),
             topology_index=run_data.get("topology_index", True),
+            ordered_traversal=run_data.get("ordered_traversal", False),
             cross_root_resolve=run_data.get("cross_root_resolve", False),
             batch_l3=run_data.get("batch_l3", False),
             read_only=run_data.get("read_only", False),

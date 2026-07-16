@@ -299,6 +299,12 @@ test "load run config" {
     }
 }
 
+test "load run config ordered_traversal" {
+    config_mod._config = None;
+    cfg = JacConfig.from_toml_str("\n[run]\nordered_traversal = true\n");
+    assert cfg.run.ordered_traversal is True;
+}
+
 test "client_errors verbose defaults to false when section omitted" {
     config_mod._config = None;
     with TemporaryDirectory() as tmpdir {
