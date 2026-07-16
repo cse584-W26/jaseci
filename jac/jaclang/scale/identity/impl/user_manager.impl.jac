@@ -115,9 +115,8 @@ impl JacScaleUserManager.get_root_id(user_id: str) -> str | None {
     if user_id == '__system__' {
         return Con.SUPER_ROOT_UUID;
     }
-    cache = _root_id_request_cache.get();
-    if cache is not None and user_id in cache {
-        return cache[user_id];
+    if (cached := _root_id_process_cache.get(user_id)) is not None {
+        return cached;
     }
     result = self._identity_storage.get_root_id(user_id);
     if not result {
@@ -126,10 +125,10 @@ impl JacScaleUserManager.get_root_id(user_id: str) -> str | None {
             result = user.get('root_id');
         }
     }
+    # Cache only positive results: a miss for a not-yet-registered user
+    # must stay a miss until the user exists.
     if result is not None {
-        new_cache = dict(cache) if cache is not None else {};
-        new_cache[user_id] = result;
-        _root_id_request_cache.set(new_cache);
+        _root_id_process_cache[user_id] = result;
     }
     return result;
 }

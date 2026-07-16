@@ -2,7 +2,6 @@ import jwt;
 import logging;
 import from datetime { UTC, datetime, timedelta }
 import from fastapi { Request, Response }
-import from contextvars { ContextVar }
 import from jaclang.runtimelib.server { UserManager }
 import from jaclang.runtimelib.transport { TransportResponse, Meta }
 import from jaclang.scale.shared.enums { Platforms, Operations }
@@ -27,9 +26,12 @@ glob _jwt_config = get_scale_config().get_jwt_config(),
      JWT_EXP_DELTA_DAYS = _jwt_config['exp_delta_days'],
      SSO_HOST = _sso_config['host'],
      logger = logging.getLogger(__name__),
-     _root_id_request_cache: ContextVar[dict[str, str] | None] = ContextVar(
-         '_jaclang_scale_root_id_cache', default=None
-     );
+     # Process-level user_id/identity -> root_id cache. The mapping is
+     # immutable once created, so positive results are cached for the process
+     # lifetime (entries are tiny; unbounded by design). Known edge: a deleted
+     # user's mapping lingers until restart — acceptable, the root anchor
+     # itself is still fetched/authorized per request.
+     _root_id_process_cache: dict[str, str] = {};
 
 enum UserRole { ADMIN = 'admin', SYSTEM = 'system', USER = 'user', }
 

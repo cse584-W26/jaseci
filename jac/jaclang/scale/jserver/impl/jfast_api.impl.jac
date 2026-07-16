@@ -128,6 +128,7 @@ impl JFastApiServer.run_server(
     if server_cfg.get('suppress_health_check_logs', False) {
         console_handler.addFilter(HealthCheckFilter());
     }
+    access_log = bool(server_cfg.get('access_log', True));
 
     log_config = {
         "version": 1,
@@ -163,6 +164,15 @@ impl JFastApiServer.run_server(
 
     };
 
+    if not access_log {
+        # uvicorn.Config(access_log=False) alone is not durable here:
+        # install_structured_logging() re-takes-over uvicorn.access on every
+        # request (handlers=[], propagate=True), resurrecting the access log
+        # via the root JSON handler. It never touches levels, so silence the
+        # INFO access records at the logger level instead.
+        log_config["loggers"]["uvicorn.access"]["level"] = "WARNING";
+    }
+
     import from jaclang.scale.runtime.lifecycle.drain { install_signal_drain }
     ms_cfg = get_scale_config().get_microservices_config();
     drain_timeout: float = float(ms_cfg.get("drain_timeout_seconds", 10));
@@ -174,6 +184,7 @@ impl JFastApiServer.run_server(
             host=host,
             port=port,
             log_config=log_config,
+            access_log=access_log,
             timeout_graceful_shutdown=int(drain_timeout)
         );
         server = uvicorn.Server(config);
@@ -195,6 +206,7 @@ impl JFastApiServer.run_server(
                 host=host,
                 port=current_port,
                 log_config=log_config,
+                access_log=access_log,
                 timeout_graceful_shutdown=int(drain_timeout)
             );
             server = uvicorn.Server(config);

@@ -74,7 +74,8 @@ impl JacScaleConfig.get_default_config(self: JacScaleConfig) -> dict[str, any] {
             'port': 8000,
             'host': '0.0.0.0',
             'docs_enabled': True,
-            'suppress_health_check_logs': False
+            'suppress_health_check_logs': False,
+            'access_log': True
         },
         'webhook': {
             'secret': 'webhook-secret-key',
@@ -268,8 +269,23 @@ impl JacScaleConfig.get_server_config(self: JacScaleConfig) -> dict[str, any] {
         'docs_enabled': server_config.get('docs_enabled', True),
         'suppress_health_check_logs': bool(
             server_config.get('suppress_health_check_logs', False)
-        )
+        ),
+        # One console.print per request when True; set False for benchmarks.
+        # JAC_ACCESS_LOG (env) wins over toml so the bench can toggle without
+        # editing a config file; truthy default preserves current behavior.
+        'access_log': _resolve_access_log(server_config)
     };
+}
+
+"""Resolve the access-log toggle: env JAC_ACCESS_LOG wins over toml, default
+True. A set-but-empty env var falls back to toml; any value other than the
+usual false-words counts as on."""
+def _resolve_access_log(server_config: dict[str, any]) -> bool {
+    env_val = os.environ.get('JAC_ACCESS_LOG');
+    if env_val is not None and env_val.strip() != '' {
+        return env_val.strip().lower() not in ('0', 'false', 'no', 'off');
+    }
+    return bool(server_config.get('access_log', True));
 }
 
 impl JacScaleConfig.get_webhook_config(self: JacScaleConfig) -> dict[str, any] {

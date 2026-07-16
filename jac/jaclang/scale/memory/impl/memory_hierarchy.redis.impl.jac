@@ -1,4 +1,10 @@
+import time;
 import from jaclang.scale.runtime.context.tracing { start_memory_span, end_memory_span }
+
+# How long an availability probe result (up OR down) is trusted. A down redis
+# costs one TCP connect attempt per window instead of one per request; a redis
+# that comes back up is noticed within this window.
+glob _REDIS_AVAILABLE_TTL_S: float = 30.0;
 
 def _deserialize_cached(data: dict) -> (Anchor | None) {
     anchor = Serializer.deserialize(data);
@@ -30,20 +36,27 @@ impl RedisBackend.postinit -> None {
 }
 
 impl RedisBackend.is_available -> bool {
-    if _process_cache.get('redis_available') is True {
-        return True;
-    }
     if self.redis_client is None {
         return False;
     }
+    now = time.monotonic();
+    cached = _process_cache.get('redis_available');
+    checked_at = _process_cache.get('redis_available_at');
+    if cached is not None
+    and checked_at is not None
+    and (now - checked_at) < _REDIS_AVAILABLE_TTL_S {
+        return bool(cached);
+    }
+    available = False;
     try {
         self.redis_client.ping();
-        _process_cache['redis_available'] = True;
-        return True;
+        available = True;
     } except Exception as e {
         logger.debug(f"Redis availability check failed: {e}");
-        return False;
     }
+    _process_cache['redis_available'] = available;
+    _process_cache['redis_available_at'] = now;
+    return available;
 }
 
 impl RedisBackend.get(id: UUID) -> (Anchor | None) {

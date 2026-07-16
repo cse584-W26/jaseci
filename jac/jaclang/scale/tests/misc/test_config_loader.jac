@@ -146,3 +146,31 @@ test "get_microservices_config: malformed JAC_SV_ROUTES falls back to empty" {
         del os.environ["JAC_SV_ROUTES"];
     }
 }
+
+test "get_server_config: access_log defaults on, toml can disable" {
+    if "JAC_ACCESS_LOG" in os.environ {
+        del os.environ["JAC_ACCESS_LOG"];
+    }
+    cfg = JacScaleConfig();
+    cfg._config = {"server": {}};
+    assert cfg.get_server_config()["access_log"] is True;
+    cfg._config = {"server": {"access_log": False}};
+    assert cfg.get_server_config()["access_log"] is False;
+}
+
+test "get_server_config: JAC_ACCESS_LOG env wins over toml" {
+    cfg = JacScaleConfig();
+    cfg._config = {"server": {"access_log": True}};
+    os.environ["JAC_ACCESS_LOG"] = "0";
+    try {
+        assert cfg.get_server_config()["access_log"] is False;
+        os.environ["JAC_ACCESS_LOG"] = "1";
+        assert cfg.get_server_config()["access_log"] is True;
+        # empty env falls back to toml
+        os.environ["JAC_ACCESS_LOG"] = "";
+        cfg._config = {"server": {"access_log": False}};
+        assert cfg.get_server_config()["access_log"] is False;
+    } finally {
+        del os.environ["JAC_ACCESS_LOG"];
+    }
+}
