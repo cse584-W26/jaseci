@@ -27,9 +27,10 @@ Env wins over `jac.toml`'s `[scale.database]` table (`backend`, `postgresql_uri`
 | `JAC_READ_ONLY` | off | **WARNING**: silently drops writes at commit. A perf-isolation probe (measures read-path cost with write cost zeroed out), not a safety/dry-run mode - do not enable on anything you want persisted. |
 | `JAC_API_LEAN_RESPONSE` | off | Drops the response envelope in the API layer (serialization-size ablation). |
 | `JAC_PROJECTION` | unset | Format: `Type:f1,f2;Type2:f3`. Env-only - no `jac.toml` mirror. Supported on mongo (Route A) and postgres-rel (Routes A/B); no-op on postgres KV. |
-| `JAC_ORDER_PUSHDOWN` | unset | Format: `NodeType:field:asc|desc`.`postgres-rel` only. Experiment flag - pushes an `ORDER BY` into SQL; text-sort semantics, so only safe for lexicographically-sortable fields (e.g. ISO-8601 timestamps), not general numeric/typed ordering. |
+| `JAC_ORDER_PUSHDOWN` | unset | Format: `NodeType:field:asc|desc`.`postgres-rel` (SQL `ORDER BY`) and, as of feat/housekeeping,`mongo` (Route-A final-hop `cursor.sort()`); no-op on postgres-KV. Malformed values raise ValueError (fail-loud parser in`runtimelib/utils.jac`). Experiment flag; text-sort semantics, so only safe for lexicographically-sortable fields (e.g. ISO-8601 timestamps), not general numeric/typed ordering. |
 | `JAC_TOPOLOGY_SQL_CHAIN` | on | `postgres-rel` only, env-only (no toml mirror). Collapses a multi-hop chain into one SQL call instead of one query per hop. |
-| `JAC_ORDERED_TRAVERSAL` | off | Note: the `jac.toml` mirror key for this flag is currently dead (constructor drops it before it reaches the flag check) - env var only for now; see `PORT_NOTES_R2.md` for the toml-key fix tracking. |
+| `JAC_ORDERED_TRAVERSAL` | off | The `jac.toml` `[run] ordered_traversal` mirror key is wired as of feat/housekeeping (commit c7773bb6e); env var and toml key both work now. |
+| `JAC_ACCESS_LOG` | on (truthy) | Uvicorn per-request access-log toggle; env wins over the `[server] access_log` toml key. Set `0` to silence the per-request log line for bench runs (floor-fix port, commit 1111c349a). |
 
 **Pg read-path autocommit is not a flag.** The autocommit behavior on the Postgres read path (lineage: commit `5fbce338e`, `fix/pg-l3-read-trips`) is hardcoded always-on in this branch - there is no env var or toml key to toggle it off.
 
