@@ -43,12 +43,16 @@ impl Serializer._serialize_attrs(
     ref_mode: bool = False,
     _seen: (tuple[set, set] | None) = None
 ) -> dict[str, object] {
+    _anchor = `obj?.__jac__;
+    projected = _anchor?._projected_fields if _anchor is not None else None;
     result = {
         a: Serializer._serialize_value(
             getattr(`obj, a), include_type, api_mode, ref_mode, _seen
         )
         for a in dir(`obj)
-        if not a.startswith('_') and not callable(getattr(`obj, a, None))
+        if not a.startswith('_')
+        and not callable(getattr(`obj, a, None))
+        and (projected is None or a in projected)
     };
 
     if include_type and not api_mode {

@@ -82,3 +82,16 @@ test "projected field absent in storage stays unset" {
     }
     assert ok;
 }
+
+
+test "api serialization of slim archetype emits only projected fields" {
+    anchor = Serializer.deserialize_projected(
+        UUID(int=12), SlimT.__module__, "SlimT", {"a": "x"}, {"a"}
+    );
+    out = Serializer.serialize(anchor.archetype, api_mode=True);
+    # Only the projected scalar 'a' appears -- the unprojected scalar-default
+    # 'b' and factory-default 'c' must NOT leak class defaults into the payload.
+    assert out["a"] == "x";
+    assert "b" not in out;
+    assert "c" not in out;
+}
