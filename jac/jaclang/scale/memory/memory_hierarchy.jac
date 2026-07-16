@@ -1,6 +1,7 @@
 import json;
 import logging;
 import from collections.abc { Callable, Generator, Iterable }
+import from contextlib { contextmanager }
 import from datetime { datetime, timezone }
 import from pickle { dumps, loads }
 import from typing { Any, cast }
@@ -161,6 +162,12 @@ obj PostgresBackend(PersistentMemory) {
 
     def postinit -> None;
     def is_available -> bool;
+    # Checks out a pooled connection with autocommit forced on for the
+    # duration (read-only: skips the txn + return-rollback trip), restoring
+    # autocommit=False before returning it to the pool.
+    @contextmanager
+    def _read_conn -> Any;
+
     def get(id: UUID) -> (Anchor | None);
     def put(anchor: Anchor) -> None;
     def delete(id: UUID) -> None;

@@ -111,13 +111,8 @@ impl PostgresRelBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None,
         params.append(plan.node_type_final);
     }
     try {
-        conn: any = self.__pool__.getconn();
-        try {
-            conn.autocommit = True;
+        with self._read_conn() as conn {
             rows: any = conn.execute(sql, tuple(params)).fetchall();
-        } finally {
-            conn.autocommit = False;
-            self.__pool__.putconn(conn);
         }
     } except Exception as e {
         logger.debug(
@@ -306,13 +301,8 @@ impl PostgresRelBackend.resolve_chain_sql(
     order_by = f"ordkey {order_cfg[2]}" if order_cfg is not None else "seq";
     sql = f"WITH {', '.join(ctes)} SELECT out_id FROM h{n} ORDER BY {order_by}";
     try {
-        conn: any = self.__pool__.getconn();
-        try {
-            conn.autocommit = True;
+        with self._read_conn() as conn {
             rows: any = conn.execute(sql, tuple(params)).fetchall();
-        } finally {
-            conn.autocommit = False;
-            self.__pool__.putconn(conn);
         }
         self.rel_chain_count += 1;
         ordered = [r[0] for r in rows];
@@ -405,13 +395,8 @@ impl PostgresRelBackend.resolve_hop_sql(
         );
     }
     try {
-        conn: any = self.__pool__.getconn();
-        try {
-            conn.autocommit = True;
+        with self._read_conn() as conn {
             rows: any = conn.execute(sql, tuple(params)).fetchall();
-        } finally {
-            conn.autocommit = False;
-            self.__pool__.putconn(conn);
         }
         self.rel_hop_count += 1;
         ordered = [r[0] for r in rows];  # UUID column -> uuid.UUID objects

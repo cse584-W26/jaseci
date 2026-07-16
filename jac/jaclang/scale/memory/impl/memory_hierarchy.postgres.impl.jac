@@ -12,6 +12,7 @@ connection pool per DSN) is folded in from day one, not deferred."""
 
 import atexit;
 import threading;
+import from contextlib { contextmanager }
 import from jaclang.scale._optdeps.psycopg { ConnectionPool, TransactionStatus, Jsonb }
 import from jaclang.runtimelib.exceptions { WriteConflict }
 
@@ -751,23 +752,31 @@ impl PostgresBackend.is_available -> bool {
     return self.__pool__ is not None;
 }
 
+"""Read-only connection checkout: autocommit for the read, no implicit txn,
+so the pool's return check finds the connection IDLE instead of INTRANS -
+saves a ROLLBACK round-trip per call. Restored before putconn so write
+checkouts keep their transactional default. Always-on, not a flag
+(ex-commit 5fbce338e)."""
+@contextmanager
+impl PostgresBackend._read_conn -> Any {
+    conn = self.__pool__.getconn();
+    conn.autocommit = True;
+    try {
+        yield conn;
+    } finally {
+        conn.autocommit = False;
+        self.__pool__.putconn(conn);
+    }
+}
+
 """Load an anchor by id from Postgres. Cold every call — L3 keeps no working
 set (L1/L2 own the identity map). A row that fails to load is quarantined,
 not returned. Mirrors SqliteMemory.get."""
 impl PostgresBackend.get(id: UUID) -> (Anchor | None) {
-    conn = self.__pool__.getconn();
-    # autocommit for the read: no implicit txn, so the pool's return check
-    # finds the connection IDLE instead of INTRANS - saves a ROLLBACK
-    # round-trip per call. Restored before putconn so write checkouts keep
-    # their transactional default.
-    conn.autocommit = True;
-    try {
+    with self._read_conn() as conn {
         row: any = conn.execute(
             f"SELECT {_READ_COLS} FROM anchors WHERE id = %s", (str(id), )
         ).fetchone();
-    } finally {
-        conn.autocommit = False;
-        self.__pool__.putconn(conn);
     }
     if row is None {
         return None;
@@ -839,16 +848,11 @@ TieredMemory.abort dropping caches for every dirty anchor on a failed request
 impl PostgresBackend.delete(id: UUID) -> None { }
 
 impl PostgresBackend.`has(id: UUID) -> bool {
-    conn = self.__pool__.getconn();
-    conn.autocommit = True;  # read-only: skip txn + return-rollback trip
-    try {
+    with self._read_conn() as conn {
         row = conn.execute(
             "SELECT 1 FROM anchors WHERE id = %s", (str(id), )
         ).fetchone();
         return row is not None;
-    } finally {
-        conn.autocommit = False;
-        self.__pool__.putconn(conn);
     }
 }
 
@@ -857,13 +861,8 @@ memory the way SqliteMemory does), yielding those that load and pass filter."""
 impl PostgresBackend.query(
     filter: (Callable[[Anchor], bool] | None) = None
 ) -> Generator[Anchor, None, None] {
-    conn = self.__pool__.getconn();
-    conn.autocommit = True;  # read-only: skip txn + return-rollback trip
-    try {
+    with self._read_conn() as conn {
         rows: any = conn.execute(f"SELECT id, {_READ_COLS} FROM anchors").fetchall();
-    } finally {
-        conn.autocommit = False;
-        self.__pool__.putconn(conn);
     }
     for row in rows {
         r: any = row;
@@ -884,16 +883,11 @@ different arch_type and be missed — SqliteMemory scans all NodeAnchors and
 does issubclass() to catch those. Widen to that scan if custom root types
 appear."""
 impl PostgresBackend.get_roots -> Generator[Root, None, None] {
-    conn = self.__pool__.getconn();
-    conn.autocommit = True;  # read-only: skip txn + return-rollback trip
-    try {
+    with self._read_conn() as conn {
         rows: any = conn.execute(
             f"SELECT id, {_READ_COLS} FROM anchors "
             "WHERE type = 'NodeAnchor' AND arch_type = 'Root'"
         ).fetchall();
-    } finally {
-        conn.autocommit = False;
-        self.__pool__.putconn(conn);
     }
     for row in rows {
         r: any = row;
@@ -955,15 +949,10 @@ impl PostgresBackend.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
         return result;
     }
     str_ids = [str(id) for id in ids];
-    conn = self.__pool__.getconn();
-    conn.autocommit = True;  # read-only: skip txn + return-rollback trip
-    try {
+    with self._read_conn() as conn {
         rows: any = conn.execute(
             f"SELECT id, {_READ_COLS} FROM anchors WHERE id = ANY(%s)", (str_ids, )
         ).fetchall();
-    } finally {
-        conn.autocommit = False;
-        self.__pool__.putconn(conn);
     }
     self.l3_fetch_count += 1;
     for row in rows {
