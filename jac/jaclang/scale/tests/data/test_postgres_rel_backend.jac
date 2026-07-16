@@ -25,6 +25,7 @@ import from jaclang.runtimelib.serializer { Serializer }
 import from jaclang.runtimelib.query_plan { QueryPlan }
 import from jaclang.project.config { JacConfig, set_config }
 import from jaclang.scale.memory.memory_hierarchy { PostgresRelBackend }
+import from jaclang.runtimelib.utils { order_pushdown_cfg }
 
 glob _DSN = os.environ.get('POSTGRESQL_REL_URI', 'postgresql:///jactest_rel'),
      _EDGE_ANCHOR: any = EdgeAnchor;
@@ -433,6 +434,57 @@ test "hop: JAC_ORDER_PUSHDOWN orders by archetype field in PG" {
         }
     }
     be.close();
+}
+
+
+test "order_pushdown_cfg fails loud on malformed JAC_ORDER_PUSHDOWN" {
+    prior: any = os.environ.pop('JAC_ORDER_PUSHDOWN', None);
+    try {
+        # wrong arity (no direction segment).
+        os.environ['JAC_ORDER_PUSHDOWN'] = 'RelPerson:name';
+        raised: bool = False;
+        try {
+            order_pushdown_cfg('RelPerson');
+        } except ValueError as e {
+            raised = True;
+            assert 'RelPerson:name' in str(e);
+        }
+        assert raised;
+
+        # empty field segment.
+        os.environ['JAC_ORDER_PUSHDOWN'] = 'RelPerson::desc';
+        raised = False;
+        try {
+            order_pushdown_cfg('RelPerson');
+        } except ValueError as e {
+            raised = True;
+            assert 'RelPerson::desc' in str(e);
+        }
+        assert raised;
+
+        # bad direction.
+        os.environ['JAC_ORDER_PUSHDOWN'] = 'RelPerson:name:sideways';
+        raised = False;
+        try {
+            order_pushdown_cfg('RelPerson');
+        } except ValueError as e {
+            raised = True;
+            assert 'RelPerson:name:sideways' in str(e);
+        }
+        assert raised;
+
+        # happy paths still parse, direction case/whitespace-insensitive.
+        os.environ['JAC_ORDER_PUSHDOWN'] = 'T:f:asc';
+        assert order_pushdown_cfg('T') == ('T', 'f', 'ASC');
+        os.environ['JAC_ORDER_PUSHDOWN'] = 'T:f:DESC';
+        assert order_pushdown_cfg('T') == ('T', 'f', 'DESC');
+    } finally {
+        if prior is None {
+            os.environ.pop('JAC_ORDER_PUSHDOWN', None);
+        } else {
+            os.environ['JAC_ORDER_PUSHDOWN'] = prior;
+        }
+    }
 }
 
 

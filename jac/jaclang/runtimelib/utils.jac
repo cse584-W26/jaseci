@@ -67,11 +67,21 @@ def order_pushdown_cfg(node_type: (str | None)) -> (tuple | None) {
         return None;
     }
     parts = raw.split(":");
-    if len(parts) != 3 or parts[0] != node_type or not parts[1] {
+    if len(parts) != 3 or not parts[0] or not parts[1] {
+        raise ValueError(
+            f"JAC_ORDER_PUSHDOWN malformed (want 'Type:field:asc|desc'): {raw!r}"
+        );
+    }
+    direction = parts[2].strip().lower();
+    if direction not in ("asc", "desc") {
+        raise ValueError(
+            f"JAC_ORDER_PUSHDOWN malformed direction (want 'asc'/'desc'): {raw!r}"
+        );
+    }
+    if parts[0] != node_type {
         return None;
     }
-    direction = 'DESC' if parts[2].lower() == 'desc' else 'ASC';
-    return (parts[0], parts[1], direction);
+    return (parts[0], parts[1], direction.upper());
 }
 
 
