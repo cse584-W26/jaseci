@@ -802,7 +802,7 @@ impl Serializer.deserialize_projected(
             }
         }
         anchor = NodeAnchor.__new__(NodeAnchor);
-        anchor.id = anchor_id;
+        anchor.id = _intern_uuid(str(anchor_id));
         anchor.root = None;
         anchor.persistent = True;
         anchor.edges = [];

@@ -8,6 +8,12 @@ UUID() is the safety contract (no is-identity callers exist).
 import from uuid { UUID }
 
 import from jaclang.runtimelib.serializer { Serializer, _intern_uuid }
+import from jaclang.runtimelib.utils { to_uuid }
+
+
+node ProjT {
+    has name: str = "";
+}
 
 
 test "intern uuid identity and value" {
@@ -31,4 +37,17 @@ test "deserialize_anchor ids intern" {
     assert a1 is not None and a2 is not None;
     assert a1.id is a2.id , "anchor ids must be interned across deserializes";
     assert a1.root is a2.root;
+}
+
+
+test "deserialize_projected ids intern" {
+    id_str = '00000000-0000-0000-0000-00000000000d';
+    a1 = Serializer.deserialize_projected(
+        to_uuid(id_str), ProjT.__module__, "ProjT", {"name": "slim"}, {"name"}
+    );
+    a2 = Serializer.deserialize_projected(
+        to_uuid(id_str), ProjT.__module__, "ProjT", {"name": "slim"}, {"name"}
+    );
+    assert a1 is not None and a2 is not None;
+    assert a1.id is a2.id , "projected anchor ids must be interned across deserializes";
 }
