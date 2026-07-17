@@ -81,6 +81,15 @@ glob logger = getLogger(__name__),
 
 glob _scale_provider_cache: list = [];
 
+glob _report_echo: bool = (
+         (os.environ.get("JAC_REPORT_ECHO") or "1").strip().lower() not in (
+             "0",
+             "false",
+             "no",
+             "off"
+         )
+     );
+
 glob _persistent_memory_provider: list = [None];
 
 def _scale_provider -> any {

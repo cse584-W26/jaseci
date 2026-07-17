@@ -1055,7 +1055,9 @@ impl JacBuiltin.log_report(expr: any, custom: bool = False) -> None {
     if custom {
         JacRuntimeInterface.get_context().custom = expr;
     } else {
-        JacRuntimeInterface.get_console().print(expr);
+        if _report_echo {
+            JacRuntimeInterface.get_console().print(expr);
+        }
         if _current_scope() is not None {
             osp_report(expr);
         } else {
