@@ -142,6 +142,15 @@ def lazy_hydration_enabled -> bool {
 }
 
 
+def mem_pool_enabled -> bool {
+    env = os.environ.get("JAC_MEM_POOL");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes", "on");
+    }
+    return False;
+}
+
+
 def release_arch(raw: str) -> str {
     m = raw.strip().lower();
     if m in ("arm64", "aarch64") {

@@ -1,5 +1,6 @@
 import json;
 import logging;
+import threading;
 import from collections.abc { Callable, Generator, Iterable }
 import from contextlib { contextmanager }
 import from datetime { datetime, timezone }
@@ -39,7 +40,47 @@ import from jaclang.scale.memory.l1_invalidation {
 import from jaclang { JacRuntimeInterface as Jac }
 
 glob logger = logging.getLogger(__name__),
-     _process_cache: dict[str, any] = {};
+     _process_cache: dict[str, any] = {},
+     # JAC_MEM_POOL free-list: per-worker pool of ScaleTieredMemory instances
+     # reused across requests instead of rebuilt (backend selection + Redis
+     # probe + l1 registration every request). Guarded by a lock because
+     # JScaleExecutionContext is occasionally constructed off the event loop
+     # (scheduler, tests); on the hot request path acquire/release are both
+     # event-loop-serialized so the lock is uncontended.
+     _mem_pool: list = [],
+     _mem_pool_lock: any = threading.Lock();
+
+
+def acquire_scale_mem -> ScaleTieredMemory {
+    import from jaclang.runtimelib.utils { mem_pool_enabled }
+    if mem_pool_enabled() {
+        with _mem_pool_lock {
+            if _mem_pool {
+                mem = _mem_pool.pop();
+                # Scrub per-request state on checkout too (defensive; release
+                # already cleared). Backends + _l1_id registration are kept.
+                mem.__mem__.clear();
+                mem.changes.clear();
+                mem._committed = False;
+                return mem;
+            }
+        }
+    }
+    return ScaleTieredMemory();
+}
+
+
+def release_scale_mem(mem: ScaleTieredMemory) {
+    # Isolation invariant: L1 (__mem__) and pending changes are cleared before
+    # the instance re-enters the pool, so no anchor from this request survives
+    # into the next checkout.
+    with _mem_pool_lock {
+        mem.__mem__.clear();
+        mem.changes.clear();
+        _mem_pool.append(mem);
+    }
+}
+
 
 def _get_db_config -> dict {
     return get_scale_config().get_database_config();

@@ -289,23 +289,31 @@ impl ScaleTieredMemory.acommit(anchor: (Anchor | None) = None) -> None {
 }
 
 impl ScaleTieredMemory.close -> None {
+    import from jaclang.runtimelib.utils { mem_pool_enabled }
     try {
         if not self._committed {
             self.commit();
         }
     } finally {
-        if self.l3 {
-            self.l3.close();
+        if mem_pool_enabled() {
+            # Pool reuse: keep backends (l2/l3) and the _l1_id registration
+            # alive and hand this instance back to the free-list. Writes were
+            # flushed by commit() above; release_scale_mem clears L1 + changes
+            # so the next checkout starts empty (multi-tenant isolation).
+            release_scale_mem(self);
+        } else {
+            if self.l3 {
+                self.l3.close();
+            }
+            if self.l2 {
+                self.l2.close();
+            }
+            if self._l1_id {
+                deregister_l1(self._l1_id);
+            }
+            self.__mem__.clear();
+            self.changes.clear();
         }
-        if self.l2 {
-            self.l2.close();
-        }
-
-        if self._l1_id {
-            deregister_l1(self._l1_id);
-        }
-        self.__mem__.clear();
-        self.changes.clear();
     }
 }
 

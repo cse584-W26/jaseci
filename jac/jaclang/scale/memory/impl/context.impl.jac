@@ -1,6 +1,7 @@
 impl JScaleExecutionContext.init(self: JScaleExecutionContext) -> None {
     import from jaclang.scale.memory.memory_hierarchy {
         ScaleTieredMemory,
+        acquire_scale_mem,
         _process_cache
     }
     import from jaclang.jac0core.constructs {
@@ -10,7 +11,9 @@ impl JScaleExecutionContext.init(self: JScaleExecutionContext) -> None {
         Root
     }
 
-    self.mem = ScaleTieredMemory();
+    # acquire_scale_mem() reuses a pooled instance when JAC_MEM_POOL is on,
+    # else constructs a fresh ScaleTieredMemory (byte-identical to before).
+    self.mem = acquire_scale_mem();
     self.reports: list[any] = [];
     self.diagnostics: list[PermissionDenied] = [];
     self.pending_effects = [];

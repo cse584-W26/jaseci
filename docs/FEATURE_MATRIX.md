@@ -40,6 +40,7 @@ Structural note: **postgres-KV is not a peer** for query-plan pushdown - empty `
 | JAC_SCALE_BACKEND | auto | `[scale.database].backend` | yes |
 | JAC_READ_AUTOCOMMIT | on (True) | none (env-only) | **yes [HK]** (A/B ablation flag over `_read_conn`; covers postgres + postgres-rel) |
 | JAC_LAZY_HYDRATION | off | none (env-only) | **yes** (floor-path `_materialize_ids` stub deferral; **GTI-inert by design** - mid-chain nodes are bare UUIDs on the fast path, so only the walk fallback engages) |
+| JAC_MEM_POOL | off | none (env-only) | **yes** (per-worker `ScaleTieredMemory` free-list; checkout/release scrub L1 + changes = isolation invariant) |
 
 # Gaps
 
