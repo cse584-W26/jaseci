@@ -92,7 +92,7 @@ def _resolve_hop_cross_root(
             return None;
         }
 
-        fidx = decode_cached(ra.topology_index_data)
+        fidx = decode_cached(root_id, ra.topology_index_data)
             if use_gti_cache and ra.topology_index_data
             else ra.get_topology_index();
         if not isinstance(fidx, TopologyIndex) or len(fidx) == 0 {
@@ -302,7 +302,7 @@ def _get_usable_index(root_anchor: (NodeAnchor | None)) -> (TopologyIndex | None
     import from jaclang.runtimelib.utils { gti_cache_enabled }
     import from jaclang.runtimelib.gti_cache { decode_cached }
 
-    idx = decode_cached(root_anchor.topology_index_data)
+    idx = decode_cached(root_anchor.id, root_anchor.topology_index_data)
         if gti_cache_enabled() and root_anchor.topology_index_data
         else root_anchor.get_topology_index();
     if not isinstance(idx, TopologyIndex) or len(idx) == 0 {

@@ -22,6 +22,16 @@ def _get_col(
     return col;
 }
 
+impl TopologyIndex._assert_mutable -> None {
+    if self._frozen {
+        raise RuntimeError(
+            "TopologyIndex is frozen: this is a shared gti_cache entry; "
+            "decode a private copy via get_topology_index before mutating"
+        );
+    }
+}
+
+
 impl TopologyIndex._ensure_type(
     type_name: str, mro_chain: (list[str] | None) = None
 ) -> int {
@@ -51,6 +61,7 @@ impl TopologyIndex.add_node(
     mro_chain: (list[str] | None) = None,
     owner_root: (UUID | None) = None
 ) -> int {
+    self._assert_mutable();
     if node_id in self.node_to_lid {
         if mro_chain {
             self._ensure_type(type_name, mro_chain);
@@ -65,6 +76,7 @@ impl TopologyIndex.add_node(
 }
 
 impl TopologyIndex.remove_node(node_id: UUID) -> None {
+    self._assert_mutable();
     lid = self.node_to_lid.get(node_id);
     if lid is None {
         return;
@@ -86,6 +98,7 @@ impl TopologyIndex.remove_node(node_id: UUID) -> None {
 impl TopologyIndex.add_edge(
     source_id: UUID, target_id: UUID, edge_type_name: str
 ) -> None {
+    self._assert_mutable();
     src_lid = self.node_to_lid.get(source_id);
     tgt_lid = self.node_to_lid.get(target_id);
     if src_lid is None or tgt_lid is None {
@@ -117,6 +130,7 @@ impl TopologyIndex.add_edge(
 impl TopologyIndex.remove_edge(
     source_id: UUID, target_id: UUID, edge_type_name: (str | None) = None
 ) -> None {
+    self._assert_mutable();
     src_lid = self.node_to_lid.get(source_id);
     tgt_lid = self.node_to_lid.get(target_id);
     if src_lid is None or tgt_lid is None {

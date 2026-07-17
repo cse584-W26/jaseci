@@ -1,52 +1,56 @@
 import os;
 import threading;
+import from uuid { UUID }
 import from collections { OrderedDict }
 import from hashlib { blake2b }
 import from jaclang.runtimelib.topology_index { TopologyIndex }
 
-glob _cache: OrderedDict = OrderedDict(),
-     _lock = threading.Lock(),
-     _stats: dict[str, int] = {"hits": 0, "misses": 0, "evictions": 0};
 
-glob DEFAULT_CAPACITY: int = 1024;
-
-
-def cache_capacity -> int {
+def _resolve_capacity -> int {
     env = os.environ.get("JAC_GTI_CACHE_SIZE");
-    if env {
-        try {
-            cap = int(env);
-            if cap > 0 {
-                return cap;
-            }
-        } except ValueError { }
+    if env is None or env == "" {
+        return 1024;
     }
-    return DEFAULT_CAPACITY;
+    try {
+        cap = int(env);
+    } except ValueError {
+        raise ValueError(f"JAC_GTI_CACHE_SIZE must be a positive integer, got {env!r}");
+    }
+    if cap <= 0 {
+        raise ValueError(f"JAC_GTI_CACHE_SIZE must be a positive integer, got {env!r}");
+    }
+    return cap;
 }
 
 
-def decode_cached(blob: bytes) -> TopologyIndex {
-    key = blake2b(blob, digest_size=16).digest();
+glob _cache: OrderedDict = OrderedDict(),
+     _lock = threading.Lock(),
+     _stats: dict[str, int] = {"hits": 0, "misses": 0, "evictions": 0},
+     _capacity: dict[str, int] = {"value": _resolve_capacity()};
+
+
+def cache_capacity -> int {
+    return _capacity["value"];
+}
+
+
+def decode_cached(root_id: UUID, blob: bytes) -> TopologyIndex {
+    digest = blake2b(blob, digest_size=16).digest();
     with _lock {
-        cached = _cache.get(key);
-        if cached is not None {
-            _cache.move_to_end(key);
+        entry = _cache.get(root_id);
+        if entry is not None and entry[0] == digest {
+            _cache.move_to_end(root_id);
             _stats["hits"] += 1;
-            return cached;
+            return entry[1];
         }
     }
     idx = TopologyIndex.decode(blob);
+    idx._frozen = True;
     with _lock {
-        existing = _cache.get(key);
-        if existing is not None {
-            _cache.move_to_end(key);
-            _stats["hits"] += 1;
-            return existing;
-        }
         _stats["misses"] += 1;
-        _cache[key] = idx;
-        cap = cache_capacity();
-        while len(_cache) > cap {
+        _cache[root_id] = (digest, idx);
+        _cache.move_to_end(root_id);
+        if len(_cache) > _capacity["value"] {
             _cache.popitem(last=False);
             _stats["evictions"] += 1;
         }
@@ -57,13 +61,17 @@ def decode_cached(blob: bytes) -> TopologyIndex {
 
 def cache_stats -> dict[str, int] {
     with _lock {
-        return dict(_stats);
+        out = dict(_stats);
+        out["size"] = len(_cache);
+        return out;
     }
 }
 
 
 def clear_cache {
+    cap = _resolve_capacity();
     with _lock {
+        _capacity["value"] = cap;
         _cache.clear();
         for k in list(_stats.keys()) {
             _stats[k] = 0;
