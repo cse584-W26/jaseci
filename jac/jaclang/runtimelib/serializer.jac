@@ -9,7 +9,7 @@ import from typing { cast, get_args, get_origin }
 import from types { NoneType, UnionType }
 import from typing { Union }
 import from uuid { UUID }
-import from jaclang.runtimelib.typecache { get_field_types }
+import from jaclang.runtimelib.typecache { get_field_types, field_names }
 import from jaclang.jac0core.archetype {
     Anchor,
     NodeAnchor,

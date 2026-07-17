@@ -2,7 +2,8 @@ import sys;
 import from dataclasses { fields, is_dataclass }
 import from typing { cast }
 
-glob _cache: dict[type, dict[str, object]] = {};
+glob _cache: dict[type, dict[str, object]] = {},
+     _names_cache: dict[type, tuple] = {};
 
 def _resolve_hints(cls: type) -> dict[str, object] {
     hints: dict[str, object] = {};
@@ -73,10 +74,27 @@ impl warm(cls: type) -> None {
     }
 }
 
+impl field_names(cls: type) -> tuple {
+    if (cached := _names_cache.get(cls)) is not None {
+        return cached;
+    }
+    names = tuple(
+        f.name
+        for f in fields(cls)
+        if not f.name.startswith('_')
+    )
+        if is_dataclass(cls)
+        else ();
+    _names_cache[cls] = names;
+    return names;
+}
+
 impl invalidate(cls: type) -> None {
     _cache.pop(cls, None);
+    _names_cache.pop(cls, None);
 }
 
 impl clear -> None {
     _cache.clear();
+    _names_cache.clear();
 }

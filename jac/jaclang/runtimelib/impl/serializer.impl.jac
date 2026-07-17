@@ -1,4 +1,8 @@
-import from jaclang.runtimelib.utils { read_only_enabled, lean_response_enabled }
+import from jaclang.runtimelib.utils {
+    read_only_enabled,
+    lean_response_enabled,
+    compiled_serializer_enabled
+}
 
 
 impl Serializer._type_info(`obj: object, `include: bool) -> dict[str, object] {
@@ -18,15 +22,27 @@ impl Serializer._serialize_attrs(
     projected = _anchor.__dict__.get('_projected_fields')
         if _anchor is not None
         else None;
-    result = {
-        a: Serializer._serialize_value(
-            getattr(`obj, a), include_type, api_mode, ref_mode, _seen
-        )
-        for a in dir(`obj)
-        if not a.startswith('_')
-        and not callable(getattr(`obj, a, None))
-        and (projected is None or a in projected)
-    };
+
+    plan = field_names(type(`obj))
+        if compiled_serializer_enabled() and projected is None
+        else ();
+    if plan {
+        result = {
+            a: Serializer._serialize_value(
+                getattr(`obj, a), include_type, api_mode, ref_mode, _seen
+            ) for a in plan
+        };
+    } else {
+        result = {
+            a: Serializer._serialize_value(
+                getattr(`obj, a), include_type, api_mode, ref_mode, _seen
+            )
+            for a in dir(`obj)
+            if not a.startswith('_')
+            and not callable(getattr(`obj, a, None))
+            and (projected is None or a in projected)
+        };
+    }
 
     if include_type and not api_mode {
         if hasattr(type(`obj), '__jac_schema__') {

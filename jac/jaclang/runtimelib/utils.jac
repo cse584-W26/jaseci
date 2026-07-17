@@ -124,6 +124,15 @@ def read_autocommit_enabled -> bool {
 }
 
 
+def compiled_serializer_enabled -> bool {
+    env = os.environ.get("JAC_COMPILED_SERIALIZER");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes", "on");
+    }
+    return False;
+}
+
+
 def release_arch(raw: str) -> str {
     m = raw.strip().lower();
     if m in ("arm64", "aarch64") {
