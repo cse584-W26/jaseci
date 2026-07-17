@@ -72,9 +72,8 @@ impl _extract_field_predicates(filt: (Callable[[Archetype], bool] | None)) -> di
     if filt is None {
         return {};
     }
-    # The compiler tags value-filtered comprehensions with their lifted
-    # predicates at codegen (see `attach_field_predicates`); just read the tag.
-    preds = getattr(filt, '__jac_field_predicates__', None);
+
+    preds = filt?.__jac_field_predicates__;
     return preds if isinstance(preds, dict) else {};
 }
 
@@ -99,6 +98,9 @@ impl _materialize_ids(
             if (a := mem.get(i)) is not None
         };
     }
+
+    import from jaclang.runtimelib.utils { lazy_hydration_enabled }
+    lazy = post_filter is None and lazy_hydration_enabled();
     result: list[NodeAnchor] = [];
     for i in ids {
         anchor = loaded.get(i);
@@ -106,7 +108,14 @@ impl _materialize_ids(
             if post_filter is not None and not post_filter(anchor.archetype) {
                 continue;
             }
-            result.append(cast(NodeAnchor, anchor));
+            if lazy {
+                stub = NodeAnchor.__new__(NodeAnchor);
+                stub.id = anchor.id;
+                stub.__dict__['_lazy_stub'] = True;
+                result.append(cast(NodeAnchor, stub));
+            } else {
+                result.append(cast(NodeAnchor, anchor));
+            }
         }
     }
     if slc is not None {

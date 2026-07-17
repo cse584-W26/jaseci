@@ -33,6 +33,7 @@ Env wins over `jac.toml`'s `[scale.database]` table (`backend`, `postgresql_uri`
 | `JAC_ACCESS_LOG` | on (truthy) | Uvicorn per-request access-log toggle; env wins over the `[server] access_log` toml key. Set `0` to silence the per-request log line for bench runs (floor-fix port, commit 1111c349a). |
 
 | `JAC_READ_AUTOCOMMIT` | on (truthy) | Postgres read-path autocommit (lineage: commit `5fbce338e`). Default-on: reads take connections in autocommit so the pool return check finds them IDLE, saving a ROLLBACK round trip per read. Set `0` to restore pre-fix behavior for A/B ablation. Covers both postgres and postgres-rel via `PostgresBackend._read_conn`. |
+| `JAC_LAZY_HYDRATION` | off | Floor/walk-path (`_materialize_ids`) lever: hands callers id-only NodeAnchor stubs (marker `_lazy_stub`) and defers archetype hydration until a field is read; the deferred `populate()` is an L1 hit (the batch_get already fetched + cached), so it is batched, never a per-anchor L3 refetch. Env-only, backend-agnostic. **Note:** inert on the GTI/topology fast path -- mid-chain pass-through nodes are already resolved as bare UUID sets there, no anchor is built, so there is nothing to defer; it only engages when a hop falls to the walk fallback (GTI off / cross-root miss). Composes with `JAC_PROJECTION` (distinct markers; projection materializes via the pushdown path, lazy via the floor path). |
 
 ## Transport parity - TCP URI required for comparative runs
 
