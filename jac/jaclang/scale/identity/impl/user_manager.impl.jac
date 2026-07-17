@@ -133,6 +133,23 @@ impl JacScaleUserManager.get_root_id(user_id: str) -> str | None {
     return result;
 }
 
+impl JacScaleUserManager.aget_root_id(user_id: str) -> str | None {
+    # Floor-fix defect 4: the base UserManager.aget_root_id always offloads
+    # get_root_id to a worker thread. Post-housekeeping the scale get_root_id
+    # is a process-dict cache hit (nanoseconds) for every repeat request, so
+    # the thread hop is pure overhead. Serve cache hits inline on the event
+    # loop; only the miss path (which blocks on Mongo/PG in _identity_storage)
+    # goes through to_thread. Semantics identical to the base wrapper.
+    import asyncio;
+    if user_id == '__system__' {
+        return Con.SUPER_ROOT_UUID;
+    }
+    if (cached := _root_id_process_cache.get(user_id)) is not None {
+        return cached;
+    }
+    return await asyncio.to_thread(self.get_root_id, user_id);
+}
+
 impl JacScaleUserManager.update_password(
     user_id: str, current_password: str, new_password: str
 ) -> dict[str, str] {

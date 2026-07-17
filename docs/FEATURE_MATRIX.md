@@ -58,7 +58,7 @@ Structural note: **postgres-KV is not a peer** for query-plan pushdown - empty `
 
 ## Remaining
 
-1. **MEDIUM - `asyncio.to_thread(get_root_id)` hop still present** (floor-fix defect 4, mislabeled in the old branch too - 78becbff5 never removed it). Removing it is new design work in runtimelib server, not a port.
+1. ~~**MEDIUM - `asyncio.to_thread(get_root_id)` hop still present**~~ (floor-fix defect 4) - **resolved** (branch feat/lazy-hydration): `JacScaleUserManager.aget_root_id` now serves process-cache hits inline on the event loop and only routes cache misses (which block on Mongo/PG in `_identity_storage`) through `to_thread`. Semantics-preserving (the base wrapper's `get_root_id` already checked the cache first), so it ships unflagged per floor-fix precedent.
 2. **MEDIUM - pg read autocommit cannot be A/B'd.** Now one `_read_conn` choke point, so adding a flag is a one-line change if the ablation is ever wanted.
 3. **LOW - `?._projected_fields` attribute-access pattern** survives at memory.impl.jac:~1797/~1988. Both sites are guarded (populated / fresh-from-execute_plan anchors), but the pattern routes through `Anchor.__getattr__` for marker-less anchors; if a future call site sees an unpopulated anchor it can recurse like the T5 bug did. Prefer `__dict__.get('_projected_fields')` for new sites.
 4. **LOW - Order pushdown is text-sort** (jsonb->>field / mongo string field): safe only for lexicographically-sortable values (ISO-8601 timestamps), not numeric. Both backends share the caveat; documented in ENV.md.
