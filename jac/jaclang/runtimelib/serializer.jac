@@ -89,7 +89,8 @@ obj Serializer {
         arch_module: str,
         arch_type: str,
         fields: dict[str, object],
-        projected: set[str]
+        projected: set[str],
+        root_id: (str | None) = None
     ) -> (object | None);
 
     static def _compute_hash(anchor: object) -> int;

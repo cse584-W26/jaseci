@@ -789,7 +789,8 @@ impl Serializer.deserialize_projected(
     arch_module: str,
     arch_type: str,
     fields: dict[str, object],
-    projected: set[str]
+    projected: set[str],
+    root_id: (str | None) = None
 ) -> (object | None) {
     resolved = Serializer._get_class(arch_module, arch_type);
     if resolved is None {
@@ -805,7 +806,8 @@ impl Serializer.deserialize_projected(
         }
         anchor = NodeAnchor.__new__(NodeAnchor);
         anchor.id = _intern_uuid(str(anchor_id));
-        anchor.root = None;
+
+        anchor.root = _intern_uuid(root_id) if root_id else None;
         anchor.persistent = True;
         anchor.edges = [];
         anchor.hash = 0;

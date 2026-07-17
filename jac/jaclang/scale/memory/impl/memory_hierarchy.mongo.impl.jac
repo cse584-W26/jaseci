@@ -537,7 +537,10 @@ impl MongoBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None]
     try {
         proj_doc: (dict | None) = None;
         if plan.projection is not None {
-            proj_doc = {'type': 1, 'arch_type': 1, 'arch_module': 1};
+            # data.root is structurally mandatory on slim anchors (traversal
+            # origins need the owning root for the GTI fast path); only
+            # archetype payload fields are trimmed by the projection.
+            proj_doc = {'type': 1, 'arch_type': 1, 'arch_module': 1, 'data.root': 1};
             for f in plan.projection {
                 proj_doc[f'data.archetype.{f}'] = 1;
             }
@@ -566,7 +569,8 @@ impl MongoBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None]
                     doc.get('arch_module', ''),
                     doc.get('arch_type', ''),
                     doc.get('data', {}).get('archetype', {}),
-                    plan.projection
+                    plan.projection,
+                    root_id=cast((str | None), doc.get('data', {}).get('root'))
                 );
                 if slim is not None {
                     self.projection_count += 1;

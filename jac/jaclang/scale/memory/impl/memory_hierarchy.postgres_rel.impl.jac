@@ -103,7 +103,10 @@ impl PostgresRelBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None,
     }
     fields = sorted(plan.projection);
     cols = ", ".join(["data->'archetype'->%s"] * len(fields));
-    sql = f"SELECT id, arch_module, arch_type, {cols} FROM anchors WHERE id = ANY(%s)";
+    # data->>'root' rides along unconditionally: slim anchors keep structural
+    # identity (owning root) so they stay valid traversal origins on the GTI
+    # fast path; only archetype payload fields are trimmed.
+    sql = f"SELECT id, arch_module, arch_type, {cols}, data->>'root' FROM anchors WHERE id = ANY(%s)";
     params: list = list(fields);  # SELECT-list binds precede WHERE binds
     params.append([str(u) for u in plan.id_in]);
     if plan.node_type_final is not None {
@@ -129,7 +132,12 @@ impl PostgresRelBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None,
             }
         }
         slim = Serializer.deserialize_projected(
-            to_uuid(r[0]), r[1] or '', r[2] or '', fvals, plan.projection
+            to_uuid(r[0]),
+            r[1] or '',
+            r[2] or '',
+            fvals,
+            plan.projection,
+            root_id=cast((str | None), r[3 + len(fields)])
         );
         if slim is not None {
             self.rel_projection_count += 1;

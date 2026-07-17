@@ -84,6 +84,44 @@ test "projected field absent in storage stays unset" {
 }
 
 
+obj _OneAnchorMem {
+    has anchor: any;
+
+    def get(id: any) -> any {
+        return self.anchor if id == self.anchor.id else None;
+    }
+}
+
+
+test "slim anchor carries the owning root (arm-B regression pin)" {
+    # root=None cost the feed 4.2x: a projected anchor used as a traversal
+    # ORIGIN made _path_root_anchor return None, skipping the root-GTI fast
+    # path so every onward hop fell to the full-materialization walk.
+    rid = UUID(int=99);
+    anchor = Serializer.deserialize_projected(
+        UUID(int=13), SlimT.__module__, "SlimT", {"a": "x"}, {"a"}, root_id=str(rid)
+    );
+    assert anchor.root == rid , "slim anchor must retain structural identity";
+
+    # back-compat: no root supplied -> None, as before
+    bare = Serializer.deserialize_projected(
+        UUID(int=14), SlimT.__module__, "SlimT", {"a": "x"}, {"a"}
+    );
+    assert bare.root is None;
+
+    # resolver consequence: with root retained, _path_root_anchor resolves the
+    # owning root instead of None (the exact gate the regression tripped).
+    import from jaclang.jac0core.archetype { ObjectSpatialPath }
+    import from jaclang.runtimelib.query_utils { _path_root_anchor }
+    root_arch = SlimT(a="root");
+    root_anchor: any = root_arch.__jac__;
+    root_anchor.id = rid;
+    path = ObjectSpatialPath(origin=[anchor.archetype], destinations=[]);
+    got = _path_root_anchor(_OneAnchorMem(anchor=root_anchor), path);
+    assert got is root_anchor , "projected origin must resolve its owning root";
+}
+
+
 test "api serialization of slim archetype emits only projected fields" {
     anchor = Serializer.deserialize_projected(
         UUID(int=12), SlimT.__module__, "SlimT", {"a": "x"}, {"a"}
