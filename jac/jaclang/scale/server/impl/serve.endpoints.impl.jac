@@ -239,6 +239,11 @@ impl JacAPIServerEndpoints.create_function_callback(
     import from jaclang.runtimelib.transport { TransportResponse, Meta }
     import from fastapi { Request }
     requires_auth = self.introspector.is_auth_required_for_function(func_name);
+    # Per-request echo gated by the same access-log toggle as uvicorn's request
+    # line (env JAC_ACCESS_LOG wins over toml, default ON = upstream behavior).
+    # Resolved once at registration: str-formatting the full payload + a stdout
+    # flush per call is pure overhead on benched/production paths.
+    echo_requests = get_scale_config().get_server_config()['access_log'];
     async def callback(
         request: Request, **kwargs: JsonValue
     ) -> (TransportResponse | StreamingResponse) {
@@ -250,7 +255,9 @@ impl JacAPIServerEndpoints.create_function_callback(
                 meta=Meta(extra={'http_status': 401})
             );
         }
-        console.print(f"Executing function '{func_name}' with params: {kwargs}");
+        if echo_requests {
+            console.print(f"Executing function '{func_name}' with params: {kwargs}");
+        }
         result = await self.execution_manager.execute_function(
             self.get_functions()[func_name], kwargs, (username or Con.GUEST.value)
         );

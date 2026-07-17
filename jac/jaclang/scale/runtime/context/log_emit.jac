@@ -96,14 +96,18 @@ def install_structured_logging {
         import from jaclang.scale.runtime.context.trace_ctx { install_trace_log_filter }
         install_trace_log_filter();
 
-        _structured_installed = True;
-    }
-
-    for noisy_name in ["uvicorn", "uvicorn.access", "uvicorn.error", "fastapi"] {
-        noisy = logging.getLogger(noisy_name);
-        if noisy.handlers or not noisy.propagate {
-            noisy.handlers = [];
-            noisy.propagate = True;
+        # Noisy-logger reset is idempotent boot-time work; it lived outside
+        # the guard and re-ran on EVERY request (4 getLogger calls + checks
+        # per request via the request middleware). Uvicorn configures these
+        # loggers before the first request, so once is enough.
+        for noisy_name in ["uvicorn", "uvicorn.access", "uvicorn.error", "fastapi"] {
+            noisy = logging.getLogger(noisy_name);
+            if noisy.handlers or not noisy.propagate {
+                noisy.handlers = [];
+                noisy.propagate = True;
+            }
         }
+
+        _structured_installed = True;
     }
 }
