@@ -24,6 +24,7 @@ Env wins over `jac.toml`'s `[scale.database]` table (`backend`, `postgresql_uri`
 | `JAC_TOPOLOGY_INDEX` | on | Gates the GTI **write** hooks only (`on_edge_created/destroyed`, `on_node_saved/destroyed`) - reads always use whatever GTI blobs already exist, flag has no read-path effect. |
 | `JAC_CROSS_ROOT_RESOLVE` | off | Per-hop foreign-root GTI resolution. |
 | `JAC_BATCH_L3` | off | Collapses frontier misses into one `$in`/`ANY()` fetch instead of per-id round-trips. |
+| `JAC_GTI_CACHE` | off | Process-level content-addressed cache of decoded GTI: `blake2b(topology_index_data) -> TopologyIndex` LRU (`runtimelib/gti_cache.jac`). Read-path only (resolver local + cross-root index decode); cannot serve stale data -- any blob change changes the key. Backend-agnostic. Cap: `JAC_GTI_CACHE_SIZE` (env-only, default 1024 entries). toml mirror `[run] gti_cache`. |
 | `JAC_READ_ONLY` | off | **WARNING**: silently drops writes at commit. A perf-isolation probe (measures read-path cost with write cost zeroed out), not a safety/dry-run mode - do not enable on anything you want persisted. |
 | `JAC_API_LEAN_RESPONSE` | off | Drops the response envelope in the API layer (serialization-size ablation). |
 | `JAC_PROJECTION` | unset | Format: `Type:f1,f2;Type2:f3`. Env-only - no `jac.toml` mirror. Supported on mongo (Route A) and postgres-rel (Routes A/B); no-op on postgres KV. |

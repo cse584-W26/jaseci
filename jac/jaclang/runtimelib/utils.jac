@@ -115,6 +115,21 @@ def lean_response_enabled -> bool {
 }
 
 
+def gti_cache_enabled -> bool {
+    env = os.environ.get("JAC_GTI_CACHE");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes", "on");
+    }
+    try {
+        import from jaclang.project.config { get_config }
+        cfg = get_config();
+        return cfg is not None and cfg.run.gti_cache;
+    } except Exception {
+        return False;
+    }
+}
+
+
 def read_autocommit_enabled -> bool {
     env = os.environ.get("JAC_READ_AUTOCOMMIT");
     if env is not None {

@@ -190,6 +190,134 @@ test "batch_l3 off loops l3.get per miss" {
     }
 }
 
+test "gti_cache parity, engagement, and freshness on cross-root reads" {
+    import from jaclang.runtimelib.gti_cache { clear_cache, cache_stats }
+    prev = {
+        k: os.environ.get(k)
+        for k in ("JAC_CROSS_ROOT_RESOLVE", "JAC_GTI_CACHE", "JAC_TOPOLOGY_INDEX")
+    };
+    os.environ["JAC_TOPOLOGY_INDEX"] = "1";
+    client = JacTestClient.from_file(FIXTURE, base_path=mkdtemp());
+    try {
+        # Same two-root graph as the matrix test.
+        client.register_user("bob", "secret123");
+        client.login("bob", "secret123");
+        bob_profile_id = first_report(
+            client.post("/walker/setup_profile_only", json={"username": "bob"})
+        );
+        client.post("/walker/post_tweet", json={"content": "hello world"});
+
+        client.register_user("alice", "secret123");
+        client.login("alice", "secret123");
+        client.post("/walker/setup_profile_only", json={"username": "alice"});
+        client.post("/walker/follow_target", json={"target_id": bob_profile_id});
+        channel_id = first_report(
+            client.post("/walker/create_channel", json={"name": "lounge"})
+        );
+        client.login("bob", "secret123");
+        client.post("/walker/join_channel", json={"channel_id": channel_id});
+        client.login("alice", "secret123");
+
+        _set_flag("JAC_CROSS_ROOT_RESOLVE", True);
+        _set_flag("JAC_GTI_CACHE", False);
+        baseline = first_report(client.post("/walker/query_follow_chain", json={}));
+        baseline_members = first_report(
+            client.post(
+                "/walker/query_channel_members", json={"channel_id": channel_id}
+            )
+        );
+
+        _set_flag("JAC_GTI_CACHE", True);
+        clear_cache();
+        r1 = first_report(client.post("/walker/query_follow_chain", json={}));
+        assert r1 == baseline , f"cache-on parity broke: {r1} != {baseline}";
+        s1 = cache_stats();
+        assert s1["misses"] >= 1 , (f"cache never engaged on a cross-root read: {s1}");
+
+        r2 = first_report(client.post("/walker/query_follow_chain", json={}));
+        assert r2 == baseline , f"warm-cache parity broke: {r2} != {baseline}";
+        s2 = cache_stats();
+        assert s2["hits"] >= 1 , f"repeat read should hit the cache: {s2}";
+
+        m1 = first_report(
+            client.post(
+                "/walker/query_channel_members", json={"channel_id": channel_id}
+            )
+        );
+        assert m1 == baseline_members , (
+            f"members parity broke: {m1} != {baseline_members}"
+        );
+
+        # Freshness: a foreign-root write (bob's new tweet changes bob's GTI
+        # blob) must be visible on the next cached read -- the content-
+        # addressed key changes with the blob, so no staleness is possible.
+        client.login("bob", "secret123");
+        client.post("/walker/post_tweet", json={"content": "second tweet"});
+        client.login("alice", "secret123");
+        r3 = first_report(client.post("/walker/query_follow_chain", json={}));
+        assert r3 == baseline + 1 , (
+            f"cached read served stale foreign GTI: {r3} != {baseline + 1}"
+        );
+    } finally {
+        client.close();
+        for (k, v) in prev.items() {
+            if v is None {
+                if k in os.environ {
+                    del os.environ[k];
+                }
+            } else {
+                os.environ[k] = v;
+            }
+        }
+    }
+}
+
+
+test "gti_cache engages on local-root reads too" {
+    import from jaclang.runtimelib.gti_cache { clear_cache, cache_stats }
+    prev = {
+        k: os.environ.get(k)
+        for k in ("JAC_CROSS_ROOT_RESOLVE", "JAC_GTI_CACHE", "JAC_TOPOLOGY_INDEX")
+    };
+    os.environ["JAC_TOPOLOGY_INDEX"] = "1";
+    _set_flag("JAC_CROSS_ROOT_RESOLVE", False);
+    client = JacTestClient.from_file(FIXTURE, base_path=mkdtemp());
+    try {
+        # Single-root graph: bob follows himself-adjacent content only.
+        client.register_user("bob", "secret123");
+        client.login("bob", "secret123");
+        client.post("/walker/setup_profile_only", json={"username": "bob"});
+        client.post("/walker/post_tweet", json={"content": "local only"});
+
+        _set_flag("JAC_GTI_CACHE", False);
+        baseline = first_report(client.post("/walker/query_follow_chain", json={}));
+
+        _set_flag("JAC_GTI_CACHE", True);
+        clear_cache();
+        r1 = first_report(client.post("/walker/query_follow_chain", json={}));
+        assert r1 == baseline , f"local cache-on parity broke: {r1} != {baseline}";
+        s1 = cache_stats();
+        assert s1["misses"] >= 1 , f"cache never engaged on a local read: {s1}";
+        r2 = first_report(client.post("/walker/query_follow_chain", json={}));
+        assert r2 == baseline;
+        assert cache_stats()["hits"] >= 1 , (
+            f"repeat local read should hit: {cache_stats()}"
+        );
+    } finally {
+        client.close();
+        for (k, v) in prev.items() {
+            if v is None {
+                if k in os.environ {
+                    del os.environ[k];
+                }
+            } else {
+                os.environ[k] = v;
+            }
+        }
+    }
+}
+
+
 test "batch_l3 on issues one batch_get and matches" {
     prev = os.environ.get("JAC_BATCH_L3");
     os.environ["JAC_BATCH_L3"] = "1";

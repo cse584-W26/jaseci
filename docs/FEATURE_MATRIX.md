@@ -30,6 +30,7 @@ Structural note: **postgres-KV is not a peer** for query-plan pushdown - empty `
 | JAC_ORDERED_TRAVERSAL | off | **yes [HK]** - loader wired (config.impl.jac:747, was dead) | **yes [HK]** |
 | JAC_CROSS_ROOT_RESOLVE | off | yes | **yes [HK]** |
 | JAC_BATCH_L3 | off | yes | **yes [HK]** |
+| JAC_GTI_CACHE | off | yes (`gti_cache`) | yes (helper: `utils.gti_cache_enabled`; cap via env-only JAC_GTI_CACHE_SIZE, default 1024) |
 | JAC_READ_ONLY | off | yes | **yes [HK]** (helper now shared: `utils.read_only_enabled`) |
 | JAC_API_LEAN_RESPONSE | off | yes | **yes [HK]** (helper now shared: `utils.lean_response_enabled`) |
 | JAC_PROJECTION | unset | **none** (env-only) | **yes [HK]** |
