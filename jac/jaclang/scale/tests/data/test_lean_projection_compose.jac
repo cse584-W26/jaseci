@@ -5,7 +5,8 @@ fetched through a genuine projection round-trip (PostgresRelBackend.
 execute_plan, not a manually-stamped marker) with lean-response ON, and
 asserts the composed response body: only the projected field survives
 (post-T5: no leaked defaults for the un-projected `age` field), and the
-lean envelope-unwrap + `_jac_*` stripping still apply on top.
+lean envelope-unwrap still applies; lean keeps `_jac_id` (node-report
+identity) but drops `_jac_type`/`_jac_archetype`.
 
 Requires local Postgres (jactest_rel), same as test_postgres_rel_backend.jac.
 """
@@ -52,14 +53,14 @@ test "lean x projection: bare body carries only the projected field" {
             f"lean must unwrap the single-report envelope: {body}"
         );
         item = body["feed"][0];
-        assert item == {"name": "ann"} , (
-            f"only the projected field must survive, no leaked defaults: {item}"
+        assert set(item.keys()) == {"name", "_jac_id"} , (
+            f"projected field + _jac_id identity must survive, nothing else: {item}"
         );
-        for key in item.keys() {
-            assert not key.startswith("_jac_") , (
-                f"lean must drop _jac_* fields, found {key}: {item}"
-            );
-        }
+        assert item["name"] == "ann";
+        assert item["_jac_id"] , "lean keeps _jac_id (node-report identity)";
+        assert "_jac_type" not in item and "_jac_archetype" not in item , (
+            f"lean must still drop type/archetype metadata: {item}"
+        );
     } finally {
         client.close();
         os.environ.pop('JAC_PROJECTION', None);

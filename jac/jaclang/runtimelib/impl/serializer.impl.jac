@@ -194,14 +194,18 @@ impl Serializer._serialize_value(
             }
         }
         result = Serializer._type_info(val, include_type);
-        if api_mode and not lean_response_enabled() {
-            result |= {
-                '_jac_type': type(val).__name__,
-                '_jac_id': val.__jac__.id.hex if val?.__jac__ else None,
-                '_jac_archetype': 'node'
-                    if isinstance(val, NodeArchetype)
-                    else 'walker' if isinstance(val, WalkerArchetype) else 'archetype'
-            };
+        if api_mode {
+            result |= {'_jac_id': val.__jac__.id.hex if val?.__jac__ else None};
+            if not lean_response_enabled() {
+                result |= {
+                    '_jac_type': type(val).__name__,
+                    '_jac_archetype': 'node'
+                        if isinstance(val, NodeArchetype)
+                        else 'walker'
+                            if isinstance(val, WalkerArchetype)
+                            else 'archetype'
+                };
+            }
         }
         return result | Serializer._serialize_attrs(
             val, include_type, api_mode, ref_mode, _seen
