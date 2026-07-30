@@ -448,6 +448,105 @@ impl TopologyIndex.get_cross_root_ids(node_ids: set[UUID]) -> dict[UUID, set[UUI
     return result;
 }
 
+impl TopologyIndex.resolve_chain_cross_root(
+    mem: Any, origin_ids: set[UUID], chain: list[tuple[(str | None), (str | None), int]]
+) -> (set[UUID] | None) {
+    if not chain {
+        return origin_ids;
+    }
+    import logging;
+    import from jaclang.jac0core.archetype { NodeAnchor }
+    import from jaclang.runtimelib.memory { TieredMemory }
+    import from jaclang.runtimelib.utils { gti_cache_enabled }
+    import from jaclang.runtimelib.gti_cache { decode_cached }
+    _logger = logging.getLogger(__name__);
+    use_gti_cache = gti_cache_enabled();
+
+    frontier: list[tuple[TopologyIndex, set[UUID]]] = [(self, origin_ids)];
+    for (hop_idx, hop) in enumerate(chain) {
+        is_last = hop_idx == len(chain) - 1;
+        next_frontier: list[tuple[TopologyIndex, set[UUID]]] = [];
+        result_ids: set[UUID] = set();
+
+        pending_foreign: dict[UUID, set[UUID]] = {};
+        for (idx, ids) in frontier {
+            hop_result = idx.resolve_chain(ids, [hop]);
+            if not hop_result {
+                continue;
+            }
+            if is_last {
+                result_ids |= hop_result;
+            } else {
+                cross_root_map = idx.get_cross_root_ids(hop_result);
+                foreign_all: set[UUID] = {
+                    uid for fset in cross_root_map.values() for uid in fset
+                };
+                local_ids = hop_result - foreign_all;
+                if local_ids {
+                    next_frontier.append((idx, local_ids));
+                }
+                for (foreign_root_id, foreign_node_ids) in cross_root_map.items() {
+                    pending_foreign.setdefault(foreign_root_id, set()).update(
+                        foreign_node_ids
+                    );
+                }
+            }
+        }
+        if is_last {
+            return result_ids;
+        }
+
+        loaded_roots: dict[UUID, Any] = {};
+        try {
+            root_ids = list(pending_foreign.keys());
+            if isinstance(mem, TieredMemory) {
+                loaded_roots = mem.batch_get(root_ids);
+            } else {
+                loaded_roots = {
+                    rid: a
+                    for rid in root_ids
+                    if (a := mem.get(rid)) is not None
+                };
+            }
+            for (foreign_root_id, foreign_node_ids) in pending_foreign.items() {
+                root_anchor = loaded_roots.get(foreign_root_id);
+                if not isinstance(root_anchor, NodeAnchor) {
+                    _logger.warning(
+                        f"cross-root resolve: root {foreign_root_id} missing or "
+                        "not a NodeAnchor, falling back to edge walk"
+                    );
+                    return None;
+                }
+                foreign_idx = decode_cached(
+                    foreign_root_id, root_anchor.topology_index_data
+                )
+                    if use_gti_cache and root_anchor.topology_index_data
+                    else root_anchor.get_topology_index();
+                if not isinstance(foreign_idx, TopologyIndex)
+                or len(foreign_idx) == 0 {
+                    _logger.warning(
+                        f"cross-root resolve: root {foreign_root_id} has no "
+                        "usable topology index, falling back to edge walk"
+                    );
+                    return None;
+                }
+                next_frontier.append((foreign_idx, foreign_node_ids));
+            }
+        } except Exception as exc {
+            _logger.warning(
+                "cross-root resolve: batched load of foreign roots failed "
+                f"({exc}), falling back to edge walk"
+            );
+            return None;
+        }
+        frontier = next_frontier;
+        if not frontier {
+            return set();
+        }
+    }
+    return set();
+}
+
 impl TopologyIndex.encode -> bytes {
     num_types = len(self.type_table);
     num_nodes = len(self.node_table);
