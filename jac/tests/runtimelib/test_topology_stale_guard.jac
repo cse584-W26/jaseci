@@ -156,6 +156,59 @@ test "write with hooks off marks the index stale and reads fall back to walk" {
     );
 }
 
+test "dark-era writes on a blob-less root block partial index bootstrap" {
+    # The subtle variant: alice's dark-era Follow edge lands while she has
+    # NO index blob at all. If that write goes unmarked, her first hooks-on
+    # write would bootstrap a fresh index containing ONLY the new edge, and
+    # queries would resolve via that partial index -- silently dropping the
+    # dark-era follow. The sentinel must cover blob-less roots too.
+    def _body {
+        client = JacTestClient.from_file(FIXTURE, base_path=mkdtemp());
+        try {
+            # Entire early graph builds in the dark: bob and carol each post
+            # a tweet, alice follows bob.
+            os.environ["JAC_TOPOLOGY_INDEX"] = "0";
+            client.register_user("bob", "secret123");
+            client.login("bob", "secret123");
+            bob_profile_id = first_report(
+                client.post("/walker/setup_profile_only", json={"username": "bob"})
+            );
+            client.post("/walker/post_tweet", json={"content": "b1"});
+
+            client.register_user("carol", "secret123");
+            client.login("carol", "secret123");
+            carol_profile_id = first_report(
+                client.post("/walker/setup_profile_only", json={"username": "carol"})
+            );
+            client.post("/walker/post_tweet", json={"content": "c1"});
+
+            client.register_user("alice", "secret123");
+            client.login("alice", "secret123");
+            client.post("/walker/setup_profile_only", json={"username": "alice"});
+            client.post(
+                "/walker/follow_target", json={"target_id": bob_profile_id}
+            );
+
+            # Hooks back on: alice follows carol. Without the guard this
+            # bootstraps a partial index holding only the carol edge.
+            os.environ["JAC_TOPOLOGY_INDEX"] = "1";
+            client.post(
+                "/walker/follow_target", json={"target_id": carol_profile_id}
+            );
+
+            count = first_report(
+                client.post("/walker/query_follow_chain", json={})
+            );
+            assert count == 2 , f"Expected both followed users' tweets, got {count!r}";
+        } finally {
+            client.close();
+        }
+    }
+    with_flags(
+        {"JAC_TOPOLOGY_INDEX": "1", "JAC_CROSS_ROOT_RESOLVE": "1"}, _body
+    );
+}
+
 test "stale guard also covers the reverse cross-root query" {
     def _body {
         client = JacTestClient.from_file(FIXTURE, base_path=mkdtemp());

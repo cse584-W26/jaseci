@@ -64,9 +64,6 @@ impl _mark_stale(root_anchor: any) -> None {
     if root_anchor is None {
         return;
     }
-    if not root_anchor.topology_index_data {
-        return;
-    }
     if is_stale_index_blob(root_anchor.topology_index_data) {
         return;
     }
