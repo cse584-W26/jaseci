@@ -1985,7 +1985,7 @@ impl TieredMemory.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None]
 
     to_l2: list[Anchor] = [];
     for anchor in self.l3.execute_plan(plan) {
-        if anchor?._projected_fields is not None {
+        if isinstance(anchor, dict) or anchor?._projected_fields is not None {
             yield anchor;
             continue;
         }

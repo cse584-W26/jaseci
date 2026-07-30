@@ -21,7 +21,8 @@ obj QueryPlan {
         node_type_final: (str | None) = None,
         post_filter: (Callable[[Anchor], bool] | None) = None,
         projection: (set[str] | None) = None,
-        order: (tuple | None) = None;
+        order: (tuple | None) = None,
+        leaf: bool = False;
 
     def is_trivial -> bool;
     def needs -> set[str];

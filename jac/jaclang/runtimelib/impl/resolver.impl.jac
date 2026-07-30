@@ -513,6 +513,13 @@ impl resolve_path_anchors(
         proj_a = _projection_for(mem, last_hop.node_type, post_filter is not None);
         if proj_a is not None {
             plan.projection = proj_a;
+
+            if not path.from_visit {
+                import from jaclang.runtimelib.utils { leaf_materialize_cfg }
+                if last_hop.node_type in leaf_materialize_cfg() {
+                    plan.leaf = True;
+                }
+            }
         }
 
         if 'order_pushdown' in mem.capabilities() {

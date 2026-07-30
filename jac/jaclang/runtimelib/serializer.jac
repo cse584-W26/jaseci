@@ -39,6 +39,9 @@ def _intern_uuid(id_str: str) -> UUID {
 }
 
 
+class JsonSafeDict(dict) {}
+
+
 obj Serializer {
     static has _registry: dict[str, type] = {},
         _aliases: dict[str, str] = {};
@@ -56,6 +59,10 @@ obj Serializer {
     ) -> object;
 
     static def deserialize(data: dict[str, object]) -> (object | None);
+    static def leaf_row(
+        src: dict[str, object], field_names: tuple, id_hex: str
+    ) -> dict;
+
     static def _serialize_value(
         val: object,
         include_type: bool,

@@ -1094,10 +1094,11 @@ impl JacGraph.refs(
     import from jaclang.runtimelib.resolver { resolve_path_anchors }
     if not path.edge_only {
         planned = resolve_path_anchors(ctx.mem, path, slc);
+
         return [
-            a.archetype
+            (a if isinstance(a, dict) else a.archetype)
             for a in planned
-            if a.archetype is not None
+            if isinstance(a, dict) or a.archetype is not None
         ];
     }
 

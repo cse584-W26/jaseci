@@ -1,6 +1,7 @@
 import os;
 import platform;
 import from collections.abc { Callable }
+import from functools { lru_cache }
 import from pathlib { Path }
 import from uuid { UUID }
 import type from jaclang.jac0core.constructs { NodeArchetype }
@@ -82,6 +83,29 @@ def order_pushdown_cfg(node_type: (str | None)) -> (tuple | None) {
         return None;
     }
     return (parts[0], parts[1], direction.upper());
+}
+
+
+@lru_cache(maxsize=1)
+def fast_build_enabled -> bool {
+    env = os.environ.get("JAC_FAST_BUILD");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes", "on");
+    }
+    return False;
+}
+
+
+def leaf_materialize_cfg -> set[str] {
+    raw = os.environ.get("JAC_LEAF_MATERIALIZE");
+    if not raw {
+        return set();
+    }
+    return {
+        t.strip()
+        for t in raw.split(",")
+        if t.strip()
+    };
 }
 
 

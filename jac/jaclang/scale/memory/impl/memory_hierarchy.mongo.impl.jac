@@ -562,7 +562,37 @@ impl MongoBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None]
         if limit_n is not None {
             cursor = cursor.limit(limit_n);
         }
+        # Hoisted per-plan constants (identical for every row).
+        leaf_fields = tuple(sorted(plan.projection))
+            if plan.leaf and plan.projection is not None
+            else None;
+        import from jaclang.runtimelib.utils { fast_build_enabled }
+        _fast = fast_build_enabled();
         for doc in cursor {
+            if leaf_fields is not None {
+                # Leaf materialization: no archetype, no NodeAnchor, no
+                # Permission -- the projected fields ARE the result.
+                # _jac_id carries identity for dedup/client.
+                d = doc.get('data', {}).get('archetype', {});
+                if _fast {
+                    # _id is a dashed uuid STRING; strip dashes directly.
+                    # leaf_row guarantees JSON-safe values -> serializer
+                    # returns the row by identity (no deep copy).
+                    out: dict = Serializer.leaf_row(
+                        d, leaf_fields, doc['_id'].replace('-', '')
+                    );
+                } else {
+                    out = {
+                        f: Serializer._deserialize_value(d[f])
+                        for f in leaf_fields
+                        if f in d
+                    };
+                    out['_jac_id'] = to_uuid(doc['_id']).hex;
+                }
+                self.projection_count += 1;
+                yield out;
+                continue;
+            }
             if plan.projection is not None {
                 slim = Serializer.deserialize_projected(
                     to_uuid(doc['_id']),

@@ -24,6 +24,17 @@ def _convert_transport_response_to_json_response(
         # single-report shape, which is the only one carrying the key).
         lean_body = dict(transport_response.data);
         ms = lean_body.pop('server_total_ms');
+        import os;
+        if os.environ.get('JAC_ORJSON', '').lower() in ('1', 'true', 'on') {
+            # C-speed encoder for the hot lean path (perf probe; parsed
+            # output identical, byte layout compact like JSONResponse).
+            import from fastapi.responses { ORJSONResponse }
+            return ORJSONResponse(
+                status_code=status,
+                content=lean_body,
+                headers={'x-server-total-ms': f"{ms:.3f}"}
+            );
+        }
         return JSONResponse(
             status_code=status,
             content=lean_body,

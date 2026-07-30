@@ -1,7 +1,36 @@
 import from jaclang.runtimelib.utils {
     read_only_enabled,
     lean_response_enabled,
-    compiled_serializer_enabled
+    compiled_serializer_enabled,
+    fast_build_enabled
+}
+
+
+def _leaf_safe_value(v: object) -> object {
+    if v is None or isinstance(v, (str, int, float, bool)) {
+        return v;
+    }
+    if isinstance(v, list) {
+        return [_leaf_safe_value(x) for x in v];
+    }
+    if isinstance(v, dict) {
+        return {str(k): _leaf_safe_value(x) for (k, x) in v.items()};
+    }
+    return str(v);
+}
+
+
+impl Serializer.leaf_row(
+    src: dict[str, object], field_names: tuple, id_hex: str
+) -> dict {
+    out = JsonSafeDict();
+    for f in field_names {
+        if f in src {
+            out[f] = _leaf_safe_value(src[f]);
+        }
+    }
+    out['_jac_id'] = id_hex;
+    return out;
 }
 
 
@@ -31,6 +60,14 @@ impl Serializer._serialize_attrs(
             a: Serializer._serialize_value(
                 getattr(`obj, a), include_type, api_mode, ref_mode, _seen
             ) for a in plan
+        };
+    } elif projected is not None {
+        result = {
+            a: Serializer._serialize_value(
+                getattr(`obj, a), include_type, api_mode, ref_mode, _seen
+            )
+            for a in sorted(projected)
+            if hasattr(`obj, a)
         };
     } else {
         result = {
@@ -96,6 +133,9 @@ impl Serializer._serialize_value(
         return val.value;
     }
 
+    if type(val) is JsonSafeDict {
+        return val;
+    }
     if isinstance(val, (list, tuple)) {
         return [
             Serializer._serialize_value(v, include_type, api_mode, ref_mode, _seen)
@@ -817,15 +857,28 @@ impl Serializer.deserialize_projected(
         return None;
     }
     cls = cast(type, resolved);
+    _fast = fast_build_enabled();
     try {
         arch: object = cls.__new__(cls);
-        for f in projected {
-            if f in fields {
-                setattr(arch, f, Serializer._deserialize_value(fields[f]));
+        if _fast {
+            arch.__dict__.update(
+                {
+                    f: Serializer._deserialize_value(fields[f])
+                    for f in projected
+                    if f in fields
+                }
+            );
+            anchor = NodeAnchor.__new__(NodeAnchor);
+            anchor.id = anchor_id;
+        } else {
+            for f in projected {
+                if f in fields {
+                    setattr(arch, f, Serializer._deserialize_value(fields[f]));
+                }
             }
+            anchor = NodeAnchor.__new__(NodeAnchor);
+            anchor.id = _intern_uuid(str(anchor_id));
         }
-        anchor = NodeAnchor.__new__(NodeAnchor);
-        anchor.id = _intern_uuid(str(anchor_id));
 
         anchor.root = _intern_uuid(root_id) if root_id else None;
         anchor.persistent = True;
@@ -835,7 +888,7 @@ impl Serializer.deserialize_projected(
         anchor.access = Permission();
         anchor.archetype = arch;
         setattr(arch, '__jac__', anchor);
-        setattr(anchor, '_projected_fields', set(projected));
+        setattr(anchor, '_projected_fields', projected if _fast else set(projected));
         return anchor;
     } except Exception as e {
         logger.error(f"Failed to build projected anchor {arch_type}: {e}");

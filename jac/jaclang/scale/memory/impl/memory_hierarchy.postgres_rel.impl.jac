@@ -102,7 +102,40 @@ impl PostgresRelBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None,
         return;
     }
     fields = sorted(plan.projection);
-    cols = ", ".join(["data->'archetype'->%s"] * len(fields));
+    # ->> (text) for str-typed fields returns the value already-decoded by
+    # psycopg's text codec, skipping the per-value stdlib json.loads that the
+    # jsonb (->) loader runs on EVERY extracted field (the raw_decode/json.load
+    # hotspot at 2550 rows). list/dict fields MUST stay -> (jsonb) so
+    # _deserialize_value rebuilds them; unknown/unresolved fields fall back to
+    # -> as well (conservative). A JSON string via ->> is byte-identical to the
+    # json.loads'd -> value, so deserialize is unaffected.
+    str_fields: set[str] = set();
+    if plan.node_type_final is not None {
+        proj_cls: (type | None) = None;
+        for c in Serializer._registry.values() {
+            if c?.__name__ == plan.node_type_final {
+                proj_cls = cast(type, c);
+                break;
+            }
+        }
+        if proj_cls is not None {
+            ftypes = get_field_types(proj_cls);
+            for f in fields {
+                if ftypes.get(f) is str {
+                    str_fields.add(f);
+                }
+            }
+        }
+    }
+    col_parts: list[str] = [];
+    for f in fields {
+        if f in str_fields {
+            col_parts.append("data->'archetype'->>%s");
+        } else {
+            col_parts.append("data->'archetype'->%s");
+        }
+    }
+    cols = ", ".join(col_parts);
     # data->>'root' rides along unconditionally: slim anchors keep structural
     # identity (owning root) so they stay valid traversal origins on the GTI
     # fast path; only archetype payload fields are trimmed.
