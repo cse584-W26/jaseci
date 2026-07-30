@@ -1,5 +1,19 @@
 import logging;
-import from jaclang.runtimelib.utils { lean_response_enabled }
+import from jaclang.runtimelib.utils { lean_response_enabled, orjson_response_enabled }
+
+def _response_class -> type {
+    # JAC_ORJSON_RESPONSE: encode response bodies with orjson (C-speed,
+    # single pass) instead of stdlib json.dumps re-walking the dict the
+    # Serializer just built. Fail-loud if the flag is on but orjson is
+    # missing - a silent fallback would invalidate benchmark comparisons.
+    import from fastapi.responses { JSONResponse }
+    if orjson_response_enabled() {
+        import from fastapi.responses { ORJSONResponse }
+        import orjson;
+        return ORJSONResponse;
+    }
+    return JSONResponse;
+}
 
 def _convert_transport_response_to_json_response(
     transport_response: TransportResponse
@@ -24,18 +38,7 @@ def _convert_transport_response_to_json_response(
         # single-report shape, which is the only one carrying the key).
         lean_body = dict(transport_response.data);
         ms = lean_body.pop('server_total_ms');
-        import os;
-        if os.environ.get('JAC_ORJSON', '').lower() in ('1', 'true', 'on') {
-            # C-speed encoder for the hot lean path (perf probe; parsed
-            # output identical, byte layout compact like JSONResponse).
-            import from fastapi.responses { ORJSONResponse }
-            return ORJSONResponse(
-                status_code=status,
-                content=lean_body,
-                headers={'x-server-total-ms': f"{ms:.3f}"}
-            );
-        }
-        return JSONResponse(
+        return _response_class()(
             status_code=status,
             content=lean_body,
             headers={'x-server-total-ms': f"{ms:.3f}"}
@@ -81,7 +84,7 @@ def _convert_transport_response_to_json_response(
             response_body['meta'] = meta_dict;
         }
     }
-    return JSONResponse(status_code=status, content=response_body);
+    return _response_class()(status_code=status, content=response_body);
 }
 
 class ConsoleLogHandler(logging.Handler) {

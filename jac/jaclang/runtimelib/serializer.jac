@@ -42,6 +42,26 @@ def _intern_uuid(id_str: str) -> UUID {
 class JsonSafeDict(dict) {}
 
 
+glob _PROJECTED_NO_ACCESS: (Permission | None) = None;
+
+
+def _shared_projected_permission -> Permission {
+    # Projected slim anchors are read-path-only (they skip dirty-scan and
+    # commit), so they all share one NO_ACCESS Permission instead of paying
+    # the Permission()/Access() constructor chain per anchor. The proxy-dict
+    # makes any grant attempt on a projected anchor raise instead of
+    # silently mutating state shared across anchors.
+    global _PROJECTED_NO_ACCESS;
+    if _PROJECTED_NO_ACCESS is None {
+        import from types { MappingProxyType }
+        perm = Permission();
+        perm.roots.anchors = MappingProxyType({});
+        _PROJECTED_NO_ACCESS = perm;
+    }
+    return _PROJECTED_NO_ACCESS;
+}
+
+
 obj Serializer {
     static has _registry: dict[str, type] = {},
         _aliases: dict[str, str] = {};

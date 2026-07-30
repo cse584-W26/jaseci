@@ -886,7 +886,7 @@ impl Serializer.deserialize_projected(
         anchor.edges = [];
         anchor.hash = 0;
         anchor.version = 0;
-        anchor.access = Permission();
+        anchor.access = _shared_projected_permission();
         anchor.archetype = arch;
         setattr(arch, '__jac__', anchor);
         setattr(anchor, '_projected_fields', projected if _fast else set(projected));
