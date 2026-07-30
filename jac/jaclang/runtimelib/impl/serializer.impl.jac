@@ -47,7 +47,7 @@ impl Serializer._serialize_attrs(
     ref_mode: bool = False,
     _seen: (tuple[set, set] | None) = None
 ) -> dict[str, object] {
-    _anchor = `obj?.__jac__;
+    _anchor = getattr(`obj, '__dict__', {}).get('__jac__');
     projected = _anchor.__dict__.get('_projected_fields')
         if _anchor is not None
         else None;
@@ -235,7 +235,8 @@ impl Serializer._serialize_value(
         }
         result = Serializer._type_info(val, include_type);
         if api_mode {
-            result |= {'_jac_id': val.__jac__.id.hex if val?.__jac__ else None};
+            _val_anchor = getattr(val, '__dict__', {}).get('__jac__');
+            result |= {'_jac_id': _val_anchor.id.hex if _val_anchor else None};
             if not lean_response_enabled() {
                 result |= {
                     '_jac_type': type(val).__name__,
