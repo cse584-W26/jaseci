@@ -246,13 +246,16 @@ impl NodeAnchor.edge_delta -> (tuple[(set[UUID], set[UUID])] | None) {
 }
 
 impl NodeAnchor.get_topology_index -> any {
-    import from jaclang.runtimelib.topology_index { TopologyIndex }
+    import from jaclang.runtimelib.topology_index { TopologyIndex, is_stale_index_blob }
     # Return the cached decoded index when we have one -- decode is O(edges)
     # and this is called on every traversal, so re-decoding each time is a
     # real per-query cost. The cache is invalidated in `set_topology_index`
     # (every mutation) and on deserialize, so it never goes stale.
     if self._topology_index_cache is not None {
         return self._topology_index_cache;
+    }
+    if is_stale_index_blob(self.topology_index_data) {
+        return TopologyIndex();
     }
     if self.topology_index_data {
         self._topology_index_cache = TopologyIndex.decode(self.topology_index_data);

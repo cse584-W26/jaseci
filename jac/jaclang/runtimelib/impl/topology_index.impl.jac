@@ -448,11 +448,21 @@ impl TopologyIndex.get_cross_root_ids(node_ids: set[UUID]) -> dict[UUID, set[UUI
     return result;
 }
 
+impl is_stale_index_blob(data: (bytes | None)) -> bool {
+    return data is not None and data == TOPO_STALE_BLOB;
+}
+
 impl TopologyIndex.resolve_chain_cross_root(
     mem: Any, origin_ids: set[UUID], chain: list[tuple[(str | None), (str | None), int]]
 ) -> (set[UUID] | None) {
     if not chain {
         return origin_ids;
+    }
+    if not all(
+        (lid := self.node_to_lid.get(uid)) is not None
+        and self.node_table[lid][2] == SELF_ROOT for uid in origin_ids
+    ) {
+        return None;
     }
     import logging;
     import from jaclang.jac0core.archetype { NodeAnchor }
@@ -514,6 +524,13 @@ impl TopologyIndex.resolve_chain_cross_root(
                     _logger.warning(
                         f"cross-root resolve: root {foreign_root_id} missing or "
                         "not a NodeAnchor, falling back to edge walk"
+                    );
+                    return None;
+                }
+                if is_stale_index_blob(root_anchor.topology_index_data) {
+                    _logger.warning(
+                        f"cross-root resolve: root {foreign_root_id} has a stale "
+                        "topology index, falling back to edge walk"
                     );
                     return None;
                 }

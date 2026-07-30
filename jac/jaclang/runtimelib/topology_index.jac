@@ -3,7 +3,11 @@ import from typing { Any }
 import from uuid { UUID }
 
 glob SELF_ROOT: UUID = UUID(int=0),
-     TOPO_VERSION: int = 2;
+     TOPO_VERSION: int = 2,
+     TOPO_STALE_BLOB: bytes = b'\xff';
+
+
+def is_stale_index_blob(data: (bytes | None)) -> bool;
 
 obj TopologyIndex {
     has type_table: list[str] = [],

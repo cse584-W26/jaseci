@@ -82,6 +82,7 @@ def _resolve_hop_cross_root(
         result |= loc;
     }
 
+    import from jaclang.runtimelib.topology_index { is_stale_index_blob }
     import from jaclang.runtimelib.utils { gti_cache_enabled }
     import from jaclang.runtimelib.gti_cache { decode_cached }
     use_gti_cache = gti_cache_enabled();
@@ -89,6 +90,9 @@ def _resolve_hop_cross_root(
     for (root_id, node_ids) in cross_map.items() {
         ra = roots.get(root_id);
         if not isinstance(ra, NodeAnchor) {
+            return None;
+        }
+        if is_stale_index_blob(ra.topology_index_data) {
             return None;
         }
 
@@ -297,6 +301,10 @@ def _try_field_pushdown(
 
 def _get_usable_index(root_anchor: (NodeAnchor | None)) -> (TopologyIndex | None) {
     if root_anchor is None {
+        return None;
+    }
+    import from jaclang.runtimelib.topology_index { is_stale_index_blob }
+    if is_stale_index_blob(root_anchor.topology_index_data) {
         return None;
     }
     import from jaclang.runtimelib.utils { gti_cache_enabled }

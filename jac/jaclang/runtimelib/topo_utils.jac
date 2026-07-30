@@ -6,6 +6,10 @@ def _type_name(`obj: object) -> str;
 
 def _get_type_mro(`obj: object) -> list[str];
 
+def _mark_stale(root_anchor: any) -> None;
+
+def _mark_roots_stale(source: any, target: any) -> None;
+
 def _index_edge_into(root_anchor: any, source: any, target: any, `edge: any) -> None;
 
 def _unindex_edge_from(root_anchor: any, source: any, target: any, `edge: any) -> None;
