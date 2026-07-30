@@ -26,7 +26,11 @@ node Channel {
 }
 
 edge Follow {}
-edge Post {}
+
+edge Post {
+    has score: int = 0;
+}
+
 edge Member {}
 
 
@@ -55,6 +59,7 @@ walker:priv setup_profile_only {
 
 walker:priv post_tweet {
     has content: str = "";
+    has score: int = 0;
     has reports: list = [];
 
     can run with Root entry {
@@ -63,7 +68,7 @@ walker:priv post_tweet {
 
     can make with Profile entry {
         tweet = Tweet(content=self.content);
-        here +>: Post() :+> tweet;
+        here +>: Post(score=self.score) :+> tweet;
         grant(tweet, level=ConnectPerm);
         report jid(tweet);
     }
@@ -143,6 +148,58 @@ walker:priv query_follow_of_follow {
         }
         me = prof_list[0];
         tweets = [me->:Follow:->[?:Profile]->:Follow:->[?:Profile]-->[?:Tweet]];
+        report len(tweets);
+    }
+}
+
+walker:priv query_follow_chain_filtered {
+    """2-hop chain with a node-field predicate on the final hop."""
+    has reports: list = [];
+
+    can run with Root entry {
+        prof_list = [-->[?:Profile]];
+        if not prof_list {
+            report 0;
+            return;
+        }
+        me = prof_list[0];
+        tweets = [me->:Follow:->[?:Profile]-->[?:Tweet, content == "keeper"]];
+        report len(tweets);
+    }
+}
+
+walker:priv query_follow_of_follow_filtered {
+    """3-hop chain with a node-field predicate on the final hop."""
+    has reports: list = [];
+
+    can run with Root entry {
+        prof_list = [-->[?:Profile]];
+        if not prof_list {
+            report 0;
+            return;
+        }
+        me = prof_list[0];
+        tweets = [
+            me->:Follow:->[?:Profile]->:Follow:->[?:Profile]-->[?:Tweet, content == "keeper"]
+        ];
+        report len(tweets);
+    }
+}
+
+walker:priv query_follow_of_follow_scored {
+    """3-hop chain with an edge-attribute predicate on the final hop."""
+    has reports: list = [];
+
+    can run with Root entry {
+        prof_list = [-->[?:Profile]];
+        if not prof_list {
+            report 0;
+            return;
+        }
+        me = prof_list[0];
+        tweets = [
+            me->:Follow:->[?:Profile]->:Follow:->[?:Profile]->:Post:score>=5:->[?:Tweet]
+        ];
         report len(tweets);
     }
 }

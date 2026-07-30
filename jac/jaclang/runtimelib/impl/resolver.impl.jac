@@ -473,29 +473,67 @@ impl resolve_path_anchors(
         }
     }
 
-    if (
+    prefix_frontier_done = False;
+    cross_chain_viable = (
         result is None
         and idx is not None
         and len(chain) > 1
         and current
         and slc is None
-        and not last_has_post_filter
         and _cross_root_enabled()
         and not any(
             _filter_has_predicates(h.dest.nd) or _filter_has_predicates(h.dest.`edge)
-            for h in chain
+            for h in chain[:-1]
         )
-    ) {
+    );
+    if cross_chain_viable and not _filter_has_predicates(last_hop.dest.`edge) {
         triples = [(h.edge_type, h.node_type, h.direction) for h in chain];
         crossed = idx.resolve_chain_cross_root(mem, current, triples);
-        if crossed is not None {
+        if crossed is not None and not last_has_post_filter {
             _trace_final('cross-root-chain', len(crossed), f"hops={len(chain)}");
             result = crossed;
+        } elif crossed is not None {
+            field_preds = _extract_field_predicates(last_hop.dest.nd);
+            if field_preds and root_anchor is not None {
+                plan = QueryPlan(
+                    root_id=root_anchor.id,
+                    chain=[],
+                    field_predicates=field_preds,
+                    id_in=crossed,
+                    post_filter=last_hop.dest.node_filter,
+                );
+                if plan.needs() <= mem.capabilities() {
+                    _trace_final(
+                        'cross-root-field-pushdown',
+                        len(crossed),
+                        f"preds={field_preds}"
+                    );
+                    return _try_pushdown(mem, plan);
+                }
+            }
+            _trace_final(
+                'cross-root-chain-filtered', len(crossed), f"hops={len(chain)}"
+            );
+            result = crossed;
+        }
+    } elif cross_chain_viable and len(chain) > 2 {
+        triples = [(h.edge_type, h.node_type, h.direction) for h in chain[:-1]];
+        prefix_ids = idx.resolve_chain_cross_root(mem, current, triples);
+        if prefix_ids is not None {
+            _trace_hop(
+                'cross-root-prefix',
+                len(chain) - 2,
+                len(current),
+                len(prefix_ids),
+                chain[-2]
+            );
+            current = prefix_ids;
+            prefix_frontier_done = True;
         }
     }
 
     if result is None {
-        if len(chain) > 1 {
+        if len(chain) > 1 and not prefix_frontier_done {
             current = _resolve_prefix(mem, current, chain[:-1], idx);
         }
         if last_has_post_filter {

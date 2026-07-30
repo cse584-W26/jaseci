@@ -188,6 +188,165 @@ test "cross-root fast path resolves a 3-hop chain through foreign roots" {
     with_cross_root(_fast_body);
 }
 
+test "cross-root filtered forward chain matches the walk" {
+    # 2-hop chain with a node-field predicate on the final hop
+    # (`content == "keeper"`). With cross-root on, the chain resolves
+    # structurally on the frontier and the predicate applies at the
+    # materialization boundary (backend field pushdown when the backend
+    # supports it, retained post-filter otherwise). Must match the walk.
+    def _build_and_query(client: any) -> any {
+        client.register_user("bob", "secret123");
+        client.login("bob", "secret123");
+        bob_profile_id = first_report(
+            client.post("/walker/setup_profile_only", json={"username": "bob"})
+        );
+        client.post("/walker/post_tweet", json={"content": "keeper"});
+        client.post("/walker/post_tweet", json={"content": "other"});
+
+        client.register_user("alice", "secret123");
+        client.login("alice", "secret123");
+        client.post("/walker/setup_profile_only", json={"username": "alice"});
+        client.post("/walker/follow_target", json={"target_id": bob_profile_id});
+
+        return first_report(
+            client.post("/walker/query_follow_chain_filtered", json={})
+        );
+    }
+
+    def _walk_body {
+        client = JacTestClient.from_file(FIXTURE, base_path=mkdtemp());
+        try {
+            count = _build_and_query(client);
+            assert count == 1 , f"Walk baseline: expected 1 tweet, got {count!r}";
+        } finally {
+            client.close();
+        }
+    }
+
+    def _fast_body {
+        client = JacTestClient.from_file(FIXTURE, base_path=mkdtemp());
+        try {
+            count = _build_and_query(client);
+            assert count == 1 , f"Fast path: expected 1 tweet, got {count!r}";
+        } finally {
+            client.close();
+        }
+    }
+
+    with_topo_index(_walk_body);
+    with_cross_root(_fast_body);
+}
+
+test "cross-root filtered 3-hop chain matches the walk" {
+    # Same as the 3-hop frontier test, but the final hop carries a
+    # node-field predicate: the prefix crosses two root boundaries in
+    # index space, then the predicate applies at the boundary. carol has
+    # one matching and one non-matching tweet.
+    def _build_and_query(client: any) -> any {
+        client.register_user("carol", "secret123");
+        client.login("carol", "secret123");
+        carol_profile_id = first_report(
+            client.post("/walker/setup_profile_only", json={"username": "carol"})
+        );
+        client.post("/walker/post_tweet", json={"content": "keeper"});
+        client.post("/walker/post_tweet", json={"content": "other"});
+
+        client.register_user("bob", "secret123");
+        client.login("bob", "secret123");
+        bob_profile_id = first_report(
+            client.post("/walker/setup_profile_only", json={"username": "bob"})
+        );
+        client.post("/walker/follow_target", json={"target_id": carol_profile_id});
+
+        client.register_user("alice", "secret123");
+        client.login("alice", "secret123");
+        client.post("/walker/setup_profile_only", json={"username": "alice"});
+        client.post("/walker/follow_target", json={"target_id": bob_profile_id});
+
+        return first_report(
+            client.post("/walker/query_follow_of_follow_filtered", json={})
+        );
+    }
+
+    def _walk_body {
+        client = JacTestClient.from_file(FIXTURE, base_path=mkdtemp());
+        try {
+            count = _build_and_query(client);
+            assert count == 1 , f"Walk baseline: expected 1 tweet, got {count!r}";
+        } finally {
+            client.close();
+        }
+    }
+
+    def _fast_body {
+        client = JacTestClient.from_file(FIXTURE, base_path=mkdtemp());
+        try {
+            count = _build_and_query(client);
+            assert count == 1 , f"Fast path: expected 1 tweet, got {count!r}";
+        } finally {
+            client.close();
+        }
+    }
+
+    with_topo_index(_walk_body);
+    with_cross_root(_fast_body);
+}
+
+test "cross-root edge-predicate 3-hop chain matches the walk" {
+    # Edge-attribute predicate (`score >= 5`) on the final hop: edge
+    # fields don't exist in index space, so the frontier resolves only
+    # the prefix and the final hop walks real edges from the (foreign)
+    # frontier ids. carol has one high-score and one low-score post.
+    def _build_and_query(client: any) -> any {
+        client.register_user("carol", "secret123");
+        client.login("carol", "secret123");
+        carol_profile_id = first_report(
+            client.post("/walker/setup_profile_only", json={"username": "carol"})
+        );
+        client.post("/walker/post_tweet", json={"content": "hot", "score": 10});
+        client.post("/walker/post_tweet", json={"content": "cold", "score": 1});
+
+        client.register_user("bob", "secret123");
+        client.login("bob", "secret123");
+        bob_profile_id = first_report(
+            client.post("/walker/setup_profile_only", json={"username": "bob"})
+        );
+        client.post("/walker/follow_target", json={"target_id": carol_profile_id});
+
+        client.register_user("alice", "secret123");
+        client.login("alice", "secret123");
+        client.post("/walker/setup_profile_only", json={"username": "alice"});
+        client.post("/walker/follow_target", json={"target_id": bob_profile_id});
+
+        return first_report(
+            client.post("/walker/query_follow_of_follow_scored", json={})
+        );
+    }
+
+    def _walk_body {
+        client = JacTestClient.from_file(FIXTURE, base_path=mkdtemp());
+        try {
+            count = _build_and_query(client);
+            assert count == 1 , f"Walk baseline: expected 1 tweet, got {count!r}";
+        } finally {
+            client.close();
+        }
+    }
+
+    def _fast_body {
+        client = JacTestClient.from_file(FIXTURE, base_path=mkdtemp());
+        try {
+            count = _build_and_query(client);
+            assert count == 1 , f"Fast path: expected 1 tweet, got {count!r}";
+        } finally {
+            client.close();
+        }
+    }
+
+    with_topo_index(_walk_body);
+    with_cross_root(_fast_body);
+}
+
 test "cross-root reverse query counts members across roots" {
     def _body {
         client = JacTestClient.from_file(FIXTURE, base_path=mkdtemp());
