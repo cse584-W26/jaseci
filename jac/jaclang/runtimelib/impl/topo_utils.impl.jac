@@ -56,8 +56,36 @@ impl _get_type_mro(`obj: object) -> list[str] {
     return chain;
 }
 
+impl _mark_stale(root_anchor: any) -> None {
+    import from jaclang.runtimelib.topology_index {
+        TOPO_STALE_BLOB,
+        is_stale_index_blob
+    }
+    if root_anchor is None {
+        return;
+    }
+    if is_stale_index_blob(root_anchor.topology_index_data) {
+        return;
+    }
+    root_anchor.topology_index_data = TOPO_STALE_BLOB;
+    root_anchor._topology_index_cache = None;
+}
+
+impl _mark_roots_stale(source: any, target: any) -> None {
+    source_root = _get_root_anchor(source);
+    if source_root is not None {
+        _mark_stale(source_root);
+    }
+    if target.root and (source_root is None or target.root != source_root.id) {
+        _mark_stale(_get_root_anchor(target));
+    }
+}
+
 impl _index_edge_into(root_anchor: any, source: any, target: any, `edge: any) -> None {
-    import from jaclang.runtimelib.topology_index { TopologyIndex }
+    import from jaclang.runtimelib.topology_index { TopologyIndex, is_stale_index_blob }
+    if is_stale_index_blob(root_anchor.topology_index_data) {
+        return;
+    }
     idx = root_anchor.get_topology_index();
     if not isinstance(idx, TopologyIndex) {
         idx = TopologyIndex();
@@ -93,7 +121,10 @@ impl _index_edge_into(root_anchor: any, source: any, target: any, `edge: any) ->
 impl _unindex_edge_from(
     root_anchor: any, source: any, target: any, `edge: any
 ) -> None {
-    import from jaclang.runtimelib.topology_index { TopologyIndex }
+    import from jaclang.runtimelib.topology_index { TopologyIndex, is_stale_index_blob }
+    if is_stale_index_blob(root_anchor.topology_index_data) {
+        return;
+    }
     idx = root_anchor.get_topology_index();
     if not isinstance(idx, TopologyIndex) {
         return;
@@ -106,10 +137,11 @@ impl _unindex_edge_from(
 }
 
 impl on_edge_created(source: any, target: any, `edge: any) -> None {
-    if not _is_enabled() {
+    if not source.persistent {
         return;
     }
-    if not source.persistent {
+    if not _is_enabled() {
+        _mark_roots_stale(source, target);
         return;
     }
     source_root = _get_root_anchor(source);
@@ -126,10 +158,11 @@ impl on_edge_created(source: any, target: any, `edge: any) -> None {
 }
 
 impl on_edge_destroyed(source: any, target: any, `edge: any) -> None {
-    if not _is_enabled() {
+    if not source.persistent {
         return;
     }
-    if not source.persistent {
+    if not _is_enabled() {
+        _mark_roots_stale(source, target);
         return;
     }
     source_root = _get_root_anchor(source);
@@ -160,7 +193,10 @@ impl on_node_saved(node_anchor: any) -> None {
     if root_anchor.id == node_anchor.id {
         return;
     }
-    import from jaclang.runtimelib.topology_index { TopologyIndex }
+    import from jaclang.runtimelib.topology_index { TopologyIndex, is_stale_index_blob }
+    if is_stale_index_blob(root_anchor.topology_index_data) {
+        return;
+    }
     idx = root_anchor.get_topology_index();
     if not isinstance(idx, TopologyIndex) {
         idx = TopologyIndex();
@@ -189,7 +225,10 @@ impl on_node_destroyed(node_anchor: any) -> None {
     if root_anchor is None {
         return;
     }
-    import from jaclang.runtimelib.topology_index { TopologyIndex }
+    import from jaclang.runtimelib.topology_index { TopologyIndex, is_stale_index_blob }
+    if is_stale_index_blob(root_anchor.topology_index_data) {
+        return;
+    }
     idx = root_anchor.get_topology_index();
     if not isinstance(idx, TopologyIndex) {
         return;

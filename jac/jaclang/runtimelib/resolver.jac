@@ -15,6 +15,7 @@ import from jaclang.runtimelib.query_plan { QueryPlan }
 import from jaclang.runtimelib.topology_index { TopologyIndex }
 
 glob logger = logging.getLogger(__name__),
+     _stale_warned: set = set(),
      __all__ = ['ChainHop', 'resolve_hop', 'resolve_path_anchors'];
 
 
