@@ -38,10 +38,15 @@ def _convert_transport_response_to_json_response(
         # single-report shape, which is the only one carrying the key).
         lean_body = dict(transport_response.data);
         ms = lean_body.pop('server_total_ms');
+        headers = {'x-server-total-ms': f"{ms:.3f}"};
+        ser_ms = lean_body.pop('server_serialize_ms', None);
+        if isinstance(ser_ms, (int, float)) {
+            headers['x-server-serialize-ms'] = f"{ser_ms:.3f}";
+        }
         return _response_class()(
             status_code=status,
             content=lean_body,
-            headers={'x-server-total-ms': f"{ms:.3f}"}
+            headers=headers
         );
     }
 
