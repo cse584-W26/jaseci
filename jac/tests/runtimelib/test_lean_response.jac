@@ -96,9 +96,11 @@ test "flag on: single dict report unwraps bare with clean objects" {
         assert body["server_total_ms"] == 12.5;
         item = body["feed"][0];
         assert item["name"] == "solo";
-        for key in item.keys() {
-            assert not key.startswith("_jac_") , (
-                f"flag on must drop _jac_* fields, found {key}: {item}"
+        # Lean keeps `_jac_id` (identity for dedup/clients, per
+        # feat(lean) 01b4d59eb) but still drops the type envelope.
+        for key in ("_jac_type", "_jac_archetype") {
+            assert key not in item , (
+                f"flag on must drop {key}: {item}"
             );
         }
     } finally {
