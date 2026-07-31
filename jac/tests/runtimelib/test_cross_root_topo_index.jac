@@ -39,6 +39,27 @@ def with_topo_index(fn: callable) {
     }
 }
 
+"""Force both the topology-index optimizer and the cross-root fast path on
+for the duration of `fn`."""
+def with_cross_root(fn: callable) {
+    keys = ["JAC_TOPOLOGY_INDEX", "JAC_CROSS_ROOT_RESOLVE"];
+    prev = {k: os.environ.get(k) for k in keys};
+    for k in keys {
+        os.environ[k] = "1";
+    }
+    try {
+        fn();
+    } finally {
+        for k in keys {
+            if prev[k] is None {
+                del os.environ[k];
+            } else {
+                os.environ[k] = prev[k];
+            }
+        }
+    }
+}
+
 """Pull the first report value from a JacTestClient response."""
 def first_report(response: any) -> any {
     data = response.data;
@@ -76,6 +97,95 @@ test "cross-root forward chain returns followed user's tweets" {
         }
     }
     with_topo_index(_body);
+}
+
+test "cross-root fast path matches the walk on the forward chain" {
+    # Same graph and query as the walk test above, but with the whole-chain
+    # cross-root fast path enabled (`resolve_chain_cross_root`). It must
+    # return the identical answer: the fast path hops into bob's index instead
+    # of walking his Post edges, and must not under- or over-count.
+    def _body {
+        client = JacTestClient.from_file(FIXTURE, base_path=mkdtemp());
+        try {
+            client.register_user("bob", "secret123");
+            client.login("bob", "secret123");
+            bob_profile_id = first_report(
+                client.post("/walker/setup_profile_only", json={"username": "bob"})
+            );
+            client.post("/walker/post_tweet", json={"content": "hello world"});
+            client.post("/walker/post_tweet", json={"content": "second tweet"});
+
+            client.register_user("alice", "secret123");
+            client.login("alice", "secret123");
+            client.post("/walker/setup_profile_only", json={"username": "alice"});
+            client.post("/walker/follow_target", json={"target_id": bob_profile_id});
+
+            count = first_report(client.post("/walker/query_follow_chain", json={}));
+            assert count == 2 , f"Expected 2 reachable tweets, got {count!r}";
+        } finally {
+            client.close();
+        }
+    }
+    with_cross_root(_body);
+}
+
+test "cross-root fast path resolves a 3-hop chain through foreign roots" {
+    # alice -Follow-> bob -Follow-> carol --> carol's tweets. Hop 2 resolves
+    # inside bob's index and yields carol's profile -- a node alice's home
+    # index has never seen, which is exactly where the per-hop cross-root
+    # path bails to the edge walk. The whole-chain frontier keeps carol's
+    # profile attached to its owner root's index and must match the walk's
+    # answer. Run once with the plain index (walk fallback, the correctness
+    # baseline) and once with the fast path on.
+    def _build_and_query(client: any) -> any {
+        carol_tweets = ["mesozoic", "cretaceous"];
+
+        client.register_user("carol", "secret123");
+        client.login("carol", "secret123");
+        carol_profile_id = first_report(
+            client.post("/walker/setup_profile_only", json={"username": "carol"})
+        );
+        for content in carol_tweets {
+            client.post("/walker/post_tweet", json={"content": content});
+        }
+
+        client.register_user("bob", "secret123");
+        client.login("bob", "secret123");
+        bob_profile_id = first_report(
+            client.post("/walker/setup_profile_only", json={"username": "bob"})
+        );
+        client.post("/walker/follow_target", json={"target_id": carol_profile_id});
+
+        client.register_user("alice", "secret123");
+        client.login("alice", "secret123");
+        client.post("/walker/setup_profile_only", json={"username": "alice"});
+        client.post("/walker/follow_target", json={"target_id": bob_profile_id});
+
+        return first_report(client.post("/walker/query_follow_of_follow", json={}));
+    }
+
+    def _walk_body {
+        client = JacTestClient.from_file(FIXTURE, base_path=mkdtemp());
+        try {
+            count = _build_and_query(client);
+            assert count == 2 , f"Walk baseline: expected 2 tweets, got {count!r}";
+        } finally {
+            client.close();
+        }
+    }
+
+    def _fast_body {
+        client = JacTestClient.from_file(FIXTURE, base_path=mkdtemp());
+        try {
+            count = _build_and_query(client);
+            assert count == 2 , f"Fast path: expected 2 tweets, got {count!r}";
+        } finally {
+            client.close();
+        }
+    }
+
+    with_topo_index(_walk_body);
+    with_cross_root(_fast_body);
 }
 
 test "cross-root reverse query counts members across roots" {

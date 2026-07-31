@@ -1,4 +1,5 @@
 import struct;
+import from typing { Any }
 import from uuid { UUID }
 
 glob SELF_ROOT: UUID = UUID(int=0),
@@ -44,6 +45,12 @@ obj TopologyIndex {
     ) -> list[UUID];
 
     def get_cross_root_ids(node_ids: set[UUID]) -> dict[UUID, set[UUID]];
+    def resolve_chain_cross_root(
+        mem: Any,
+        origin_ids: set[UUID],
+        chain: list[tuple[(str | None), (str | None), int]]
+    ) -> (set[UUID] | None);
+
     def encode -> bytes;
     static def decode(data: bytes) -> TopologyIndex;
     def __len__ -> int;

@@ -131,6 +131,22 @@ walker:priv query_follow_chain {
     }
 }
 
+walker:priv query_follow_of_follow {
+    """Deep chain: my Follows -> their Follows -> their Tweets (3 hops)."""
+    has reports: list = [];
+
+    can run with Root entry {
+        prof_list = [-->[?:Profile]];
+        if not prof_list {
+            report 0;
+            return;
+        }
+        me = prof_list[0];
+        tweets = [me->:Follow:->[?:Profile]->:Follow:->[?:Profile]-->[?:Tweet]];
+        report len(tweets);
+    }
+}
+
 walker:priv query_channel_members {
     has channel_id: str = "";
     has reports: list = [];

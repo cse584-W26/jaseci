@@ -473,6 +473,27 @@ impl resolve_path_anchors(
         }
     }
 
+    if (
+        result is None
+        and idx is not None
+        and len(chain) > 1
+        and current
+        and slc is None
+        and not last_has_post_filter
+        and _cross_root_enabled()
+        and not any(
+            _filter_has_predicates(h.dest.nd) or _filter_has_predicates(h.dest.`edge)
+            for h in chain
+        )
+    ) {
+        triples = [(h.edge_type, h.node_type, h.direction) for h in chain];
+        crossed = idx.resolve_chain_cross_root(mem, current, triples);
+        if crossed is not None {
+            _trace_final('cross-root-chain', len(crossed), f"hops={len(chain)}");
+            result = crossed;
+        }
+    }
+
     if result is None {
         if len(chain) > 1 {
             current = _resolve_prefix(mem, current, chain[:-1], idx);
