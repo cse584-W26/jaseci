@@ -568,6 +568,11 @@ impl MongoBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None]
             else None;
         import from jaclang.runtimelib.utils { fast_build_enabled }
         _fast = fast_build_enabled();
+        # frozenset is immutable -> one shared _projected_fields for every
+        # slim anchor from this plan (per-anchor set() copies removed).
+        _proj_frozen = frozenset(plan.projection)
+            if plan.projection is not None
+            else None;
         for doc in cursor {
             if leaf_fields is not None {
                 # Leaf materialization: no archetype, no NodeAnchor, no
@@ -595,11 +600,11 @@ impl MongoBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None]
             }
             if plan.projection is not None {
                 slim = Serializer.deserialize_projected(
-                    to_uuid(doc['_id']),
+                    doc['_id'],
                     doc.get('arch_module', ''),
                     doc.get('arch_type', ''),
                     doc.get('data', {}).get('archetype', {}),
-                    plan.projection,
+                    cast(set, _proj_frozen),
                     root_id=cast((str | None), doc.get('data', {}).get('root'))
                 );
                 if slim is not None {

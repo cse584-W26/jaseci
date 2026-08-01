@@ -9,7 +9,7 @@ import from typing { cast, get_args, get_origin }
 import from types { NoneType, UnionType }
 import from typing { Union }
 import from uuid { UUID }
-import from jaclang.runtimelib.typecache { get_field_types, field_names, emit_plan }
+import from jaclang.runtimelib.typecache { get_field_types, field_names, emit_plan, emit_plan_map }
 import from jaclang.jac0core.archetype {
     Anchor,
     NodeAnchor,
@@ -112,7 +112,7 @@ obj Serializer {
     ) -> (object | None);
 
     static def deserialize_projected(
-        anchor_id: UUID,
+        anchor_id: (UUID | str),
         arch_module: str,
         arch_type: str,
         fields: dict[str, object],

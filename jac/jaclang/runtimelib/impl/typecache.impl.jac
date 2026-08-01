@@ -89,7 +89,8 @@ impl field_names(cls: type) -> tuple {
     return names;
 }
 
-glob _plan_cache: dict[type, tuple] = {};
+glob _plan_cache: dict[type, tuple] = {},
+     _plan_map_cache: dict[type, dict] = {};
 
 # emit_plan kinds: 0 = full dispatch, 1 = scalar (str/int/float/bool/None),
 # 2 = list of scalars. Classification is static (declared types); every
@@ -142,14 +143,26 @@ impl emit_plan(cls: type) -> tuple {
 }
 
 
+impl emit_plan_map(cls: type) -> dict {
+    if (cached := _plan_map_cache.get(cls)) is not None {
+        return cached;
+    }
+    m = dict(emit_plan(cls));
+    _plan_map_cache[cls] = m;
+    return m;
+}
+
+
 impl invalidate(cls: type) -> None {
     _cache.pop(cls, None);
     _names_cache.pop(cls, None);
     _plan_cache.pop(cls, None);
+    _plan_map_cache.pop(cls, None);
 }
 
 impl clear -> None {
     _cache.clear();
     _names_cache.clear();
     _plan_cache.clear();
+    _plan_map_cache.clear();
 }

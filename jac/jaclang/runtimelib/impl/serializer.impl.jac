@@ -905,13 +905,33 @@ impl Serializer.deserialize_projected(
             anchor = NodeAnchor.__new__(NodeAnchor);
             anchor.id = anchor_id;
         } else {
+            # Plan-guided fast path: statically-scalar fields (and lists of
+            # scalars) from BSON need no _deserialize_value dispatch; every
+            # fast path re-guards the runtime value and falls back, so
+            # output is value-identical.
+            _kinds = emit_plan_map(cls);
             for f in projected {
                 if f in fields {
-                    setattr(arch, f, Serializer._deserialize_value(fields[f]));
+                    v = fields[f];
+                    k = _kinds.get(f, 0);
+                    if k == 1 and (v is None or type(v) in (str, int, float, bool)) {
+                        setattr(arch, f, v);
+                    } elif (
+                        k == 2
+                        and type(v) is list
+                        and all(type(x) in (str, int, float, bool) for x in v)
+                    ) {
+                        setattr(arch, f, v);
+                    } else {
+                        setattr(arch, f, Serializer._deserialize_value(v));
+                    }
                 }
             }
             anchor = NodeAnchor.__new__(NodeAnchor);
-            anchor.id = _intern_uuid(str(anchor_id));
+            # anchor_id may arrive as the raw stored string; intern once.
+            anchor.id = _intern_uuid(anchor_id)
+                if isinstance(anchor_id, str)
+                else _intern_uuid(str(anchor_id));
         }
 
         anchor.root = _intern_uuid(root_id) if root_id else None;
@@ -922,7 +942,16 @@ impl Serializer.deserialize_projected(
         anchor.access = _shared_projected_permission();
         anchor.archetype = arch;
         setattr(arch, '__jac__', anchor);
-        setattr(anchor, '_projected_fields', projected if _fast else set(projected));
+        if _fast {
+            setattr(anchor, '_projected_fields', projected);
+        } else {
+            # frozenset is immutable -> safe to share across anchors.
+            setattr(
+                anchor,
+                '_projected_fields',
+                projected if isinstance(projected, frozenset) else set(projected)
+            );
+        }
         return anchor;
     } except Exception as e {
         logger.error(f"Failed to build projected anchor {arch_type}: {e}");
