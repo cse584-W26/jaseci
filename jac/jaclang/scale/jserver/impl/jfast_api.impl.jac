@@ -120,6 +120,70 @@ class HealthCheckFilter(logging.Filter) {
     }
 }
 
+def _arm_warmup_gc_freeze -> None {
+    # JAC_GC_FREEZE_WARMUP=<seconds>: boot-time gc.freeze (JAC_GC_FREEZE)
+    # cannot cover the request working set - L1 anchor caches, decoded GTI
+    # blobs, per-class plans - because it does not exist yet at boot. Every
+    # gen-2 collection then re-traverses that populated heap from inside a
+    # request thread (measured 2026-07-31: 35 gen-2s per 500-req bench,
+    # p50 170ms each = the entire feed p99 tail, 242ms -> 61ms once frozen
+    # post-warmup). This flag re-freezes N seconds after boot, once warmup
+    # traffic has populated the caches.
+    #
+    # JAC_GC_FREEZE_WARMUP_GEN2=<n> additionally raises the gen-2 threshold
+    # (collections per gen-1 before a full collection; CPython default 10).
+    # Keep it moderate (~50-100): pushing it very high (1000) merely defers
+    # gen-2 into rare multi-second stop-the-world monsters.
+    import os;
+    import gc;
+    import threading;
+    import time;
+    import logging;
+    raw = os.environ.get("JAC_GC_FREEZE_WARMUP");
+    if not raw {
+        return;
+    }
+    try {
+        delay_s = float(raw);
+    } except ValueError as e {
+        raise ValueError(
+            f"JAC_GC_FREEZE_WARMUP must be seconds (float), got {raw!r}"
+        ) from e;
+    }
+    gen2_raw = os.environ.get("JAC_GC_FREEZE_WARMUP_GEN2");
+    gen2: (int | None) = None;
+    if gen2_raw {
+        try {
+            gen2 = int(gen2_raw);
+        } except ValueError as e {
+            raise ValueError(
+                f"JAC_GC_FREEZE_WARMUP_GEN2 must be an int, got {gen2_raw!r}"
+            ) from e;
+        }
+    }
+
+    def _freeze_later -> None {
+        time.sleep(delay_s);
+        t0 = time.perf_counter();
+        gc.collect();
+        gc.freeze();
+        if gen2 is not None {
+            (g0, g1, _) = gc.get_threshold();
+            gc.set_threshold(g0, g1, gen2);
+        }
+        logging.getLogger(__name__).info(
+            "gc warmup freeze: froze %d objects in %.0fms%s",
+            gc.get_freeze_count(),
+            (time.perf_counter() - t0) * 1000.0,
+            f", gen2 threshold -> {gen2}" if gen2 is not None else ""
+        );
+    }
+    threading.Thread(
+        target=_freeze_later, daemon=True, name="jac-gc-warmup-freeze"
+    ).start();
+}
+
+
 impl JFastApiServer.run_server(
     self: JFastApiServer, host: str = '0.0.0.0', port: int = 8000, max_retries: int = 10
 ) -> None {
@@ -193,6 +257,7 @@ impl JFastApiServer.run_server(
         gc.collect();
         gc.freeze();
     }
+    _arm_warmup_gc_freeze();
 
     prebound = self?._prebound_listen_socket;
     if prebound is not None {
