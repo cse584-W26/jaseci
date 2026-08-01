@@ -89,12 +89,67 @@ impl field_names(cls: type) -> tuple {
     return names;
 }
 
+glob _plan_cache: dict[type, tuple] = {};
+
+# emit_plan kinds: 0 = full dispatch, 1 = scalar (str/int/float/bool/None),
+# 2 = list of scalars. Classification is static (declared types); every
+# fast path re-guards at runtime and falls back to dispatch, so a field
+# holding a surprise value still serializes byte-identically.
+glob _SCALARS: tuple = (str, int, float, bool);
+
+
+def _classify(hint: object) -> int {
+    import from typing { get_args, get_origin, Union }
+    import from types { NoneType, UnionType }
+    if hint in (str, int, float, bool) {
+        return 1;
+    }
+    origin = get_origin(hint);
+    if origin in (Union, UnionType) {
+        args = set(get_args(hint));
+        args.discard(NoneType);
+        if args and all(a in (str, int, float, bool) for a in args) {
+            return 1;
+        }
+        return 0;
+    }
+    if origin is list {
+        args = get_args(hint);
+        if len(args) == 1 and args[0] in (str, int, float, bool) {
+            return 2;
+        }
+    }
+    return 0;
+}
+
+
+impl emit_plan(cls: type) -> tuple {
+    if (cached := _plan_cache.get(cls)) is not None {
+        return cached;
+    }
+    names = field_names(cls);
+    if not names {
+        _plan_cache[cls] = ();
+        return ();
+    }
+    types_map = get_field_types(cls);
+    plan = tuple(
+        (n, _classify(types_map.get(n)) if n in types_map else 0)
+        for n in names
+    );
+    _plan_cache[cls] = plan;
+    return plan;
+}
+
+
 impl invalidate(cls: type) -> None {
     _cache.pop(cls, None);
     _names_cache.pop(cls, None);
+    _plan_cache.pop(cls, None);
 }
 
 impl clear -> None {
     _cache.clear();
     _names_cache.clear();
+    _plan_cache.clear();
 }

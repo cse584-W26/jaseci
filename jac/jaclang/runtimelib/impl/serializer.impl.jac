@@ -6,6 +6,22 @@ import from jaclang.runtimelib.utils {
 }
 
 
+# Per-call flag snapshot: the env-reading helpers cost an os.environ
+# round-trip (bytes encode/decode) and the recursive walk was calling them
+# once PER OBJECT - ~40% of serialize time on a 2550-item feed. serialize()
+# refreshes the snapshot once per top-level call, so runtime flag toggles
+# (tests) still take effect while the walk reads plain globals.
+glob _lean_on: bool = False,
+     _compiled_on: bool = False;
+
+
+def _refresh_flag_snapshot -> None {
+    global _lean_on, _compiled_on;
+    _lean_on = lean_response_enabled();
+    _compiled_on = compiled_serializer_enabled();
+}
+
+
 def _leaf_safe_value(v: object) -> object {
     if v is None or isinstance(v, (str, int, float, bool)) {
         return v;
@@ -52,15 +68,31 @@ impl Serializer._serialize_attrs(
         if _anchor is not None
         else None;
 
-    plan = field_names(type(`obj))
-        if compiled_serializer_enabled() and projected is None
+    plan = emit_plan(type(`obj))
+        if _compiled_on and projected is None
         else ();
     if plan {
-        result = {
-            a: Serializer._serialize_value(
-                getattr(`obj, a), include_type, api_mode, ref_mode, _seen
-            ) for a in plan
-        };
+        # Specialized emitter: statically-scalar fields skip the recursive
+        # dispatch ladder entirely; every fast path re-guards the runtime
+        # value and falls back to full dispatch, so output stays
+        # byte-identical for surprise values.
+        result = {};
+        for (a, kind) in plan {
+            v = getattr(`obj, a);
+            if kind == 1 and (v is None or type(v) in (str, int, float, bool)) {
+                result[a] = v;
+            } elif (
+                kind == 2
+                and type(v) is list
+                and all(type(x) in (str, int, float, bool) for x in v)
+            ) {
+                result[a] = v;
+            } else {
+                result[a] = Serializer._serialize_value(
+                    v, include_type, api_mode, ref_mode, _seen
+                );
+            }
+        }
     } elif projected is not None {
         result = {
             a: Serializer._serialize_value(
@@ -112,6 +144,7 @@ impl Serializer.serialize(
     api_mode: bool = False,
     ref_mode: bool = False
 ) -> object {
+    _refresh_flag_snapshot();
     _seen = (set(), set()) if ref_mode else None;
     return Serializer._serialize_value(`obj, include_type, api_mode, ref_mode, _seen);
 }
@@ -237,7 +270,7 @@ impl Serializer._serialize_value(
         if api_mode {
             _val_anchor = getattr(val, '__dict__', {}).get('__jac__');
             result |= {'_jac_id': _val_anchor.id.hex if _val_anchor else None};
-            if not lean_response_enabled() {
+            if not _lean_on {
                 result |= {
                     '_jac_type': type(val).__name__,
                     '_jac_archetype': 'node'
