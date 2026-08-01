@@ -6,6 +6,22 @@ import from jaclang.runtimelib.utils {
 }
 
 
+# Per-call flag snapshot: the env-reading helpers cost an os.environ
+# round-trip (bytes encode/decode) and the recursive walk was calling them
+# once PER OBJECT - ~40% of serialize time on a 2550-item feed. serialize()
+# refreshes the snapshot once per top-level call, so runtime flag toggles
+# (tests) still take effect while the walk reads plain globals.
+glob _lean_on: bool = False,
+     _compiled_on: bool = False;
+
+
+def _refresh_flag_snapshot -> None {
+    global _lean_on, _compiled_on;
+    _lean_on = lean_response_enabled();
+    _compiled_on = compiled_serializer_enabled();
+}
+
+
 def _leaf_safe_value(v: object) -> object {
     if v is None or isinstance(v, (str, int, float, bool)) {
         return v;
@@ -47,20 +63,36 @@ impl Serializer._serialize_attrs(
     ref_mode: bool = False,
     _seen: (tuple[set, set] | None) = None
 ) -> dict[str, object] {
-    _anchor = `obj?.__jac__;
+    _anchor = getattr(`obj, '__dict__', {}).get('__jac__');
     projected = _anchor.__dict__.get('_projected_fields')
         if _anchor is not None
         else None;
 
-    plan = field_names(type(`obj))
-        if compiled_serializer_enabled() and projected is None
+    plan = emit_plan(type(`obj))
+        if _compiled_on and projected is None
         else ();
     if plan {
-        result = {
-            a: Serializer._serialize_value(
-                getattr(`obj, a), include_type, api_mode, ref_mode, _seen
-            ) for a in plan
-        };
+        # Specialized emitter: statically-scalar fields skip the recursive
+        # dispatch ladder entirely; every fast path re-guards the runtime
+        # value and falls back to full dispatch, so output stays
+        # byte-identical for surprise values.
+        result = {};
+        for (a, kind) in plan {
+            v = getattr(`obj, a);
+            if kind == 1 and (v is None or type(v) in (str, int, float, bool)) {
+                result[a] = v;
+            } elif (
+                kind == 2
+                and type(v) is list
+                and all(type(x) in (str, int, float, bool) for x in v)
+            ) {
+                result[a] = v;
+            } else {
+                result[a] = Serializer._serialize_value(
+                    v, include_type, api_mode, ref_mode, _seen
+                );
+            }
+        }
     } elif projected is not None {
         result = {
             a: Serializer._serialize_value(
@@ -112,6 +144,7 @@ impl Serializer.serialize(
     api_mode: bool = False,
     ref_mode: bool = False
 ) -> object {
+    _refresh_flag_snapshot();
     _seen = (set(), set()) if ref_mode else None;
     return Serializer._serialize_value(`obj, include_type, api_mode, ref_mode, _seen);
 }
@@ -235,8 +268,9 @@ impl Serializer._serialize_value(
         }
         result = Serializer._type_info(val, include_type);
         if api_mode {
-            result |= {'_jac_id': val.__jac__.id.hex if val?.__jac__ else None};
-            if not lean_response_enabled() {
+            _val_anchor = getattr(val, '__dict__', {}).get('__jac__');
+            result |= {'_jac_id': _val_anchor.id.hex if _val_anchor else None};
+            if not _lean_on {
                 result |= {
                     '_jac_type': type(val).__name__,
                     '_jac_archetype': 'node'
@@ -871,13 +905,33 @@ impl Serializer.deserialize_projected(
             anchor = NodeAnchor.__new__(NodeAnchor);
             anchor.id = anchor_id;
         } else {
+            # Plan-guided fast path: statically-scalar fields (and lists of
+            # scalars) from BSON need no _deserialize_value dispatch; every
+            # fast path re-guards the runtime value and falls back, so
+            # output is value-identical.
+            _kinds = emit_plan_map(cls);
             for f in projected {
                 if f in fields {
-                    setattr(arch, f, Serializer._deserialize_value(fields[f]));
+                    v = fields[f];
+                    k = _kinds.get(f, 0);
+                    if k == 1 and (v is None or type(v) in (str, int, float, bool)) {
+                        setattr(arch, f, v);
+                    } elif (
+                        k == 2
+                        and type(v) is list
+                        and all(type(x) in (str, int, float, bool) for x in v)
+                    ) {
+                        setattr(arch, f, v);
+                    } else {
+                        setattr(arch, f, Serializer._deserialize_value(v));
+                    }
                 }
             }
             anchor = NodeAnchor.__new__(NodeAnchor);
-            anchor.id = _intern_uuid(str(anchor_id));
+            # anchor_id may arrive as the raw stored string; intern once.
+            anchor.id = _intern_uuid(anchor_id)
+                if isinstance(anchor_id, str)
+                else _intern_uuid(str(anchor_id));
         }
 
         anchor.root = _intern_uuid(root_id) if root_id else None;
@@ -885,10 +939,19 @@ impl Serializer.deserialize_projected(
         anchor.edges = [];
         anchor.hash = 0;
         anchor.version = 0;
-        anchor.access = Permission();
+        anchor.access = _shared_projected_permission();
         anchor.archetype = arch;
         setattr(arch, '__jac__', anchor);
-        setattr(anchor, '_projected_fields', projected if _fast else set(projected));
+        if _fast {
+            setattr(anchor, '_projected_fields', projected);
+        } else {
+            # frozenset is immutable -> safe to share across anchors.
+            setattr(
+                anchor,
+                '_projected_fields',
+                projected if isinstance(projected, frozenset) else set(projected)
+            );
+        }
         return anchor;
     } except Exception as e {
         logger.error(f"Failed to build projected anchor {arch_type}: {e}");

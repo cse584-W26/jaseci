@@ -363,8 +363,16 @@ impl ExecutionManager._finalize_call_response(
         and len(reports) == 1
         and not ctx.diagnostics
     ) {
+        import from time { perf_counter }
+        _t_ser = perf_counter();
         lone = Serializer.serialize(reports[0], api_mode=True);
         if isinstance(lone, dict) {
+            if 'server_total_ms' in lone {
+                # Bench shape: expose the response-serialization span the
+                # walker-internal server_total_ms structurally excludes.
+                # Popped into x-server-serialize-ms at the JSON boundary.
+                lone['server_serialize_ms'] = (perf_counter() - _t_ser) * 1000.0;
+            }
             return lone;
         }
     }

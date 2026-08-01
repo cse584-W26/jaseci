@@ -172,6 +172,16 @@ def compiled_serializer_enabled -> bool {
 }
 
 
+def orjson_response_enabled -> bool {
+    # JAC_ORJSON is the alias Aaron's bench scripts use for the same lever.
+    env = os.environ.get("JAC_ORJSON_RESPONSE") or os.environ.get("JAC_ORJSON");
+    if env is not None {
+        return env.lower() in ("1", "true", "yes", "on");
+    }
+    return False;
+}
+
+
 def lazy_hydration_enabled -> bool {
     env = os.environ.get("JAC_LAZY_HYDRATION");
     if env is not None {
