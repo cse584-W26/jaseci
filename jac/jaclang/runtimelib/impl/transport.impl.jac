@@ -36,6 +36,40 @@ impl HTTPTransport.send(data: any) -> None {
             if data.meta.extra
             else (200 if data.ok else 500);
 
+        import from jaclang.runtimelib.utils { lean_response_enabled }
+        if (
+            lean_response_enabled()
+            and data.ok
+            and isinstance(data.data, dict)
+            and isinstance(data.data.get('server_total_ms'), (int, float))
+        ) {
+            # Lean bench contract: the lone report is the whole body; the
+            # walker-stamped timings ride as headers instead of payload.
+            lean_body = dict(data.data);
+            ms = lean_body.pop('server_total_ms');
+            self.handler.send_response(status);
+            self.handler.send_header('Content-Type', 'application/json');
+            self.handler.send_header('x-server-total-ms', f"{ms:.3f}");
+            ser_ms = lean_body.pop('server_serialize_ms', None);
+            if isinstance(ser_ms, (int, float)) {
+                self.handler.send_header('x-server-serialize-ms', f"{ser_ms:.3f}");
+            }
+            self.handler.send_header('Access-Control-Allow-Origin', '*');
+            self.handler.send_header(
+                'Access-Control-Allow-Methods', 'GET, POST, OPTIONS'
+            );
+            self.handler.send_header(
+                'Access-Control-Allow-Headers', 'Content-Type, Authorization'
+            );
+            self.handler.end_headers();
+            self.handler.wfile.write(json.dumps(lean_body).encode());
+            self.response_data = lean_body;
+            if self.on_message {
+                self.on_message(data);
+            }
+            return;
+        }
+
         response_body = {
             'ok': data.ok,
             'type': data.type,

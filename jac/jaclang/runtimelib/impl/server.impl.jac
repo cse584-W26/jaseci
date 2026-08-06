@@ -3,6 +3,7 @@ import from jaclang.cli.banners { JAC_DISCORD_URL }
 import from jaclang.runtimelib.serializer { Serializer }
 import from jaclang.runtimelib.client_bundle { MissingBunError, _ensure_js_generated }
 import from jaclang.runtimelib.exceptions { WriteConflict }
+import from jaclang.runtimelib.utils { lean_response_enabled }
 import from jaclang.runtimelib.auth_models {
     IdentityType,
     LoginRequest,
@@ -362,11 +363,29 @@ impl ExecutionManager._finalize_call_response(
         return reports;
     }
 
+    ctx = Jac.get_context();
+    if (
+        lean_response_enabled()
+        and isinstance(reports, list)
+        and len(reports) == 1
+        and not ctx.diagnostics
+    ) {
+        # Lean single-report path: skip serializing the walker-state echo
+        # ('result') entirely and return the lone report as the response body.
+        import from time { perf_counter }
+        _t_ser = perf_counter();
+        lone = Serializer.serialize(reports[0], api_mode=True);
+        if isinstance(lone, dict) {
+            if 'server_total_ms' in lone {
+                lone['server_serialize_ms'] = (perf_counter() - _t_ser) * 1000.0;
+            }
+            return lone;
+        }
+    }
     envelope: dict[str, JsonValue] = {
         'result': Serializer.serialize(result, api_mode=True),
         'reports': Serializer.serialize(reports, api_mode=True)
     };
-    ctx = Jac.get_context();
     if ctx.diagnostics {
         envelope['warnings'] = [d.to_dict() for d in ctx.diagnostics];
         ctx.diagnostics.clear();

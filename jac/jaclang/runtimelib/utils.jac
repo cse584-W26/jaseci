@@ -60,6 +60,15 @@ def triple_arch(triple: str) -> str {
     return "x86_64";
 }
 
+def lean_response_enabled -> bool {
+    # JAC_API_LEAN_RESPONSE=1: walker responses drop the result echo and the
+    # _jac_type/_jac_archetype envelope fields; a lone dict report is returned
+    # as the bare response body. Default off = stock envelope. Env-only.
+    import os;
+    return os.environ.get('JAC_API_LEAN_RESPONSE', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
 def get_name(target_path: (str | None) = None) -> (str | None);
 
 def get_db_path(base_path: str, target_path: (str | None) = None) -> (str | None);

@@ -1,3 +1,13 @@
+import from jaclang.runtimelib.utils { lean_response_enabled }
+
+glob _flag_snapshot: dict[str, bool] = {'lean': False};
+
+def _refresh_flag_snapshot {
+    # Flag read once per top-level serialize() call, not per recursed object:
+    # a per-object env read is measurable on multi-thousand-item reports.
+    _flag_snapshot['lean'] = lean_response_enabled();
+}
+
 impl Serializer._type_info(`obj: object, `include: bool) -> dict[str, object] {
     return {'__type__': type(`obj).__name__, '__module__': type(`obj).__module__}
         if `include
@@ -50,6 +60,7 @@ impl Serializer.serialize(
     api_mode: bool = False,
     ref_mode: bool = False
 ) -> object {
+    _refresh_flag_snapshot();
     _seen = (set(), set()) if ref_mode else None;
     return Serializer._serialize_value(`obj, include_type, api_mode, ref_mode, _seen);
 }
@@ -161,13 +172,21 @@ impl Serializer._serialize_value(
         }
         result = Serializer._type_info(val, include_type);
         if api_mode {
-            result |= {
-                '_jac_type': type(val).__name__,
-                '_jac_id': val.__jac__.id.hex if val?.__jac__ else None,
-                '_jac_archetype': 'node'
-                    if isinstance(val, NodeArchetype)
-                    else 'walker' if isinstance(val, WalkerArchetype) else 'archetype'
-            };
+            if _flag_snapshot['lean'] {
+                # Lean keeps _jac_id (the wire identity for node reports) and
+                # drops only the type-envelope fields.
+                result |= {'_jac_id': val.__jac__.id.hex if val?.__jac__ else None};
+            } else {
+                result |= {
+                    '_jac_type': type(val).__name__,
+                    '_jac_id': val.__jac__.id.hex if val?.__jac__ else None,
+                    '_jac_archetype': 'node'
+                        if isinstance(val, NodeArchetype)
+                        else 'walker'
+                            if isinstance(val, WalkerArchetype)
+                            else 'archetype'
+                };
+            }
         }
         return result
             | Serializer._serialize_attrs(val, include_type, api_mode, ref_mode, _seen);
