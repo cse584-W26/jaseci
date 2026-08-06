@@ -141,12 +141,25 @@ impl ScaleTieredMemory.commit(anchor: (Anchor | None) = None) -> None {
     self._mark_committed(anchor);
 }
 
+# Same contract as runtimelib.memory._note_touched: every anchor handed to a
+# request must land in the per-request touched registry or the request-scoped
+# commit scan will never see writes to it (silent write loss).
+def _note_touched_scale(anchor: Anchor) {
+    import from jaclang { JacRuntimeInterface as Jac }
+    try {
+        Jac.get_context().touched[anchor.id] = anchor;
+    } except Exception {
+        ;
+    }
+}
+
 impl ScaleTieredMemory.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
     result: dict[UUID, Anchor] = {};
     l1_misses: list[UUID] = [];
     for id in ids {
         self._refresh_if_stale(id);
         if (anchor := self.__mem__.get(id)) {
+            _note_touched_scale(anchor);
             result[id] = anchor;
         } else {
             l1_misses.append(id);
@@ -163,6 +176,7 @@ impl ScaleTieredMemory.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
             if id in l2_results {
                 anchor = l2_results[id];
                 self.__mem__[id] = anchor;
+                _note_touched_scale(anchor);
                 result[id] = anchor;
             } else {
                 l2_misses.append(id);
@@ -185,6 +199,7 @@ impl ScaleTieredMemory.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
         }
         for (id, anchor) in l3_results.items() {
             self.__mem__[id] = anchor;
+            _note_touched_scale(anchor);
             if self.l2 {
                 try {
                     self.l2.put(anchor);
@@ -249,6 +264,7 @@ impl ScaleTieredMemory.query(
 ) -> Generator[Anchor, None, None] {
     for anchor in list(self.__mem__.values()) {
         if filter is None or filter(anchor) {
+            _note_touched_scale(anchor);
             yield anchor;
         }
     }
