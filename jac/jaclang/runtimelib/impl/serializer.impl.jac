@@ -1,11 +1,16 @@
-import from jaclang.runtimelib.utils { lean_response_enabled }
+import from jaclang.runtimelib.utils {
+    compiled_serializer_enabled,
+    lean_response_enabled
+}
+import from jaclang.runtimelib.typecache { emit_plan }
 
-glob _flag_snapshot: dict[str, bool] = {'lean': False};
+glob _flag_snapshot: dict[str, bool] = {'lean': False, 'compiled': False};
 
 def _refresh_flag_snapshot {
     # Flag read once per top-level serialize() call, not per recursed object:
     # a per-object env read is measurable on multi-thousand-item reports.
     _flag_snapshot['lean'] = lean_response_enabled();
+    _flag_snapshot['compiled'] = compiled_serializer_enabled();
 }
 
 impl Serializer._type_info(`obj: object, `include: bool) -> dict[str, object] {
@@ -21,13 +26,36 @@ impl Serializer._serialize_attrs(
     ref_mode: bool = False,
     _seen: (tuple[set, set] | None) = None
 ) -> dict[str, object] {
-    result = {
-        a: Serializer._serialize_value(
-            getattr(`obj, a), include_type, api_mode, ref_mode, _seen
-        )
-        for a in dir(`obj)
-        if not a.startswith('_') and not callable(getattr(`obj, a, None))
-    };
+    plan = emit_plan(type(`obj)) if _flag_snapshot['compiled'] else ();
+    if plan {
+        # Typed per-class plan: statically-scalar fields skip dispatch, each
+        # re-guarded at runtime so surprise values fall back to full dispatch.
+        result = {};
+        for (a, kind) in plan {
+            v = getattr(`obj, a);
+            if kind == 1 and (v is None or type(v) in (str, int, float, bool)) {
+                result[a] = v;
+            } elif (
+                kind == 2
+                and type(v) is list
+                and all(type(x) in (str, int, float, bool) for x in v)
+            ) {
+                result[a] = v;
+            } else {
+                result[a] = Serializer._serialize_value(
+                    v, include_type, api_mode, ref_mode, _seen
+                );
+            }
+        }
+    } else {
+        result = {
+            a: Serializer._serialize_value(
+                getattr(`obj, a), include_type, api_mode, ref_mode, _seen
+            )
+            for a in dir(`obj)
+            if not a.startswith('_') and not callable(getattr(`obj, a, None))
+        };
+    }
 
     if include_type and not api_mode {
         if hasattr(type(`obj), '__jac_schema__') {
@@ -358,13 +386,17 @@ impl Serializer.register_alias(old_name: str, cls: type) -> None {
     Serializer._aliases[old_name] = new_name;
 }
 
-impl Serializer.repair(data: dict[str, object], cls: type) -> tuple {
+impl Serializer.repair(
+    data: dict[str, object], cls: type, mode: (str | None) = None
+) -> tuple {
     import from jaclang.runtimelib.schema_rules {
         apply_rules,
         merged_rules_for,
         repair_mode
     }
-    mode = repair_mode();
+    if mode is None {
+        mode = repair_mode();
+    }
     if mode == 'off' {
         return (data, []);
     }
@@ -728,7 +760,7 @@ impl Serializer._deserialize_archetype(
     }
     cls = cast(type, resolved);
     mode = repair_mode();
-    (data, repair_steps) = Serializer.repair(data, cls);
+    (data, repair_steps) = Serializer.repair(data, cls, mode);
     try {
         arch: object = cls.__new__(cls);
         field_types = get_field_types(cls);

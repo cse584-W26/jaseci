@@ -71,6 +71,14 @@ def access_log_enabled -> bool {
     return True;
 }
 
+def compiled_serializer_enabled -> bool {
+    # JAC_COMPILED_SERIALIZER=1: serialize archetype attrs from a cached
+    # per-class typed plan instead of a dir() reflection scan. Default off.
+    import os;
+    return os.environ.get('JAC_COMPILED_SERIALIZER', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
 def lean_response_enabled -> bool {
     # JAC_API_LEAN_RESPONSE=1: walker responses drop the result echo and the
     # _jac_type/_jac_archetype envelope fields; a lone dict report is returned

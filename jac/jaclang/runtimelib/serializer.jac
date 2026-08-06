@@ -43,7 +43,7 @@ obj Serializer {
     static def register(cls: type) -> None;
     static def register_alias(old_name: str, cls: type) -> None;
     static def fingerprint(cls: type) -> str;
-    static def repair(data: dict[str, object], cls: type) -> tuple;
+    static def repair(data: dict[str, object], cls: type, mode: (str | None) = None) -> tuple;
     static def coerce(val: object, target_type: object) -> tuple;
     static def serialize(
         `obj: object,
