@@ -54,6 +54,17 @@ impl MongoBackend.ensure_indexes -> None {
     self.collection.create_index(
         [('updated_at', DESCENDING)], name='updated_at_-1', background=True
     );
+    # graph-index contract: hop_rows filters {type:'EdgeAnchor',
+    # data.source|data.target: {$in: ...}, arch_type: {$in: ...}} - without
+    # these, every hop is a full EdgeAnchor collection scan.
+    self.collection.create_index(
+        [('type', ASCENDING), ('data.source', ASCENDING), ('arch_type', ASCENDING)],
+        name='hop_src', background=True
+    );
+    self.collection.create_index(
+        [('type', ASCENDING), ('data.target', ASCENDING), ('arch_type', ASCENDING)],
+        name='hop_tgt', background=True
+    );
 }
 
 def _mongo_q_collection(backend: MongoBackend) -> any {

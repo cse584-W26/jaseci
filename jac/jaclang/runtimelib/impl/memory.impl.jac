@@ -2022,13 +2022,39 @@ impl TieredMemory._resolve_l3_backend(db_path: str) -> PersistentMemory {
     return SqliteMemory(path=db_path);
 }
 
+"""Record an anchor as touched by the current request context, so commit/abort
+can scan O(request-touched) instead of the whole process-lifetime L1 cache.
+No context (CLI/boot/tests without a request) -> no-op; commit falls back to
+the full scan, preserving prior behavior."""
+def _note_touched(anchor: Anchor) -> None {
+    import from jaclang { JacRuntimeInterface as Jac }
+    try {
+        Jac.get_context().touched[anchor.id] = anchor;
+    } except Exception {
+        ;
+    }
+}
+
+
+def _ctx_touched -> (dict | None) {
+    import from jaclang { JacRuntimeInterface as Jac }
+    try {
+        return Jac.get_context().touched;
+    } except Exception {
+        return None;
+    }
+}
+
+
 impl TieredMemory.get(id: UUID) -> (Anchor | None) {
     if (anchor := self.__mem__.get(id)) {
+        _note_touched(anchor);
         return anchor;
     }
 
     if self.l2 and (anchor := self.l2.get(id)) {
         self.__mem__[anchor.id] = anchor;
+        _note_touched(anchor);
         return anchor;
     }
 
@@ -2037,6 +2063,7 @@ impl TieredMemory.get(id: UUID) -> (Anchor | None) {
         if self.l2 {
             self.l2.put(anchor);
         }
+        _note_touched(anchor);
         return anchor;
     }
     return None;
@@ -2044,6 +2071,7 @@ impl TieredMemory.get(id: UUID) -> (Anchor | None) {
 
 impl TieredMemory.put(anchor: Anchor) -> None {
     self.__mem__[anchor.id] = anchor;
+    _note_touched(anchor);
     if self.l2 {
         self.l2.put(anchor);
     }
@@ -2146,7 +2174,9 @@ impl TieredMemory.commit(anchor: (Anchor | None) = None) -> None {
 
 impl TieredMemory._collect_into(changes: ChangeSet) -> None {
     import from jaclang { JacRuntimeInterface as Jac }
-    for (id, anchor) in list(self.__mem__.items()) {
+    touched = _ctx_touched();
+    scan = touched if touched is not None else self.__mem__;
+    for (id, anchor) in list(scan.items()) {
         if not anchor.persistent or not anchor.is_populated() {
             continue;
         }
@@ -2249,7 +2279,9 @@ impl TieredMemory._post_apply(apply_report: ApplyReport) -> None {
 
 impl TieredMemory.abort -> None {
     self.changes.clear();
-    for (id, anchor) in list(self.__mem__.items()) {
+    touched = _ctx_touched();
+    scan = touched if touched is not None else self.__mem__;
+    for (id, anchor) in list(scan.items()) {
         if not anchor.persistent or not anchor.is_populated() {
             continue;
         }
@@ -2263,6 +2295,9 @@ impl TieredMemory.abort -> None {
         }
         if dirty {
             self.__mem__.pop(id, None);
+            if touched is not None {
+                touched.pop(id, None);
+            }
             if self.l2 {
                 self.l2.invalidate(id);
             }
@@ -2378,6 +2413,9 @@ impl TieredMemory.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
                 result[anchor.id] = anchor;
             }
         }
+    }
+    for anchor in result.values() {
+        _note_touched(anchor);
     }
     return result;
 }

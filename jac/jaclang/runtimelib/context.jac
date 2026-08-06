@@ -23,6 +23,7 @@ obj ExecutionContext {
         diagnostics: list[PermissionDenied] = [],
         pending_effects: list[Callable] = [],
         read_versions: dict[UUID, int] = {},
+        touched: dict[UUID, any] = {},
         custom: any = MISSING,
         system_root: NodeAnchor postinit,
         user_root: NodeAnchor postinit,
