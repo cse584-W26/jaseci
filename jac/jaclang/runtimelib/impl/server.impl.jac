@@ -3,7 +3,67 @@ import from jaclang.cli.banners { JAC_DISCORD_URL }
 import from jaclang.runtimelib.serializer { Serializer }
 import from jaclang.runtimelib.client_bundle { MissingBunError, _ensure_js_generated }
 import from jaclang.runtimelib.exceptions { WriteConflict }
-import from jaclang.runtimelib.utils { lean_response_enabled }
+import from jaclang.runtimelib.utils { access_log_enabled, lean_response_enabled }
+
+# Resolved once at import: the access-log gate sits on every request's logging
+# path and JAC_ACCESS_LOG is a boot-time decision.
+glob _access_log_on: bool = access_log_enabled();
+
+def _arm_warmup_gc_freeze {
+    # JAC_GC_FREEZE_WARMUP=<seconds>: boot-time gc.freeze cannot cover the
+    # request working set (caches populated by warmup traffic) because it does
+    # not exist yet at boot; re-freeze N seconds in, once warmed. Optional
+    # JAC_GC_FREEZE_WARMUP_GEN2=<n> raises only the gen-2 threshold - keep it
+    # moderate (~50-100); very high values defer gen-2 into rare multi-second
+    # stop-the-world pauses instead of eliminating them.
+    import os;
+    import gc;
+    import threading;
+    import time;
+    import logging;
+    raw = os.environ.get('JAC_GC_FREEZE_WARMUP');
+    if not raw {
+        return;
+    }
+    try {
+        delay_s = float(raw);
+    } except ValueError as e {
+        raise ValueError(
+            f"JAC_GC_FREEZE_WARMUP must be seconds (float), got {raw!r}"
+        ) from e;
+    }
+    gen2_raw = os.environ.get('JAC_GC_FREEZE_WARMUP_GEN2');
+    gen2: (int | None) = None;
+    if gen2_raw {
+        try {
+            gen2 = int(gen2_raw);
+        } except ValueError as e {
+            raise ValueError(
+                f"JAC_GC_FREEZE_WARMUP_GEN2 must be an int, got {gen2_raw!r}"
+            ) from e;
+        }
+    }
+
+    def _freeze_later {
+        time.sleep(delay_s);
+        t0 = time.perf_counter();
+        gc.collect();
+        gc.freeze();
+        if gen2 is not None {
+            (g0, g1, _) = gc.get_threshold();
+            gc.set_threshold(g0, g1, gen2);
+        }
+        logging.getLogger(__name__).info(
+            'gc warmup freeze: froze %d objects in %.0fms%s',
+            gc.get_freeze_count(),
+            (time.perf_counter() - t0) * 1000.0,
+            f", gen2 threshold -> {gen2}" if gen2 is not None else ''
+        );
+    }
+    threading.Thread(
+        target=_freeze_later, daemon=True, name='jac-gc-warmup-freeze'
+    ).start();
+}
 import from jaclang.runtimelib.auth_models {
     IdentityType,
     LoginRequest,
@@ -2414,7 +2474,9 @@ impl JacAPIServer.create_handler -> type[BaseHTTPRequestHandler] {
         }
 
         def log_message(self: JacRequestHandler, format: str, *args: object) {
-            console.print(f"{self.address_string()} - {(format % args)}");
+            if _access_log_on {
+                console.print(f"{self.address_string()} - {(format % args)}");
+            }
         }
     }
     return JacRequestHandler;
@@ -2584,6 +2646,17 @@ impl JacAPIServer.start(
                 on_ready();
             }
         }
+        # JAC_GC_FREEZE=1: exempt the boot-time heap (compiler, runtime modules,
+        # caches) from every future gen-2 scan - full collections otherwise
+        # re-traverse the whole resident heap from inside request threads
+        # (standard CPython large-heap practice, cf. gc.freeze docs). Default off.
+        import os;
+        import gc;
+        if os.environ.get('JAC_GC_FREEZE', '').lower() in ('1', 'true', 'yes', 'on') {
+            gc.collect();
+            gc.freeze();
+        }
+        _arm_warmup_gc_freeze();
         try {
             httpd.serve_forever();
         } except KeyboardInterrupt {

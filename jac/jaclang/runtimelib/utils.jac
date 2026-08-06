@@ -60,6 +60,17 @@ def triple_arch(triple: str) -> str {
     return "x86_64";
 }
 
+def access_log_enabled -> bool {
+    # JAC_ACCESS_LOG=0 silences the per-request console line. Default ON =
+    # stock behavior. Resolved once at server boot (restart to change).
+    import os;
+    env_val = os.environ.get('JAC_ACCESS_LOG');
+    if env_val is not None and env_val.strip() != '' {
+        return env_val.strip().lower() not in ('0', 'false', 'no', 'off');
+    }
+    return True;
+}
+
 def lean_response_enabled -> bool {
     # JAC_API_LEAN_RESPONSE=1: walker responses drop the result echo and the
     # _jac_type/_jac_archetype envelope fields; a lone dict report is returned
