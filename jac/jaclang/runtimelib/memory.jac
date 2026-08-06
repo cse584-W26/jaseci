@@ -227,7 +227,9 @@ obj TieredMemory(VolatileMemory) {
     def is_recoverable_quarantine(id: UUID) -> bool;
     def _collect_into(changes: ChangeSet) -> None;
     def _post_apply(apply_report: ApplyReport) -> None;
-    def batch_get(ids: list[UUID]) -> dict[UUID, Anchor];
+    def batch_get(
+        ids: list[UUID], projection: (tuple | None) = None
+    ) -> dict[UUID, Anchor];
     def hop_rows(
         src_ids: list[UUID], hop: QHop, ordered: bool = False
     ) -> (list[tuple[UUID, UUID]] | None);

@@ -2048,8 +2048,15 @@ def _ctx_touched -> (dict | None) {
 
 impl TieredMemory.get(id: UUID) -> (Anchor | None) {
     if (anchor := self.__mem__.get(id)) {
-        _note_touched(anchor);
-        return anchor;
+        if anchor.__dict__.get('_projected_fields') is not None {
+            # Cached anchor was loaded under JAC_PROJECTION_FIELDS; a plain
+            # get() expects the full anchor - drop it and refetch below so
+            # projection can never poison full readers.
+            self.__mem__.pop(id, None);
+        } else {
+            _note_touched(anchor);
+            return anchor;
+        }
     }
 
     if self.l2 and (anchor := self.l2.get(id)) {
@@ -2191,6 +2198,16 @@ impl TieredMemory._collect_into(changes: ChangeSet) -> None {
         }
         if anchor.hash != 0 and computed == anchor.hash {
             continue;
+        }
+        if anchor.__dict__.get('_projected_fields') is not None {
+            # A projection-loaded anchor carries only a field subset; letting
+            # it commit would write defaults over the unfetched fields.
+            raise RuntimeError(
+                f"write detected on projection-loaded anchor {id} "
+                f"({type(anchor.archetype).__name__}): walkers that write this "
+                "type must not be served under JAC_PROJECTION_FIELDS - "
+                "writes on projected reads are refused, not dropped"
+            );
         }
         if anchor.hash == 0 {
             if (
@@ -2393,7 +2410,11 @@ impl TieredMemory.existing_ids(ids: list[UUID]) -> (set[UUID] | None) {
     return self.l3.existing_ids(ids);
 }
 
-impl TieredMemory.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
+impl TieredMemory.batch_get(
+    ids: list[UUID], projection: (tuple | None) = None
+) -> dict[UUID, Anchor] {
+    # projection is honored only by backends that support it (mongo tier);
+    # the base path always fetches full anchors, which is a correct superset.
     result: dict[UUID, Anchor] = {};
     missing_ids: list[UUID] = [];
     for id in ids {

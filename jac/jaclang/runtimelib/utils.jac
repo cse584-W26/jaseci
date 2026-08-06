@@ -71,6 +71,30 @@ def access_log_enabled -> bool {
     return True;
 }
 
+def _parse_projection_fields -> dict {
+    # JAC_PROJECTION_FIELDS="Tweet=content,created_at;Profile=username":
+    # per-node-type archetype field allowlists for planner materialization.
+    # Unlisted fields are not fetched from storage and deserialize to their
+    # class defaults; writes to projection-loaded anchors are refused loudly.
+    # Parsed once at boot. Empty/unset = feature off (stock).
+    import os;
+    raw = os.environ.get('JAC_PROJECTION_FIELDS', '');
+    out = {};
+    for part in raw.split(';') {
+        if '=' not in part {
+            continue;
+        }
+        (t, fs) = part.split('=', 1);
+        names = frozenset(f.strip() for f in fs.split(',') if f.strip());
+        if t.strip() and names {
+            out[t.strip()] = names;
+        }
+    }
+    return out;
+}
+
+glob PROJECTION_FIELDS: dict = _parse_projection_fields();
+
 def compiled_serializer_enabled -> bool {
     # JAC_COMPILED_SERIALIZER=1: serialize archetype attrs from a cached
     # per-class typed plan instead of a dir() reflection scan. Default off.

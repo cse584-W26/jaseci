@@ -153,12 +153,23 @@ def _note_touched_scale(anchor: Anchor) {
     }
 }
 
-impl ScaleTieredMemory.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
+impl ScaleTieredMemory.batch_get(
+    ids: list[UUID], projection: (tuple | None) = None
+) -> dict[UUID, Anchor] {
     result: dict[UUID, Anchor] = {};
     l1_misses: list[UUID] = [];
+    wanted = projection[0] if projection is not None else None;
     for id in ids {
         self._refresh_if_stale(id);
         if (anchor := self.__mem__.get(id)) {
+            pf = anchor.__dict__.get('_projected_fields');
+            if pf is not None and (wanted is None or not (wanted <= pf)) {
+                # Cached copy is a projection that doesn't cover this request
+                # (full read, or a wider field set): refetch and replace.
+                self.__mem__.pop(id, None);
+                l1_misses.append(id);
+                continue;
+            }
             _note_touched_scale(anchor);
             result[id] = anchor;
         } else {
@@ -188,7 +199,10 @@ impl ScaleTieredMemory.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
 
     if l2_misses and self.l3 {
         l3_results: dict[UUID, Anchor] = {};
-        if hasattr(self.l3, 'batch_get') {
+        projected_fetch = projection is not None and isinstance(self.l3, MongoBackend);
+        if projected_fetch {
+            l3_results = self.l3.batch_get(l2_misses, projection);
+        } elif hasattr(self.l3, 'batch_get') {
             l3_results = self.l3.batch_get(l2_misses);
         } else {
             for mid in l2_misses {
@@ -198,9 +212,14 @@ impl ScaleTieredMemory.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
             }
         }
         for (id, anchor) in l3_results.items() {
+            if projected_fetch {
+                # Mark the subset load and keep it out of L2: the shared cache
+                # must only ever hold full anchors.
+                anchor.__dict__['_projected_fields'] = wanted;
+            }
             self.__mem__[id] = anchor;
             _note_touched_scale(anchor);
-            if self.l2 {
+            if self.l2 and not projected_fetch {
                 try {
                     self.l2.put(anchor);
                 } except Exception { }

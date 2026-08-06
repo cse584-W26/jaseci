@@ -999,13 +999,23 @@ impl MongoBackend._put_node_atomic(
     }
 }
 
-impl MongoBackend.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
+impl MongoBackend.batch_get(
+    ids: list[UUID], projection: (tuple | None) = None
+) -> dict[UUID, Anchor] {
     result: dict[UUID, Anchor] = {};
     if self.client is None or not ids {
         return result;
     }
     self.fetch_count += len(ids);
     str_ids = [str(to_uuid(id)) for id in ids];
+    # Exclusion projection: drop only the unwanted archetype fields so the
+    # anchor skeleton (access, edges, version, ...) always arrives intact and
+    # deserialize fills the missing fields with class defaults.
+    mongo_proj = (
+        {f"data.archetype.{f}": 0 for f in projection[1]}
+            if projection is not None
+            else None
+    );
     span = start_memory_span(
         "memory.batch_get mongodb",
         {
@@ -1016,7 +1026,7 @@ impl MongoBackend.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
         }
     );
     try {
-        for doc in self.collection.find({'_id': {'$in': str_ids}}) {
+        for doc in self.collection.find({'_id': {'$in': str_ids}}, mongo_proj) {
             if (anchor := self._load_anchor(doc)) {
                 anchor.is_updated = False;
                 result[UUID(doc['_id'])] = anchor;

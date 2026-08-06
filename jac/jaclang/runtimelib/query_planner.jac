@@ -53,7 +53,14 @@ def _hop_once(
 def _resolve_ids(mem: Memory, view: _View, q: GraphQuery, upto: int) -> list[UUID];
 
 
-def _materialize(mem: Memory, view: _View, ids: list[UUID]) -> list[Anchor];
+def _materialize(
+    mem: Memory,
+    view: _View,
+    ids: list[UUID],
+    projection: (tuple | None) = None
+) -> list[Anchor];
+
+def _last_hop_projection(q: GraphQuery) -> (tuple | None);
 
 
 def _verify_last_hop(anchor: Anchor, hop: QHop) -> bool;

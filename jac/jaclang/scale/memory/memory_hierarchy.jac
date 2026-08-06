@@ -106,7 +106,9 @@ obj MongoBackend(PersistentMemory) {
 
     def get_roots -> Generator[Root, None, None];
     def commit(anchor: (Anchor | None) = None) -> None;
-    def batch_get(ids: list[UUID]) -> dict[UUID, Anchor];
+    def batch_get(
+        ids: list[UUID], projection: (tuple | None) = None
+    ) -> dict[UUID, Anchor];
     def ensure_indexes -> None;
     def apply(changeset: ChangeSet) -> ApplyReport;
     def hop_rows(
@@ -163,7 +165,9 @@ obj ScaleTieredMemory(TieredMemory) {
     def close -> None;
     def _mark_committed(anchor: (Anchor | None)) -> None;
     def get(id: UUID) -> (Anchor | None);
-    def batch_get(ids: list[UUID]) -> dict[UUID, Anchor];
+    def batch_get(
+        ids: list[UUID], projection: (tuple | None) = None
+    ) -> dict[UUID, Anchor];
     def query(
         filter: (Callable[[Anchor], bool] | None) = None
     ) -> Generator[Anchor, None, None];

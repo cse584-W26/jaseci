@@ -369,7 +369,40 @@ impl _resolve_ids(mem: Memory, view: _View, q: GraphQuery, upto: int) -> list[UU
 }
 
 
-impl _materialize(mem: Memory, view: _View, ids: list[UUID]) -> list[Anchor] {
+impl _last_hop_projection(q: GraphQuery) -> (tuple | None) {
+    # JAC_PROJECTION_FIELDS: when the final hop targets exactly one node type
+    # with a configured field allowlist, materialize only those archetype
+    # fields (plus any predicate fields the verifier reads). Returns
+    # (wanted frozenset, excluded tuple) or None for full materialization.
+    import from jaclang.runtimelib.utils { PROJECTION_FIELDS }
+    if not PROJECTION_FIELDS or not q.hops {
+        return None;
+    }
+    last = q.hops[-1];
+    nd = last.nd;
+    if nd is None or isinstance(nd, tuple) {
+        return None;
+    }
+    wanted = PROJECTION_FIELDS.get(nd.__name__);
+    if not wanted {
+        return None;
+    }
+    import from jaclang.runtimelib.typecache { get_field_types }
+    need = set(wanted) | {p.field for p in last.preds};
+    excl = tuple(f for f in get_field_types(nd).keys() if f not in need);
+    if not excl {
+        return None;
+    }
+    return (frozenset(need), excl);
+}
+
+
+impl _materialize(
+    mem: Memory,
+    view: _View,
+    ids: list[UUID],
+    projection: (tuple | None) = None
+) -> list[Anchor] {
     if not ids {
         return [];
     }
@@ -386,7 +419,7 @@ impl _materialize(mem: Memory, view: _View, ids: list[UUID]) -> list[Anchor] {
     }
     if missing {
         if isinstance(mem, TieredMemory) {
-            loaded.update(mem.batch_get(missing));
+            loaded.update(mem.batch_get(missing, projection));
         } else {
             for i in missing {
                 if (a := mem.get(i)) is not None {
@@ -440,7 +473,7 @@ impl resolve_query(mem: Memory, q: GraphQuery) -> list[Anchor] {
     if q.slc is not None {
         ids = ids[q.slc];
     }
-    winners = _materialize(mem, view, ids);
+    winners = _materialize(mem, view, ids, _last_hop_projection(q));
     if not q.hops {
         return winners;
     }
