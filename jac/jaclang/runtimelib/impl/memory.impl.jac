@@ -23,6 +23,7 @@ import from jaclang.runtimelib.changeset {
     ApplyReport,
     ChangeSet,
     WriteIntent,
+    anchor_clean_fast,
     derive_dirty_fields,
     snapshot_field_hashes
 }
@@ -2191,6 +2192,9 @@ impl TieredMemory._collect_into(changes: ChangeSet) -> None {
         if existing is not None and existing.is_delete() {
             continue;
         }
+        if anchor.hash != 0 and anchor_clean_fast(anchor) {
+            continue;
+        }
         try {
             computed = Serializer._compute_hash(anchor);
         } except Exception {
@@ -2303,7 +2307,9 @@ impl TieredMemory.abort -> None {
             continue;
         }
         dirty = anchor.hash == 0;
-        if not dirty {
+        if not dirty and anchor_clean_fast(anchor) {
+            dirty = False;
+        } elif not dirty {
             try {
                 dirty = Serializer._compute_hash(anchor) != anchor.hash;
             } except Exception {

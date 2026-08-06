@@ -1,9 +1,63 @@
 import from uuid { UUID }
 
-import from jaclang.jac0core.archetype { Anchor, EdgeAnchor, NodeAnchor }
+import from jaclang.jac0core.archetype { Anchor, Archetype, EdgeAnchor, NodeAnchor }
 import from jaclang.runtimelib.serializer { Serializer }
 import from jaclang.runtimelib.typecache { get_field_types }
 import from jaclang.runtimelib.exceptions { WriteConflict }
+
+
+def _dirty_bit_env -> bool {
+    # JAC_DIRTY_BIT=1: track archetype field writes via a setattr hook so the
+    # commit/abort scans can prove an anchor clean without a whole-anchor
+    # re-serialize. Default off = stock hash-everything behavior.
+    import os;
+    return os.environ.get('JAC_DIRTY_BIT', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+glob DIRTY_BIT: bool = _dirty_bit_env();
+
+glob _SUSPECT_CACHE: dict = {};
+
+def _suspect_fields(cls: type) -> list[str] {
+    # Fields the setattr hook is structurally blind to: containers and other
+    # in-place-mutable values that can change without an attribute assignment.
+    cached = _SUSPECT_CACHE.get(cls);
+    if cached is not None {
+        return cached;
+    }
+    out: list[str] = [];
+    for (name, t) in get_field_types(cls).items() {
+        base = getattr(t, '__origin__', t);
+        if not (isinstance(base, type) and issubclass(base, (str, int, float, bool))) {
+            out.append(name);
+        }
+    }
+    _SUSPECT_CACHE[cls] = out;
+    return out;
+}
+
+def _tracking_setattr(inst: object, name: str, value: object) -> None {
+    object.__setattr__(inst, name, value);
+    if name == '__jac__' {
+        # Last write of hydration (serializer.impl.jac:889) and of creation:
+        # doubles as the "hydration complete - clear noise" marker.
+        inst.__dict__['__jac_dirty_fields__'] = set();
+        return;
+    }
+    touched = inst.__dict__.get('__jac_dirty_fields__');
+    if touched is None {
+        touched = set();
+        inst.__dict__['__jac_dirty_fields__'] = touched;
+    }
+    touched.add(name);
+}
+
+with entry {
+    if DIRTY_BIT {
+        Archetype.__setattr__ = _tracking_setattr;
+    }
+}
 
 
 enum WriteOp {
@@ -213,7 +267,75 @@ def snapshot_field_hashes(anchor: Anchor) -> None {
         serialized = Serializer._serialize_value(val, include_type=True, _seen=_seen);
         hashes[name] = field_hash(serialized);
     }
+    if DIRTY_BIT {
+        # access lives on the ANCHOR, not the archetype: grant() mutates it in
+        # place, invisible to the setattr hook, so the gate needs a baseline.
+        try {
+            hashes['__anchor_access__'] = field_hash(
+                Serializer._serialize_value(anchor.access, include_type=True, _seen=_seen)
+            );
+        } except Exception {
+            hashes['__anchor_access__'] = 0;
+        }
+    }
     object.__setattr__(arch, '__jac_field_hashes__', hashes);
+    if DIRTY_BIT and arch.__dict__.get('__jac_dirty_fields__') {
+        # snapshot == "this anchor is now in its persisted state", so the
+        # dirty set resets here too (covers the _post_apply re-baseline site,
+        # where no `__jac__` write happens).
+        arch.__dict__['__jac_dirty_fields__'] = set();
+    }
+}
+
+
+"""DIRTY_BIT fast gate: True = provably clean (skip whole-anchor hash),
+False = cannot prove clean (caller falls back to the stock hash path)."""
+def anchor_clean_fast(anchor: Anchor) -> bool {
+    if not DIRTY_BIT {
+        return False;
+    }
+    if not anchor.is_populated() or anchor.archetype is None {
+        return False;
+    }
+    arch = anchor.archetype;
+    stored: dict[str, int] = arch.__dict__.get('__jac_field_hashes__', {});
+    if not stored or '__anchor_access__' not in stored {
+        return False;
+    }
+    touched = arch.__dict__.get('__jac_dirty_fields__');
+    if touched {
+        ftypes = get_field_types(type(arch));
+        if touched & set(ftypes.keys()) {
+            return False;
+        }
+    }
+    _seen: tuple[set, set] = (set(), set());
+    for name in _suspect_fields(type(arch)) {
+        val = getattr(arch, name, None);
+        serialized = Serializer._serialize_value(val, include_type=True, _seen=_seen);
+        if field_hash(serialized) != stored.get(name) {
+            return False;
+        }
+    }
+    try {
+        acc = Serializer._serialize_value(anchor.access, include_type=True, _seen=_seen);
+        if field_hash(acc) != stored.get('__anchor_access__') {
+            return False;
+        }
+    } except Exception {
+        return False;
+    }
+    if isinstance(anchor, NodeAnchor) {
+        try {
+            delta = anchor.edge_delta();
+            if delta is not None and (delta[0] or delta[1]) {
+                return False;
+            }
+        } except Exception {
+            return False;
+        }
+    }
+    return True;
 }
 
 
@@ -228,7 +350,16 @@ def derive_dirty_fields(anchor: Anchor) -> set[str] {
     }
     dirty: set[str] = set();
     _seen: tuple[set, set] = (set(), set());
-    for name in get_field_types(type(arch)).keys() {
+    ftypes = get_field_types(type(arch));
+    names = list(ftypes.keys());
+    if DIRTY_BIT {
+        touched = arch.__dict__.get('__jac_dirty_fields__');
+        if touched {
+            dirty |= (touched & set(ftypes.keys()));
+        }
+        names = [n for n in _suspect_fields(type(arch)) if n not in dirty];
+    }
+    for name in names {
         val = getattr(arch, name, None);
         serialized = Serializer._serialize_value(val, include_type=True, _seen=_seen);
         if field_hash(serialized) != stored.get(name) {
