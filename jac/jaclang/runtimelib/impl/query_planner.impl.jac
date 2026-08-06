@@ -6,7 +6,26 @@ impl _trace_enabled -> bool {
 
 impl _build_view(mem: Memory, q: GraphQuery) -> _View {
     view = _View();
-    for anchor in list(mem.get_mem().values()) {
+    # The scan exists to overlay THIS request's own uncommitted edge state
+    # (fresh hash==0 edges, detached edges). Any such edge necessarily passed
+    # through get/put/batch_get and is therefore in the request's touched
+    # registry - scan that instead of the whole process-global L1. Fall back
+    # to the full scan when there is no request context or when the planner
+    # is driven against a memory that is not the context's own (tests, CLI).
+    pool = None;
+    try {
+        import from jaclang { JacRuntimeInterface as Jac }
+        ctx = Jac.get_context();
+        if ctx.mem is mem {
+            pool = ctx.touched;
+        }
+    } except Exception {
+        pool = None;
+    }
+    if pool is None {
+        pool = mem.get_mem();
+    }
+    for anchor in list(pool.values()) {
         if not isinstance(anchor, EdgeAnchor) or not anchor.is_populated() {
             continue;
         }
