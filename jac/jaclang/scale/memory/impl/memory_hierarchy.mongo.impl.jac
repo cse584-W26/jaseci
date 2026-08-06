@@ -440,6 +440,9 @@ impl MongoBackend.delete(id: UUID) -> None { }
 impl MongoBackend.close -> None {
     self.client = None;
     self._l2_ref = None;
+    if HOP_CACHE_ON {
+        _HOP_CACHE.clear();
+    }
 }
 
 impl MongoBackend.`has(id: UUID) -> bool {
@@ -568,11 +571,215 @@ def _mongo_pred_filter(preds: list[QPred]) -> dict {
 }
 
 
+# --- JAC_HOP_CACHE ----------------------------------------------------------
+# Process-global warm layer of COMMITTED hop topology:
+#   src_id_str -> { hop_sig -> [(arm_idx, edge_id_str, nbr_id_str)] }
+# Uncommitted same-request edges are overlaid by the planner (_build_view
+# fresh/detached sets), so only committed state belongs here. Commits flow
+# exclusively through apply(), which invalidates the touched endpoints.
+# ponytail: single-process only - same grade as the L1 object cache. A second
+# worker/pod does not see this one's invalidations; cross-process invalidation
+# (change stream / pubsub) is out of scope for the single-pod research arm.
+glob _HOP_CACHE: dict = {};
+
+
+def _hop_cache_env -> bool {
+    return os.environ.get('JAC_HOP_CACHE', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+
+glob HOP_CACHE_ON: bool = _hop_cache_env();
+
+
+def _hop_cache_max -> int {
+    try {
+        return int(os.environ.get('JAC_HOP_CACHE_MAX', '100000'));
+    } except ValueError {
+        return 100000;
+    }
+}
+
+
+glob HOP_CACHE_MAX: int = _hop_cache_max();
+
+
+def _hop_node_types(hop: QHop) -> tuple {
+    nd = hop.nd;
+    return nd if isinstance(nd, tuple) else ((nd, ) if nd is not None else ());
+}
+
+
+def _hop_cache_sig(backend: MongoBackend, hop: QHop) -> tuple {
+    # Everything the stock query shape depends on. epreds/preds/only are not
+    # used by hop_rows, so they cannot change its rows.
+    etypes = (
+        tuple(sorted(_mongo_type_names(backend, hop.`edge)))
+        if hop.`edge is not None
+        else None
+    );
+    ntypes = tuple(
+        sorted(
+            [
+                tuple(sorted(_mongo_type_names(backend, nt)))
+                for nt in _hop_node_types(hop)
+            ]
+        )
+    );
+    return (hop.dir, etypes, ntypes);
+}
+
+
+def _hop_cache_invalidate(changeset: ChangeSet) -> None {
+    try {
+        for stage in changeset.staged() {
+            for intent in stage {
+                anchor = intent.anchor;
+                if intent.op == WriteOp.NODE_DELETE {
+                    _HOP_CACHE.clear();
+                    return;
+                }
+                if isinstance(anchor, EdgeAnchor) {
+                    # __dict__ not attribute access: a stub anchor would
+                    # trigger __getattr__ -> populate() -> a DB read.
+                    d = anchor.__dict__;
+                    src = d.get('source');
+                    tgt = d.get('target');
+                    if src is None or tgt is None {
+                        _HOP_CACHE.clear();
+                        return;
+                    }
+                    _HOP_CACHE.pop(str(src.id), None);
+                    _HOP_CACHE.pop(str(tgt.id), None);
+                } elif intent.edges_added or intent.edges_removed {
+                    _HOP_CACHE.pop(str(anchor.id), None);
+                }
+            }
+        }
+    } except Exception as e {
+        logger.debug(f"hop cache: conservative clear ({e})");
+        _HOP_CACHE.clear();
+    }
+}
+
+
+def _hop_rows_cached(
+    backend: MongoBackend, src_ids: list[UUID], hop: QHop
+) -> list[tuple[UUID, UUID]] {
+    sig = _hop_cache_sig(backend, hop);
+    keys = list(dict.fromkeys([str(i) for i in src_ids]));
+    # Same arms as the stock body, but by leaf field name (matched, neighbor).
+    arms: list;
+    if hop.dir == 1 {
+        arms = [('target', 'source', False), ('source', 'target', True)];
+    } elif hop.dir == 3 {
+        arms = [('source', 'target', False), ('target', 'source', False)];
+    } else {
+        arms = [('source', 'target', False), ('target', 'source', True)];
+    }
+    misses = [
+        k
+        for k in keys
+        if sig not in _HOP_CACHE.get(k, {})
+    ];
+    grouped: dict = {};
+    if misses {
+        rows: list = [];
+        base: dict = {'type': 'EdgeAnchor'};
+        if hop.`edge is not None {
+            base['arch_type'] = {'$in': _mongo_type_names(backend, hop.`edge)};
+        }
+        arm_idx = 0;
+        try {
+            for (mkey, nkey, undir_only) in arms {
+                filt = dict(base);
+                filt[f"data.{mkey}"] = {'$in': misses};
+                if undir_only {
+                    filt['data.is_undirected'] = True;
+                }
+                proj = {'_id': 1, 'data.source': 1, 'data.target': 1};
+                for doc in backend.collection.find(filt, proj) {
+                    data = doc.get('data') or {};
+                    nbr = data.get(nkey);
+                    if nbr {
+                        rows.append(
+                            (arm_idx, str(doc['_id']), str(data.get(mkey)), str(nbr))
+                        );
+                    }
+                }
+                arm_idx += 1;
+            }
+            node_types = _hop_node_types(hop);
+            if node_types {
+                nbr_ids = list({r[3] for r in rows});
+                keep: set = set(nbr_ids);
+                for nt in node_types {
+                    nfilt = {
+                        '_id': {
+                            '$in': [
+                                k
+                                for k in nbr_ids
+                                if k in keep
+                            ]
+                        },
+                        'arch_type': {'$in': _mongo_type_names(backend, nt)}
+                    };
+                    got = {
+                        str(d['_id']) for d in backend.collection.find(nfilt, {'_id': 1})
+                    };
+                    keep = keep & got;
+                }
+                rows = [
+                    r
+                    for r in rows
+                    if r[3] in keep
+                ];
+            }
+        } except Exception as e {
+            logger.debug(f"MongoDB hop_rows failed: {e}");
+            return [];
+        }
+        for k in misses {
+            grouped[k] = [];
+        }
+        for r in rows {
+            grouped.setdefault(r[2], []).append((r[0], r[1], r[3]));
+        }
+        for k in misses {
+            _HOP_CACHE.setdefault(k, {})[sig] = grouped[k];
+        }
+    }
+    all_rows: list = [];
+    for k in keys {
+        cached = grouped.get(k);
+        if cached is None {
+            cached = _HOP_CACHE.get(k, {}).get(sig) or [];
+        }
+        all_rows.extend(cached);
+    }
+    if len(_HOP_CACHE) > HOP_CACHE_MAX {
+        # ponytail: crude full clear, correct and O(1)-ish. Per-key LRU only if
+        # the reload storm ever shows up in a profile.
+        _HOP_CACHE.clear();
+    }
+    # Stock order = arm0 rows sorted by _id, then arm1 rows sorted by _id (each
+    # arm is one find().sort('_id', 1) over the whole frontier, and one edge doc
+    # yields at most one row per arm). Sorting (arm_idx, edge_id) reproduces it.
+    # Stock does not dedup across arms (dir==3 self-loops appear in both), and
+    # neither does this.
+    all_rows.sort();
+    return [(UUID(r[1]), UUID(r[2])) for r in all_rows];
+}
+
+
 impl MongoBackend.hop_rows(
     src_ids: list[UUID], hop: QHop, ordered: bool = False
 ) -> (list[tuple[UUID, UUID]] | None) {
     if self.client is None or not src_ids {
         return [];
+    }
+    if HOP_CACHE_ON {
+        return _hop_rows_cached(self, src_ids, hop);
     }
     keys = [str(i) for i in src_ids];
     arms: list;
@@ -799,6 +1006,9 @@ impl MongoBackend.apply(changeset: ChangeSet) -> ApplyReport {
                     );
                 }
             }
+        }
+        if HOP_CACHE_ON {
+            _hop_cache_invalidate(changeset);
         }
         if span {
             span.set_attribute("mem.count", len(apply_report.applied));
