@@ -1861,7 +1861,8 @@ impl TieredMemory._collect_into(changes: ChangeSet) -> None {
             );
         }
         if not recorded {
-            if Jac.check_write_access(anchor, op_hint="field_write") {
+            if anchor.__dict__.get('_topo_system_write', False)
+            or Jac.check_write_access(anchor, op_hint="field_write") {
                 changes.record_create(anchor);
             }
         }

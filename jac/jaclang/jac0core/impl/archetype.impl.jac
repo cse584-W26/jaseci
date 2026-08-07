@@ -247,10 +247,7 @@ impl NodeAnchor.edge_delta -> (tuple[(set[UUID], set[UUID])] | None) {
 
 impl NodeAnchor.get_topology_index -> any {
     import from jaclang.runtimelib.topology_index { TopologyIndex, is_stale_index_blob }
-    # Return the cached decoded index when we have one -- decode is O(edges)
-    # and this is called on every traversal, so re-decoding each time is a
-    # real per-query cost. The cache is invalidated in `set_topology_index`
-    # (every mutation) and on deserialize, so it never goes stale.
+
     if self._topology_index_cache is not None {
         return self._topology_index_cache;
     }
@@ -265,10 +262,10 @@ impl NodeAnchor.get_topology_index -> any {
 }
 
 impl NodeAnchor.set_topology_index(index: any) -> None {
-    # Keep the decoded cache and the serialized blob coherent: callers mutate
-    # the index object returned by `get_topology_index` and hand it back here.
     self._topology_index_cache = index;
     self.topology_index_data = index.encode();
+
+    self.__dict__['_topo_system_write'] = True;
 }
 
 impl EdgeAnchor.__getstate__ -> dict[(str, object)] {

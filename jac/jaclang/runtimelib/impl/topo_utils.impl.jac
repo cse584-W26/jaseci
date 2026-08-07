@@ -69,6 +69,8 @@ impl _mark_stale(root_anchor: any) -> None {
     }
     root_anchor.topology_index_data = TOPO_STALE_BLOB;
     root_anchor._topology_index_cache = None;
+
+    root_anchor.__dict__['_topo_system_write'] = True;
 }
 
 impl _mark_roots_stale(source: any, target: any) -> None {
