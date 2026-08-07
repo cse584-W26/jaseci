@@ -209,6 +209,7 @@ obj TieredMemory(VolatileMemory) {
         l2: (CacheMemory | None) postinit,
         l3: (PersistentMemory | None) postinit,
         changes: ChangeSet postinit,
+        _commit_lock: threading.RLock postinit,
         use_cache: bool = False;
 
     def get_l3_fetch_count -> int;

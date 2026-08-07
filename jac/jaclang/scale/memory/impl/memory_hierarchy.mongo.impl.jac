@@ -1216,10 +1216,15 @@ impl MongoBackend._put_node_atomic(
                     if s
                 };
                 object.__setattr__(anchor, '_initial_edge_ids', frozenset(merged_ids));
+                # Prune only stale COMMITTED refs (hash != 0) that the merged
+                # doc no longer lists. Uncommitted edges (hash == 0) may be
+                # another in-flight request's in-memory append on this shared
+                # anchor - dropping them here silently cancels that request's
+                # acked topology write.
                 anchor.edges = [
                     e
                     for e in anchor.edges
-                    if e.id in merged_ids
+                    if e.id in merged_ids or e.hash == 0
                 ];
 
                 anchor.version = merged_doc.get('data', {}).get(

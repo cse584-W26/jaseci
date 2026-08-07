@@ -23,6 +23,7 @@ import from jaclang.runtimelib.changeset {
     ApplyReport,
     ChangeSet,
     WriteIntent,
+    WriteOp,
     anchor_clean_fast,
     derive_dirty_fields,
     snapshot_field_hashes
@@ -1986,6 +1987,7 @@ impl TieredMemory.postinit -> None {
     self.__mem__ = {};
 
     self.changes = ChangeSet();
+    self._commit_lock = threading.RLock();
 
     if self.use_cache {
         self.l2 = LocalCacheMemory();
@@ -2044,6 +2046,33 @@ def _ctx_touched -> (dict | None) {
     } except Exception {
         return None;
     }
+}
+
+
+"""True iff the anchor has a pending edge delta that THIS request's commit
+should persist: any removal, or an added edge that is either in the request's
+scan (owned by this request) or already committed (hash != 0). Foreign
+UNCOMMITTED edge ids on a shared node belong to the in-flight request that
+created them - persisting them here would write a dangling reference and
+absorb the edge into the baseline before its owner commits it."""
+def _owned_pending_delta(anchor: Anchor, scan: dict, mem: dict) -> bool {
+    if not isinstance(anchor, NodeAnchor) {
+        return False;
+    }
+    delta = anchor.edge_delta();
+    if delta is None {
+        return False;
+    }
+    if delta[1] {
+        return True;
+    }
+    for eid in delta[0] {
+        ea = mem.get(eid);
+        if eid in scan or (ea is not None and ea.hash != 0) {
+            return True;
+        }
+    }
+    return False;
 }
 
 
@@ -2167,16 +2196,24 @@ impl TieredMemory.commit(anchor: (Anchor | None) = None) -> None {
         self.changes.clear();
         return;
     }
-    self._collect_into(self.changes);
-    if self.changes.is_empty() {
-        return;
-    }
-    apply_report = self.l3.apply(self.changes);
-    self._post_apply(apply_report);
-    self.changes.clear();
+    # Concurrent request commits share this store and self.changes; an
+    # unserialized collect/apply/clear interleaving lets one request's clear()
+    # wipe another request's freshly collected intents before they are applied
+    # (acked write, nothing in L3 - silent loss). ponytail: one commit lock per
+    # store; per-anchor locking is the upgrade path if commit throughput ever
+    # matters.
+    with self._commit_lock {
+        self._collect_into(self.changes);
+        if self.changes.is_empty() {
+            return;
+        }
+        apply_report = self.l3.apply(self.changes);
+        self._post_apply(apply_report);
+        self.changes.clear();
 
-    if (conflict := apply_report.primary_conflict()) {
-        raise conflict;
+        if (conflict := apply_report.primary_conflict()) {
+            raise conflict;
+        }
     }
 }
 
@@ -2201,7 +2238,16 @@ impl TieredMemory._collect_into(changes: ChangeSet) -> None {
             continue;
         }
         if anchor.hash != 0 and computed == anchor.hash {
-            continue;
+            # A matching whole-anchor hash must not mask a pending topology
+            # delta: _post_apply re-baselines the hash from LIVE state, which
+            # may already include an edge another in-flight request appended
+            # but never committed. The delta vs _initial_edge_ids is the
+            # topology source of truth. Only a delta THIS request owns keeps
+            # the anchor in the commit (foreign uncommitted edges are the
+            # owning request's to persist).
+            if not _owned_pending_delta(anchor, scan, self.__mem__) {
+                continue;
+            }
         }
         if anchor.__dict__.get('_projected_fields') is not None {
             # A projection-loaded anchor carries only a field subset; letting
@@ -2230,7 +2276,20 @@ impl TieredMemory._collect_into(changes: ChangeSet) -> None {
         if isinstance(anchor, NodeAnchor) {
             delta = anchor.edge_delta();
             if delta is not None {
-                added = [eid for eid in delta[0]];
+                # Only persist edge ids this request owns (in its touched scan)
+                # or that are already committed (hash != 0). A shared node's
+                # live edge list can contain ANOTHER in-flight request's
+                # uncommitted edge; recording it here would persist a
+                # reference to an edge doc that request may never commit
+                # (dangling ref) and absorb it into the baseline so the owner
+                # commit sees no delta - silent edge loss.
+                added = [];
+                for eid in delta[0] {
+                    ea = self.__mem__.get(eid);
+                    if eid in scan or (ea is not None and ea.hash != 0) {
+                        added.append(eid);
+                    }
+                }
                 removed = [eid for eid in delta[1]];
                 if (added or removed) and Jac.check_connect_access(anchor) {
                     changes.record_edge_delta(anchor, added, removed);
@@ -2285,9 +2344,21 @@ impl TieredMemory._post_apply(apply_report: ApplyReport) -> None {
             anchor.hash = Serializer._compute_hash(anchor);
             snapshot_field_hashes(anchor);
             if isinstance(anchor, NodeAnchor) {
-                anchor.__dict__['_initial_edge_ids'] = frozenset(
-                    e.id for e in anchor.edges
-                );
+                if intent.op == WriteOp.EDGE_LIST_DELTA {
+                    # Re-baseline from what was APPLIED, never from live
+                    # edges: a concurrent request may have appended an edge
+                    # after this commit's collect, and a live-state baseline
+                    # would absorb it as "already persisted" - silently
+                    # losing that edge forever.
+                    prior = anchor.__dict__.get('_initial_edge_ids') or frozenset();
+                    anchor.__dict__['_initial_edge_ids'] = (
+                        frozenset(prior) | frozenset(intent.edges_added)
+                    ) - frozenset(intent.edges_removed);
+                } else {
+                    anchor.__dict__['_initial_edge_ids'] = frozenset(
+                        e.id for e in anchor.edges
+                    );
+                }
                 if anchor.id in read_versions {
                     read_versions[anchor.id] = anchor.version;
                 }
@@ -2299,35 +2370,69 @@ impl TieredMemory._post_apply(apply_report: ApplyReport) -> None {
 }
 
 impl TieredMemory.abort -> None {
-    self.changes.clear();
-    touched = _ctx_touched();
-    scan = touched if touched is not None else self.__mem__;
-    for (id, anchor) in list(scan.items()) {
-        if not anchor.persistent or not anchor.is_populated() {
-            continue;
-        }
-        dirty = anchor.hash == 0;
-        if not dirty and anchor_clean_fast(anchor) {
-            dirty = False;
-        } elif not dirty {
-            try {
-                dirty = Serializer._compute_hash(anchor) != anchor.hash;
-            } except Exception {
-                dirty = True;
+    # Same lock as commit: an abort clearing self.changes while another
+    # request's commit is between collect and apply would drop that request's
+    # acked intents.
+    self._commit_lock.acquire();
+    try {
+        self.changes.clear();
+        touched = _ctx_touched();
+        scan = touched if touched is not None else self.__mem__;
+        for (id, anchor) in list(scan.items()) {
+            if not anchor.persistent or not anchor.is_populated() {
+                continue;
+            }
+            dirty = anchor.hash == 0;
+            if not dirty and anchor_clean_fast(anchor) {
+                dirty = False;
+            } elif not dirty {
+                try {
+                    dirty = Serializer._compute_hash(anchor) != anchor.hash;
+                } except Exception {
+                    dirty = True;
+                }
+            }
+            if dirty {
+                self.__mem__.pop(id, None);
+                if touched is not None {
+                    touched.pop(id, None);
+                }
+                if (
+                    isinstance(anchor, EdgeAnchor)
+                    and anchor.hash == 0
+                    and anchor.is_populated()
+                ) {
+                    # Roll back the in-memory append too: a phantom edge left
+                    # in an endpoint's live edge list makes a retried walker's
+                    # idempotency guard see the aborted write as already done
+                    # and ack a no-op (silent loss).
+                    for endp in (anchor.source, anchor.target) {
+                        if (
+                            isinstance(endp, NodeAnchor)
+                            and 'edges' in endp.__dict__
+                        ) {
+                            endp.edges = [
+                                e
+                                for e in endp.edges
+                                if e.id != anchor.id
+                            ];
+                        }
+                    }
+                }
+                if self.l2 {
+                    self.l2.invalidate(id);
+                }
+                if self.l3 and anchor.hash == 0 {
+                    # Never-committed anchor: roll back any partial create.
+                    # Previously-committed anchors are only EVICTED (refetched
+                    # from L3 on next access) - deleting them from L3 would
+                    # destroy the committed baseline document.
+                    self.l3.delete(id);
+                }
             }
         }
-        if dirty {
-            self.__mem__.pop(id, None);
-            if touched is not None {
-                touched.pop(id, None);
-            }
-            if self.l2 {
-                self.l2.invalidate(id);
-            }
-            if self.l3 {
-                self.l3.delete(id);
-            }
-        }
+    } finally {
+        self._commit_lock.release();
     }
 }
 

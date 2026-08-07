@@ -1,7 +1,9 @@
 impl ScaleTieredMemory.postinit -> None {
+    import threading;
     self.__mem__ = {};
 
     self.changes = ChangeSet();
+    self._commit_lock = threading.RLock();
 
     self._l1_id = new_l1_id();
     register_l1(self._l1_id, self);
@@ -94,51 +96,59 @@ impl ScaleTieredMemory.commit(anchor: (Anchor | None) = None) -> None {
         self._mark_committed(anchor);
         return;
     }
-    self._collect_into(self.changes);
-    if self.changes.is_empty() {
-        self._mark_committed(anchor);
-        return;
-    }
+    # Concurrent request commits share this store and self.changes; an
+    # unserialized collect/apply/clear interleaving lets one request's clear()
+    # wipe another request's freshly collected intents before they are applied
+    # (acked write, nothing in L3 - silent loss). ponytail: one commit lock per
+    # store; per-anchor locking is the upgrade path if commit throughput ever
+    # matters.
+    with self._commit_lock {
+        self._collect_into(self.changes);
+        if self.changes.is_empty() {
+            self._mark_committed(anchor);
+            return;
+        }
 
-    self_broadcasting: set = set();
-    if isinstance(self.l3, MongoBackend) {
-        self_broadcasting = {
-            intent.anchor.id
-            for intent in self.changes.intents.values()
-            if intent.op == WriteOp.EDGE_LIST_DELTA
-        };
-    }
-    apply_report = self.l3.apply(self.changes);
-    if self.l2 {
-        applied = set(apply_report.applied);
-        for intent in list(self.changes.intents.values()) {
-            if intent.anchor.id not in applied {
-                continue;
-            }
-            try {
-                if intent.is_delete() {
-                    self.l2.invalidate(intent.anchor.id);
-                    cast(RedisBackend, self.l2).publish_invalidation(
-                        str(intent.anchor.id), self._l1_id
-                    );
-                } elif intent.anchor.id not in self_broadcasting {
-                    self.l2.put(intent.anchor);
-                    cast(RedisBackend, self.l2).publish_invalidation(
-                        str(intent.anchor.id), self._l1_id
-                    );
+        self_broadcasting: set = set();
+        if isinstance(self.l3, MongoBackend) {
+            self_broadcasting = {
+                intent.anchor.id
+                for intent in self.changes.intents.values()
+                if intent.op == WriteOp.EDGE_LIST_DELTA
+            };
+        }
+        apply_report = self.l3.apply(self.changes);
+        if self.l2 {
+            applied = set(apply_report.applied);
+            for intent in list(self.changes.intents.values()) {
+                if intent.anchor.id not in applied {
+                    continue;
                 }
-            } except Exception as l2_err {
-                logger.warning(f"L2 cache update failed: {l2_err}");
+                try {
+                    if intent.is_delete() {
+                        self.l2.invalidate(intent.anchor.id);
+                        cast(RedisBackend, self.l2).publish_invalidation(
+                            str(intent.anchor.id), self._l1_id
+                        );
+                    } elif intent.anchor.id not in self_broadcasting {
+                        self.l2.put(intent.anchor);
+                        cast(RedisBackend, self.l2).publish_invalidation(
+                            str(intent.anchor.id), self._l1_id
+                        );
+                    }
+                } except Exception as l2_err {
+                    logger.warning(f"L2 cache update failed: {l2_err}");
+                }
             }
         }
-    }
-    self._post_apply(apply_report);
-    self.changes.clear();
+        self._post_apply(apply_report);
+        self.changes.clear();
 
-    if (conflict := apply_report.primary_conflict()) {
-        raise conflict;
+        if (conflict := apply_report.primary_conflict()) {
+            raise conflict;
+        }
+        self._mark_committed(anchor);
     }
-    self._mark_committed(anchor);
 }
 
 # Same contract as runtimelib.memory._note_touched: every anchor handed to a
@@ -232,9 +242,13 @@ impl ScaleTieredMemory.batch_get(
 
 impl ScaleTieredMemory.acommit(anchor: (Anchor | None) = None) -> None {
     import asyncio;
-    if anchor is None and self._committed {
-        return;
-    }
+    # No `self._committed` skip here: the flag is instance-wide on a store
+    # shared by every in-flight request, while the commit scan is scoped to
+    # the CURRENT request's touched anchors. Another request's commit
+    # completing between this request's writes and this acommit would flip the
+    # flag and make this request silently skip committing its own acked
+    # writes (they linger dirty in L1 until unrelated later traffic touches
+    # the same anchors - or are lost for good).
     await asyncio.to_thread(self.commit, anchor);
     if anchor is None {
         self._committed = True;
