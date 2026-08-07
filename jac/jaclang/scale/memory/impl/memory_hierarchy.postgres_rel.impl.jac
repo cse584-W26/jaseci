@@ -341,6 +341,16 @@ impl PostgresRelBackend.resolve_chain_sql(
     }
     order_by = f"ordkey {order_cfg[2]}" if order_cfg is not None else "seq";
     sql = f"WITH {', '.join(ctes)} SELECT out_id FROM h{n} ORDER BY {order_by}";
+    # Sorted-fetch cap (utils.order_pushdown_cfg soundness note): only on the
+    # ordered final hop, and only when no client-side slice window follows
+    # (ordered[slc] below may need rows past N when the slice has an offset).
+    if order_cfg is not None
+    and len(order_cfg) > 3
+    and order_cfg[3] is not None
+    and slc is None {
+        sql = f"{sql} LIMIT %s";
+        params.append(order_cfg[3]);
+    }
     try {
         with self._read_conn() as conn {
             rows: any = conn.execute(sql, tuple(params)).fetchall();
@@ -429,6 +439,12 @@ impl PostgresRelBackend.resolve_hop_sql(
             f"ORDER BY MAX(a.data->'archetype'->>%s) {order_cfg[2]}"
         );
         params.append(order_cfg[1]);
+        # Sorted-fetch cap (utils.order_pushdown_cfg soundness note); skipped
+        # when a client-side slice window follows (ordered[slc] below).
+        if len(order_cfg) > 3 and order_cfg[3] is not None and slc is None {
+            sql = f"{sql} LIMIT %s";
+            params.append(order_cfg[3]);
+        }
     } else {
         sql = (
             f"SELECT dst.out_id FROM ({inner}) dst{type_join} "

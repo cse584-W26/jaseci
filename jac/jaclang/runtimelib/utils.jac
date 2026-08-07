@@ -68,9 +68,9 @@ def order_pushdown_cfg(node_type: (str | None)) -> (tuple | None) {
         return None;
     }
     parts = raw.split(":");
-    if len(parts) != 3 or not parts[0] or not parts[1] {
+    if len(parts) not in (3, 4) or not parts[0] or not parts[1] {
         raise ValueError(
-            f"JAC_ORDER_PUSHDOWN malformed (want 'Type:field:asc|desc'): {raw!r}"
+            "JAC_ORDER_PUSHDOWN malformed " f"(want 'Type:field:asc|desc[:N]'): {raw!r}"
         );
     }
     direction = parts[2].strip().lower();
@@ -79,10 +79,25 @@ def order_pushdown_cfg(node_type: (str | None)) -> (tuple | None) {
             f"JAC_ORDER_PUSHDOWN malformed direction (want 'asc'/'desc'): {raw!r}"
         );
     }
+    limit: (int | None) = None;
+    if len(parts) == 4 {
+        try {
+            limit = int(parts[3]);
+        } except ValueError {
+            raise ValueError(
+                f"JAC_ORDER_PUSHDOWN malformed limit (want positive int): {raw!r}"
+            );
+        }
+        if limit <= 0 {
+            raise ValueError(
+                f"JAC_ORDER_PUSHDOWN malformed limit (want positive int): {raw!r}"
+            );
+        }
+    }
     if parts[0] != node_type {
         return None;
     }
-    return (parts[0], parts[1], direction.upper());
+    return (parts[0], parts[1], direction.upper(), limit);
 }
 
 

@@ -551,10 +551,19 @@ impl MongoBackend.execute_plan(plan: QueryPlan) -> Generator[Anchor, None, None]
         # Final-hop only -- mid-chain ordering needs an edges table to sort
         # on, which mongo lacks; that stays structurally pg-rel-only.
         if plan.order is not None {
-            (_, ofield, odir) = plan.order;
+            # plan.order = (type, field, dir[, limit]) -- 3-tuples from older
+            # callers/tests stay valid; the optional limit rides as slot 4.
+            (_, ofield, odir) = plan.order[:3];
             cursor = cursor.sort(
                 f"data.archetype.{ofield}", -1 if odir == 'DESC' else 1
             );
+            olimit = plan.order[3] if len(plan.order) > 3 else None;
+            # Sorted-fetch cap (see utils.order_pushdown_cfg soundness note).
+            # Only when the plan carries no slice bound of its own: a slice's
+            # skip/limit window must win over the stream cap.
+            if olimit is not None and not skip_n and limit_n is None {
+                limit_n = olimit;
+            }
         }
         if skip_n {
             cursor = cursor.skip(skip_n);

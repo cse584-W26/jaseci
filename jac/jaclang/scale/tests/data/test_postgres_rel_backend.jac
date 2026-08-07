@@ -473,11 +473,32 @@ test "order_pushdown_cfg fails loud on malformed JAC_ORDER_PUSHDOWN" {
         }
         assert raised;
 
+        # bad limit segment (non-int / non-positive).
+        os.environ['JAC_ORDER_PUSHDOWN'] = 'RelPerson:name:desc:twenty';
+        raised = False;
+        try {
+            order_pushdown_cfg('RelPerson');
+        } except ValueError as e {
+            raised = True;
+            assert 'twenty' in str(e);
+        }
+        assert raised;
+        os.environ['JAC_ORDER_PUSHDOWN'] = 'RelPerson:name:desc:0';
+        raised = False;
+        try {
+            order_pushdown_cfg('RelPerson');
+        } except ValueError {
+            raised = True;
+        }
+        assert raised;
+
         # happy paths still parse, direction case/whitespace-insensitive.
         os.environ['JAC_ORDER_PUSHDOWN'] = 'T:f:asc';
-        assert order_pushdown_cfg('T') == ('T', 'f', 'ASC');
+        assert order_pushdown_cfg('T') == ('T', 'f', 'ASC', None);
         os.environ['JAC_ORDER_PUSHDOWN'] = 'T:f:DESC';
-        assert order_pushdown_cfg('T') == ('T', 'f', 'DESC');
+        assert order_pushdown_cfg('T') == ('T', 'f', 'DESC', None);
+        os.environ['JAC_ORDER_PUSHDOWN'] = 'T:f:desc:20';
+        assert order_pushdown_cfg('T') == ('T', 'f', 'DESC', 20);
     } finally {
         if prior is None {
             os.environ.pop('JAC_ORDER_PUSHDOWN', None);
