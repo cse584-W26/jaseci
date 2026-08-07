@@ -24,6 +24,7 @@ obj ExecutionContext {
         pending_effects: list[Callable] = [],
         read_versions: dict[UUID, int] = {},
         touched: dict[UUID, any] = {},
+        request_read_only: bool = False,
         custom: any = MISSING,
         system_root: NodeAnchor postinit,
         user_root: NodeAnchor postinit,

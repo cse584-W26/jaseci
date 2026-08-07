@@ -183,10 +183,27 @@ def _sv_on_complete(scope: WalkScope, ok: bool) {
         ;
     }
     if ok {
+        # JAC_RO_WALKERS: this in-walk commit is THE commit for the serving
+        # path (the finalize-time acommit short-circuits on _committed), so
+        # the read-only gate must live here. The guard's refusal MUST
+        # propagate - only the commit itself keeps the swallow-for-OCC-retry
+        # except (a WriteConflict here is retried via the finalize acommit).
+        ro = False;
         try {
-            JacRuntimeInterface.get_context().mem.commit();
+            import from jaclang.runtimelib.utils { request_read_only }
+            ro = request_read_only();
         } except Exception {
-            ;
+            ro = False;
+        }
+        if ro {
+            import from jaclang.runtimelib.changeset { assert_request_clean }
+            assert_request_clean();
+        } else {
+            try {
+                JacRuntimeInterface.get_context().mem.commit();
+            } except Exception {
+                ;
+            }
         }
     }
 }

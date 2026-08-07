@@ -53,9 +53,81 @@ def _tracking_setattr(inst: object, name: str, value: object) -> None {
     touched.add(name);
 }
 
+def _ro_walkers_configured -> bool {
+    # Read the env directly (not utils.RO_WALKERS) to keep changeset import-
+    # cycle-free; this is a boot-time decision either way.
+    import os;
+    return bool(os.environ.get('JAC_RO_WALKERS', '').strip());
+}
+
+# The RO-request guard reads __jac_dirty_fields__, so JAC_RO_WALKERS needs the
+# setattr hook installed even when the dirty-bit commit path is off. Everything
+# that maintains the dirty set keys off THIS, not off DIRTY_BIT - a set that is
+# filled but never reset would accumulate across requests on L1-resident
+# archetypes and make the guard fire on writes some earlier request committed.
+glob SETATTR_HOOK: bool = DIRTY_BIT or _ro_walkers_configured();
+
 with entry {
-    if DIRTY_BIT {
+    if SETATTR_HOOK {
         Archetype.__setattr__ = _tracking_setattr;
+    }
+}
+
+
+# RO-request guard: refuse - loudly - any write a JAC_RO_WALKERS-listed walker
+# attempted. The raise names the exact anchor/fields; nothing was committed
+# (the caller skipped acommit). Limitation: in-place container mutations are
+# NOT detected (that needs the hashing scan this feature exists to skip) - the
+# new-anchor / edge-delta / setattr checks cover the realistic mistakes, and
+# the RO list is a curated allowlist.
+def assert_request_clean -> None {
+    import from jaclang { JacRuntimeInterface as Jac }
+    touched: dict[UUID, any] = {};
+    try {
+        touched = Jac.get_context().touched;
+    } except Exception {
+        return;
+    }
+    for (id, anchor) in list(touched.items()) {
+        if not anchor.persistent or not anchor.is_populated() {
+            continue;
+        }
+        arch = anchor.archetype;
+        if arch is None {
+            continue;
+        }
+        if anchor.hash == 0 {
+            raise RuntimeError(
+                f"read-only walker (JAC_RO_WALKERS) created persistent "
+                f"{type(arch).__name__} {id} - writes in RO requests are "
+                "refused, not dropped; remove the walker from JAC_RO_WALKERS "
+                "or stop writing"
+            );
+        }
+        dirty = arch.__dict__.get('__jac_dirty_fields__');
+        if dirty {
+            declared = dirty & set(get_field_types(type(arch)).keys());
+            if declared {
+                raise RuntimeError(
+                    f"read-only walker (JAC_RO_WALKERS) wrote fields "
+                    f"{sorted(declared)} on {type(arch).__name__} {id} - "
+                    "writes in RO requests are refused, not dropped"
+                );
+            }
+        }
+        if isinstance(anchor, NodeAnchor) {
+            try {
+                delta = anchor.edge_delta();
+                if delta is not None and (delta[0] or delta[1]) {
+                    raise RuntimeError(
+                        f"read-only walker (JAC_RO_WALKERS) changed edges on "
+                        f"{type(arch).__name__} {id} - writes in RO requests "
+                        "are refused, not dropped"
+                    );
+                }
+            } except RuntimeError as re { raise re; }
+            except Exception { ; }
+        }
     }
 }
 
@@ -279,7 +351,7 @@ def snapshot_field_hashes(anchor: Anchor) -> None {
         }
     }
     object.__setattr__(arch, '__jac_field_hashes__', hashes);
-    if DIRTY_BIT and arch.__dict__.get('__jac_dirty_fields__') {
+    if SETATTR_HOOK and arch.__dict__.get('__jac_dirty_fields__') {
         # snapshot == "this anchor is now in its persisted state", so the
         # dirty set resets here too (covers the _post_apply re-baseline site,
         # where no `__jac__` write happens).

@@ -3,7 +3,7 @@ import from jaclang.cli.banners { JAC_DISCORD_URL }
 import from jaclang.runtimelib.serializer { Serializer }
 import from jaclang.runtimelib.client_bundle { MissingBunError, _ensure_js_generated }
 import from jaclang.runtimelib.exceptions { WriteConflict }
-import from jaclang.runtimelib.utils { access_log_enabled, lean_response_enabled }
+import from jaclang.runtimelib.utils { access_log_enabled, lean_response_enabled, RO_WALKERS, request_read_only }
 
 # Resolved once at import: the access-log gate sits on every request's logging
 # path and JAC_ACCESS_LOG is a boot-time decision.
@@ -415,7 +415,14 @@ impl ExecutionManager._finalize_call_response(
 ) -> dict[str, JsonValue] | Generator | AsyncGenerator {
     call_state.reports.put_nowait(call_state._sentinel);
     reports = await self.report_collector(call_state);
-    await Jac.acommit();
+    if not request_read_only() {
+        await Jac.acommit();
+    } else {
+        # JAC_RO_WALKERS request: no commit at all. Assert the walker really
+        # was read-only instead of silently dropping whatever it wrote.
+        import from jaclang.runtimelib.changeset { assert_request_clean }
+        assert_request_clean();
+    }
     if isgenerator(result) or isinstance(result, AsyncGenerator) {
         return result;
     }
@@ -579,6 +586,9 @@ impl ExecutionManager.spawn_walker_sync(
         } else {
             target_node = ctx.get_root();
         }
+        if walker_cls.__name__ in RO_WALKERS {
+            ctx.request_read_only = True;
+        }
         result = await asyncio.to_thread(Jac.spawn, `walker, target_node);
 
         if iscoroutine(result) {
@@ -612,6 +622,9 @@ impl ExecutionManager.spawn_walker_async(
             }
         } else {
             target_node = ctx.get_root();
+        }
+        if walker_cls.__name__ in RO_WALKERS {
+            ctx.request_read_only = True;
         }
         spawn_result = Jac.spawn(`walker, target_node);
         if iscoroutine(spawn_result) {
