@@ -905,6 +905,35 @@ impl MongoBackend.existing_ids(ids: list[UUID]) -> (set[UUID] | None) {
 }
 
 
+impl MongoBackend.order_keys(
+    ids: list[UUID], field: str, desc: bool, n: int
+) -> (list[tuple] | None) {
+    # Sort keys WITHOUT materializing: storage sorts and slices, we get back at
+    # most n (id, value) pairs. Returns None on any failure so the planner takes
+    # its materialize-all fallback instead of serving a truncated answer.
+    if self.client is None or not ids {
+        return [];
+    }
+    import from pymongo { ASCENDING, DESCENDING }
+    key = f"data.archetype.{field}";
+    try {
+        out: list = [];
+        cur = self.collection.find(
+            {'_id': {'$in': [str(to_uuid(i)) for i in ids]}}, {'_id': 1, key: 1}
+        ).sort(key, DESCENDING if desc else ASCENDING).limit(n);
+        for doc in cur {
+            data = doc.get('data') or {};
+            arch = data.get('archetype') or {};
+            out.append((UUID(str(doc['_id'])), arch.get(field)));
+        }
+        return out;
+    } except Exception as e {
+        logger.debug(f"MongoDB order_keys failed: {e}");
+        return None;
+    }
+}
+
+
 impl MongoBackend.filter_ids(
     ids: list[UUID], preds: list[QPred]
 ) -> (set[UUID] | None) {

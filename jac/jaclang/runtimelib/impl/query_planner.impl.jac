@@ -546,6 +546,160 @@ impl _verify_last_hop(anchor: Anchor, hop: QHop) -> bool {
 }
 
 
+# --- JAC_ORDER_PUSHDOWN -----------------------------------------------------
+# "Type:field:asc|desc" (sort only) or "Type:field:asc|desc:N" (sort + per-
+# stream limit). Parsed once at import; default off.
+#
+# SOUNDNESS (per-stream limit): each refs expression is one planner query =
+# one "stream". A per-stream limit N is only correct when the downstream
+# consumer merges its streams, sorts on the SAME field/direction, and slices
+# to K <= N: global top-K is then a subset of the union of per-stream top-Ns.
+# CONSEQUENCE: a boot with the :N spec serves ONLY capped-consumer walkers
+# correctly for the named type - an uncapped reader of that type (e.g. plain
+# load_feed) receives a truncated stream. Curated bench boots only; do NOT
+# run the cross-arm feed oracle with :N set.
+#
+# Also: the sort field does not have to survive JAC_PROJECTION_FIELDS (keys come
+# from order_keys / resident getattr, never from the materialized doc), but if
+# the projection allowlist excludes it the CONSUMER's own re-sort sees class
+# defaults. Naming a sort field the projection drops is an operator error.
+def _parse_order_pushdown -> (tuple | None) {
+    import os;
+    raw = os.environ.get('JAC_ORDER_PUSHDOWN', '').strip();
+    if not raw {
+        return None;
+    }
+    parts = raw.split(':');
+    if len(parts) not in (3, 4) {
+        raise ValueError(
+            f"JAC_ORDER_PUSHDOWN must be 'Type:field:asc|desc[:N]', got {raw!r}"
+        );
+    }
+    (tname, field, direction) = (
+        parts[0].strip(), parts[1].strip(), parts[2].strip().lower()
+    );
+    if not tname or not field or direction not in ('asc', 'desc') {
+        raise ValueError(
+            f"JAC_ORDER_PUSHDOWN must be 'Type:field:asc|desc[:N]', got {raw!r}"
+        );
+    }
+    n: (int | None) = None;
+    if len(parts) == 4 {
+        try {
+            n = int(parts[3]);
+        } except ValueError as e {
+            raise ValueError(
+                f"JAC_ORDER_PUSHDOWN limit must be an int, got {parts[3]!r}"
+            ) from e;
+        }
+        if n <= 0 {
+            raise ValueError(f"JAC_ORDER_PUSHDOWN limit must be > 0, got {n}");
+        }
+    }
+    return (tname, field, direction == 'desc', n);
+}
+
+
+glob ORDER_PUSHDOWN: (tuple | None) = _parse_order_pushdown();
+
+
+def _order_spec(q: GraphQuery) -> (tuple | None) {
+    # The spec applies only when the last hop targets exactly ONE node type
+    # whose name matches it - same single-type gate shape as
+    # _last_hop_projection. Anything else takes the stock path untouched.
+    spec = ORDER_PUSHDOWN;
+    if spec is None or not q.hops {
+        return None;
+    }
+    nd = q.hops[-1].nd;
+    if nd is None or isinstance(nd, tuple) {
+        return None;
+    }
+    return spec if nd.__name__ == spec[0] else None;
+}
+
+
+def _order_pairs(pairs: list[tuple], desc: bool) -> list[tuple] {
+    # (x, value) pairs sorted by value, NULLS LAST IN BOTH DIRECTIONS. Split
+    # first rather than sorting on a (value is None, value) key: reverse=True
+    # would flip the null group to the front. Python's sort is stable, so ties
+    # keep input order - which makes the slice boundary depend on candidate
+    # order when values are not unique.
+    vals = [
+        p
+        for p in pairs
+        if p[1] is not None
+    ];
+    nulls = [
+        p
+        for p in pairs
+        if p[1] is None
+    ];
+    vals.sort(key=lambda (p: tuple) { p[1]; }, reverse=desc);
+    return vals + nulls;
+}
+
+
+def _storage_order_keys(
+    mem: Memory, ids: list[UUID], field: str, desc: bool, n: int
+) -> (list[tuple] | None) {
+    # None = "this backend cannot sort for us" -> caller falls back to
+    # materialize-all. Duck-typed on the method rather than isinstance'd on
+    # MongoBackend so runtimelib keeps not importing jaclang.scale.
+    import from jaclang.runtimelib.memory { TieredMemory }
+    if not isinstance(mem, TieredMemory) {
+        return None;
+    }
+    fn = getattr(mem.l3, 'order_keys', None);
+    return None if fn is None else fn(ids, field, desc, n);
+}
+
+
+def _order_limit_ids(
+    mem: Memory, view: _View, ids: list[UUID], spec: tuple
+) -> (list[UUID] | None) {
+    # Top-n candidate ids in sorted order, or None when the storage tier can't
+    # sort (caller then materializes everything and sorts in-process).
+    (_, field, desc, n) = spec;
+    pool = mem.get_mem();
+    pairs: list[tuple] = [];
+    missing: list[UUID] = [];
+    for i in ids {
+        # READ ONLY: no inserts, no ctx.touched note here - the survivors go
+        # through the normal _materialize call, which does all bookkeeping.
+        a = view.live_nodes.get(i) or pool.get(i);
+        if a is not None and a.is_populated() and a.archetype is not None {
+            pairs.append((i, getattr(a.archetype, field, None)));
+        } else {
+            missing.append(i);
+        }
+    }
+    if missing {
+        keys = _storage_order_keys(mem, missing, field, desc, n);
+        if keys is None {
+            return None;
+        }
+        pairs.extend(keys);
+    }
+    return [
+        p[0]
+        for p in _order_pairs(pairs, desc)[:n]
+    ];
+}
+
+
+def _order_anchors(anchors: list[Anchor], spec: tuple) -> list[Anchor] {
+    (_, field, desc, n) = spec;
+    ordered = [
+        p[0]
+        for p in _order_pairs(
+            [(a, getattr(a.archetype, field, None)) for a in anchors], desc
+        )
+    ];
+    return ordered if n is None else ordered[:n];
+}
+
+
 impl resolve_query_prefix(mem: Memory, q: GraphQuery, upto: int) -> list[UUID] {
     view = _build_view(mem, q);
     return _resolve_ids(mem, view, q, upto);
@@ -561,16 +715,35 @@ impl resolve_query(mem: Memory, q: GraphQuery) -> list[Anchor] {
     if q.slc is not None {
         ids = ids[q.slc];
     }
+    spec = _order_spec(q) if ORDER_PUSHDOWN is not None else None;
+    sort_after: (tuple | None) = spec;
+    if spec is not None and spec[3] is not None {
+        final = _order_limit_ids(mem, view, ids, spec);
+        if final is not None {
+            # _materialize returns in ids order, so the winners come back
+            # already sorted and capped; nothing left to do after verify.
+            ids = final;
+            sort_after = None;
+        }
+    }
     winners = _materialize(mem, view, ids, _last_hop_projection(q));
     if not q.hops {
         return winners;
     }
     last = q.hops[-1];
+    # Last-hop predicates can drop the verified count below the limit (the
+    # pushdown picks the top-n candidates, the verifier then filters them).
+    # Documented edge; feed workloads carry no last-hop preds.
     verified = [
         w
         for w in winners
         if _verify_last_hop(w, last)
     ];
+    if sort_after is not None {
+        # Sort-only spec, or the no-storage-sort fallback: same order, same
+        # cap, computed in-process off the materialized archetypes.
+        verified = _order_anchors(verified, sort_after);
+    }
     if _trace_enabled() {
         logger.info(
             f"[gquery] final materialized={len(winners)} "
