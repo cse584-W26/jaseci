@@ -154,6 +154,14 @@ def _mongo_quarantine(
     l2: (any | None) = None,
     reason_code: str = 'DESER_ERROR'
 ) {
+    # Quarantine is the one path that removes docs without updating their
+    # referrers, so it invalidates the planner's verified-stub cache.
+    try {
+        import from jaclang.runtimelib.query_planner { heal_cache_clear }
+        heal_cache_clear();
+    } except Exception {
+        ;
+    }
     try {
         q_col = _mongo_q_collection(backend);
         now_ts = datetime.now(timezone.utc).isoformat();

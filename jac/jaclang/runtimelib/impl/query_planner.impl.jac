@@ -190,12 +190,75 @@ impl _edge_pred_keep(
 }
 
 
+# --- JAC_HEAL_CACHE ---------------------------------------------------------
+# Process-global set of edge-stub ids whose EXISTENCE has been fully verified
+# by a _heal_sweep pass (edge doc present AND its other endpoint present).
+# view.probed only dedups within one query, so without this the same healthy
+# stubs pay existing_ids + edge_endpoints + existing_ids on every request.
+#
+# No per-write invalidation by design: a committed edge delete rewrites the
+# owning node's edges list in the same transaction, so the deleted edge's stub
+# stops being consulted at all - a stale _HEAL_OK entry is dead weight, never a
+# wrong answer. The ONE path that removes docs without updating referrers is
+# quarantine, so quarantine clears this cache (see _mongo_quarantine).
+# ponytail: single-process only, same grade as the L1 object cache.
+glob _HEAL_OK: set = set();
+
+
+def _heal_cache_env -> bool {
+    import os;
+    return os.environ.get('JAC_HEAL_CACHE', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+
+glob HEAL_CACHE_ON: bool = _heal_cache_env();
+
+
+def _heal_cache_max -> int {
+    import os;
+    try {
+        return int(os.environ.get('JAC_HEAL_CACHE_MAX', '1000000'));
+    } except ValueError {
+        return 1000000;
+    }
+}
+
+
+glob HEAL_CACHE_MAX: int = _heal_cache_max();
+
+
+def heal_cache_clear {
+    _HEAL_OK.clear();
+}
+
+
+def _heal_cache_add(alive: list[EdgeAnchor], bad: set[UUID]) -> None {
+    # Only called from points where verification for `alive` actually
+    # completed; `bad` are the ones this pass quarantined.
+    if not HEAL_CACHE_ON {
+        return;
+    }
+    for st in alive {
+        if st.id not in bad {
+            _HEAL_OK.add(st.id);
+        }
+    }
+    if len(_HEAL_OK) > HEAL_CACHE_MAX {
+        _HEAL_OK.clear();
+    }
+}
+
+
 impl _heal_sweep(
     mem: Memory, view: _View, nanch: NodeAnchor, engine_eids: set[UUID]
 ) -> None {
     suspects: list[EdgeAnchor] = [];
     for stub in list(nanch.edges) {
-        if stub.id in engine_eids or stub.id in view.probed or stub.is_populated() {
+        if stub.id in engine_eids
+            or stub.id in view.probed
+            or stub.is_populated()
+            or (HEAL_CACHE_ON and stub.id in _HEAL_OK) {
             continue;
         }
         view.probed.add(stub.id);
@@ -241,12 +304,16 @@ impl _heal_sweep(
         to_check.append(other_id);
     }
     if not to_check {
+        # Every alive stub's other endpoint was resident (or the engine gave no
+        # endpoints for it) - nothing left to check, verification completed.
+        _heal_cache_add(alive, set());
         return;
     }
     ok_nodes = mem.existing_ids(to_check);
     if ok_nodes is None {
         return;
     }
+    bad: set[UUID] = set();
     for st in alive {
         oid = other_of.get(st.id);
         if oid is None {
@@ -257,6 +324,7 @@ impl _heal_sweep(
             continue;
         }
         mem.quarantine_ref(nanch, st);
+        bad.add(st.id);
         try {
             import from jaclang.runtimelib.memory { TieredMemory }
             if isinstance(mem, TieredMemory) and mem.l3 is not None {
@@ -267,6 +335,7 @@ impl _heal_sweep(
         }
         view.detached.add(st.id);
     }
+    _heal_cache_add(alive, bad);
 }
 
 
