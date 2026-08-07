@@ -9,7 +9,12 @@ import from jaclang.runtimelib.auth_models {
     RegisterRequest
 }
 
-import from jaclang.runtimelib.utils { read_only_enabled, lean_response_enabled }
+import from jaclang.runtimelib.utils {
+    read_only_enabled,
+    lean_response_enabled,
+    request_read_only,
+    RO_WALKERS
+}
 
 impl UserManager.postinit -> None {
     import sqlite3;
@@ -346,8 +351,11 @@ impl ExecutionManager._finalize_call_response(
 ) -> dict[str, JsonValue] | Generator | AsyncGenerator {
     call_state.reports.put_nowait(call_state._sentinel);
     reports = await self.report_collector(call_state);
-    if not read_only_enabled() {
+    if not request_read_only() {
         await Jac.acommit();
+    } else {
+        import from jaclang.runtimelib.changeset { assert_no_dirty }
+        assert_no_dirty(list(Jac.get_context().mem.__mem__.items()));
     }
     if isgenerator(result) or isinstance(result, AsyncGenerator) {
         return result;
@@ -368,9 +376,6 @@ impl ExecutionManager._finalize_call_response(
         lone = Serializer.serialize(reports[0], api_mode=True);
         if isinstance(lone, dict) {
             if 'server_total_ms' in lone {
-                # Bench shape: expose the response-serialization span the
-                # walker-internal server_total_ms structurally excludes.
-                # Popped into x-server-serialize-ms at the JSON boundary.
                 lone['server_serialize_ms'] = (perf_counter() - _t_ser) * 1000.0;
             }
             return lone;
@@ -514,6 +519,9 @@ impl ExecutionManager.spawn_walker_sync(
         } else {
             target_node = ctx.get_root();
         }
+        if walker_cls.__name__ in RO_WALKERS {
+            ctx.__dict__['_request_read_only'] = True;
+        }
         result = await asyncio.to_thread(Jac.spawn, `walker, target_node);
 
         if iscoroutine(result) {
@@ -547,6 +555,9 @@ impl ExecutionManager.spawn_walker_async(
             }
         } else {
             target_node = ctx.get_root();
+        }
+        if walker_cls.__name__ in RO_WALKERS {
+            ctx.__dict__['_request_read_only'] = True;
         }
         spawn_result = Jac.spawn(`walker, target_node);
         if iscoroutine(spawn_result) {

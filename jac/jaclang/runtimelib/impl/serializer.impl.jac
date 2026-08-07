@@ -1,22 +1,18 @@
 import from jaclang.runtimelib.utils {
     read_only_enabled,
+    request_read_only,
     lean_response_enabled,
     compiled_serializer_enabled,
     fast_build_enabled
 }
 
 
-# Per-call flag snapshot: the env-reading helpers cost an os.environ
-# round-trip (bytes encode/decode) and the recursive walk was calling them
-# once PER OBJECT - ~40% of serialize time on a 2550-item feed. serialize()
-# refreshes the snapshot once per top-level call, so runtime flag toggles
-# (tests) still take effect while the walk reads plain globals.
 glob _lean_on: bool = False,
      _compiled_on: bool = False;
 
 
-def _refresh_flag_snapshot -> None {
-    global _lean_on, _compiled_on;
+def _refresh_flag_snapshot {
+    global _lean_on,_compiled_on;
     _lean_on = lean_response_enabled();
     _compiled_on = compiled_serializer_enabled();
 }
@@ -68,14 +64,8 @@ impl Serializer._serialize_attrs(
         if _anchor is not None
         else None;
 
-    plan = emit_plan(type(`obj))
-        if _compiled_on and projected is None
-        else ();
+    plan = emit_plan(type(`obj)) if _compiled_on and projected is None else ();
     if plan {
-        # Specialized emitter: statically-scalar fields skip the recursive
-        # dispatch ladder entirely; every fast path re-guards the runtime
-        # value and falls back to full dispatch, so output stays
-        # byte-identical for surprise values.
         result = {};
         for (a, kind) in plan {
             v = getattr(`obj, a);
@@ -448,13 +438,17 @@ impl Serializer.register_alias(old_name: str, cls: type) -> None {
     Serializer._aliases[old_name] = new_name;
 }
 
-impl Serializer.repair(data: dict[str, object], cls: type) -> tuple {
+impl Serializer.repair(
+    data: dict[str, object], cls: type, mode: (str | None) = None
+) -> tuple {
     import from jaclang.runtimelib.schema_rules {
         apply_rules,
         merged_rules_for,
         repair_mode
     }
-    mode = repair_mode();
+    if mode is None {
+        mode = repair_mode();
+    }
     if mode == 'off' {
         return (data, []);
     }
@@ -713,7 +707,7 @@ impl Serializer._deserialize_anchor(data: dict[str, object]) -> (Anchor | None) 
             }
         }
 
-        if not read_only_enabled() {
+        if not request_read_only() {
             anchor.hash = Serializer._compute_hash(anchor);
         }
         return anchor;
@@ -763,7 +757,7 @@ impl Serializer._deserialize_archetype(
     }
     cls = cast(type, resolved);
     mode = repair_mode();
-    (data, repair_steps) = Serializer.repair(data, cls);
+    (data, repair_steps) = Serializer.repair(data, cls, mode);
     try {
         arch: object = cls.__new__(cls);
         field_types = get_field_types(cls);
@@ -903,12 +897,11 @@ impl Serializer.deserialize_projected(
                 }
             );
             anchor = NodeAnchor.__new__(NodeAnchor);
-            anchor.id = anchor_id;
+
+            anchor.id = _intern_uuid(anchor_id)
+                if isinstance(anchor_id, str)
+                else anchor_id;
         } else {
-            # Plan-guided fast path: statically-scalar fields (and lists of
-            # scalars) from BSON need no _deserialize_value dispatch; every
-            # fast path re-guards the runtime value and falls back, so
-            # output is value-identical.
             _kinds = emit_plan_map(cls);
             for f in projected {
                 if f in fields {
@@ -928,7 +921,6 @@ impl Serializer.deserialize_projected(
                 }
             }
             anchor = NodeAnchor.__new__(NodeAnchor);
-            # anchor_id may arrive as the raw stored string; intern once.
             anchor.id = _intern_uuid(anchor_id)
                 if isinstance(anchor_id, str)
                 else _intern_uuid(str(anchor_id));
@@ -945,7 +937,6 @@ impl Serializer.deserialize_projected(
         if _fast {
             setattr(anchor, '_projected_fields', projected);
         } else {
-            # frozenset is immutable -> safe to share across anchors.
             setattr(
                 anchor,
                 '_projected_fields',

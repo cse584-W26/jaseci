@@ -1789,6 +1789,12 @@ impl TieredMemory._collect_into(changes: ChangeSet) -> None {
     if read_only_enabled() {
         return;
     }
+    import from jaclang.runtimelib.utils { request_read_only }
+    if request_read_only() {
+        import from jaclang.runtimelib.changeset { assert_no_dirty }
+        assert_no_dirty(list(self.__mem__.items()));
+        return;
+    }
     import from jaclang { JacRuntimeInterface as Jac }
     for (id, anchor) in list(self.__mem__.items()) {
         if not anchor.persistent or not anchor.is_populated() {

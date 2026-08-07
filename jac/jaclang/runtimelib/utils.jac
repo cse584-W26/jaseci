@@ -124,6 +124,36 @@ def read_only_enabled -> bool {
 }
 
 
+def _parse_ro_walkers -> frozenset {
+    raw = os.environ.get("JAC_RO_WALKERS", "");
+    return frozenset(
+        t.strip()
+        for t in raw.split(",")
+        if t.strip()
+    );
+}
+
+
+glob RO_WALKERS: frozenset = _parse_ro_walkers();
+
+
+def request_read_only -> bool {
+    if read_only_enabled() {
+        return True;
+    }
+    if not RO_WALKERS {
+        return False;
+    }
+    try {
+        import from jaclang { JacRuntimeInterface as Jac }
+        ctx = Jac.get_context();
+        return bool(ctx.__dict__.get('_request_read_only', False));
+    } except Exception {
+        return False;
+    }
+}
+
+
 def lean_response_enabled -> bool {
     env = os.environ.get("JAC_API_LEAN_RESPONSE");
     if env is not None {
@@ -173,7 +203,6 @@ def compiled_serializer_enabled -> bool {
 
 
 def orjson_response_enabled -> bool {
-    # JAC_ORJSON is the alias Aaron's bench scripts use for the same lever.
     env = os.environ.get("JAC_ORJSON_RESPONSE") or os.environ.get("JAC_ORJSON");
     if env is not None {
         return env.lower() in ("1", "true", "yes", "on");

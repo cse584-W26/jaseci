@@ -1,9 +1,93 @@
+import os;
+
 import from uuid { UUID }
 
 import from jaclang.jac0core.archetype { Anchor, EdgeAnchor, NodeAnchor }
 import from jaclang.runtimelib.serializer { Serializer }
 import from jaclang.runtimelib.typecache { get_field_types }
 import from jaclang.runtimelib.exceptions { WriteConflict }
+
+
+def _dirty_bit_env -> bool {
+    env = os.environ.get("JAC_DIRTY_BIT");
+    return env is not None and env.lower() in ("1", "true", "yes", "on");
+}
+
+
+glob DIRTY_BIT: bool = _dirty_bit_env(),
+     _SUSPECT_CACHE: dict[type, list[str]] = {};
+
+
+def _suspect_fields(cls: type) -> list[str] {
+    cached = _SUSPECT_CACHE.get(cls);
+    if cached is not None {
+        return cached;
+    }
+    out: list[str] = [];
+    for (name, t) in get_field_types(cls).items() {
+        base = getattr(t, '__origin__', t);
+        if not (isinstance(base, type) and issubclass(base, (str, int, float, bool))) {
+            out.append(name);
+        }
+    }
+    _SUSPECT_CACHE[cls] = out;
+    return out;
+}
+
+
+def _tracking_setattr(self: object, name: str, value: object) {
+    object.__setattr__(self, name, value);
+    d = self.__dict__;
+    s = d.get('__jac_dirty_fields__');
+    if s is None {
+        d['__jac_dirty_fields__'] = {name};
+    } else {
+        s.add(name);
+    }
+}
+
+
+def _ro_guard_env -> bool {
+    return bool((os.environ.get("JAC_RO_WALKERS") or "").strip());
+}
+
+
+glob RO_GUARD: bool = _ro_guard_env();
+
+
+with entry {
+    if DIRTY_BIT or RO_GUARD {
+        import from jaclang.jac0core.archetype { Archetype as _ArchBase }
+        _ArchBase.__setattr__ = _tracking_setattr;
+    }
+}
+
+
+def assert_no_dirty(mem_items: list) {
+    for (id, anchor) in mem_items {
+        if not anchor.persistent or not anchor.is_populated() {
+            continue;
+        }
+        if anchor?._projected_fields is not None {
+            continue;
+        }
+        arch = anchor.archetype;
+        if arch is None {
+            continue;
+        }
+        touched = arch.__dict__.get('__jac_dirty_fields__');
+        if touched {
+            touched = touched & set(get_field_types(type(arch)).keys());
+        }
+        if touched {
+            raise RuntimeError(
+                f"read-only walker (JAC_RO_WALKERS) wrote fields {sorted(touched)} "
+                f"on {type(arch).__name__} {id} - writes in RO requests are refused, "
+                f"not dropped; remove the walker from JAC_RO_WALKERS or stop writing"
+            );
+        }
+    }
+}
 
 
 enum WriteOp {
@@ -201,11 +285,18 @@ def field_hash(serialized: object) -> int {
 }
 
 
-import from jaclang.runtimelib.utils { read_only_enabled }
+import from jaclang.runtimelib.utils { read_only_enabled, request_read_only }
 
 
 def snapshot_field_hashes(anchor: Anchor) -> None {
-    if read_only_enabled() {
+    if request_read_only() {
+        if (
+            (RO_GUARD or DIRTY_BIT)
+            and anchor.is_populated()
+            and anchor.archetype is not None
+        ) {
+            anchor.archetype.__dict__['__jac_dirty_fields__'] = set();
+        }
         return;
     }
     if not anchor.is_populated() or anchor.archetype is None {
@@ -214,12 +305,21 @@ def snapshot_field_hashes(anchor: Anchor) -> None {
     arch = anchor.archetype;
     hashes: dict[str, int] = {};
     _seen: tuple[set, set] = (set(), set());
-    for name in get_field_types(type(arch)).keys() {
+    if DIRTY_BIT {
+        names = _suspect_fields(type(arch));
+        hashes['__baseline__'] = 0;
+    } else {
+        names = list(get_field_types(type(arch)).keys());
+    }
+    for name in names {
         val = getattr(arch, name, None);
         serialized = Serializer._serialize_value(val, include_type=True, _seen=_seen);
         hashes[name] = field_hash(serialized);
     }
     object.__setattr__(arch, '__jac_field_hashes__', hashes);
+    if DIRTY_BIT {
+        arch.__dict__['__jac_dirty_fields__'] = set();
+    }
 }
 
 
@@ -234,7 +334,21 @@ def derive_dirty_fields(anchor: Anchor) -> set[str] {
     }
     dirty: set[str] = set();
     _seen: tuple[set, set] = (set(), set());
-    for name in get_field_types(type(arch)).keys() {
+    ftypes = get_field_types(type(arch));
+    if DIRTY_BIT {
+        touched = arch.__dict__.get('__jac_dirty_fields__');
+        if touched {
+            dirty |= touched & set(ftypes.keys());
+        }
+        names = [
+            n
+            for n in _suspect_fields(type(arch))
+            if n not in dirty
+        ];
+    } else {
+        names = list(ftypes.keys());
+    }
+    for name in names {
         val = getattr(arch, name, None);
         serialized = Serializer._serialize_value(val, include_type=True, _seen=_seen);
         if field_hash(serialized) != stored.get(name) {

@@ -9,7 +9,12 @@ import from typing { cast, get_args, get_origin }
 import from types { NoneType, UnionType }
 import from typing { Union }
 import from uuid { UUID }
-import from jaclang.runtimelib.typecache { get_field_types, field_names, emit_plan, emit_plan_map }
+import from jaclang.runtimelib.typecache {
+    get_field_types,
+    field_names,
+    emit_plan,
+    emit_plan_map
+}
 import from jaclang.jac0core.archetype {
     Anchor,
     NodeAnchor,
@@ -46,11 +51,6 @@ glob _PROJECTED_NO_ACCESS: (Permission | None) = None;
 
 
 def _shared_projected_permission -> Permission {
-    # Projected slim anchors are read-path-only (they skip dirty-scan and
-    # commit), so they all share one NO_ACCESS Permission instead of paying
-    # the Permission()/Access() constructor chain per anchor. The proxy-dict
-    # makes any grant attempt on a projected anchor raise instead of
-    # silently mutating state shared across anchors.
     global _PROJECTED_NO_ACCESS;
     if _PROJECTED_NO_ACCESS is None {
         import from types { MappingProxyType }
@@ -69,7 +69,10 @@ obj Serializer {
     static def register(cls: type) -> None;
     static def register_alias(old_name: str, cls: type) -> None;
     static def fingerprint(cls: type) -> str;
-    static def repair(data: dict[str, object], cls: type) -> tuple;
+    static def repair(
+        data: dict[str, object], cls: type, mode: (str | None) = None
+    ) -> tuple;
+
     static def coerce(val: object, target_type: object) -> tuple;
     static def serialize(
         `obj: object,
