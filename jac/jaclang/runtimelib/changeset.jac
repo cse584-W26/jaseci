@@ -399,9 +399,23 @@ def anchor_clean_fast(anchor: Anchor) -> bool {
     }
     if isinstance(anchor, NodeAnchor) {
         try {
-            delta = anchor.edge_delta();
-            if delta is not None and (delta[0] or delta[1]) {
+            # Equal cardinality + every current id in the baseline frozenset
+            # proves set equality without edge_delta's set builds - this gate
+            # runs for EVERY touched node (e.g. all guard-materialized
+            # profiles), so the constant matters on high-degree nodes.
+            initial = anchor.__dict__.get('_initial_edge_ids');
+            if initial is None {
+                if anchor.edge_delta() is not None {
+                    return False;
+                }
+            } elif len(anchor.edges) != len(initial) {
                 return False;
+            } else {
+                for e in anchor.edges {
+                    if e.id not in initial {
+                        return False;
+                    }
+                }
             }
         } except Exception {
             return False;

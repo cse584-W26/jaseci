@@ -612,6 +612,53 @@ def _hop_cache_env -> bool {
 glob HOP_CACHE_ON: bool = _hop_cache_env();
 
 
+def _bulk_commit_env -> bool {
+    return os.environ.get('JAC_BULK_COMMIT', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+
+glob BULK_COMMIT_ON: bool = _bulk_commit_env();
+
+
+def _bulk_flush(
+    backend: MongoBackend, batch: list, apply_report: ApplyReport, poisoned: set
+) -> None {
+    # JAC_BULK_COMMIT: contiguous plain full-writes (no CAS, no delta, no
+    # delete) collapse into one ordered bulk_write - one round trip instead of
+    # one per intent. Post-write bookkeeping mirrors _write_to_db. On any bulk
+    # error the WHOLE batch is marked failed (conservative: over-fails rather
+    # than risking a silently-acked lost write; plain upserts make errors rare).
+    if not batch {
+        return;
+    }
+    import from pymongo { UpdateOne }
+    models = [
+        UpdateOne(
+            {'_id': str(to_uuid(it.anchor.id))},
+            {'$set': _anchor_to_doc(it.anchor)},
+            upsert=True
+        )
+        for it in batch
+    ];
+    try {
+        backend.collection.bulk_write(models, ordered=True);
+        for it in batch {
+            backend.put_count += 1;
+            it.anchor.hash = Serializer._compute_hash(it.anchor);
+            snapshot_field_hashes(it.anchor);
+            apply_report.applied.append(it.anchor.id);
+        }
+    } except Exception as e {
+        for it in batch {
+            poisoned.add(it.anchor.id);
+            apply_report.failed[it.anchor.id] = str(e);
+        }
+        logger.error(f"MongoDB bulk apply failed ({len(batch)} intents): {e}");
+    }
+}
+
+
 def _hop_cache_max -> int {
     try {
         return int(os.environ.get('JAC_HOP_CACHE_MAX', '100000'));
@@ -1067,8 +1114,26 @@ impl MongoBackend.apply(changeset: ChangeSet) -> ApplyReport {
             }
             return apply_report;
         }
+        pending: list = [];
+        pending_ids: set = set();
         for stage in changeset.staged() {
             for intent in stage {
+                # Flush before anything that must observe the batch's outcome:
+                # a dependent intent (its dep may fail in the batch) or any
+                # non-batchable op (strict apply-order preservation).
+                batchable = (
+                    BULK_COMMIT_ON
+                    and not intent.is_delete()
+                    and intent.op
+                        not in (WriteOp.EDGE_LIST_DELTA, WriteOp.FIELD_UPDATE)
+                    and intent.cas_version is None
+                    and intent.anchor.persistent
+                );
+                if pending and (not batchable or intent.depends_on & pending_ids) {
+                    _bulk_flush(self, pending, apply_report, poisoned);
+                    pending = [];
+                    pending_ids = set();
+                }
                 if (deps := intent.depends_on & poisoned) {
                     dep = next(iter(deps));
                     apply_report.skipped[intent.anchor.id] = f"dependency {dep} failed";
@@ -1077,6 +1142,11 @@ impl MongoBackend.apply(changeset: ChangeSet) -> ApplyReport {
                         f"MongoDB apply: skipping {intent.op.name} on "
                         f"{intent.anchor.id}: dependency {dep} failed"
                     );
+                    continue;
+                }
+                if batchable {
+                    pending.append(intent);
+                    pending_ids.add(intent.anchor.id);
                     continue;
                 }
                 try {
@@ -1100,6 +1170,7 @@ impl MongoBackend.apply(changeset: ChangeSet) -> ApplyReport {
                 }
             }
         }
+        _bulk_flush(self, pending, apply_report, poisoned);
         if HOP_CACHE_ON {
             _hop_cache_invalidate(changeset);
         }
@@ -1163,11 +1234,16 @@ impl MongoBackend._put_node_atomic(
             if fields
             else {};
 
-        full = dict(Serializer.serialize(anchor, include_type=True));
-        non_arch_top = {
-            k: v
-            for (k, v) in full.items()
-            if k not in ('edges', 'archetype', 'version')
+        # Mirror of Serializer.serialize's Anchor branch MINUS edges/archetype/
+        # version (handled separately below). The full serialize built the
+        # O(edges) id list and walked every archetype field just to discard
+        # them here - measurable per-commit cost on high-degree nodes.
+        non_arch_top = dict(Serializer._type_info(anchor, True));
+        non_arch_top |= {
+            'id': str(anchor.id),
+            'root': str(anchor.root) if anchor.root else None,
+            'persistent': anchor.persistent,
+            'access': Serializer._serialize_value(anchor.access, True)
         };
 
         set_doc: dict[str, object] = {
