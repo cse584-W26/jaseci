@@ -621,6 +621,23 @@ def _bulk_commit_env -> bool {
 glob BULK_COMMIT_ON: bool = _bulk_commit_env();
 
 
+def _edge_rows_only_env -> bool {
+    return os.environ.get('JAC_EDGE_ROWS_ONLY', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+
+# JAC_EDGE_ROWS_ONLY (bench-grade, default off): edge documents are already the
+# read-side source of truth (hop_rows queries them directly), so skip the
+# O(node-degree) data.edges array rewrite on BOTH endpoint node docs per edge
+# write. Known limits while on: node-doc edges arrays go stale (hydration stubs
+# and heal work from them), edge writes no longer bump node versions (topology
+# OCC gating off - single-client benches only), and _edge_alive trusts edge
+# rows (read-your-deletes for edges lost). Production shape = hydrate edges
+# from edge rows; this flag exists to measure the win first.
+glob EDGE_ROWS_ONLY: bool = _edge_rows_only_env();
+
+
 def _bulk_flush(
     backend: MongoBackend, batch: list, apply_report: ApplyReport, poisoned: set
 ) -> None {
@@ -1201,6 +1218,15 @@ impl MongoBackend._apply_one(intent: WriteIntent) -> None {
         return;
     }
     if intent.op == WriteOp.EDGE_LIST_DELTA {
+        if EDGE_ROWS_ONLY {
+            # Edge docs carry the topology; leave the node doc's edges array
+            # stale (see flag comment at the definition). Field updates merged
+            # into this intent still persist (ungated - flag is bench-grade).
+            if intent.fields {
+                self.put_partial(anchor, intent.fields);
+            }
+            return;
+        }
         self._put_node_atomic(
             cast(NodeAnchor, anchor),
             [str(eid) for eid in intent.edges_added],

@@ -47,6 +47,13 @@ impl _build_view(mem: Memory, q: GraphQuery) -> _View {
 
 
 impl _edge_alive(ea: EdgeAnchor) -> bool {
+    if _EDGE_ROWS_ONLY {
+        # JAC_EDGE_ROWS_ONLY: node-doc edges arrays are stale by design, so
+        # membership in src.edges proves nothing. Edge-doc existence (the
+        # engine row that surfaced this anchor) is the liveness signal;
+        # read-your-deletes for edges is lost while the flag is on.
+        return True;
+    }
     src = ea.source;
     if src is None or not src.is_populated() {
         return True;
@@ -203,6 +210,16 @@ impl _edge_pred_keep(
 # quarantine, so quarantine clears this cache (see _mongo_quarantine).
 # ponytail: single-process only, same grade as the L1 object cache.
 glob _HEAL_OK: set = set();
+
+
+def _edge_rows_only_env -> bool {
+    import os;
+    return os.environ.get('JAC_EDGE_ROWS_ONLY', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+
+glob _EDGE_ROWS_ONLY: bool = _edge_rows_only_env();
 
 
 def _heal_cache_env -> bool {
