@@ -539,13 +539,40 @@ def _mongo_record_ancestry(backend: MongoBackend, cls: type) {
                 upsert=True
             );
         }
+        if TYPE_NAME_CACHE_ON {
+            # New ancestry rows can widen any cached closure.
+            _TYPE_NAME_CACHE.clear();
+        }
     } except Exception as e {
         logger.debug(f"MongoDB ancestry record failed: {e}");
     }
 }
 
 
+def _type_name_cache_env -> bool {
+    return os.environ.get('JAC_TYPE_NAME_CACHE', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+
+# JAC_TYPE_NAME_CACHE (experimental probe, default off): memoize the
+# graph_types ancestry closure per class name. Every hop_rows/_hop_cache_sig
+# call otherwise pays 1-2 graph_types finds even on a full hop-cache hit.
+# Invalidated whenever this process records new ancestry; another process
+# registering a brand-new subtype is not seen (same single-process grade as
+# _HOP_CACHE / _HEAL_OK).
+glob TYPE_NAME_CACHE_ON: bool = _type_name_cache_env();
+
+glob _TYPE_NAME_CACHE: dict = {};
+
+
 def _mongo_type_names(backend: MongoBackend, cls: type) -> list[str] {
+    if TYPE_NAME_CACHE_ON {
+        cached = _TYPE_NAME_CACHE.get(cls.__name__);
+        if cached is not None {
+            return cached;
+        }
+    }
     names: list[str] = [cls.__name__];
     try {
         col = _mongo_types_col(backend);
@@ -557,6 +584,10 @@ def _mongo_type_names(backend: MongoBackend, cls: type) -> list[str] {
         }
     } except Exception as e {
         logger.debug(f"MongoDB ancestry lookup failed: {e}");
+        return names;
+    }
+    if TYPE_NAME_CACHE_ON {
+        _TYPE_NAME_CACHE[cls.__name__] = names;
     }
     return names;
 }
@@ -638,6 +669,20 @@ def _edge_rows_only_env -> bool {
 glob EDGE_ROWS_ONLY: bool = _edge_rows_only_env();
 
 
+def _cas_skip_env -> bool {
+    return os.environ.get('JAC_CAS_SKIP', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+
+# JAC_CAS_SKIP (experimental probe, default off; only meaningful with
+# JAC_EDGE_ROWS_ONLY): skip the apply-time CAS version precheck for
+# EDGE_LIST_DELTA intents. Under EDGE_ROWS_ONLY those intents write nothing to
+# the node doc and edge writes no longer bump node versions (topology OCC is
+# already documented off), so the precheck find is a dead round trip.
+glob CAS_SKIP: bool = _cas_skip_env();
+
+
 def _bulk_flush(
     backend: MongoBackend, batch: list, apply_report: ApplyReport, poisoned: set
 ) -> None {
@@ -714,8 +759,95 @@ def _hop_cache_sig(backend: MongoBackend, hop: QHop) -> tuple {
 }
 
 
-def _hop_cache_invalidate(changeset: ChangeSet) -> None {
+def _hop_cache_append_env -> bool {
+    return os.environ.get('JAC_HOP_CACHE_APPEND', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+
+# JAC_HOP_CACHE_APPEND (experimental probe, default off): on a committed edge
+# CREATE, update both endpoints' cached hop entries in place instead of popping
+# them, so the next request's hop over either endpoint stays a cache hit.
+# Row construction mirrors _hop_rows_cached's arm tables exactly; a sig whose
+# type closure does not include the new edge/node archetype names is left
+# untouched (a refetch under that same closure would not match the edge
+# either). Single-process grade, same as _HOP_CACHE itself.
+glob HOP_CACHE_APPEND: bool = _hop_cache_append_env();
+
+
+def _hop_cache_append(ea: EdgeAnchor) -> bool {
+    # True = both endpoint entries consistent (updated or absent); False = give
+    # up, caller falls back to the pop-invalidate.
+    d = ea.__dict__;
+    src = d.get('source');
+    tgt = d.get('target');
+    earch = d.get('archetype');
+    if src is None or tgt is None or earch is None {
+        return False;
+    }
+    sarch = src.__dict__.get('archetype');
+    tarch = tgt.__dict__.get('archetype');
+    if sarch is None or tarch is None {
+        return False;
+    }
+    ename = type(earch).__name__;
+    sname = type(sarch).__name__;
+    tname = type(tarch).__name__;
+    undirected = bool(d.get('is_undirected', False));
+    eid = str(ea.id);
+    sid = str(src.id);
+    tid = str(tgt.id);
+    for (key, _) in ((sid, tid), (tid, sid)) {
+        entry = _HOP_CACHE.get(key);
+        if not entry {
+            continue;
+        }
+        for (sig, rows) in entry.items() {
+            (hdir, etypes, ntypes) = sig;
+            if etypes is not None and ename not in etypes {
+                continue;
+            }
+            arms: list;
+            if hdir == 1 {
+                arms = [('target', 'source', False), ('source', 'target', True)];
+            } elif hdir == 3 {
+                arms = [('source', 'target', False), ('target', 'source', False)];
+            } else {
+                arms = [('source', 'target', False), ('target', 'source', True)];
+            }
+            for (arm_idx, arm) in enumerate(arms) {
+                (mkey, nkey, undir_only) = arm;
+                mval = sid if mkey == 'source' else tid;
+                if mval != key {
+                    continue;
+                }
+                if undir_only and not undirected {
+                    continue;
+                }
+                nval = tid if nkey == 'target' else sid;
+                nname = tname if nval == tid else sname;
+                ok = True;
+                for grp in ntypes {
+                    if nname not in grp {
+                        ok = False;
+                        break;
+                    }
+                }
+                if ok {
+                    rows.append((arm_idx, eid, nval));
+                }
+            }
+        }
+    }
+    return True;
+}
+
+
+def _hop_cache_invalidate(
+    changeset: ChangeSet, applied: (set | None) = None
+) -> None {
     try {
+        appended: set = set();
         for stage in changeset.staged() {
             for intent in stage {
                 anchor = intent.anchor;
@@ -733,9 +865,28 @@ def _hop_cache_invalidate(changeset: ChangeSet) -> None {
                         _HOP_CACHE.clear();
                         return;
                     }
+                    if (
+                        HOP_CACHE_APPEND
+                        and intent.op == WriteOp.EDGE_CREATE
+                        and (applied is None or anchor.id in applied)
+                        and _hop_cache_append(anchor)
+                    ) {
+                        appended.add(anchor.id);
+                        continue;
+                    }
                     _HOP_CACHE.pop(str(src.id), None);
                     _HOP_CACHE.pop(str(tgt.id), None);
                 } elif intent.edges_added or intent.edges_removed {
+                    if (
+                        HOP_CACHE_APPEND
+                        and not intent.edges_removed
+                        and appended
+                        and all(eid in appended for eid in intent.edges_added)
+                    ) {
+                        # Every added edge was folded into the cache in place;
+                        # this node's entry is already correct.
+                        continue;
+                    }
                     _HOP_CACHE.pop(str(anchor.id), None);
                 }
             }
@@ -1093,6 +1244,13 @@ impl MongoBackend.apply(changeset: ChangeSet) -> ApplyReport {
         read_gated: dict[str, int] = {};
         for stage in changeset.staged() {
             for intent in stage {
+                if (
+                    CAS_SKIP
+                    and EDGE_ROWS_ONLY
+                    and intent.op == WriteOp.EDGE_LIST_DELTA
+                ) {
+                    continue;
+                }
                 if intent.cas_version is not None {
                     read_gated[str(to_uuid(intent.anchor.id))] = intent.cas_version;
                 }
@@ -1189,7 +1347,7 @@ impl MongoBackend.apply(changeset: ChangeSet) -> ApplyReport {
         }
         _bulk_flush(self, pending, apply_report, poisoned);
         if HOP_CACHE_ON {
-            _hop_cache_invalidate(changeset);
+            _hop_cache_invalidate(changeset, set(apply_report.applied));
         }
         if self._journal_batch and apply_report.applied {
             # One journal wait per commit: the intent ops above were acked at
