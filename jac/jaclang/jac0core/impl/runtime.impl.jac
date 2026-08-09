@@ -897,6 +897,22 @@ impl JacGraph.refs(
             if path.edges_only
             else resolve_query(ctx.mem, path)
     );
+    if planned and isinstance(planned[0], dict) {
+        # JAC_LEAF_MATERIALIZE rows: projected plain dicts, all-or-nothing per
+        # query, so one check on the head covers the set. They are sound only
+        # inside a read-only request - one escaping into a write path is a
+        # runtime invariant violation, not a user error.
+        import from jaclang.runtimelib.utils { request_read_only }
+        if not request_read_only() {
+            tname = getattr(path.hops[-1].nd, '__name__', '?') if path.hops else '?';
+            raise RuntimeError(
+                f"JAC_LEAF_MATERIALIZE leaf row for {tname} reached a request "
+                "that is not stamped read-only; leaf dicts must never be "
+                "visible to a write path"
+            );
+        }
+        return planned;
+    }
     return [
         a.archetype
         for a in planned

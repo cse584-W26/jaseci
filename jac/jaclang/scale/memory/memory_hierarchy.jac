@@ -123,6 +123,8 @@ obj MongoBackend(PersistentMemory) {
         ids: list[UUID], field: str, desc: bool, n: int
     ) -> (list[tuple] | None);
 
+    def leaf_rows(ids: list[UUID], names: tuple) -> (dict | None);
+
     def _apply_one(intent: WriteIntent) -> None;
     def inspect_summary -> dict;
     def list_quarantined(limit: int = 50) -> list;

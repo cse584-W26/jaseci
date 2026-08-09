@@ -946,6 +946,50 @@ impl MongoBackend.order_keys(
 }
 
 
+impl MongoBackend.leaf_rows(ids: list[UUID], names: tuple) -> (dict | None) {
+    # JAC_LEAF_MATERIALIZE: {UUID: {'_jac_id': hex} | declared fields}, read
+    # straight off BSON. No Serializer.deserialize, no Anchor, no L1 insert, no
+    # touched-set note - leaf rows never reach a commit because the planner
+    # only asks for them inside a read-only request (see JAC_LEAF_MATERIALIZE
+    # in query_planner.impl.jac). Returns None on failure so the caller falls
+    # back to stock materialization instead of serving a short answer.
+    #
+    # A doc missing any declared field is omitted, not filled with None: the
+    # caller materializes the leftovers through the stock path, which fills
+    # class defaults exactly as deserialize would.
+    if self.client is None or not ids or not names {
+        return {};
+    }
+    try {
+        proj = {'_id': 1}
+            | {
+                f"data.archetype.{f}": 1
+                for f in names
+            };
+        out: dict = {};
+        for doc in self.collection.find(
+            {'_id': {'$in': [str(to_uuid(i)) for i in ids]}}, proj
+        ) {
+            arch = (doc.get('data') or {}).get('archetype') or {};
+            if not all(f in arch for f in names) {
+                continue;
+            }
+            uid = UUID(str(doc['_id']));
+            out[uid] = {'_jac_id': uid.hex}
+                | {
+                    f: arch[f]
+                    for f in names
+                };
+        }
+        self.fetch_count += len(out);
+        return out;
+    } except Exception as e {
+        logger.debug(f"MongoDB leaf_rows failed: {e}");
+        return None;
+    }
+}
+
+
 impl MongoBackend.filter_ids(
     ids: list[UUID], preds: list[QPred]
 ) -> (set[UUID] | None) {

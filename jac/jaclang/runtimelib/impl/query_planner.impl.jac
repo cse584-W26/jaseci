@@ -700,6 +700,151 @@ def _order_anchors(anchors: list[Anchor], spec: tuple) -> list[Anchor] {
 }
 
 
+# --- JAC_LEAF_MATERIALIZE ---------------------------------------------------
+# "Tweet" / "Tweet,Comment": an EXPRESSION read whose final hop targets exactly
+# one listed node type returns projected plain dicts (_jac_id hex + every
+# declared has-field) instead of constructed archetypes. Parsed once at import;
+# empty/unset = feature off (stock).
+#
+# SAFETY - the read-only stamp is the PRECONDITION, not an optimization on top:
+# a leaf row is not an anchor. It has no identity in L1, no touched-set entry,
+# no dirty bit, no version. That is provably harmless only because the request
+# was stamped read-only (walker on JAC_RO_WALKERS), which skips the end-of-
+# request commit entirely and asserts nothing was written - so there is no
+# commit for a leaf row to be missing from. Hence three gates, not one:
+#   1. request_read_only() here, per query;
+#   2. from_visit queries excluded - visit-loaded nodes are handed to walker
+#      abilities and can be written (like_tweet), so they stay full-hydration;
+#   3. a fail-loud re-check at the refs passthrough (JacGraph.refs), because a
+#      leaf dict reaching a write path is a runtime invariant violation.
+def _parse_leaf_types -> frozenset {
+    import os;
+    raw = os.environ.get('JAC_LEAF_MATERIALIZE', '');
+    return frozenset(t.strip() for t in raw.split(',') if t.strip());
+}
+
+
+glob LEAF_TYPES: frozenset = _parse_leaf_types();
+
+
+def _leaf_cls(q: GraphQuery) -> (type | None) {
+    # Same single-type last-hop gate shape as _last_hop_projection/_order_spec.
+    if not LEAF_TYPES or not q.hops or q.from_visit {
+        return None;
+    }
+    nd = q.hops[-1].nd;
+    if nd is None or isinstance(nd, tuple) or nd.__name__ not in LEAF_TYPES {
+        return None;
+    }
+    import from jaclang.runtimelib.utils { request_read_only }
+    return nd if request_read_only() else None;
+}
+
+
+def _leaf_row(arch: object, id: UUID, names: tuple) -> dict {
+    return {'_jac_id': id.hex}
+        | {
+            f: getattr(arch, f, None)
+            for f in names
+        };
+}
+
+
+def _leaf_fetch(mem: Memory, ids: list[UUID], names: tuple) -> (dict | None) {
+    # None = "this backend cannot project rows" -> caller falls back to stock
+    # materialization. Duck-typed on the method like _storage_order_keys.
+    import from jaclang.runtimelib.memory { TieredMemory }
+    if not isinstance(mem, TieredMemory) {
+        return None;
+    }
+    fn = getattr(mem.l3, 'leaf_rows', None);
+    return None if fn is None else fn(ids, names);
+}
+
+
+def _leaf_rows(mem: Memory, view: _View, ids: list[UUID], cls: type) -> list[dict] {
+    import from jaclang.runtimelib.typecache { field_names }
+    names = field_names(cls);
+    pool = mem.get_mem();
+    rows: dict[UUID, dict] = {};
+    missing: list[UUID] = [];
+    for i in ids {
+        # READ ONLY: resident anchors are read, never inserted or noted.
+        a = view.live_nodes.get(i) or pool.get(i);
+        if a is not None and a.is_populated() and a.archetype is not None {
+            rows[i] = _leaf_row(a.archetype, i, names);
+        } else {
+            missing.append(i);
+        }
+    }
+    if missing {
+        fetched = _leaf_fetch(mem, missing, names);
+        if fetched {
+            rows.update(fetched);
+        }
+        rest = [
+            i
+            for i in missing
+            if i not in rows
+        ];
+        if rest {
+            # Backend without leaf_rows (sqlite/plain memory), a doc the engine
+            # could not project, or a genuinely absent id: stock materialize and
+            # flatten. Output-identical - class defaults included - just no win.
+            for a in _materialize(mem, view, rest) {
+                if a.archetype is not None {
+                    rows[a.id] = _leaf_row(a.archetype, a.id, names);
+                }
+            }
+        }
+    }
+    return [
+        rows[i]
+        for i in ids
+        if i in rows
+    ];
+}
+
+
+def _leaf_finish(
+    mem: Memory,
+    view: _View,
+    ids: list[UUID],
+    last: QHop,
+    cls: type,
+    sort_after: (tuple | None)
+) -> list {
+    rows = _leaf_rows(mem, view, ids, cls);
+    want = last.only_ids();
+    # No isinstance check on a row: _hop_once already type-narrowed the final
+    # hop (_live_row rejects targets that are not hop.nd) and the single-type
+    # gate proved hop.nd IS cls - the same reasoning _verify_last_hop's
+    # isinstance re-checks defensively. Predicates and only-ids remain, read
+    # dict-aware off the projected row.
+    verified = [
+        r
+        for r in rows
+        if all(p.matches(r.get(p.field)) for p in last.preds)
+            and (want is None or UUID(r['_jac_id']) in want)
+    ];
+    if sort_after is not None {
+        (_, field, desc, n) = sort_after;
+        ordered = [
+            p[0]
+            for p in _order_pairs([(r, r.get(field)) for r in verified], desc)
+        ];
+        verified = ordered if n is None else ordered[:n];
+    }
+    if _trace_enabled() {
+        logger.info(
+            f"[gquery] leaf {cls.__name__} ids={len(ids)} rows={len(rows)} "
+            f"verified={len(verified)}"
+        );
+    }
+    return verified;
+}
+
+
 impl resolve_query_prefix(mem: Memory, q: GraphQuery, upto: int) -> list[UUID] {
     view = _build_view(mem, q);
     return _resolve_ids(mem, view, q, upto);
@@ -725,6 +870,14 @@ impl resolve_query(mem: Memory, q: GraphQuery) -> list[Anchor] {
             ids = final;
             sort_after = None;
         }
+    }
+    leaf = _leaf_cls(q);
+    if leaf is not None {
+        # Leaf composes AFTER id selection: hop caches, slc and the pushdown's
+        # _order_limit_ids all ran above untouched. Declared return type says
+        # list[Anchor]; leaf rows are dicts (checker noise, accepted) and the
+        # refs passthrough re-gates them fail-loud.
+        return _leaf_finish(mem, view, ids, q.hops[-1], leaf, sort_after);
     }
     winners = _materialize(mem, view, ids, _last_hop_projection(q));
     if not q.hops {
