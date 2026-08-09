@@ -18,6 +18,18 @@ impl MongoBackend.postinit -> None {
         if self.client {
             self.db = self.client[self.db_name];
             self.collection = self.db[self.collection_name];
+            # Durability parity with one-WAL-fsync-per-commit engines: a URI
+            # j/journal=true write concern would pay one journal fsync PER
+            # mongo op, while one commit issues several ops. Downgrade per-op
+            # acks to w:1 and pay a single j:true barrier per apply() instead
+            # (see MongoBackend.apply) - same durability point as a pg COMMIT.
+            if self.collection.write_concern.document.get('j') {
+                import from pymongo { WriteConcern }
+                self.collection = self.collection.with_options(
+                    write_concern=WriteConcern(w=1)
+                );
+                self._journal_batch = True;
+            }
         }
     }
     if self.client is not None {
@@ -1046,6 +1058,17 @@ impl MongoBackend.apply(changeset: ChangeSet) -> ApplyReport {
         }
         if HOP_CACHE_ON {
             _hop_cache_invalidate(changeset);
+        }
+        if self._journal_batch and apply_report.applied {
+            # One journal wait per commit: the intent ops above were acked at
+            # w:1 (see postinit); this j:true counter bump flushes the WT log
+            # past them (log commits are ordered), so the whole commit is
+            # durable before the client is acked. If it raises, the commit
+            # errors out un-acked - same contract as a failed pg COMMIT.
+            import from pymongo { WriteConcern }
+            self.db['_commit_barrier'].with_options(
+                write_concern=WriteConcern(w=1, j=True)
+            ).update_one({'_id': 'c'}, {'$inc': {'n': 1}}, upsert=True);
         }
         if span {
             span.set_attribute("mem.count", len(apply_report.applied));
