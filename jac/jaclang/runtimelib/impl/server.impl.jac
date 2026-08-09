@@ -416,7 +416,28 @@ impl ExecutionManager._finalize_call_response(
     call_state.reports.put_nowait(call_state._sentinel);
     reports = await self.report_collector(call_state);
     if not request_read_only() {
+        # Time the commit (incl. journal barrier) so write benches can end the
+        # server span at durability, matching the baselines' commit-in-handler
+        # scope; the in-walker server_total_ms stops pre-commit and cannot see
+        # this. Injected only into lean bench reports that already carry
+        # server_total_ms.
+        import from time { perf_counter }
+        _t_commit = perf_counter();
         await Jac.acommit();
+        _commit_ms = (perf_counter() - _t_commit) * 1000.0;
+        if (
+            isinstance(reports, list)
+            and len(reports) == 1
+            and isinstance(reports[0], dict)
+            and 'server_total_ms' in reports[0]
+        ) {
+            # Additive: the in-walk commit (osp_kernel_sv) usually did the real
+            # work and already stamped its time; this acommit is then a
+            # short-circuit whose overhead still belongs to the commit span.
+            reports[0]['server_commit_ms'] = (
+                reports[0].get('server_commit_ms', 0.0) + _commit_ms
+            );
+        }
     } else {
         # JAC_RO_WALKERS request: no commit at all. Assert the walker really
         # was read-only instead of silently dropping whatever it wrote.

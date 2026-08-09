@@ -54,6 +54,10 @@ impl HTTPTransport.send(data: any) -> None {
             if isinstance(ser_ms, (int, float)) {
                 self.handler.send_header('x-server-serialize-ms', f"{ser_ms:.3f}");
             }
+            commit_ms = lean_body.pop('server_commit_ms', None);
+            if isinstance(commit_ms, (int, float)) {
+                self.handler.send_header('x-server-commit-ms', f"{commit_ms:.3f}");
+            }
             self.handler.send_header('Access-Control-Allow-Origin', '*');
             self.handler.send_header(
                 'Access-Control-Allow-Methods', 'GET, POST, OPTIONS'

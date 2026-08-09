@@ -200,7 +200,22 @@ def _sv_on_complete(scope: WalkScope, ok: bool) {
             assert_request_clean();
         } else {
             try {
+                # Time the in-walk commit (this is THE commit for the serving
+                # path, incl. the journal barrier) and expose it on the bench
+                # report dict so the fair server span can end at durability;
+                # the walker's own server_total_ms stops before this runs.
+                import from time { perf_counter }
+                _t_commit = perf_counter();
                 JacRuntimeInterface.get_context().mem.commit();
+                _commit_ms = (perf_counter() - _t_commit) * 1000.0;
+                for _r in scope.reports {
+                    if isinstance(_r, dict) and 'server_total_ms' in _r {
+                        _r['server_commit_ms'] = (
+                            _r.get('server_commit_ms', 0.0) + _commit_ms
+                        );
+                        break;
+                    }
+                }
             } except Exception {
                 ;
             }
