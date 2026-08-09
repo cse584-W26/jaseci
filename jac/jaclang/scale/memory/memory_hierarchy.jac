@@ -129,6 +129,7 @@ obj MongoBackend(PersistentMemory) {
         mongo_url: (str | None) = None,
         _l2_ref: (any | None) = None,
         _l1_id: (str | None) = None,
+        _journal_batch: bool = False,
         fetch_count: int = 0,
         put_count: int = 0,
         projection_count: int = 0;
