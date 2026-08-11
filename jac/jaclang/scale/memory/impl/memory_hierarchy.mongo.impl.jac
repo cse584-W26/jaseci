@@ -652,6 +652,25 @@ def _bulk_commit_env -> bool {
 glob BULK_COMMIT_ON: bool = _bulk_commit_env();
 
 
+def _coalesce_commit_env -> bool {
+    return os.environ.get('JAC_COALESCE_COMMIT', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+
+# JAC_COALESCE_COMMIT (bench-grade, default off): collapse the whole changeset
+# into ONE ordered bulk_write instead of the stock per-intent apply loop, and
+# fold the journal barrier into that same call (w:1,j:true write concern on
+# the bulk_write itself) instead of the separate _commit_barrier round trip -
+# the j:true ack already makes the whole batch durable. Falls back to the
+# stock per-intent path, unchanged, for any commit containing a CAS'd intent
+# or an EDGE_LIST_DELTA while EDGE_ROWS_ONLY is off; fallback is whole-commit
+# (not per-intent), so apply-order semantics are unaffected. Any bulk_write
+# error fails the WHOLE commit (conservative, same rationale as _bulk_flush).
+# Takes precedence over JAC_BULK_COMMIT when both are set.
+glob COALESCE_COMMIT: bool = _coalesce_commit_env();
+
+
 def _edge_rows_only_env -> bool {
     return os.environ.get('JAC_EDGE_ROWS_ONLY', '').strip().lower()
         in ('1', 'true', 'yes', 'on');
@@ -1229,6 +1248,112 @@ impl MongoBackend.filter_ids(
 
 impl MongoBackend.commit(anchor: (Anchor | None) = None) -> None { }
 
+def _coalesced_apply(
+    backend: MongoBackend, changeset: ChangeSet, apply_report: ApplyReport
+) -> bool {
+    # JAC_COALESCE_COMMIT fast path. Returns True once the commit has been
+    # fully handled here (success or failure) - caller must not fall into the
+    # stock loop or barrier. False = some intent forces the stock per-intent
+    # path; nothing here has touched the DB yet (fallback is whole-commit).
+    for stage in changeset.staged() {
+        for intent in stage {
+            if intent.cas_version is not None {
+                return False;
+            }
+            if intent.op == WriteOp.EDGE_LIST_DELTA and not EDGE_ROWS_ONLY {
+                return False;
+            }
+        }
+    }
+
+    import from pymongo { DeleteOne, UpdateOne }
+
+    models: list = [];
+    write_anchors: list = [];
+    applied_ids: list = [];
+
+    for stage in changeset.staged() {
+        for intent in stage {
+            anchor = intent.anchor;
+            if intent.is_delete() {
+                models.append(DeleteOne({'_id': str(to_uuid(anchor.id))}));
+                applied_ids.append(anchor.id);
+                continue;
+            }
+            if intent.op in (WriteOp.EDGE_LIST_DELTA, WriteOp.FIELD_UPDATE) {
+                # Mirrors put_partial's own guard exactly - non-persistent and
+                # empty-fields both land in "no model, still applied".
+                partial_data: dict[str, object] = Serializer.serialize_fields(
+                    anchor, intent.fields
+                )
+                    if anchor.persistent and intent.fields
+                    else {};
+                if not partial_data {
+                    applied_ids.append(anchor.id);
+                    continue;
+                }
+                update: dict[str, object] = {
+                    f"data.archetype.{k}": v for (k, v) in partial_data.items()
+                };
+                update['updated_at'] = datetime.now(timezone.utc).isoformat();
+                models.append(
+                    UpdateOne({'_id': str(to_uuid(anchor.id))}, {'$set': update})
+                );
+                write_anchors.append(anchor);
+                continue;
+            }
+            # Plain full write: cas_version is already ruled out above; only
+            # persistence gates it (mirrors _write_to_db's guard).
+            if not anchor.persistent {
+                continue;
+            }
+            models.append(
+                UpdateOne(
+                    {'_id': str(to_uuid(anchor.id))},
+                    {'$set': _anchor_to_doc(anchor)},
+                    upsert=True
+                )
+            );
+            write_anchors.append(anchor);
+        }
+    }
+
+    if not models {
+        for aid in applied_ids {
+            apply_report.applied.append(aid);
+        }
+        return True;
+    }
+
+    try {
+        if backend._journal_batch {
+            import from pymongo { WriteConcern }
+            backend.collection.with_options(
+                write_concern=WriteConcern(w=1, j=True)
+            ).bulk_write(models, ordered=True);
+        } else {
+            backend.collection.bulk_write(models, ordered=True);
+        }
+    } except Exception as e {
+        for aid in (applied_ids + [a.id for a in write_anchors]) {
+            apply_report.failed[aid] = str(e);
+        }
+        logger.error(f"MongoDB coalesced apply failed ({len(models)} models): {e}");
+        return True;
+    }
+
+    for aid in applied_ids {
+        apply_report.applied.append(aid);
+    }
+    for wa in write_anchors {
+        backend.put_count += 1;
+        wa.hash = Serializer._compute_hash(wa);
+        snapshot_field_hashes(wa);
+        apply_report.applied.append(wa.id);
+    }
+    return True;
+}
+
 impl MongoBackend.apply(changeset: ChangeSet) -> ApplyReport {
     apply_report = ApplyReport();
     if changeset.is_empty() or self.client is None {
@@ -1286,6 +1411,15 @@ impl MongoBackend.apply(changeset: ChangeSet) -> ApplyReport {
             }
             if span {
                 span.set_attribute("mem.count", 0);
+            }
+            return apply_report;
+        }
+        if COALESCE_COMMIT and _coalesced_apply(self, changeset, apply_report) {
+            if HOP_CACHE_ON {
+                _hop_cache_invalidate(changeset, set(apply_report.applied));
+            }
+            if span {
+                span.set_attribute("mem.count", len(apply_report.applied));
             }
             return apply_report;
         }
