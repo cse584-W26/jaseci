@@ -1200,15 +1200,22 @@ impl MongoBackend.leaf_rows(ids: list[UUID], names: tuple) -> (dict | None) {
                 f"data.archetype.{f}": 1
                 for f in names
             };
+        # Every returned _id is by definition one of the requested ids: build
+        # the reverse map once and reuse those UUID objects instead of
+        # reparsing UUID(str(doc['_id'])) per row.
+        idmap: dict[str, UUID] = {str(to_uuid(i)): i for i in ids};
         out: dict = {};
         for doc in self.collection.find(
-            {'_id': {'$in': [str(to_uuid(i)) for i in ids]}}, proj
+            {'_id': {'$in': list(idmap.keys())}}, proj
         ) {
             arch = (doc.get('data') or {}).get('archetype') or {};
             if not all(f in arch for f in names) {
                 continue;
             }
-            uid = UUID(str(doc['_id']));
+            uid = idmap.get(doc['_id']);
+            if uid is None {
+                continue;
+            }
             out[uid] = {'_jac_id': uid.hex}
                 | {
                     f: arch[f]
