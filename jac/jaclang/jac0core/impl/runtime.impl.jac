@@ -868,7 +868,25 @@ impl JacBuiltin.log_report(expr: any, custom: bool = False) -> None {
     if custom {
         JacRuntimeInterface.get_context().custom = expr;
     } else {
-        JacRuntimeInterface.get_console().print(expr);
+        echo_on = JacBuiltin?._report_echo_on;
+        if echo_on is None {
+            # JAC_REPORT_ECHO=0 disables the per-report console echo: report
+            # exprs console.print() their full payload on every hit, the
+            # hottest logging path in the runtime, and it duplicates the
+            # walker response body already sent to the client. Default ON =
+            # stock behavior. Resolved once, cached like JacLLM.default_llm.
+            import os;
+            env_val = os.environ.get('JAC_REPORT_ECHO');
+            echo_on = (
+                env_val.strip().lower() not in ('0', 'false', 'no', 'off')
+                if env_val is not None and env_val.strip() != ''
+                else True
+            );
+            JacBuiltin._report_echo_on = echo_on;
+        }
+        if echo_on {
+            JacRuntimeInterface.get_console().print(expr);
+        }
         if _current_scope() is not None {
             osp_report(expr);
         } else {
