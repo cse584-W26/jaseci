@@ -1,16 +1,18 @@
 import from jaclang.runtimelib.utils {
     compiled_serializer_enabled,
-    lean_response_enabled
+    lean_response_enabled,
+    leaf_passthrough_enabled
 }
 import from jaclang.runtimelib.typecache { emit_plan }
 
-glob _flag_snapshot: dict[str, bool] = {'lean': False, 'compiled': False};
+glob _flag_snapshot: dict[str, bool] = {'lean': False, 'compiled': False, 'leafpass': False};
 
 def _refresh_flag_snapshot {
     # Flag read once per top-level serialize() call, not per recursed object:
     # a per-object env read is measurable on multi-thousand-item reports.
     _flag_snapshot['lean'] = lean_response_enabled();
     _flag_snapshot['compiled'] = compiled_serializer_enabled();
+    _flag_snapshot['leafpass'] = leaf_passthrough_enabled();
 }
 
 impl Serializer._type_info(`obj: object, `include: bool) -> dict[str, object] {
@@ -117,6 +119,13 @@ impl Serializer._serialize_value(
         ];
     }
     if isinstance(val, dict) {
+        # Leaf-materialized rows (_leaf_row / MongoBackend.leaf_rows) are
+        # JSON-safe by construction and '_jac_id' is their exclusive marker
+        # key; a user dict that happens to carry '_jac_id' with non-JSON-safe
+        # nested values would bypass conversion here, hence default off.
+        if _flag_snapshot['leafpass'] and '_jac_id' in val {
+            return val;
+        }
         return {
             str(k): Serializer._serialize_value(
                 v, include_type, api_mode, ref_mode, _seen

@@ -103,6 +103,15 @@ def compiled_serializer_enabled -> bool {
         in ('1', 'true', 'yes', 'on');
 }
 
+def leaf_passthrough_enabled -> bool {
+    # JAC_LEAF_PASSTHROUGH=1: leaf-materialized rows (JAC_LEAF_MATERIALIZE)
+    # are dicts already JSON-safe by construction; skip the serializer's
+    # dict re-walk for them. Default off.
+    import os;
+    return os.environ.get('JAC_LEAF_PASSTHROUGH', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
 def lean_response_enabled -> bool {
     # JAC_API_LEAN_RESPONSE=1: walker responses drop the result echo and the
     # _jac_type/_jac_archetype envelope fields; a lone dict report is returned
