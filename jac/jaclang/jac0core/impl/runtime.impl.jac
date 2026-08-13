@@ -933,6 +933,40 @@ impl JacGraph.arefs(path: GraphQuery | NodeArchetype | list[NodeArchetype]) -> N
     ;
 }
 
+impl JacGraph.chain_has(item: any, path: any) -> bool {
+    # Consumption-aware lowering of `item in [chain]`: instead of
+    # materializing the whole result list, narrow the final hop to the
+    # candidate's id and delegate to the standard resolver - overlay,
+    # ACL filtering, dedup, and residual predicates are inherited by
+    # construction, so the only semantic question is list-membership
+    # equality. That is guarded exactly: archetypes with any __eq__ other
+    # than identity (object.__eq__) take the materialize-everything
+    # fallback, as does anything without a real anchor.
+    an = getattr(item, '__jac__', None) if item is not None else None;
+    if (
+        not isinstance(path, GraphQuery)
+        or not path.hops
+        or an is None
+        or not isinstance(an, Anchor)
+        or type(item).__eq__ is not object.__eq__
+        or path.hops[-1].only is not None
+        or path.edges_only
+    ) {
+        return item in JacGraph.refs(path);
+    }
+    path.hops[-1].only = [item];
+    import from jaclang.runtimelib.query_planner { resolve_query }
+    ctx = JacRuntimeInterface.get_context();
+    ctx.note_traversal_reads([nd.__jac__ for nd in path.origin]);
+    tid = an.id;
+    for a in resolve_query(ctx.mem, path) {
+        if a.id == tid {
+            return True;
+        }
+    }
+    return False;
+}
+
 
 impl JacGraph.filter_on(
     items: list[Archetype], func: Callable[([Archetype], bool)]

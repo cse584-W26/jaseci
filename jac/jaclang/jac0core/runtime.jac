@@ -229,6 +229,8 @@ class JacGraph {
         path: GraphQuery | NodeArchetype | list[NodeArchetype]
     ) -> None;
 
+    static def chain_has(item: any, path: any) -> bool;
+
     static def filter_on(
         items: list[Archetype], func: Callable[([Archetype], bool)]
     ) -> list[Archetype];

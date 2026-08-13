@@ -170,6 +170,12 @@ class StreamProofPass(UniPass) {
                 if rpt is not None {
                     continue;   # chain reported directly: serialization sink
                 }
+                cmp = _ancestor(ch, (uni.CompareExpr, ));
+                if cmp is not None and ch in getattr(cmp, 'rights', []) {
+                    # in-place membership test lowers to chain_has (no
+                    # materialized elements escape) - see exit_compare_expr
+                    continue;
+                }
                 # chain used as a sub-expression of another chain (origin) is
                 # covered by the outer chain's own audit
                 if _ancestor(ch, (uni.EdgeRefTrailer, )) is not None {

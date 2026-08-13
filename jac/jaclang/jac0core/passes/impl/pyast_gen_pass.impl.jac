@@ -3024,6 +3024,36 @@ impl PyastGenPass.translate_jac_bin_op(nd: uni.BinaryExpr) -> list[ast3.AST] {
 }
 
 impl PyastGenPass.exit_compare_expr(nd: uni.CompareExpr) -> None {
+    # Consumption-aware chain lowering: `x in [chain]` / `x not in [chain]`
+    # with the chain written in place has exactly one, syntactically certain
+    # consumer - the membership test - so it needs no materialized list.
+    # Lower to chain_has(x, <query>), which narrows the final hop to x and
+    # delegates to the standard resolver (overlay/ACL/dedup inherited);
+    # chain_has itself falls back to full materialization when equality
+    # semantics or query shape make the narrowed probe inexact.
+    if (
+        len(nd.ops) == 1
+        and len(nd.rights) == 1
+        and isinstance(nd.rights[0], uni.EdgeRefTrailer)
+        and getattr(nd.rights[0], 'bare_query_py', None) is not None
+        and str(getattr(nd.ops[0], 'value', '')) in ('in', 'not in')
+    ) {
+        probe = self.sync(
+            ast3.Call(
+                func=self.jaclib_obj('chain_has'),
+                args=[
+                    cast(ast3.expr, self.py_ast_val(nd.left)),
+                    cast(ast3.expr, nd.rights[0].bare_query_py)
+                ],
+                keywords=[]
+            )
+        );
+        if str(getattr(nd.ops[0], 'value', '')) == 'not in' {
+            probe = self.sync(ast3.UnaryOp(op=self.sync(ast3.Not()), operand=probe));
+        }
+        nd.gen.py_ast = [probe];
+        return;
+    }
     nd.gen.py_ast = [
         self.sync(
             ast3.Compare(
@@ -4015,6 +4045,9 @@ impl PyastGenPass.exit_edge_ref_trailer(nd: uni.EdgeRefTrailer) -> None {
             func=self.jaclib_obj('GraphQuery'), args=[origin_ast], keywords=gq_kws
         )
     );
+    # bare (unwrapped) query AST for consumption-aware enclosing-expression
+    # lowerings (e.g. `x in [chain]` -> chain_has) - see exit_compare_expr
+    nd.bare_query_py = pynode;
     if from_visit {
         pynode = self.sync(
             ast3.Call(
