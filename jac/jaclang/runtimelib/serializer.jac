@@ -57,7 +57,9 @@ obj Serializer {
         ref_mode: bool = False
     ) -> object;
 
-    static def deserialize(data: dict[str, object]) -> (object | None);
+    static def deserialize(
+        data: dict[str, object], fingerprint: str = ''
+    ) -> (object | None);
     static def _serialize_value(
         val: object,
         include_type: bool,
@@ -87,11 +89,16 @@ obj Serializer {
     static def _occurrence_note(n: int) -> str;
     static def _reset_warn_cache -> None;
     static def _id_to_stub(anchor_cls: type, id_str: str) -> (object | None);
-    static def _deserialize_anchor(data: dict[str, object]) -> (object | None);
+    static def _deserialize_anchor(
+        data: dict[str, object], fingerprint: str = ''
+    ) -> (object | None);
     static def _deserialize_permission(data: object) -> object;
     static def _deserialize_access(data: object) -> object;
     static def _deserialize_archetype(
-        data: dict[str, object], anchor: object
+        data: dict[str, object], anchor: object, fingerprint: str = ''
+    ) -> (object | None);
+    static def _deserialize_trusted(
+        data: dict[str, object], anchor: object, cls: type
     ) -> (object | None);
 
     static def _compute_hash(anchor: object) -> int;

@@ -168,6 +168,7 @@ obj JacAPIServerCore {
 
     def _configure_openapi_security -> None;
     def _print_startup_banner(dev: bool, no_client: bool) -> None;
+    def _tune_gc -> None;
     def register_health_endpoint -> None;
     def register_build_status_endpoint -> None;
     def _register_client_error_endpoint -> None;

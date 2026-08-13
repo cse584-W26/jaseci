@@ -882,7 +882,7 @@ impl Session._materialize(
     if existing is not None and existing.is_populated() {
         return existing;
     }
-    got = Serializer.deserialize(row.props);
+    got = Serializer.deserialize(row.props, fingerprint=row.fingerprint);
     if not isinstance(got, Anchor) {
         logger.warning(
             f"could not materialize anchor {row.id} ({row.arch_type}); skipping"

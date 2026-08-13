@@ -266,7 +266,9 @@ impl Serializer._deserialize_jac_ref(data: dict[str, object]) -> (object | None)
     return Serializer._id_to_stub(stub_cls, id_str);
 }
 
-impl Serializer.deserialize(data: dict[str, object]) -> (object | None) {
+impl Serializer.deserialize(
+    data: dict[str, object], fingerprint: str = ''
+) -> (object | None) {
     if not isinstance(data, dict) {
         return data;
     }
@@ -274,10 +276,12 @@ impl Serializer.deserialize(data: dict[str, object]) -> (object | None) {
     if not type_name {
         return {k: Serializer._deserialize_value(v) for (k, v) in data.items()};
     }
+    if type_name in ('Anchor', 'NodeAnchor', 'EdgeAnchor') {
+        # fingerprint rides along so the archetype rebuild can prove the
+        # stored props match the live class shape and take the trusted path
+        return Serializer._deserialize_anchor(data, fingerprint);
+    }
     dispatch = {
-        'Anchor': Serializer._deserialize_anchor,
-        'NodeAnchor': Serializer._deserialize_anchor,
-        'EdgeAnchor': Serializer._deserialize_anchor,
         'Permission': Serializer._deserialize_permission,
         'Access': Serializer._deserialize_access
     };
@@ -748,7 +752,9 @@ impl Serializer._id_to_stub(anchor_cls: type, id_str: str) -> (Anchor | None) {
     }
 }
 
-impl Serializer._deserialize_anchor(data: dict[str, object]) -> (Anchor | None) {
+impl Serializer._deserialize_anchor(
+    data: dict[str, object], fingerprint: str = ''
+) -> (Anchor | None) {
     anchor_cls = {'NodeAnchor': NodeAnchor, 'EdgeAnchor': EdgeAnchor}.get(
         data.get('__type__', ''), Anchor
     );
@@ -776,7 +782,7 @@ impl Serializer._deserialize_anchor(data: dict[str, object]) -> (Anchor | None) 
                 }
                 return None;
             }
-            archetype = Serializer._deserialize_archetype(arch_data, anchor);
+            archetype = Serializer._deserialize_archetype(arch_data, anchor, fingerprint);
             if archetype is None {
                 arch_key = f"{arch_data.get('__module__')}.{arch_data.get('__type__')}";
                 if (n := Serializer._warn_occurrence("archetype-failed", arch_key)) {
@@ -869,8 +875,134 @@ impl Serializer._deserialize_access(data: object) -> Access {
     return access;
 }
 
+glob _trusted_plan_cache: dict = {};
+
+
+def _trusted_plan(cls: type) -> (tuple | None) {
+    # Per-class cache of (name, kind, allowed, elem) rows for the trusted
+    # deserialize path. `allowed` is the tuple of EXACT scalar types the
+    # declared annotation admits (NoneType included only when the field is
+    # Optional) - a value whose type() is in `allowed` would pass through
+    # coerce unchanged, so direct assignment is provably value-identical.
+    # A declared-float field with a stored int is NOT admitted (coerce would
+    # widen it); it takes the dispatch+coerce branch like any other surprise.
+    if cls in _trusted_plan_cache {
+        return _trusted_plan_cache[cls];
+    }
+    import from typing { get_args, get_origin, Union }
+    import from types { NoneType, UnionType }
+    plan = emit_plan(cls);
+    if not plan {
+        _trusted_plan_cache[cls] = None;
+        return None;
+    }
+    field_types = get_field_types(cls);
+    scalars = (str, int, float, bool);
+    rows: list = [];
+    for (name, kind) in plan {
+        allowed: (tuple | None) = None;
+        elem: (type | None) = None;
+        target = field_types.get(name);
+        if kind == 1 and target is not None {
+            if target in scalars {
+                allowed = (target, );
+            } else {
+                origin = get_origin(target);
+                if origin in (Union, UnionType) {
+                    members = tuple(
+                        a
+                        for a in get_args(target)
+                        if a in scalars or a is NoneType
+                    );
+                    allowed = members if members else None;
+                }
+            }
+            if allowed is None {
+                kind = 0;
+            }
+        } elif kind == 2 and target is not None {
+            args = get_args(target);
+            if len(args) == 1 and args[0] in scalars {
+                elem = args[0];
+            } else {
+                kind = 0;
+            }
+        }
+        rows.append((name, kind, allowed, elem));
+    }
+    out = tuple(rows);
+    _trusted_plan_cache[cls] = out;
+    return out;
+}
+
+
+impl Serializer._deserialize_trusted(
+    data: dict[str, object], anchor: Anchor, cls: type
+) -> (object | None) {
+    # Fingerprint-verified rebuild. Caller has already proven the stored props
+    # were serialized by the CURRENT class shape, so: no unknown keys exist, no
+    # field is missing, and no repair/attic work applies. Scalar fields whose
+    # stored type exactly matches a declared union member skip both the
+    # _deserialize_value dispatch and coerce. Every assumption is re-guarded at
+    # runtime; ANY mismatch returns None and the caller falls back to the full
+    # slow path, making this value-identical by construction.
+    import from jaclang.runtimelib.schema_rules { merged_rules_for, repair_mode }
+    if repair_mode() != 'off' and merged_rules_for(cls) is not None {
+        # registered rules may rewrite even current-shape data; let the slow
+        # path arbitrate
+        return None;
+    }
+    plan = _trusted_plan(cls);
+    if not plan {
+        return None;
+    }
+    names = {row[0] for row in plan};
+    for k in data {
+        if not k.startswith('__') and k not in names {
+            return None;
+        }
+    }
+    field_types = get_field_types(cls);
+    try {
+        arch: object = cls.__new__(cls);
+        # setattr (not __dict__ writes) so Archetype.__setattr__ semantics
+        # match the slow path exactly
+        for (name, kind, allowed, elem) in plan {
+            if name not in data {
+                return None;
+            }
+            v = data[name];
+            if kind == 1 and type(v) in allowed {
+                setattr(arch, name, v);
+            } elif (
+                kind == 2
+                and type(v) is list
+                and all(type(x) is elem for x in v)
+            ) {
+                setattr(arch, name, v);
+            } else {
+                dv = Serializer._deserialize_value(v);
+                target = field_types.get(name);
+                if target is not None {
+                    (coerced, ok) = Serializer.coerce(dv, target);
+                    if not ok {
+                        return None;
+                    }
+                    dv = coerced;
+                }
+                setattr(arch, name, dv);
+            }
+        }
+        setattr(arch, '__jac__', anchor);
+        return arch;
+    } except Exception {
+        return None;
+    }
+}
+
+
 impl Serializer._deserialize_archetype(
-    data: dict[str, object], anchor: Anchor
+    data: dict[str, object], anchor: Anchor, fingerprint: str = ''
 ) -> (object | None) {
     import from jaclang.runtimelib.schema_rules { ATTIC_KEY, REPAIRS_ATTR, repair_mode }
     raw_type_name = data.get('__type__');
@@ -885,6 +1017,15 @@ impl Serializer._deserialize_archetype(
         return None;
     }
     cls = cast(type, resolved);
+    if fingerprint and fingerprint == getattr(cls, '__jac_fingerprint__', None) {
+        # The stored fingerprint proves the props were written by exactly this
+        # class shape, so the drift machinery below (repair rules, per-field
+        # coercion recovery, unknown-key attic) provably has nothing to do.
+        # _deserialize_trusted bails to this slow path on ANY surprise.
+        if (fast := Serializer._deserialize_trusted(data, anchor, cls)) is not None {
+            return fast;
+        }
+    }
     mode = repair_mode();
     (data, repair_steps) = Serializer.repair(data, cls);
     try {
