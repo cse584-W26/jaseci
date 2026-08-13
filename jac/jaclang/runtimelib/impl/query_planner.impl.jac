@@ -258,12 +258,133 @@ impl resolve_query_prefix(mem: Session, q: GraphQuery, upto: int) -> list[UUID] 
 }
 
 
+glob _stream_class_cache: dict = {};
+
+
+def _stream_class_ok(module_name: str, type_name: str) -> bool {
+    key = (module_name, type_name);
+    if (hit := _stream_class_cache.get(key)) is not None {
+        return hit;
+    }
+    import from jaclang.runtimelib.serializer { Serializer }
+    import from jaclang.jac0core.constructs { Archetype }
+    cls = Serializer._get_class(module_name, type_name);
+    ok = (
+        cls is not None
+        and getattr(cls, '__jac_access__', None)
+            is getattr(Archetype, '__jac_access__', None)
+    );
+    _stream_class_cache[key] = ok;
+    return ok;
+}
+
+
+impl _try_stream(
+    mem: Session, q: GraphQuery, ids: list[UUID], local: dict[UUID, Anchor]
+) -> (list[Anchor] | None) {
+    # Zero-materialization path, gated on the compiler's stream proof: the
+    # current walker's class carries __jac_stream_fields__ ONLY if
+    # StreamProofPass proved every observation of chain results is trivial
+    # (jid / proven scalar fields / list plumbing / report). Ids already in
+    # the session (overlay) are served as their real resident anchors, so
+    # read-your-writes is preserved; everything else becomes a slim
+    # NodeAnchor + StreamNode built straight from the stored row - no
+    # archetype construction, no edge stubs, no adjacency fetch.
+    import os;
+    if os.environ.get('JAC_STREAM', '1').lower() in ('0', 'off', 'false') {
+        return None;
+    }
+    import from jaclang.jac0core.osp_kernel { _current_scope }
+    scope = _current_scope();
+    wlk = scope.wlk if scope is not None else None;
+    if wlk is None
+        or getattr(type(wlk), '__jac_stream_fields__', None) is None
+        or q.edges_only or q.from_visit {
+        return None;
+    }
+    store = mem.store;
+    if store is None or not hasattr(store, 'load_props') {
+        return None;
+    }
+    cq = compile_query(q, len(q.hops));
+    if cq.residual {
+        return None;   # residual predicates need materialized values
+    }
+    resident: dict = {};
+    need: list[UUID] = [];
+    for i in ids {
+        a = local.get(i) or mem.__mem__.get(i);
+        if a is not None {
+            resident[i] = a;
+        } elif i not in mem._deleted {
+            need.append(i);
+        }
+    }
+    mem.read_barrier();
+    rows = store.load_props(need) if need else {};
+    import from jaclang.runtimelib.serializer { Serializer }
+    import from jaclang.runtimelib.streamnode { StreamNode }
+    out: list[Anchor] = [];
+    for i in ids {
+        if (ra := resident.get(i)) is not None {
+            if ra.is_populated() and ra.archetype is not None {
+                out.append(ra);
+            }
+            continue;
+        }
+        row = rows.get(i);
+        if row is None or row.kind != 'NodeAnchor' {
+            continue;
+        }
+        arch_props = row.props.get('archetype');
+        if not isinstance(arch_props, dict) {
+            return None;   # unexpected row shape: whole query falls back
+        }
+        if not _stream_class_ok(row.arch_module, row.arch_type) {
+            # class overrides __jac_access__ (or is unknown): its access hook
+            # may read instance fields, which requires real materialization
+            return None;
+        }
+        anchor = NodeAnchor.__new__(NodeAnchor);
+        ad = anchor.__dict__;
+        ad['id'] = row.id;
+        ad['root'] = row.root_id;
+        ad['persistent'] = True;
+        ad['hash'] = 1;
+        ad['access'] = Serializer._deserialize_permission(
+            row.props.get('access')
+        );
+        ad['edges'] = [];
+        ad['version'] = 0;
+        ad['_row_version'] = row.version;
+        ad['_sn_arch_type'] = row.arch_type;
+        ad['archetype'] = StreamNode(arch_props, anchor);
+        out.append(anchor);
+    }
+    if _acl_gated() {
+        _prefetch_acl_roots(mem, out);
+        out = [
+            a
+            for a in out
+            if _acl_read_ok(a)
+        ];
+    }
+    if q.slc is not None {
+        out = out[q.slc];
+    }
+    return out;
+}
+
+
 impl resolve_query(mem: Session, q: GraphQuery) -> list[Anchor] {
     if not q.origin {
         return [];
     }
     (pairs, local) = _resolve_pairs(mem, q, len(q.hops));
     ids = _unique_nodes(pairs);
+    if (streamed := _try_stream(mem, q, ids, local)) is not None {
+        return streamed;
+    }
     out = _materialize_ids(mem, ids, local);
     if _acl_gated() {
         _prefetch_acl_roots(mem, out);

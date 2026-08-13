@@ -188,6 +188,9 @@ def get_ir_gen_sched(
         import from jaclang.compiler.passes.main.jsx_intrinsic_guard_pass {
             JsxIntrinsicGuardPass
         }
+        import from jaclang.compiler.passes.main.stream_proof_pass {
+            StreamProofPass
+        }
 
         import jaclang.compiler.symbol_utils;
         import jaclang.compiler.passes.main.layout_pass;
@@ -200,7 +203,8 @@ def get_ir_gen_sched(
             DeclImplMatchPass,
             SemanticAnalysisPass,
             SemDefMatchPass,
-            CFGBuildPass
+            CFGBuildPass,
+            StreamProofPass
         ];
         if gen_mtir {
             import from jaclang.compiler.passes.main.mtir_gen_pass { MTIRGenPass }

@@ -790,6 +790,43 @@ impl PgStore.load_full(ids: list[UUID]) -> dict[UUID, AnchorRow] {
 }
 
 
+impl PgStore.load_props(ids: list[UUID]) -> dict[UUID, AnchorRow] {
+    # Stream-path row fetch: props + identity only. No adjacency subquery
+    # (the stream proof guarantees .edges is never observed) and no src/dst
+    # (node rows only), which is most of load_full's buffer cost.
+    if not ids {
+        return {};
+    }
+    out: dict[UUID, AnchorRow] = {};
+    rows = self._run(
+        """
+        SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,
+               a.root_id, a.props, a.xmin::text
+        FROM anchors a WHERE a.id = ANY(CAST(:ids AS uuid[]))
+        """,
+        {'ids': [str(i) for i in ids]}
+    );
+    for r in rows {
+        raw_props = r[6];
+        props: dict = (
+            raw_props if isinstance(raw_props, dict) else json.loads(str(raw_props))
+        );
+        row = AnchorRow(
+            id=intern_uuid(r[0]),
+            kind=str(r[1]),
+            arch_type=str(r[2]),
+            arch_module=str(r[3]),
+            fingerprint=str(r[4]),
+            root_id=intern_uuid(r[5]) if r[5] else None,
+            props=props,
+            version=int(str(r[7]))
+        );
+        out[row.id] = row;
+    }
+    return out;
+}
+
+
 impl PgStore.upsert(rows_in: list[AnchorRow]) -> None {
     if not rows_in {
         return;

@@ -41,6 +41,11 @@ def _acl_read_ok(anchor: Anchor) -> bool;
 def _prefetch_acl_roots(mem: Session, anchors: list[Anchor]) -> None;
 
 
+def _try_stream(
+    mem: Session, q: GraphQuery, ids: list[UUID], local: dict[UUID, Anchor]
+) -> (list[Anchor] | None);
+
+
 def resolve_query(mem: Session, q: GraphQuery) -> list[Anchor];
 
 

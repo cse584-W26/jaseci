@@ -1537,6 +1537,24 @@ impl PyastGenPass.exit_archetype(nd: uni.Archetype) -> None {
             )
         );
     }
+    if (stream_fields := getattr(nd, 'stream_fields', None)) is not None {
+        # StreamProofPass approved this walker's chain results for the
+        # zero-materialization path; surface the proof to the runtime as a
+        # class attribute (same channel as __jac_async__).
+        body.insert(
+            0,
+            self.sync(
+                ast3.Assign(
+                    targets=[
+                        self.sync(
+                            ast3.Name(id='__jac_stream_fields__', ctx=ast3.Store())
+                        )
+                    ],
+                    value=self.sync(ast3.Constant(value=tuple(stream_fields)))
+                )
+            )
+        );
+    }
     if (sem_decorator := self._get_sem_decorator(nd)) {
         decorators.append(sem_decorator);
     }

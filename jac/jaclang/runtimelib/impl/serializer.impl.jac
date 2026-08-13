@@ -154,6 +154,53 @@ impl Serializer._serialize_value(
         return result;
     }
 
+    if isinstance(val, StreamNode) {
+        # Proof-gated stream fragment: identity from the slim anchor, field
+        # values straight from stored props. Scalars pass through; anything
+        # nested is round-tripped (deserialize -> serialize), which is by
+        # construction exactly what materializing and re-serializing would
+        # produce. Shares the (id, row_version) memo with the materialized
+        # path, so warm entries serve both.
+        an_s = val.__dict__['__jac__'];
+        ver_s = an_s.__dict__.get('_row_version');
+        frag_key_s = None;
+        if api_mode and not include_type and not ref_mode and _seen is None
+            and ver_s is not None {
+            frag_key_s = (an_s.id, ver_s);
+            if (hit := _frag_cache.get(frag_key_s)) is not None {
+                return hit;
+            }
+        }
+        out_s: dict = {
+            '_jac_type': an_s.__dict__.get('_sn_arch_type', ''),
+            '_jac_id': an_s.id.hex,
+            '_jac_archetype': 'node'
+        } if api_mode else {};
+        for (k, v) in val.__dict__['_sn_props'].items() {
+            if k.startswith('__') {
+                continue;
+            }
+            if v is None or type(v) in (str, int, float, bool) {
+                out_s[k] = v;
+            } else {
+                out_s[k] = Serializer._serialize_value(
+                    Serializer._deserialize_value(v),
+                    include_type,
+                    api_mode,
+                    ref_mode,
+                    _seen
+                );
+            }
+        }
+        if frag_key_s is not None {
+            if len(_frag_cache) > 200000 {
+                _frag_cache.clear();
+            }
+            _frag_cache[frag_key_s] = out_s;
+        }
+        return out_s;
+    }
+
     if isinstance(val, Archetype) {
         frag_key = None;
         if api_mode and not include_type and not ref_mode and _seen is None {
