@@ -320,6 +320,9 @@ impl Session.mark_dirty(anchor: Anchor) -> None {
     if anchor.id in self.__mem__ {
         self._dirty[anchor.id] = None;
         self._clean.discard(anchor.id);
+        # a mutated anchor no longer matches its stored row, so the
+        # (id, row_version) response-fragment memo must not serve it
+        anchor.__dict__.pop('_row_version', None);
     }
 }
 
@@ -914,6 +917,12 @@ impl Session._materialize(
         anchor.edges = edges;
     }
     self.__mem__[row.id] = anchor;
+    if row.version {
+        # row version (pg xmin) keys the response-fragment memo in the
+        # serializer; mark_dirty pops it the moment the anchor diverges from
+        # its stored row
+        anchor.__dict__['_row_version'] = row.version;
+    }
     # Freshly materialized from the store: clean by construction. Mutation is
     # tracked as it happens (Archetype.__setattr__ -> mark_dirty, plus the
     # edge attach/detach paths that mutate `edges` in place), so there is no

@@ -155,6 +155,23 @@ impl Serializer._serialize_value(
     }
 
     if isinstance(val, Archetype) {
+        frag_key = None;
+        if api_mode and not include_type and not ref_mode and _seen is None {
+            # Response-fragment memo: the api-mode fragment of a CLEAN anchor
+            # is a pure function of (anchor id, stored row version). The
+            # version is stashed by Session._materialize and popped by
+            # mark_dirty on any divergence, so a hit can only serve bytes the
+            # store itself would produce. Viewer-independent: ACL filtering
+            # happens before serialization, never inside the fragment.
+            an0 = val.__dict__.get('__jac__');
+            ver0 = an0.__dict__.get('_row_version') if an0 is not None else None;
+            if ver0 is not None {
+                frag_key = (an0.id, ver0);
+                if (hit := _frag_cache.get(frag_key)) is not None {
+                    return hit;
+                }
+            }
+        }
         if _seen is not None {
             jac_anchor = val?.__jac__;
             if jac_anchor {
@@ -194,8 +211,15 @@ impl Serializer._serialize_value(
                     else 'walker' if isinstance(val, WalkerArchetype) else 'archetype'
             };
         }
-        return result
+        out = result
             | Serializer._serialize_attrs(val, include_type, api_mode, ref_mode, _seen);
+        if frag_key is not None {
+            if len(_frag_cache) > 200000 {
+                _frag_cache.clear();
+            }
+            _frag_cache[frag_key] = out;
+        }
+        return out;
     }
 
     if val?.__dict__ {
@@ -875,7 +899,8 @@ impl Serializer._deserialize_access(data: object) -> Access {
     return access;
 }
 
-glob _trusted_plan_cache: dict = {};
+glob _trusted_plan_cache: dict = {},
+     _frag_cache: dict = {};
 
 
 def _bulk_fill_ok(cls: type, names: list) -> bool {
