@@ -350,9 +350,64 @@ impl PgStore._connect -> Any {
 }
 
 
+# JAC_PG_POOL=1: park the main wire connection at PgStore.close and hand it
+# to the next PgStore for the same DSN, instead of closing it. The serving
+# layer builds one Session (and so one PgStore) per request; without the
+# pool every request tears down its connection and the next one pays a
+# fresh backend fork + startup on the embedded cluster (~10-25ms measured).
+# Only the MAIN connection is pooled - side connections can carry LISTEN
+# state and are always closed for real. A parked connection is never in a
+# transaction (close() rolls back or discards it). Default off.
+def _pg_pool_enabled -> bool {
+    import os;
+    return os.environ.get('JAC_PG_POOL', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+
+def _make_lock -> Any {
+    import threading;
+    return threading.Lock();
+}
+
+
+glob _PG_POOL: bool = _pg_pool_enabled(),
+     _POOL_MAX = 4,
+     _pool_gate: Any = _make_lock(),
+     _conn_pool: dict[str, list] = {};
+
+
+def _pool_checkout(dsn: str) -> Any {
+    with _pool_gate {
+        conns = _conn_pool.get(dsn);
+        if conns {
+            return conns.pop();
+        }
+    }
+    return None;
+}
+
+
+def _pool_checkin(dsn: str, conn: Any) -> bool {
+    with _pool_gate {
+        conns = _conn_pool.setdefault(dsn, []);
+        if len(conns) < _POOL_MAX {
+            conns.append(conn);
+            return True;
+        }
+    }
+    return False;
+}
+
+
 impl PgStore._main -> Any {
     if self._conn is None {
-        self._conn = self._connect();
+        if _PG_POOL {
+            self._conn = _pool_checkout(self.conninfo.dsn());
+        }
+        if self._conn is None {
+            self._conn = self._connect();
+        }
     }
     return self._conn;
 }
@@ -1503,6 +1558,20 @@ impl PgStore.close -> None {
     with self._lock {
         parked = self._stop_listen_thread();
         self._listeners = [];
+        main_conn = self._conn;
+        if _PG_POOL and main_conn is not None {
+            reusable = not getattr(main_conn, '_closed', True);
+            if reusable and self._in_txn {
+                try {
+                    main_conn.run('ROLLBACK');
+                } except Exception {
+                    reusable = False;
+                }
+            }
+            if reusable and _pool_checkin(self.conninfo.dsn(), main_conn) {
+                self._conn = None;
+            }
+        }
         for c in [self._conn, self._side_conn] {
             if c is not None {
                 try {
