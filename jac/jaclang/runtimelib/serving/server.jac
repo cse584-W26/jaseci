@@ -1,6 +1,7 @@
 import asyncio;
 import inspect;
 import logging;
+import os;
 import threading;
 import from urllib.parse { unquote, urlsplit }
 import from jaclang.runtimelib.serving.app { ServingApp }
@@ -21,6 +22,7 @@ glob _logger: logging.Logger = logging.getLogger(
          "jaclang.runtimelib.serving.server"
      ),
      _access_logger: logging.Logger = logging.getLogger(ACCESS_LOGGER_NAME),
+     _ACCESS_LOG_ON: bool = os.environ.get('JAC_ACCESS_LOG', '1') != '0',
      MAX_HEADER_COUNT: int = 100,
      MAX_BODY_BYTES: int = 104857600,
      HEADER_TIMEOUT_SECONDS: float = 30.0,
@@ -268,11 +270,13 @@ obj ServingServer {
             } finally {
                 self._busy.discard(task);
             }
-            _access_logger.info(
-                f'{request.client_host or "-"} - '
-                f'"{request.method} {request.url.path} {http_version}" '
-                f'{response.status_code}'
-            );
+            if _ACCESS_LOG_ON {
+                _access_logger.info(
+                    f'{request.client_host or "-"} - '
+                    f'"{request.method} {request.url.path} {http_version}" '
+                    f'{response.status_code}'
+                );
+            }
             if not wrote {
                 return;
             }
@@ -415,10 +419,12 @@ obj ServingServer {
         request: Request, reader: asyncio.StreamReader, writer: asyncio.StreamWriter
     ) {
         if not self._ws_origin_allowed(request) {
-            _access_logger.info(
-                f'{request.client_host or "-"} - '
-                f'"WS {request.url.path}" 403 (cross-origin refused)'
-            );
+            if _ACCESS_LOG_ON {
+                _access_logger.info(
+                    f'{request.client_host or "-"} - '
+                    f'"WS {request.url.path}" 403 (cross-origin refused)'
+                );
+            }
             await self._bare_error(writer, 403, 'Forbidden');
             return;
         }
@@ -428,9 +434,11 @@ obj ServingServer {
             await self._bare_error(writer, 404, 'Not Found');
             return;
         }
-        _access_logger.info(
-            f'{request.client_host or "-"} - "WS {request.url.path}" 101'
-        );
+        if _ACCESS_LOG_ON {
+            _access_logger.info(
+                f'{request.client_host or "-"} - "WS {request.url.path}" 101'
+            );
+        }
         ws = WebSocket(
             reader=reader,
             writer=writer,
