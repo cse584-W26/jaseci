@@ -94,6 +94,7 @@ obj Session {
     def get(id: UUID) -> (Anchor | None);
     def put(anchor: Anchor) -> None;
     def mark_dirty(anchor: Anchor) -> None;
+    def load_edges(anchor: Anchor) -> list;
     def delete(id: UUID) -> None;
     def close -> None;
     def `has(id: UUID) -> bool;

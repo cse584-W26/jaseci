@@ -666,6 +666,35 @@ impl PgStore.txn_isolation -> (TxnIsolation | None) {
 }
 
 
+impl PgStore.edge_ids_for(node_id: UUID) -> list[UUID] {
+    # Adjacency for one node, in edge order. Two indexed lookups
+    # (idx_anchors_src / idx_anchors_dst) unioned - deliberately not an
+    # `OR` across both columns, which cannot use a single index.
+    rows = self._run(
+        """
+        SELECT id FROM (
+            SELECT id, seq FROM anchors
+             WHERE kind = 'EdgeAnchor' AND src = CAST(:nid AS uuid)
+            UNION ALL
+            SELECT id, seq FROM anchors
+             WHERE kind = 'EdgeAnchor' AND dst = CAST(:nid AS uuid)
+        ) e ORDER BY e.seq, e.id
+        """,
+        {'nid': str(node_id)}
+    );
+    out: list[UUID] = [];
+    seen: set = set();
+    for r in rows {
+        eid = UUID(str(r[0]));
+        if eid not in seen {
+            seen.add(eid);
+            out.append(eid);
+        }
+    }
+    return out;
+}
+
+
 impl PgStore.load_full(ids: list[UUID]) -> dict[UUID, AnchorRow] {
     if not ids {
         return {};
@@ -675,10 +704,10 @@ impl PgStore.load_full(ids: list[UUID]) -> dict[UUID, AnchorRow] {
         """
         SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,
                a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text,
-               CASE WHEN a.kind = 'NodeAnchor' THEN
-                   (SELECT string_agg(e.id::text, ',' ORDER BY e.seq, e.id)
-                      FROM anchors e WHERE e.src = a.id OR e.dst = a.id)
-               END
+               -- adjacency is lazy (Session.load_edges / edge_ids_for):
+               -- this correlated subquery fired for every node row and cost
+               -- ~11x the row fetch itself, for an array most reads discard.
+               NULL
         FROM anchors a WHERE a.id = ANY(CAST(:ids AS uuid[]))
         """,
         {'ids': [str(i) for i in ids]}
