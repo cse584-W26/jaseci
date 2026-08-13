@@ -185,8 +185,8 @@ impl EdgeAnchor.detach -> None {
     import from jaclang.jac0core.osp_graph_sv { sv_forget_edge }
     sv_forget_edge(self);
 
-    import from jaclang.jac0core.runtime { JacRuntime }
-    ctx = JacRuntime.exec_ctx;
+    import from jaclang.jac0core.runtime { JacRuntimeInterface }
+    ctx = JacRuntimeInterface.peek_context();
     if ctx is not None {
         # remove_edge mutates each endpoint's `edges` list in place, which
         # bypasses Archetype.__setattr__; mark both ends so the endpoint rows
@@ -266,8 +266,8 @@ impl Archetype.__setattr__(name: str, value: any) -> None {
     if an is None or not an.persistent {
         return;
     }
-    import from jaclang.jac0core.runtime { JacRuntime }
-    ctx = JacRuntime.exec_ctx;
+    import from jaclang.jac0core.runtime { JacRuntimeInterface }
+    ctx = JacRuntimeInterface.peek_context();
     if ctx is not None {
         md = ctx.mem?.mark_dirty;
         if md is not None {

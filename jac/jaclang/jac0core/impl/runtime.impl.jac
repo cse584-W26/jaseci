@@ -405,6 +405,15 @@ impl JacContext.get_context -> ExecutionContext {
     return ctx;
 }
 
+impl JacContext.peek_context -> (ExecutionContext | None) {
+    # Non-creating variant of get_context for hot paths (dirty marking):
+    # the request-scoped contextvar is authoritative on the served path -
+    # JacRuntime.exec_ctx there is a DIFFERENT context with a different
+    # session, and marking into it silently drops writes at flush.
+    ctx = _request_context.get();
+    return ctx if ctx is not None else JacRuntime.exec_ctx;
+}
+
 impl JacPersistence.commit(anchor: Anchor | Archetype | None = None) -> None {
     if isinstance(anchor, Archetype) {
         anchor = anchor.__jac__;
@@ -1073,7 +1082,7 @@ impl JacGraph.build_edge(
         # Archetype.__setattr__ and would otherwise leave an
         # already-persistent endpoint unmarked. Mark both ends explicitly so
         # change tracking does not depend on re-hashing every anchor.
-        _ctx = JacRuntime.exec_ctx;
+        _ctx = JacRuntimeInterface.peek_context();
         if _ctx is not None {
             _md = _ctx.mem?.mark_dirty;
             if _md is not None {
