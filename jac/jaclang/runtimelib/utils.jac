@@ -72,3 +72,34 @@ def triple_arch(triple: str) -> str {
 def get_name(target_path: (str | None) = None) -> (str | None);
 
 def get_db_path(base_path: str, target_path: (str | None) = None) -> (str | None);
+
+
+def _parse_ro_walkers -> frozenset {
+    # JAC_RO_WALKERS="load_feed,load_feed_chain": walkers declared read-only.
+    # A request spawning one of them runs its store transaction in
+    # SNAPSHOT_READ_ONLY isolation and skips the commit funnel; any write
+    # attempt raises ReadOnlyWalkerError (fail loud, never silently drop).
+    # Parsed once at boot. Empty/unset = feature off (stock).
+    import os;
+    raw = os.environ.get('JAC_RO_WALKERS', '');
+    return frozenset(t.strip() for t in raw.split(',') if t.strip());
+}
+
+
+glob RO_WALKERS: frozenset = _parse_ro_walkers();
+
+
+def request_read_only -> bool {
+    # True only when this request was stamped read-only (walker name listed
+    # in JAC_RO_WALKERS at spawn time). No global read-only mode on this
+    # runtime. Outside a request context: False (treated as a write context).
+    if not RO_WALKERS {
+        return False;
+    }
+    try {
+        import from jaclang { JacRuntimeInterface as Jac }
+        return bool(Jac.get_context().request_read_only);
+    } except Exception {
+        return False;
+    }
+}

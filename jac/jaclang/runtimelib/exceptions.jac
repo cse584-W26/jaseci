@@ -13,6 +13,25 @@ obj MissingAnchorError(ValueError) {
 }
 
 
+obj ReadOnlyWalkerError(Exception) {
+    has op: str = '',
+        detail: str = '';
+
+    def postinit {
+        super.init(self.message());
+    }
+
+    def message -> str {
+        return (
+            f"read-only walker (JAC_RO_WALKERS) attempted a write "
+            f"({self.op}): {self.detail} - writes in RO requests are "
+            "refused, not dropped; remove the walker from JAC_RO_WALKERS "
+            "or stop writing"
+        );
+    }
+}
+
+
 obj WriteConflict(Exception) {
     has anchor_id: UUID,
         expected_version: int = -1,

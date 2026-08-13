@@ -522,6 +522,10 @@ impl ExecutionManager.spawn_walker_sync(
         } else {
             target_node = ctx.get_root();
         }
+        import from jaclang.runtimelib.utils { RO_WALKERS }
+        if walker_cls.__name__ in RO_WALKERS {
+            ctx.request_read_only = True;
+        }
         result = await asyncio.to_thread(Jac.spawn, `walker, target_node);
 
         if iscoroutine(result) {
@@ -555,6 +559,10 @@ impl ExecutionManager.spawn_walker_async(
             }
         } else {
             target_node = ctx.get_root();
+        }
+        import from jaclang.runtimelib.utils { RO_WALKERS }
+        if walker_cls.__name__ in RO_WALKERS {
+            ctx.request_read_only = True;
         }
         spawn_result = Jac.spawn(`walker, target_node);
         if iscoroutine(spawn_result) {

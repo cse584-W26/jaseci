@@ -8,6 +8,7 @@ import from uuid { UUID }
 import from jaclang.jac0core.archetype { Anchor, EdgeAnchor, NodeAnchor, Root }
 import from jaclang.runtimelib.dbcatalog { DbKind, MAINTENANCE_DB, SCRATCH_PREFIX }
 import from jaclang.runtimelib.pgembed { PgRuntime }
+import from jaclang.runtimelib.exceptions { ReadOnlyWalkerError }
 import from jaclang.runtimelib.store {
     AnchorRow,
     ConnInfo,
@@ -15,6 +16,7 @@ import from jaclang.runtimelib.store {
     Store,
     TxnIsolation
 }
+import from jaclang.runtimelib.utils { request_read_only }
 
 glob logger = logging.getLogger(__name__),
      MAX_RETRIES = 5,

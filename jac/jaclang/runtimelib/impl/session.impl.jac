@@ -306,7 +306,19 @@ impl Session.get(id: UUID) -> (Anchor | None) {
 }
 
 
+def _ro_name_of(anchor: Anchor) -> str {
+    arch = anchor.archetype;
+    return type(arch).__name__ if arch is not None else type(anchor).__name__;
+}
+
+
 impl Session.put(anchor: Anchor) -> None {
+    if request_read_only() {
+        raise ReadOnlyWalkerError(
+            op='put',
+            detail=f"attempted to persist {_ro_name_of(anchor)} {anchor.id}"
+        );
+    }
     with self._lock {
         self.__mem__[anchor.id] = anchor;
         self._dirty[anchor.id] = None;
@@ -318,6 +330,12 @@ impl Session.put(anchor: Anchor) -> None {
 
 impl Session.mark_dirty(anchor: Anchor) -> None {
     if anchor.id in self.__mem__ {
+        if request_read_only() {
+            raise ReadOnlyWalkerError(
+                op='field_write',
+                detail=f"wrote a field on {_ro_name_of(anchor)} {anchor.id}"
+            );
+        }
         self._dirty[anchor.id] = None;
         self._clean.discard(anchor.id);
         # a mutated anchor no longer matches its stored row, so the
@@ -328,6 +346,11 @@ impl Session.mark_dirty(anchor: Anchor) -> None {
 
 
 impl Session.delete(id: UUID) -> None {
+    if request_read_only() {
+        raise ReadOnlyWalkerError(
+            op='delete', detail=f"attempted to delete anchor {id}"
+        );
+    }
     with self._lock {
         self.__mem__.pop(id, None);
         self._dirty.pop(id, None);
@@ -459,6 +482,32 @@ impl Session.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
 
 
 impl Session.commit(anchor: (Anchor | None) = None) -> None {
+    if request_read_only() {
+        # JAC_RO_WALKERS request: skip the commit funnel (no flush scan, no
+        # durability barrier). Dirty state reaching here means a write slipped
+        # past the eager put/mark_dirty/delete guards - refuse, never drop.
+        with self._lock {
+            if self._dirty or self._deleted {
+                raise ReadOnlyWalkerError(
+                    op='commit',
+                    detail=(
+                        f"{len(self._dirty)} dirty / {len(self._deleted)} "
+                        "deleted anchors reached commit in a read-only request"
+                    )
+                );
+            }
+            if self.store is not None
+                and self.store.txn_isolation()
+                    is TxnIsolation.SNAPSHOT_READ_ONLY {
+                # Close only our own read snapshot; a SERIALIZABLE txn here
+                # belongs to a concurrent write request - leave it alone.
+                self.store.commit();
+                self._drop_snapshot_reads();
+            }
+        }
+        self._fire_on_commit();
+        return;
+    }
     import from time { perf_counter }
     _t0 = perf_counter();
     with self._lock {
@@ -598,6 +647,9 @@ impl Session._fire_on_commit -> None {
 
 
 impl Session._txn_isolation -> TxnIsolation {
+    if request_read_only() {
+        return TxnIsolation.SNAPSHOT_READ_ONLY;
+    }
     if self._read_scopes > 0
         and self._active_units == 0
         and not self._dirty
@@ -639,6 +691,20 @@ impl Session._ensure_txn -> None {
             self.store.commit();
             self._drop_snapshot_reads();
             self.store.begin(TxnIsolation.SERIALIZABLE);
+        }
+        if wanted is TxnIsolation.SNAPSHOT_READ_ONLY
+            and self.store.txn_isolation() is TxnIsolation.SERIALIZABLE
+            and not self._dirty
+            and not self._deleted
+            and not self._txn_changed {
+            # RO-stamped request found a clean SERIALIZABLE txn (e.g. the
+            # pre-stamp user-root fetch opened it): close it and read under a
+            # READ ONLY snapshot instead. Anchors read under SERIALIZABLE are
+            # not snapshot reads, so they stay cached. A txn with pending
+            # writes (_txn_changed) belongs to a concurrent write request and
+            # is left untouched.
+            self.store.commit();
+            self.store.begin(TxnIsolation.SNAPSHOT_READ_ONLY);
         }
     }
 }

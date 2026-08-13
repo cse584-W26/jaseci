@@ -26,6 +26,7 @@ obj ExecutionContext {
         pending_effects: list[Callable] = [],
         read_versions: dict[UUID, int] = {},
         _commit_ms: float = 0.0,
+        request_read_only: bool = False,
         custom: any = MISSING,
         call_state: ContextVar[CallState] = ContextVar('call_state'),
         base_path_dir: (str | None) = None,

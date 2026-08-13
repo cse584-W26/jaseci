@@ -262,9 +262,26 @@ impl Archetype.postinit -> None { }
 
 impl Archetype.__setattr__(name: str, value: any) -> None {
     object.__setattr__(self, name, value);
+    if name == '__jac__' {
+        # Anchor attach (deserialize tail), not a data write.
+        return;
+    }
     an = self.__dict__.get('__jac__');
     if an is None or not an.persistent {
         return;
+    }
+    import from jaclang.runtimelib.utils { request_read_only }
+    if request_read_only() {
+        # JAC_RO_WALKERS: a field write on a persistent archetype inside a
+        # read-only request is refused eagerly, never silently dropped. The
+        # check lives HERE rather than at commit because an RO request skips
+        # the commit flush scan by design, so this is the only point that
+        # still sees the write.
+        import from jaclang.runtimelib.exceptions { ReadOnlyWalkerError }
+        raise ReadOnlyWalkerError(
+            op='field_write',
+            detail=f"wrote field {name!r} on {type(self).__name__} {an.id}"
+        );
     }
     import from jaclang.jac0core.runtime { JacRuntimeInterface }
     ctx = JacRuntimeInterface.peek_context();
