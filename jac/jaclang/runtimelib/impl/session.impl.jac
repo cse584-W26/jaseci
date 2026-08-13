@@ -904,7 +904,6 @@ impl Session._materialize(
     # is about to write, so an unchanged dirty-marked anchor is skipped.
     self._flushed_hash.pop(row.id, None);
     self._clean.add(row.id);
-    anchor.hash = 0;
     if self.store is not None
         and self.store.txn_isolation() is TxnIsolation.SNAPSHOT_READ_ONLY {
         self._snapshot_reads.add(row.id);
