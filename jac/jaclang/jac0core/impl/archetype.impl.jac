@@ -57,24 +57,6 @@ impl Anchor.__getattr__(name: str) -> object {
         }
         return getattr(self, name);
     }
-    if name == 'edges' and isinstance(self, NodeAnchor) {
-        # Lazy adjacency: populated nodes carry no `edges` until something
-        # reads it. Fetch this node's incident edges once, then cache in the
-        # instance dict so subsequent reads are plain attribute lookups.
-        import from jaclang { JacRuntimeInterface as Jac }
-        loaded: list = [];
-        try {
-            ctx = Jac.get_context();
-            loader = ctx.mem?.load_edges;
-            if loader is not None {
-                loaded = loader(self);
-            }
-        } except Exception as e {
-            logger.warning(f"lazy edge load failed for {self.id}: {e}");
-        }
-        object.__setattr__(self, 'edges', loaded);
-        return loaded;
-    }
     raise AttributeError(
         f"'{self.__class__.__name__} object has not attribute {name}'"
     );
@@ -147,13 +129,8 @@ impl Anchor.__eq__(other: object) -> bool {
 }
 
 impl NodeAnchor.is_populated -> bool {
-    # `edges` is lazily loaded (see NodeAnchor.__getattr__): a node whose
-    # archetype is loaded is fully usable, and its adjacency is fetched only
-    # when something actually reads it. Requiring 'edges' here would force
-    # every row load to also fetch that node's incident edges - measured at
-    # 11x the cost of the row fetch itself on a 2550-node read, for an array
-    # the common read path never touches.
-    return 'archetype' in self.__dict__;
+    d = self.__dict__;
+    return 'edges' in d and 'archetype' in d;
 }
 
 impl EdgeAnchor.is_populated -> bool {

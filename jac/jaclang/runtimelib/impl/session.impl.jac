@@ -316,34 +316,6 @@ impl Session.put(anchor: Anchor) -> None {
 }
 
 
-impl Session.load_edges(anchor: Anchor) -> list {
-    # Lazy adjacency fetch for one node (NodeAnchor.__getattr__ calls this the
-    # first time the edge list is read). Kept off the bulk row load because the
-    # common read path never touches adjacency.
-    if self.store is None {
-        return [];
-    }
-    ids: list = [];
-    try {
-        ids = self.store.edge_ids_for(anchor.id);
-    } except Exception as e {
-        logger.warning(f"edge id fetch failed for {anchor.id}: {e}");
-        return [];
-    }
-    out: list = [];
-    for eid in ids {
-        if eid in self._deleted {
-            continue;
-        }
-        if (stub := Serializer._id_to_stub(EdgeAnchor, str(eid))) is not None
-            and isinstance(stub, EdgeAnchor) {
-            out.append(stub);
-        }
-    }
-    return out;
-}
-
-
 impl Session.mark_dirty(anchor: Anchor) -> None {
     if anchor.id in self.__mem__ {
         self._dirty[anchor.id] = None;
@@ -908,24 +880,20 @@ impl Session._materialize(
     }
     anchor: Anchor = got;
     if isinstance(anchor, NodeAnchor) and self.store is not None {
-        # Adjacency is lazy (NodeAnchor.__getattr__ -> Session.load_edges).
-        # Only pre-populate when the row already carried edge ids, so we
-        # never pay a second round-trip for something we were handed.
-        if edge_ids is not None {
-            live = [
-                i
-                for i in edge_ids
-                if i not in self._deleted
-            ];
-            edges = [];
-            for eid in live {
-                if (stub := Serializer._id_to_stub(EdgeAnchor, str(eid))) is not None
-                    and isinstance(stub, EdgeAnchor) {
-                    edges.append(stub);
-                }
+        adj = edge_ids if edge_ids is not None else [];
+        live = [
+            i
+            for i in adj
+            if i not in self._deleted
+        ];
+        edges = [];
+        for eid in live {
+            if (stub := Serializer._id_to_stub(EdgeAnchor, str(eid))) is not None
+                and isinstance(stub, EdgeAnchor) {
+                edges.append(stub);
             }
-            anchor.edges = edges;
         }
+        anchor.edges = edges;
     }
     self.__mem__[row.id] = anchor;
     # Freshly materialized from the store: clean by construction. Mutation is

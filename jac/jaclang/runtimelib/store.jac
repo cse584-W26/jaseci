@@ -94,7 +94,6 @@ obj Store {
     def in_txn -> bool abst;
     def txn_isolation -> (TxnIsolation | None) abst;
     def load_full(ids: list[UUID]) -> dict[UUID, AnchorRow] abst;
-    def edge_ids_for(node_id: UUID) -> list[UUID] abst;
     def upsert(rows_in: list[AnchorRow]) -> None abst;
     def delete(ids: list[UUID]) -> None abst;
     def existing(ids: list[UUID]) -> set[UUID] abst;

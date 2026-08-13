@@ -1069,7 +1069,7 @@ impl JacGraph.build_edge(
         );
         source.edges.append(eanch);
         target.edges.append(eanch);
-        # Appending to the anchor's edge list mutates it in place, so it never reaches
+        # `.edges` is a list mutation on the anchor, so it never reaches
         # Archetype.__setattr__ and would otherwise leave an
         # already-persistent endpoint unmarked. Mark both ends explicitly so
         # change tracking does not depend on re-hashing every anchor.
