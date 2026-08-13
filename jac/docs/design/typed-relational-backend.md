@@ -200,12 +200,30 @@ shipped as text, keyed by (id, xmin) into the existing fragment memo) and
 Python never parses props at all - estimated −15-19 ms, schema-neutral,
 no migration story. That is the next lever, ahead of the rewrite.
 
-Verdict: the typed relational backend remains the right *architectural*
-endgame - and the paper's best story stands (the language's declarations
-derive the expert schema) - but as an engineering priority it is now
-third, behind DB-side fragment projection and per-row ACL batching. It
-buys 1.4x on today's runtime at the cost of the full migration/
-polymorphism/id-directory scope below.
+Verdict against hand-tuned PG: 1.4x, punt. **Decision (same day): GO -
+because the actual research target is the ORM bar, not the hand-tuned
+app.** Measured on seed-clean data, same session: SQLAlchemy serves the
+feed at **server p50 30.2 ms** (wall 42.5). Jac is at 96. The relational
+program reaches that bar only as a package - tables alone land at ~67:
+
+| phase | mechanism | est. p50 after |
+|---|---|---|
+| today | streaming runtime (shipped) | 96 |
+| **R1: typed read tables** | per-node-archetype tables derived from the registry, trigger-maintained from `anchors` in the same txn (write path untouched); stream fragment fetch reads typed columns | ~78 |
+| **R2: SQL fragment assembly** | DB emits the (id, xmin)-keyed response fragment as text from typed columns; Python stops parsing props and building fragment dicts entirely | ~60 |
+| **R3: edge tables + join traversal** | per-edge-type tables with FK endpoints; chain compiles to joins (floor B physics: 8.7 ms measured) | ~50 |
+| **R4: SQL-side ACL for streamed reads** | owner/all-grant predicate folded into the fragment query; per-row Python ACL + Permission objects disappear from the read path | **~33-38** |
+| residual | auth, txn, sort/dedup, envelope encode, HTTP, GC | floor ~30 |
+
+R1+R2 need no migration story (anchors stays source of truth; mirrors are
+derived state, rebuildable). R3 is where the real schema commitment
+starts (untyped-hop UNIONs, id directory). R4 must preserve
+check_access_level semantics exactly - fold ONLY the provable fast paths
+(all-grant, owner-match) and fall back per-row otherwise.
+
+Sequencing note: R1's trigger-maintained mirrors double row-write cost;
+write ops measured today at 1.8-4.3 ms have ~2x headroom against the
+SQLAlchemy write bar before that matters.
 
 ## Interim steps that don't need the full design
 
