@@ -11,13 +11,38 @@ impl Serializer._serialize_attrs(
     ref_mode: bool = False,
     _seen: (tuple[set, set] | None) = None
 ) -> dict[str, object] {
-    result = {
-        a: Serializer._serialize_value(
-            getattr(`obj, a), include_type, api_mode, ref_mode, _seen
-        )
-        for a in dir(`obj)
-        if not a.startswith('_') and not callable(getattr(`obj, a, None))
-    };
+    plan = emit_plan(type(`obj));
+    if plan {
+        # Typed emit-plan: statically-scalar fields (and lists of scalars)
+        # skip the recursive _serialize_value dispatch behind a runtime
+        # re-guard that falls back, keeping output value-identical. Replaces
+        # the per-object dir() scan + isinstance ladder.
+        result = {};
+        for (a, kind) in plan {
+            v = getattr(`obj, a);
+            if kind == 1 and (v is None or type(v) in (str, int, float, bool)) {
+                result[a] = v;
+            } elif (
+                kind == 2
+                and type(v) is list
+                and all(type(x) in (str, int, float, bool) for x in v)
+            ) {
+                result[a] = v;
+            } else {
+                result[a] = Serializer._serialize_value(
+                    v, include_type, api_mode, ref_mode, _seen
+                );
+            }
+        }
+    } else {
+        result = {
+            a: Serializer._serialize_value(
+                getattr(`obj, a), include_type, api_mode, ref_mode, _seen
+            )
+            for a in dir(`obj)
+            if not a.startswith('_') and not callable(getattr(`obj, a, None))
+        };
+    }
 
     if include_type and not api_mode {
         if hasattr(type(`obj), '__jac_schema__') {

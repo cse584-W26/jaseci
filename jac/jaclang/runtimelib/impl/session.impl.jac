@@ -241,6 +241,7 @@ impl Session.postinit -> None {
     self._dirty = {};
     self._deleted = set();
     self._flushed_hash = {};
+    self._clean = set();
     self._on_commit = [];
     self._txn_changed = set();
     self._runtime = None;
@@ -309,6 +310,7 @@ impl Session.put(anchor: Anchor) -> None {
     with self._lock {
         self.__mem__[anchor.id] = anchor;
         self._dirty[anchor.id] = None;
+        self._clean.discard(anchor.id);
         self._deleted.discard(anchor.id);
     }
 }
@@ -317,6 +319,7 @@ impl Session.put(anchor: Anchor) -> None {
 impl Session.mark_dirty(anchor: Anchor) -> None {
     if anchor.id in self.__mem__ {
         self._dirty[anchor.id] = None;
+        self._clean.discard(anchor.id);
     }
 }
 
@@ -326,6 +329,7 @@ impl Session.delete(id: UUID) -> None {
         self.__mem__.pop(id, None);
         self._dirty.pop(id, None);
         self._flushed_hash.pop(id, None);
+        self._clean.discard(id);
         self._deleted.add(id);
     }
 }
@@ -490,20 +494,14 @@ impl Session.abort -> None {
 
 
 impl Session._evict_uncommitted -> None {
-    import from jaclang.runtimelib.serializer { Serializer }
     for (id, anchor) in list(self.__mem__.items()) {
         if not anchor.persistent or not anchor.is_populated() {
             continue;
         }
-        known = self._flushed_hash.get(id);
-        dirty = known is None;
-        if not dirty {
-            try {
-                dirty = Serializer._compute_hash(anchor) != known;
-            } except Exception {
-                dirty = True;
-            }
-        }
+        # Tracked-clean anchors (materialized from the store and never
+        # mutated since) can stay; anything marked dirty, or whose state we
+        # cannot vouch for, is evicted so the next read re-fetches truth.
+        dirty = id in self._dirty or id not in self._clean;
         if dirty {
             if isinstance(anchor, EdgeAnchor) {
                 import from jaclang.jac0core.osp_graph_sv { sv_forget_edge }
@@ -511,6 +509,7 @@ impl Session._evict_uncommitted -> None {
             }
             self.__mem__.pop(id, None);
             self._flushed_hash.pop(id, None);
+            self._clean.discard(id);
         }
     }
 }
@@ -714,6 +713,7 @@ impl Session._recover_conflict -> None {
     for id in list(self._txn_changed) {
         if id in self.__mem__ {
             self._flushed_hash.pop(id, None);
+            self._clean.discard(id);
             self._dirty[id] = None;
         } else {
             self._deleted.add(id);
@@ -775,6 +775,13 @@ impl Session._flush_locked(full: bool) -> None {
             if anchor is None or not anchor.persistent or not anchor.is_populated() {
                 continue;
             }
+            # Tracked-clean: materialized from the store and untouched since
+            # (mutation marks dirty at the point of mutation). Nothing to
+            # write, and no need to serialize+hash it to find that out - this
+            # is what makes a full flush O(mutated) instead of O(resident).
+            if id not in self._dirty and id in self._clean {
+                continue;
+            }
             h = _persist_hash(anchor);
             if h != 0 and self._flushed_hash.get(id) == h and id not in self._dirty {
                 continue;
@@ -795,6 +802,7 @@ impl Session._flush_locked(full: bool) -> None {
             for (anchor, h) in pending {
                 self._flushed_hash[anchor.id] = h;
                 anchor.hash = h;
+                self._clean.add(anchor.id);
                 self._txn_changed.add(anchor.id);
             }
         }
@@ -888,8 +896,15 @@ impl Session._materialize(
         anchor.edges = edges;
     }
     self.__mem__[row.id] = anchor;
-    self._flushed_hash[row.id] = _persist_hash(anchor);
-    anchor.hash = self._flushed_hash[row.id];
+    # Freshly materialized from the store: clean by construction. Mutation is
+    # tracked as it happens (Archetype.__setattr__ -> mark_dirty, plus the
+    # edge attach/detach paths that mutate `edges` in place), so there is no
+    # need to serialize+hash every anchor on the read path just to have a
+    # baseline to diff against later. The flush still hashes the anchors it
+    # is about to write, so an unchanged dirty-marked anchor is skipped.
+    self._flushed_hash.pop(row.id, None);
+    self._clean.add(row.id);
+    anchor.hash = 0;
     if self.store is not None
         and self.store.txn_isolation() is TxnIsolation.SNAPSHOT_READ_ONLY {
         self._snapshot_reads.add(row.id);
@@ -939,6 +954,7 @@ impl Session.close -> None {
     self._dirty.clear();
     self._deleted.clear();
     self._flushed_hash.clear();
+    self._clean.clear();
     import from jaclang.jac0core.osp_graph_sv { sv_store_closed }
     sv_store_closed(self);
 }

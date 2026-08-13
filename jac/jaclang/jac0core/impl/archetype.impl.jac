@@ -188,6 +188,17 @@ impl EdgeAnchor.detach -> None {
     import from jaclang.jac0core.runtime { JacRuntime }
     ctx = JacRuntime.exec_ctx;
     if ctx is not None {
+        # remove_edge mutates each endpoint's `edges` list in place, which
+        # bypasses Archetype.__setattr__; mark both ends so the endpoint rows
+        # are rewritten without relying on a full re-hash of every anchor.
+        md = ctx.mem?.mark_dirty;
+        if md is not None {
+            for end in (self.source, self.target) {
+                if end is not None and end.persistent {
+                    md(end);
+                }
+            }
+        }
         ctx.mem.delete(self.id);
     }
 }

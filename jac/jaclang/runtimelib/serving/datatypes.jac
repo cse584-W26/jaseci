@@ -279,7 +279,15 @@ class JSONResponse(Response) {
     }
 
     def body_bytes(self: JSONResponse) -> bytes {
-        return dumps(self.content, default=_json_default).encode('utf-8');
+        # orjson: C-speed single-pass encode (UUID/datetime handled by the
+        # str() default, matching stdlib). Falls back to stdlib json if the
+        # optional dependency is absent, keeping the zero-dep story.
+        try {
+            import orjson;
+            return orjson.dumps(self.content, default=_json_default);
+        } except ImportError {
+            return dumps(self.content, default=_json_default).encode('utf-8');
+        }
     }
 }
 

@@ -2,7 +2,38 @@ import sys;
 import from dataclasses { fields, is_dataclass }
 import from typing { cast }
 
-glob _cache: dict[type, dict[str, object]] = {};
+glob _cache: dict[type, dict[str, object]] = {},
+     _names_cache: dict[type, tuple] = {},
+     _plan_cache: dict[type, tuple] = {};
+
+
+# emit_plan kinds: 0 = full recursive dispatch, 1 = scalar passthrough
+# (str/int/float/bool/None), 2 = list-of-scalar passthrough. Classification
+# is static (declared types); every fast path re-guards the runtime value
+# and falls back to dispatch, so output is value-identical.
+def _classify(hint: object) -> int {
+    import from typing { get_args, get_origin, Union }
+    import from types { NoneType, UnionType }
+    if hint in (str, int, float, bool) {
+        return 1;
+    }
+    origin = get_origin(hint);
+    if origin in (Union, UnionType) {
+        args = set(get_args(hint));
+        args.discard(NoneType);
+        if args and all(a in (str, int, float, bool) for a in args) {
+            return 1;
+        }
+        return 0;
+    }
+    if origin is list {
+        a = get_args(hint);
+        if len(a) == 1 and a[0] in (str, int, float, bool) {
+            return 2;
+        }
+    }
+    return 0;
+}
 
 def _resolve_hints(cls: type) -> dict[str, object] {
     hints: dict[str, object] = {};
@@ -73,10 +104,42 @@ impl warm(cls: type) -> None {
     }
 }
 
+impl field_names(cls: type) -> tuple {
+    if (cached := _names_cache.get(cls)) is not None {
+        return cached;
+    }
+    names = tuple(
+        f.name for f in fields(cls) if not f.name.startswith('_')
+    ) if is_dataclass(cls) else ();
+    _names_cache[cls] = names;
+    return names;
+}
+
+impl emit_plan(cls: type) -> tuple {
+    if (cached := _plan_cache.get(cls)) is not None {
+        return cached;
+    }
+    names = field_names(cls);
+    if not names {
+        _plan_cache[cls] = ();
+        return ();
+    }
+    types_map = get_field_types(cls);
+    plan = tuple(
+        (n, _classify(types_map.get(n)) if n in types_map else 0) for n in names
+    );
+    _plan_cache[cls] = plan;
+    return plan;
+}
+
 impl invalidate(cls: type) -> None {
     _cache.pop(cls, None);
+    _names_cache.pop(cls, None);
+    _plan_cache.pop(cls, None);
 }
 
 impl clear -> None {
     _cache.clear();
+    _names_cache.clear();
+    _plan_cache.clear();
 }

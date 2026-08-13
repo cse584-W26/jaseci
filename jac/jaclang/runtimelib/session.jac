@@ -77,6 +77,7 @@ obj Session {
         _dirty: dict[UUID, None] postinit,
         _deleted: set[UUID] postinit,
         _flushed_hash: dict[UUID, int] postinit,
+        _clean: set[UUID] postinit,
         _on_commit: list[Callable] postinit,
         _txn_changed: set[UUID] postinit,
         _runtime: (Any | None) postinit,

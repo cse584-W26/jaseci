@@ -289,7 +289,8 @@ def _owner_alive(pid: (int | None)) -> bool {
 
 
 impl PgStore._connect -> Any {
-    import from jaclang.vendor.pgload { connect as pg_connect }
+    import from jaclang.vendor.pgpsycopg { resolve_connect }
+    pg_connect = resolve_connect();
     info = self.conninfo;
     return pg_connect(
         info.user,

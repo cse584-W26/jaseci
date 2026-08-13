@@ -874,7 +874,17 @@ impl JacBuiltin.log_report(expr: any, custom: bool = False) -> None {
     if custom {
         JacRuntimeInterface.get_context().custom = expr;
     } else {
-        JacRuntimeInterface.get_console().print(expr);
+        import os;
+        # JAC_REPORT_ECHO: the per-report console echo pretty-prints the whole
+        # report payload (Rich repr over every element) on the request hot
+        # path - on a 2,550-item feed it re-walks the entire structure and
+        # dominates serialize time. Gated off by default; set to 1 for the
+        # dev-console echo.
+        if os.environ.get('JAC_REPORT_ECHO', '').strip().lower() in (
+            '1', 'true', 'yes', 'on'
+        ) {
+            JacRuntimeInterface.get_console().print(expr);
+        }
         if _current_scope() is not None {
             osp_report(expr);
         } else {
@@ -1059,6 +1069,21 @@ impl JacGraph.build_edge(
         );
         source.edges.append(eanch);
         target.edges.append(eanch);
+        # `.edges` is a list mutation on the anchor, so it never reaches
+        # Archetype.__setattr__ and would otherwise leave an
+        # already-persistent endpoint unmarked. Mark both ends explicitly so
+        # change tracking does not depend on re-hashing every anchor.
+        _ctx = JacRuntime.exec_ctx;
+        if _ctx is not None {
+            _md = _ctx.mem?.mark_dirty;
+            if _md is not None {
+                for _end in (source, target) {
+                    if _end.persistent {
+                        _md(_end);
+                    }
+                }
+            }
+        }
         sv_conn(source, target, eanch, is_undirected);
         if conn_assign {
             for (fld, val) in zip(conn_assign[0], conn_assign[1], strict=False) {
