@@ -49,12 +49,28 @@ def _project_data_dir(explicit: str) -> str {
 def _project_database -> str {
     import from jaclang.runtimelib.session { project_db_name }
     base = str(Path.cwd());
-    jacs = sorted(
-        p
-        for p in Path.cwd().glob("*.jac")
-        if p.is_file()
-    );
-    target = str(jacs[0]) if len(jacs) == 1 else None;
+    # Resolve the same database the serving runtime does: a jac.toml's entry
+    # point names the project. Only without one fall back to the single-.jac
+    # heuristic (multiple .jac files used to force the 'main' fallback and
+    # point `jac db` at a different, empty database than `jac start`).
+    target: (str | None) = None;
+    try {
+        import from jaclang.project.config { get_config }
+        cfg = get_config(start_path=Path.cwd(), force_discover=False);
+        if cfg and cfg.toml_path and cfg.project.entry_point {
+            target = str(cfg.toml_path.parent / cfg.project.entry_point);
+        }
+    } except Exception {
+        ;
+    }
+    if target is None {
+        jacs = sorted(
+            p
+            for p in Path.cwd().glob("*.jac")
+            if p.is_file()
+        );
+        target = str(jacs[0]) if len(jacs) == 1 else None;
+    }
     return project_db_name(base, target);
 }
 
