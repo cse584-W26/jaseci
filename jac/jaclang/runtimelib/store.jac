@@ -66,7 +66,13 @@ obj AnchorRow {
         undirected: bool = False,
         ancestry: list[str] = [],
         version: int = 0,
-        adjacency: (list[UUID] | None) = None;
+        adjacency: (list[UUID] | None) = None,
+        # arch_type of the endpoint nodes, denormalised onto the edge row so a
+        # typed hop can be pruned at the edge index instead of after fetching
+        # every candidate target. Set when the endpoints are known; never
+        # clobbered with NULL on re-save (see PgStore.upsert).
+        src_type: (str | None) = None,
+        dst_type: (str | None) = None;
 }
 
 
@@ -174,6 +180,7 @@ obj PgStore(Store) {
     def _schema_fingerprint -> str;
     def _schema_stamp -> (str | None);
     def _apply_schema_ddl -> None;
+    def _backfill_endpoint_types -> None;
     def _load_known_types -> None;
     def _peer_sessions -> list[dict];
     def _reap_dead_sessions -> int;

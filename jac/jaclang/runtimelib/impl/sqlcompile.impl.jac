@@ -32,13 +32,46 @@ def _pushable_value(v: any) -> bool {
 }
 
 
-def _type_cond(alias: str, tname: str, params: dict, pfx: str) -> str {
+def _type_cond_col(col: str, tname: str, params: dict, pfx: str) -> str {
     key = f"{pfx}t";
     params[key] = tname;
     return (
-        f"({alias}.arch_type = :{key} OR {alias}.arch_type IN "
+        f"({col} = :{key} OR {col} IN "
         f"(SELECT type_name FROM graph_types WHERE ancestor = :{key}))"
     );
+}
+
+
+def _type_cond(alias: str, tname: str, params: dict, pfx: str) -> str {
+    return _type_cond_col(f"{alias}.arch_type", tname, params, pfx);
+}
+
+
+# The same polymorphic test the node join applies, but against the endpoint
+# type denormalised onto the edge row (src_type / dst_type). Emitting it inside
+# the edge condition lets a typed hop prune at idx_anchors_{src,dst}_typed
+# instead of fetching every incident target and discarding the misses.
+def _endpoint_type_cond(
+    alias: str, col: str, names: list[str], params: dict, pfx: str
+) -> (str | None) {
+    parts: list[str] = [];
+    for (k, tname) in enumerate(names) {
+        if tname {
+            parts.append(
+                _type_cond_col(f"{alias}.{col}", tname, params, f"{pfx}x{k}")
+            );
+        }
+    }
+    if not parts {
+        return None;
+    }
+    inner = parts[0] if len(parts) == 1 else f"({' OR '.join(parts)})";
+    # NULL-tolerant by construction. The backfill fills legacy rows, but an
+    # edge written while an endpoint was an unpopulated stub can still carry
+    # NULL, and silently dropping such an edge from a traversal would be a
+    # correctness bug. Letting NULL through only costs a probe: the node join
+    # downstream applies the authoritative type test anyway.
+    return f"({alias}.{col} IS NULL OR {inner})";
 }
 
 
@@ -100,16 +133,32 @@ def _pred_cond(alias: str, p: QPred, params: dict, pfx: str) -> (str | None) {
 }
 
 
-def _dir_cond(alias: str, fid: str, dir: int) -> str {
+def _dir_cond(
+    alias: str,
+    fid: str,
+    dir: int,
+    to_dst: (str | None) = None,
+    to_src: (str | None) = None
+) -> str {
+    # to_dst / to_src are the target-node type tests to apply on the branch
+    # where the hop lands on e.dst / e.src respectively.
+    def arm(side: str, cond: (str | None)) -> str {
+        base = f"{alias}.{side} = {fid}";
+        return base if cond is None else f"({base} AND {cond})";
+    }
+
     if dir == 1 {
         return (
-            f"({alias}.dst = {fid} OR ({alias}.undirected AND {alias}.src = {fid}))"
+            f"({arm('dst', to_src)} OR ({alias}.undirected "
+            f"AND {arm('src', to_dst)}))"
         );
     }
     if dir == 3 {
-        return f"({alias}.src = {fid} OR {alias}.dst = {fid})";
+        return f"({arm('src', to_dst)} OR {arm('dst', to_src)})";
     }
-    return f"({alias}.src = {fid} OR ({alias}.undirected AND {alias}.dst = {fid}))";
+    return (
+        f"({arm('src', to_dst)} OR ({alias}.undirected AND {arm('dst', to_src)}))"
+    );
 }
 
 
@@ -140,7 +189,16 @@ impl compile_query(q: GraphQuery, upto: int) -> CompiledQuery {
         e = f"e{n}";
         nd_alias = f"n{n}";
         pfx_e = f"h{n}e";
-        econds = [f"{e}.kind = 'EdgeAnchor'", _dir_cond(e, fid, hop.dir)];
+        nd_names = [
+            str(getattr(nt, '__name__', ''))
+            for nt in _nd_types(hop)
+        ];
+        to_dst = _endpoint_type_cond(e, 'dst_type', nd_names, params, f"{pfx_e}d");
+        to_src = _endpoint_type_cond(e, 'src_type', nd_names, params, f"{pfx_e}s");
+        econds = [
+            f"{e}.kind = 'EdgeAnchor'",
+            _dir_cond(e, fid, hop.dir, to_dst, to_src)
+        ];
         if hop.`edge is not None {
             econds.append(_type_cond(e, hop.`edge.__name__, params, pfx_e));
         }

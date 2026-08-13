@@ -834,11 +834,18 @@ impl Session._serialize(anchor: Anchor) -> AnchorRow {
     }
     src: (UUID | None) = None;
     dst: (UUID | None) = None;
+    src_type: (str | None) = None;
+    dst_type: (str | None) = None;
     undirected = False;
     if isinstance(anchor, EdgeAnchor) {
         src = anchor.source.id if anchor.source is not None else None;
         dst = anchor.target.id if anchor.target is not None else None;
         undirected = anchor.is_undirected;
+        # Denormalise the endpoint archetype names so typed hops prune at the
+        # edge index. Unpopulated stubs leave these None, and upsert coalesces
+        # rather than overwriting a previously recorded value.
+        src_type = _endpoint_type(anchor.source);
+        dst_type = _endpoint_type(anchor.target);
     }
     return AnchorRow(
         id=anchor.id,
@@ -851,8 +858,19 @@ impl Session._serialize(anchor: Anchor) -> AnchorRow {
         src=src,
         dst=dst,
         undirected=undirected,
-        ancestry=_ancestry_of(arch)
+        ancestry=_ancestry_of(arch),
+        src_type=src_type,
+        dst_type=dst_type
     );
+}
+
+
+def _endpoint_type(end: (Anchor | None)) -> (str | None) {
+    if end is None or not end.is_populated() {
+        return None;
+    }
+    arch = end.archetype;
+    return type(arch).__name__ if arch is not None else None;
 }
 
 

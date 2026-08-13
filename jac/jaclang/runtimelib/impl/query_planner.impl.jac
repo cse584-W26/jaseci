@@ -18,6 +18,31 @@ impl _acl_read_ok(anchor: Anchor) -> bool {
 }
 
 
+impl _prefetch_acl_roots(mem: Session, anchors: list[Anchor]) -> None {
+    # check_access_level() reads the owner Root of each anchor to consult its
+    # access blob. Left alone that is one single-row round trip per distinct
+    # owner, every request, because the session cache starts cold - 53 serial
+    # queries for a 2550-item feed. Warm them in one batch_get first; the ACL
+    # code is untouched and simply finds them already resident. Pure prefetch:
+    # same anchors fetched, same order of checks, same verdicts.
+    roots: list[UUID] = [];
+    seen: set[UUID] = set();
+    for a in anchors {
+        rid = a.root;
+        if rid is None or rid in seen {
+            continue;
+        }
+        seen.add(rid);
+        if mem.__mem__.get(rid) is None {
+            roots.append(rid);
+        }
+    }
+    if roots {
+        mem.batch_get(roots);
+    }
+}
+
+
 impl _origin_anchors(q: GraphQuery) -> list[Anchor] {
     seen: set[UUID] = set();
     out: list[Anchor] = [];
@@ -241,6 +266,7 @@ impl resolve_query(mem: Session, q: GraphQuery) -> list[Anchor] {
     ids = _unique_nodes(pairs);
     out = _materialize_ids(mem, ids, local);
     if _acl_gated() {
+        _prefetch_acl_roots(mem, out);
         out = [
             a
             for a in out
@@ -274,6 +300,9 @@ impl resolve_query_edges(mem: Session, q: GraphQuery) -> list[Anchor] {
     }
     edges = _materialize_ids(mem, edge_ids, local);
     if _acl_gated() {
+        # both the edges and the nodes they land on get access-checked below
+        _prefetch_acl_roots(mem, edges);
+        _prefetch_acl_roots(mem, _materialize_ids(mem, list(node_of.values()), local));
         kept: list[Anchor] = [];
         for ea in edges {
             if not _acl_read_ok(ea) {
