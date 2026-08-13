@@ -93,13 +93,22 @@ degrades to slow-correct, not wrong.
   fingerprint, mutation via hydrate) still correct.
 - Full runtimelib suite green.
 
-## Status
+## Status — SHIPPED as `c4b7e1862`
 
-- [ ] StreamProofPass skeleton + schedule insertion
-- [ ] analysis: chain-expr discovery + use-walk + kill conditions
-- [ ] pyast injection of `__jac_stream_fields__`
-- [ ] store.load_props (no adjacency)
-- [ ] StreamNode + slim-anchor path in resolve_query
-- [ ] serializer StreamNode branch (fragment-from-props)
-- [ ] tests + parity + full suite
-- [ ] re-benchmark (wallbench.py 150)
+- [x] StreamProofPass + schedule insertion (after CFGBuildPass)
+- [x] analysis: chain-expr discovery + symbol def-use audit + kill conditions
+- [x] pyast injection of `__jac_stream_fields__`
+- [x] store.load_props (no adjacency, no src/dst)
+- [x] StreamNode + slim-anchor path in resolve_query (`_try_stream`)
+      + runtime guards added during landing: classes overriding
+      `__jac_access__` refuse to stream (hook may read instance fields);
+      StreamNode answers the default hook
+- [x] serializer StreamNode branch, shared (id, row_version) fragment memo
+- [x] parity: 2,552-item feed value-identical vs `JAC_STREAM=0`
+      (order + content); core 58 tests green
+- [x] re-benchmark: server p50 178 -> **98 ms**, client wall 209 -> **126 ms**
+      (hand-tuned PG baseline same session: 14 / 29 ms)
+
+Approval check on the real app: `load_feed_chain -> ('created_at',)`,
+`load_feed_trace -> ()`, visit-based `load_feed -> None` (denied), and the
+mutator/escaper probes deny at the exact offending use.

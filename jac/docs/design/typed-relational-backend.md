@@ -162,6 +162,48 @@ Python deserialisation of 2,500 anchors — is ~250 ms and survives any
 schema change untouched. Schema compilation is the right long-term DB
 answer; it is not the current bottleneck. Sequencing: app-side first.
 
+## Addendum (2026-08-13 EOD): verdict after the streaming runtime landed
+
+Re-measured once proven zero-materialization, typed-endpoint pruning, and
+membership pushdown were in (`c4b7e1862`..`310ae86d3`), at the grown
+~3.7k-item feed (server p50 142 ms; scale by ~0.69 for the canonical
+2,552-item numbers). Driver-inclusive floors, raw psycopg:
+
+| floor | p50 |
+|---|---|
+| A: current schema, stream-path SQL (traversal + load_props) | **58.7 ms** |
+| A1: traversal only | 10.8 |
+| A2: props fetch, jsonb parsed to dicts | 44.6 |
+| A2x: same, props as unparsed text | 25.8 (wire ≈ 10.6) |
+| A2y: same, no props on wire | 15.2 (jsonb->dict parse ≈ 18.8) |
+| B: relational schema, one typed query (baseline's own) | **11.5 ms** |
+
+**Schema-sensitive share: ~44 ms of 142 (~30 ms of the 98).** The other
+~80 ms is per-row runtime semantics - slim anchors, Permission objects,
+ACL checks, fragment memo, encode, session/txn, HTTP - and survives any
+schema unchanged. A perfect per-type-table rewrite therefore lands the
+feed at roughly **70 ms, not 15**: a 1.4x, not the 7x that separates us
+from the hand-tuned baseline.
+
+The morning's case for the rewrite was ~250 ms of costs that the day's
+runtime work eliminated by other means (adjacency subquery deleted from
+the stream path, double row-reads gone, typed-endpoint pruning, no
+archetype materialization). What is left for the schema to fix is mostly
+**jsonb wire+parse (~29 ms)** and **pointer-walk vs hash-join (~9 ms)**.
+
+Two-thirds of that is reachable *without* the rewrite: emit the response
+fragment server-side (`props->'archetype'` shaped by jsonb_build_object,
+shipped as text, keyed by (id, xmin) into the existing fragment memo) and
+Python never parses props at all - estimated −20-25 ms, schema-neutral,
+no migration story. That is the next lever, ahead of the rewrite.
+
+Verdict: the typed relational backend remains the right *architectural*
+endgame - and the paper's best story stands (the language's declarations
+derive the expert schema) - but as an engineering priority it is now
+third, behind DB-side fragment projection and per-row ACL batching. It
+buys 1.4x on today's runtime at the cost of the full migration/
+polymorphism/id-directory scope below.
+
 ## Interim steps that don't need the full design
 
 | step | saving | status |
