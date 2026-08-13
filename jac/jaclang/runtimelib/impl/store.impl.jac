@@ -1,3 +1,25 @@
+# Interned str->UUID conversion. The same anchor/edge ids recur on every
+# request (feed rows, adjacency lists) - 20k UUID() constructions per request
+# on the littleX feed. UUID objects are immutable, so sharing one instance per
+# id string is observationally identical while turning repeat conversions into
+# one C-level dict hit. Wholesale clear at 500k entries bounds memory.
+glob _uuid_cache: dict = {};
+
+
+impl intern_uuid(s: object) -> UUID {
+    key = s if isinstance(s, str) else str(s);
+    if (hit := _uuid_cache.get(key)) is not None {
+        return hit;
+    }
+    u = UUID(key);
+    if len(_uuid_cache) > 500000 {
+        _uuid_cache.clear();
+    }
+    _uuid_cache[key] = u;
+    return u;
+}
+
+
 glob _SCHEMA_SQL = [
          """
     CREATE TABLE IF NOT EXISTS anchors (
@@ -743,21 +765,21 @@ impl PgStore.load_full(ids: list[UUID]) -> dict[UUID, AnchorRow] {
                 for tok in str(r[11]).split(',') {
                     if tok and tok not in seen_e {
                         seen_e.add(tok);
-                        adjacency.append(UUID(tok));
+                        adjacency.append(intern_uuid(tok));
                     }
                 }
             }
         }
         row = AnchorRow(
-            id=UUID(str(r[0])),
+            id=intern_uuid(r[0]),
             kind=str(r[1]),
             arch_type=str(r[2]),
             arch_module=str(r[3]),
             fingerprint=str(r[4]),
-            root_id=UUID(str(r[5])) if r[5] else None,
+            root_id=intern_uuid(r[5]) if r[5] else None,
             props=props,
-            src=UUID(str(r[6])) if r[6] else None,
-            dst=UUID(str(r[7])) if r[7] else None,
+            src=intern_uuid(r[6]) if r[6] else None,
+            dst=intern_uuid(r[7]) if r[7] else None,
             undirected=bool(r[8]),
             version=int(str(r[10])),
             adjacency=adjacency

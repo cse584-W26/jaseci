@@ -766,7 +766,7 @@ impl Serializer._reset_warn_cache -> None {
 impl Serializer._id_to_stub(anchor_cls: type, id_str: str) -> (Anchor | None) {
     try {
         stub = anchor_cls.__new__(anchor_cls);
-        stub.id = UUID(id_str);
+        stub.id = intern_uuid(id_str);
         return stub;
     } except Exception as e {
         logger.error(
@@ -784,8 +784,8 @@ impl Serializer._deserialize_anchor(
     );
     try {
         anchor = anchor_cls.__new__(anchor_cls);
-        anchor.id = UUID(data['id']) if data.get('id') else None;
-        anchor.root = UUID(data['root']) if data.get('root') else None;
+        anchor.id = intern_uuid(data['id']) if data.get('id') else None;
+        anchor.root = intern_uuid(data['root']) if data.get('root') else None;
         anchor.persistent = data.get('persistent', False);
         anchor.access = Serializer._deserialize_permission(data.get('access'));
 
@@ -837,7 +837,7 @@ impl Serializer._deserialize_anchor(
             setattr(
                 anchor,
                 '_initial_edge_ids',
-                frozenset(UUID(eid) for eid in (edge_ids or []))
+                frozenset(intern_uuid(eid) for eid in (edge_ids or []))
             );
 
             anchor.version = data.get('version', 0);

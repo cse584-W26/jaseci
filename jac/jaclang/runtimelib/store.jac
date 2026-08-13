@@ -89,6 +89,9 @@ obj ChannelMessage {
 }
 
 
+def intern_uuid(s: object) -> UUID;
+
+
 obj Store {
     def is_available -> bool abst;
     def server_version -> int abst;
