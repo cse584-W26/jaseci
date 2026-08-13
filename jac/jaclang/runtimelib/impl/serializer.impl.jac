@@ -853,7 +853,15 @@ impl Serializer._deserialize_anchor(
             }
         }
 
-        anchor.hash = Serializer._compute_hash(anchor);
+        # `hash` here is purely the "already persisted" sentinel: the only
+        # comparison anywhere is check_access_level's `hash == 0` (zero means
+        # brand-new and grants WRITE - see 9352fb2be for what zeroing it
+        # costs). Flush-time change detection uses _persist_hash against the
+        # session's _flushed_hash map, never this value, so re-serializing the
+        # anchor we just built only to sha256 it (~40% of materialize cost at
+        # 2500 anchors/request) bought nothing. Any nonzero constant is
+        # equivalent.
+        anchor.hash = 1;
         return anchor;
     } except Exception as e {
         failed_arch = data.get('archetype');
