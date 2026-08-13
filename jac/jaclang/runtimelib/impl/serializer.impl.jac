@@ -878,10 +878,31 @@ impl Serializer._deserialize_access(data: object) -> Access {
 glob _trusted_plan_cache: dict = {};
 
 
+def _bulk_fill_ok(cls: type, names: list) -> bool {
+    # `arch.__dict__.update(vals)` is equivalent to the per-field setattr loop
+    # exactly when (a) the class uses Archetype's own __setattr__, whose
+    # dirty-marking branch is dead until __jac__ is set (we set it last), and
+    # (b) no field name is shadowed by a data descriptor on the class (plain
+    # dataclass defaults and cached_property are not data descriptors).
+    if getattr(cls, '__setattr__', None) is not getattr(
+        Archetype, '__setattr__', None
+    ) {
+        return False;
+    }
+    for n in names {
+        attr = getattr(cls, n, None);
+        if attr is not None and hasattr(type(attr), '__set__') {
+            return False;
+        }
+    }
+    return True;
+}
+
+
 def _trusted_plan(cls: type) -> (tuple | None) {
-    # Per-class cache of (name, kind, allowed, elem) rows for the trusted
-    # deserialize path. `allowed` is the tuple of EXACT scalar types the
-    # declared annotation admits (NoneType included only when the field is
+    # Per-class cache of ((name, kind, allowed, elem) rows, bulk_ok) for the
+    # trusted deserialize path. `allowed` is the tuple of EXACT scalar types
+    # the declared annotation admits (NoneType included only when the field is
     # Optional) - a value whose type() is in `allowed` would pass through
     # coerce unchanged, so direct assignment is provably value-identical.
     # A declared-float field with a stored int is NOT admitted (coerce would
@@ -930,7 +951,7 @@ def _trusted_plan(cls: type) -> (tuple | None) {
         }
         rows.append((name, kind, allowed, elem));
     }
-    out = tuple(rows);
+    out = (tuple(rows), _bulk_fill_ok(cls, [r[0] for r in rows]));
     _trusted_plan_cache[cls] = out;
     return out;
 }
@@ -952,7 +973,11 @@ impl Serializer._deserialize_trusted(
         # path arbitrate
         return None;
     }
-    plan = _trusted_plan(cls);
+    cached = _trusted_plan(cls);
+    if not cached {
+        return None;
+    }
+    (plan, bulk_ok) = cached;
     if not plan {
         return None;
     }
@@ -965,21 +990,20 @@ impl Serializer._deserialize_trusted(
     field_types = get_field_types(cls);
     try {
         arch: object = cls.__new__(cls);
-        # setattr (not __dict__ writes) so Archetype.__setattr__ semantics
-        # match the slow path exactly
+        vals: dict = {};
         for (name, kind, allowed, elem) in plan {
             if name not in data {
                 return None;
             }
             v = data[name];
             if kind == 1 and type(v) in allowed {
-                setattr(arch, name, v);
+                vals[name] = v;
             } elif (
                 kind == 2
                 and type(v) is list
                 and all(type(x) is elem for x in v)
             ) {
-                setattr(arch, name, v);
+                vals[name] = v;
             } else {
                 dv = Serializer._deserialize_value(v);
                 target = field_types.get(name);
@@ -990,9 +1014,21 @@ impl Serializer._deserialize_trusted(
                     }
                     dv = coerced;
                 }
-                setattr(arch, name, dv);
+                vals[name] = dv;
             }
         }
+        if bulk_ok {
+            # one C-level dict update instead of a Python __setattr__ frame per
+            # field; _bulk_fill_ok proved the two are indistinguishable while
+            # __jac__ is unset
+            arch.__dict__.update(vals);
+        } else {
+            for (name, v) in vals.items() {
+                setattr(arch, name, v);
+            }
+        }
+        # real setattr for __jac__ so post-construction semantics (dirty
+        # marking from here on) match the slow path exactly
         setattr(arch, '__jac__', anchor);
         return arch;
     } except Exception {
