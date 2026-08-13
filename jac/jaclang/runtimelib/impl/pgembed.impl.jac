@@ -243,12 +243,38 @@ impl PgRuntime._sock_dir -> str {
 }
 
 
+# JAC_PG_ENSURE_CACHE=1: remember (data_dir, database) pairs this process
+# has already brought up. ensure() is called for every new PgStore - one per
+# request session in serve mode - and its ready path opens two throwaway
+# probe connections (_wait_ready + _ensure_database admin), ~10-20ms per
+# request measured. With the cache, later ensure() calls for a known pair
+# only re-check the postmaster pidfile (microseconds) and fall through to
+# the full path the moment the server is not running. Default off.
+def _ensure_cache_enabled -> bool {
+    import os;
+    return os.environ.get('JAC_PG_ENSURE_CACHE', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+
+glob _ENSURE_CACHE: bool = _ensure_cache_enabled(),
+     _ensured: set = set();
+
+
 impl PgRuntime.ensure -> ConnInfo {
+    if _ENSURE_CACHE
+        and (self.data_dir, self.database) in _ensured
+        and self.is_running() {
+        return self.conninfo();
+    }
     with self._lock {
         if self.is_running() {
             try {
                 self._wait_ready();
                 self._ensure_database();
+                if _ENSURE_CACHE {
+                    _ensured.add((self.data_dir, self.database));
+                }
                 return self.conninfo();
             } except Exception {
                 logger.info(
@@ -278,6 +304,9 @@ impl PgRuntime.ensure -> ConnInfo {
             self._sweep_on_start();
         }
         self._ensure_database();
+        if _ENSURE_CACHE {
+            _ensured.add((self.data_dir, self.database));
+        }
         return self.conninfo();
     }
 }
