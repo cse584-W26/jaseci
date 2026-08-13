@@ -459,6 +459,8 @@ impl Session.batch_get(ids: list[UUID]) -> dict[UUID, Anchor] {
 
 
 impl Session.commit(anchor: (Anchor | None) = None) -> None {
+    import from time { perf_counter }
+    _t0 = perf_counter();
     with self._lock {
         if self.store is not None {
             attempt = 0;
@@ -479,6 +481,15 @@ impl Session.commit(anchor: (Anchor | None) = None) -> None {
         } else {
             self._dirty.clear();
             self._deleted.clear();
+        }
+    }
+    if os.environ.get('JAC_TIMING_HEADERS') == '1' {
+        try {
+            import from jaclang.jac0core.runtime { JacRuntimeInterface }
+            ctx = JacRuntimeInterface.get_context();
+            ctx._commit_ms += (perf_counter() - _t0) * 1000.0;
+        } except Exception {
+            ;
         }
     }
     self._fire_on_commit();

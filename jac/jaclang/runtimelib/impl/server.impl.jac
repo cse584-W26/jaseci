@@ -387,6 +387,9 @@ async def _run_function_with_occ(
     deserialize_args: bool = True,
     include_traceback: bool = False
 ) -> dict[str, JsonValue] | Generator | AsyncGenerator {
+    import from time { perf_counter }
+    _timing_on = os.environ.get('JAC_TIMING_HEADERS') == '1';
+    _t0 = perf_counter();
     resolved = await _abegin_user_request_context(mgr.user_manager, username);
     if isinstance(resolved, dict) {
         return resolved;
@@ -405,7 +408,15 @@ async def _run_function_with_occ(
             call_token = ctx.call_state.set(CallState());
             call_state = ctx.call_state.get();
             try {
-                return await run_attempt(call_state, ctx);
+                out = await run_attempt(call_state, ctx);
+                if _timing_on and isinstance(out, dict) {
+                    _whole_ms = (perf_counter() - _t0) * 1000.0;
+                    out['_server_commit_ms'] = round(ctx._commit_ms, 3);
+                    out['_server_total_ms'] = round(
+                        max(_whole_ms - ctx._commit_ms, 0.0), 3
+                    );
+                }
+                return out;
             } except WriteConflict as wc {
                 ctx.mem.abort();
                 ctx.pending_effects.clear();

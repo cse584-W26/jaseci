@@ -25,6 +25,7 @@ obj ExecutionContext {
         diagnostics: list[PermissionDenied] = [],
         pending_effects: list[Callable] = [],
         read_versions: dict[UUID, int] = {},
+        _commit_ms: float = 0.0,
         custom: any = MISSING,
         call_state: ContextVar[CallState] = ContextVar('call_state'),
         base_path_dir: (str | None) = None,

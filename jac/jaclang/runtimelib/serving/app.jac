@@ -33,6 +33,13 @@ glob _logger: logging.Logger = logging.getLogger("jaclang.runtimelib.serving.app
 
 
 def transport_to_response(tr: TransportResponse) -> JSONResponse {
+    timing_hdrs: (tuple | None) = None;
+    if isinstance(tr.data, dict) and '_server_total_ms' in tr.data {
+        timing_hdrs = (
+            tr.data.pop('_server_total_ms'),
+            tr.data.pop('_server_commit_ms', 0.0)
+        );
+    }
     status = 200 if tr.ok else 500;
     if tr.meta and tr.meta.extra {
         status = tr.meta.extra.get('http_status', status);
@@ -81,7 +88,12 @@ def transport_to_response(tr: TransportResponse) -> JSONResponse {
             body['meta'] = meta_dict;
         }
     }
-    return JSONResponse(content=body, status_code=status);
+    resp = JSONResponse(content=body, status_code=status);
+    if timing_hdrs is not None {
+        resp.headers.set('x-server-total-ms', str(timing_hdrs[0]));
+        resp.headers.set('x-server-commit-ms', str(timing_hdrs[1]));
+    }
+    return resp;
 }
 
 def _slash_alternate(path: str) -> (str | None) {
