@@ -366,10 +366,11 @@ impl ExecutionManager._finalize_call_response(
         return reports;
     }
 
-    envelope: dict[str, JsonValue] = {
-        'result': Serializer.serialize(result, api_mode=True),
-        'reports': Serializer.serialize(reports, api_mode=True)
-    };
+    envelope: dict[str, JsonValue] = {};
+    if os.environ.get('JAC_API_LEAN_RESPONSE') != '1' {
+        envelope['result'] = Serializer.serialize(result, api_mode=True);
+    }
+    envelope['reports'] = Serializer.serialize(reports, api_mode=True);
     ctx = Jac.get_context();
     if ctx.diagnostics {
         envelope['warnings'] = [d.to_dict() for d in ctx.diagnostics];
