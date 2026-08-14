@@ -65,11 +65,32 @@ this path (no double bookkeeping, no cross-keyspace collisions).
   oracle-exact WITH triggers firing).
 - wallbench 150 for numbers. DBs must be seed-clean first.
 
-## Status
-- [x] plan written
-- [ ] mirrors: DDL/trigger/backfill in store
-- [ ] stream mirror fetch + exact ACL fast path
-- [ ] StreamNode frag + serializer Fragment emit
-- [ ] tests + parity + write-oracle + bench + commit
-- [ ] R3: edge tables + join traversal (only if context remains;
-      est −4 ms; needs id directory + untyped-hop UNION fallback)
+## Status — R1/R2/R4 SHIPPED as `a5c3aac34`
+
+- [x] mirrors: DDL/trigger/backfill (jsonb field columns; frag prebuilt in
+      trigger; acl_all/acl_spec scalars; CREATE OR REPLACE TRIGGER; backfill
+      after triggers with DO NOTHING so concurrent writes win)
+- [x] stream mirror fetch + exact ACL fast path (owner pass; per-root
+      override-then-max; specials/per-anchor-grants, __jac_access__
+      overriders, and shared-root-owned rows take the full per-row path)
+- [x] StreamNode frag + orjson.Fragment emit; unproven reads lazily
+      inflate from the fragment (found via shared-root suite: report-sink
+      comprehensions read fields the proof never collected)
+- [x] driver normalisation (pure-Python uuid-as-string vs psycopg UUID)
+- [x] 58 tests, value-parity vs JAC_STREAM=0, write oracle exact WITH
+      triggers (create 2.17 ms — ~0.3 ms trigger cost — like 2.63,
+      follow 4.06)
+- [ ] R3: edge tables + join traversal (open; est −4 ms; needs id
+      directory + untyped-hop UNION fallback)
+
+**Final seed-clean, same-session:** Jac server p50 **40.1 ms**
+(wall 66.8) vs SQLAlchemy **30.9** (p95: Jac ~50 vs SQLAlchemy 55.8 —
+Jac is TIGHTER at the tail) vs hand-tuned 14.3. Day trajectory:
+305 -> 96 -> 40 server-side; ORM gap now 1.3x at p50, better at p95.
+
+Native-lowering gotchas found while landing (compiler bugs to report):
+gen-exprs with binary ops inside join(), heterogeneous tuples into dict
+values, and list-literal + variable concatenation all ICE the native
+pathway, and E5092 demotion can leave NO bytecode with NO recorded error
+— the module compiles to nothing silently. Also jac->SQL string escaping
+loses a backslash layer (use left(key,2) <> '__' instead of LIKE E'\_%').
