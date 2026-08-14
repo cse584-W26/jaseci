@@ -1003,6 +1003,28 @@ impl PgStore.ensure_mirror(cls: type) -> bool {
                 + "WHERE a.kind = 'NodeAnchor' AND a.arch_type = '" + at + "' "
                 + 'ON CONFLICT (id) DO NOTHING'
         );
+        # The DDL above committed on a connection of its own, so a request
+        # whose snapshot was already taken sees the mirror as missing or
+        # EMPTY (postgres resolves catalog lookups against a fresh snapshot
+        # but row reads against the transaction's). Serving a chain from an
+        # incomplete mirror silently returns fewer rows - the worst kind of
+        # wrong - so confirm completeness FROM THE CALLER'S OWN snapshot
+        # before declaring the mirror usable. Anti-join with LIMIT 1: it
+        # stops at the first row the mirror is missing.
+        missing = self._run(
+            "SELECT 1 FROM anchors a WHERE a.kind = 'NodeAnchor' "
+                + 'AND a.arch_type = :at AND NOT EXISTS ('
+                + 'SELECT 1 FROM ' + table + ' m WHERE m.id = a.id) LIMIT 1',
+            {'at': at}
+        );
+        if missing {
+            # Deliberately NOT cached: this request falls back to the
+            # non-mirror path (correct, just slower) and the next request -
+            # whose snapshot is newer than the DDL commit - probes again and
+            # succeeds. Re-running the DDL on that retry is free; every
+            # statement is IF NOT EXISTS / OR REPLACE / DO NOTHING.
+            return False;
+        }
         _mirror_state[cls] = {'ok': True, 'table': table, 'cols': cols};
         return True;
     } except Exception as e {
