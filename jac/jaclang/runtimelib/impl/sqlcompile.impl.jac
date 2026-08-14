@@ -176,7 +176,15 @@ def _nd_types(hop: QHop) -> list {
 }
 
 
-impl compile_query(q: GraphQuery, upto: int) -> CompiledQuery {
+impl compile_query(
+    q: GraphQuery, upto: int, mirror: (dict | None) = None
+) -> CompiledQuery {
+    # mirror (R3): {'table': str, 'fcols': [column, ...]} - the FINAL hop's
+    # node join targets the slim per-archetype mirror table instead of fat
+    # `anchors`, and the SELECT returns the mirror's fragment/ACL columns so
+    # traversal + fetch collapse into ONE statement. The caller has already
+    # proven mirror membership == the hop's type test (single class, no
+    # registered subtypes) and that the final hop carries no node predicates.
     out = CompiledQuery();
     params: dict = {};
     params['origin'] = [];
@@ -235,7 +243,22 @@ impl compile_query(q: GraphQuery, upto: int) -> CompiledQuery {
             params[key] = [str(x) for x in want];
             nconds.append(f"{nd_alias}.id = ANY(CAST(:{key} AS uuid[]))");
         }
-        joins.append(f"JOIN anchors {nd_alias} ON {' AND '.join(nconds)}");
+        is_final = (i == len(q.hops[:upto]) - 1);
+        if mirror is not None and is_final {
+            mconds = [f"{nd_alias}.id = {_other_expr(e, fid)}"];
+            want_m = hop.only_ids();
+            if want_m is not None {
+                key_m = f"h{n}only";
+                params[key_m] = [str(x) for x in want_m];
+                mconds.append(f"{nd_alias}.id = ANY(CAST(:{key_m} AS uuid[]))");
+            }
+            joins.append(
+                'JOIN ' + mirror['table'] + f" {nd_alias} ON "
+                    + ' AND '.join(mconds)
+            );
+        } else {
+            joins.append(f"JOIN anchors {nd_alias} ON {' AND '.join(nconds)}");
+        }
         order.append(f"{e}.seq");
         order.append(f"{e}.id");
         fid = f"{nd_alias}.id";
@@ -247,8 +270,22 @@ impl compile_query(q: GraphQuery, upto: int) -> CompiledQuery {
         out.params = params;
         return out;
     }
+    if mirror is not None {
+        sel_parts: list = [];
+        sel_parts.append(f"n{n}.id");
+        sel_parts.append(f"n{n}.root_id");
+        sel_parts.append(f"n{n}.acl_all");
+        sel_parts.append(f"n{n}.acl_spec");
+        sel_parts.append(f"n{n}.frag");
+        for c in mirror['fcols'] {
+            sel_parts.append(f"n{n}." + c);
+        }
+        sel = ', '.join(sel_parts);
+    } else {
+        sel = f"n{n}.id, e{n}.id";
+    }
     out.sql = (
-        f"SELECT n{n}.id, e{n}.id "
+        'SELECT ' + sel + ' '
         f"FROM unnest(CAST(:origin AS uuid[])) WITH ORDINALITY AS f0(id, ord) "
         f"LEFT JOIN anchors s1 ON s1.id = f0.id "
         + ' '.join(joins)

@@ -533,9 +533,133 @@ impl _try_stream(
 }
 
 
+impl _try_stream_fused(mem: Session, q: GraphQuery) -> (list[Anchor] | None) {
+    # R3: one statement for traversal + mirror fetch. Eligibility mirrors
+    # _try_stream plus: single-class final hop with NO node predicates and NO
+    # registered subtypes beyond the class itself (mirror membership must
+    # equal the polymorphic type test exactly), and a ready mirror whose
+    # columns cover the proof fields.
+    import os;
+    if os.environ.get('JAC_STREAM', '1').lower() in ('0', 'off', 'false') {
+        return None;
+    }
+    import from jaclang.jac0core.osp_kernel { _current_scope }
+    scope = _current_scope();
+    wlk = scope.wlk if scope is not None else None;
+    fields = getattr(type(wlk), '__jac_stream_fields__', None)
+        if wlk is not None else None;
+    if fields is None or q.edges_only or q.from_visit or not q.hops {
+        return None;
+    }
+    store = mem.store;
+    if store is None or not hasattr(store, 'mirror_info') {
+        return None;
+    }
+    last = q.hops[-1];
+    nd_last = last.nd;
+    if not isinstance(nd_last, type) or last.preds {
+        return None;
+    }
+    tname_last = getattr(nd_last, '__name__', '');
+    if not _stream_class_ok(getattr(nd_last, '__module__', ''), tname_last) {
+        return None;
+    }
+    try {
+        subs = [
+            t
+            for t in store.subtype_names(tname_last)
+            if t != tname_last
+        ];
+        if subs {
+            return None;   # polymorphic hierarchy: membership != type test
+        }
+    } except Exception {
+        return None;
+    }
+    if not store.ensure_mirror(nd_last) {
+        return None;
+    }
+    info = store.mirror_info(nd_last);
+    if info is None {
+        return None;
+    }
+    fcols: list = [];
+    for f in fields {
+        c = info['cols'].get(str(f));
+        if c is None {
+            return None;
+        }
+        fcols.append(c);
+    }
+    cq = compile_query(
+        q, len(q.hops), mirror={'table': info['table'], 'fcols': fcols}
+    );
+    if cq.residual {
+        return None;
+    }
+    # split origins exactly like _resolve_pairs
+    origins = _origin_anchors(q);
+    local: dict[UUID, Anchor] = {};
+    sql_ids: list[UUID] = [];
+    mem_origins: list[Anchor] = [];
+    for oanch in origins {
+        if oanch.persistent {
+            sql_ids.append(oanch.id);
+        } else {
+            mem_origins.append(oanch);
+        }
+        local[oanch.id] = oanch;
+    }
+    mem.read_barrier();
+    cq.params['origin'] = [str(i) for i in sql_ids];
+    import from jaclang.runtimelib.store { intern_uuid }
+    ids: list[UUID] = [];
+    seen_ids: set[UUID] = set();
+    mrows: list = [];
+    resident: dict = {};
+    try {
+        raw = store.rows(cq.sql, cq.params) if sql_ids else [];
+    } except Exception as e {
+        logger.warning(f"fused stream query failed (falling back): {e}");
+        return None;
+    }
+    for r in raw {
+        nid = intern_uuid(r[0]);
+        if nid in seen_ids {
+            continue;
+        }
+        seen_ids.add(nid);
+        if nid in mem._deleted {
+            continue;
+        }
+        a = local.get(nid) or mem.__mem__.get(nid);
+        if a is not None {
+            resident[nid] = a;
+        } else {
+            mrows.append(r);
+        }
+        ids.append(nid);
+    }
+    # session-only origins traverse the in-memory overlay, same as the
+    # generic path; their results are resident by construction
+    for (a, e) in _walk_memory(mem_origins, q, len(q.hops)) {
+        if a.id in seen_ids or a.id in mem._deleted {
+            continue;
+        }
+        seen_ids.add(a.id);
+        resident[a.id] = a;
+        ids.append(a.id);
+    }
+    return _stream_from_mirror(mem, q, ids, resident, mrows, fields);
+}
+
+
 impl resolve_query(mem: Session, q: GraphQuery) -> list[Anchor] {
     if not q.origin {
         return [];
+    }
+    if (fused := _try_stream_fused(mem, q)) is not None {
+        return fused;
     }
     (pairs, local) = _resolve_pairs(mem, q, len(q.hops));
     ids = _unique_nodes(pairs);

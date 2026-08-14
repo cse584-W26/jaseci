@@ -15,4 +15,6 @@ obj CompiledQuery {
 }
 
 
-def compile_query(q: GraphQuery, upto: int) -> CompiledQuery;
+def compile_query(
+    q: GraphQuery, upto: int, mirror: (dict | None) = None
+) -> CompiledQuery;

@@ -949,6 +949,15 @@ impl PgStore.ensure_mirror(cls: type) -> bool {
 }
 
 
+impl PgStore.mirror_info(cls: type) -> (dict | None) {
+    st = _mirror_state.get(cls);
+    if not st or not st['ok'] {
+        return None;
+    }
+    return {'table': st['table'], 'cols': st['cols']};
+}
+
+
 impl PgStore.load_mirror_rows(
     cls: type, ids: list[UUID], fields: tuple
 ) -> (list[tuple] | None) {
