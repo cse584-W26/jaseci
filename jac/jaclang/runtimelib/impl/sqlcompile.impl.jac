@@ -89,9 +89,86 @@ def _sql_type_of(v: any) -> str {
 }
 
 
-def _pred_cond(alias: str, p: QPred, params: dict, pfx: str) -> (str | None) {
+# JAC_PROMOTED_PREDICATES=1: when a queried field is generated-column
+# promoted (see PgStore._apply_promotions), emit the predicate against that
+# real typed+indexed column instead of the jsonb path so postgres can use
+# the promotion index. Default off - see _pred_cond for the scope this is
+# limited to and why.
+def _promoted_predicates_enabled -> bool {
+    import os;
+    return os.environ.get('JAC_PROMOTED_PREDICATES', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+
+glob PROMOTED_PREDICATES: bool = _promoted_predicates_enabled();
+
+
+# Mirrors PgStore._sanitize_ident (store.impl.jac) exactly - the promoted
+# column name has to be derived identically here and at DDL time or the
+# predicate references a column that was never created. Duplicated rather
+# than imported: it's 6 lines and store.impl.jac doesn't export it.
+def _sanitize_ident(name: str) -> str {
+    out = '';
+    for ch in name.lower() {
+        out += ch if (ch.isalnum() or ch == '_') else '_';
+    }
+    return out;
+}
+
+
+def _promoted_column(
+    promotions: dict[str, list[str]], arch: str, fld: str
+) -> (str | None) {
+    if not arch or fld not in promotions.get(arch, []) {
+        return None;
+    }
+    return f"g_{_sanitize_ident(arch)}_{_sanitize_ident(fld)}";
+}
+
+
+def _pred_cond(
+    alias: str, p: QPred, params: dict, pfx: str, promoted_col: (str | None) = None
+) -> (str | None) {
     if not _ident_ok(p.field) or not _pushable_value(p.value) {
         return None;
+    }
+    if promoted_col is not None and p.op in ('==', '!=', 'in') {
+        # Promoted columns are TEXT, generated as props->archetype->>fld
+        # (note ->>, not ->): a JSON-null value AND a missing key both
+        # collapse to SQL NULL there, whereas the jsonb-path expression
+        # below distinguishes them ('null'::jsonb vs SQL NULL). So this
+        # only fires for concrete non-None text-typed values/lists - a
+        # None-valued predicate or a non-str value falls through to the
+        # unaccelerated jsonb path, which stays byte-identical to today.
+        # ponytail: numeric/bool promoted-column comparisons and ordered
+        # (<,<=,>,>=) ops aren't accelerated either - the generated column
+        # is always TEXT (store.impl.jac), so a numeric predicate would
+        # need a cast that defeats the plain-btree index anyway. Extend
+        # _apply_promotions to type the column per-field if that ever
+        # shows up hot.
+        if p.op == 'in' {
+            vals = list(p.value) if isinstance(p.value, (list, tuple, set)) else [p.value];
+            if vals and all(isinstance(v, str) for v in vals) {
+                parts: list[str] = [];
+                for (i, v) in enumerate(vals) {
+                    key = f"{pfx}v{i}";
+                    params[key] = v;
+                    parts.append(f":{key}");
+                }
+                return f"{alias}.{promoted_col} IN ({', '.join(parts)})";
+            }
+        } elif isinstance(p.value, str) {
+            key = f"{pfx}v";
+            params[key] = p.value;
+            if p.op == '==' {
+                return f"{alias}.{promoted_col} = :{key}";
+            }
+            # '!=': missing-key/JSON-null rows read back as SQL NULL on the
+            # promoted column, and IS NULL must satisfy != here - same as
+            # the jsonb branch's "expr IS NULL OR expr <> rhs" below.
+            return f"({alias}.{promoted_col} IS NULL OR {alias}.{promoted_col} <> :{key})";
+        }
     }
     expr = f"{alias}.props->'archetype'->'{p.field}'";
     if p.op == 'in' {
@@ -177,7 +254,10 @@ def _nd_types(hop: QHop) -> list {
 
 
 impl compile_query(
-    q: GraphQuery, upto: int, mirror: (dict | None) = None
+    q: GraphQuery,
+    upto: int,
+    mirror: (dict | None) = None,
+    promotions: dict[str, list[str]] = {}
 ) -> CompiledQuery {
     # mirror (R3): {'table': str, 'fcols': [column, ...]} - the FINAL hop's
     # node join targets the slim per-archetype mirror table instead of fat
@@ -207,11 +287,17 @@ impl compile_query(
             f"{e}.kind = 'EdgeAnchor'",
             _dir_cond(e, fid, hop.dir, to_dst, to_src)
         ];
+        epred_arch = '';
         if hop.`edge is not None {
-            econds.append(_type_cond(e, hop.`edge.__name__, params, pfx_e));
+            epred_arch = str(getattr(hop.`edge, '__name__', ''));
+            econds.append(_type_cond(e, epred_arch, params, pfx_e));
         }
         for (j, p) in enumerate(hop.epreds) {
-            cond = _pred_cond(e, p, params, f"{pfx_e}p{j}");
+            pcol = (
+                _promoted_column(promotions, epred_arch, p.field)
+                    if PROMOTED_PREDICATES else None
+            );
+            cond = _pred_cond(e, p, params, f"{pfx_e}p{j}", pcol);
             if cond is None {
                 out.residual.setdefault(i, []).append(p);
             } else {
@@ -223,14 +309,28 @@ impl compile_query(
             f"{nd_alias}.id = {_other_expr(e, fid)}",
             f"{nd_alias}.kind = 'NodeAnchor'"
         ];
-        for (k, nt) in enumerate(_nd_types(hop)) {
+        nd_types_l = _nd_types(hop);
+        for (k, nt) in enumerate(nd_types_l) {
             tname = str(getattr(nt, '__name__', ''));
             if tname {
                 nconds.append(_type_cond(nd_alias, tname, params, f"h{n}n{k}"));
             }
         }
+        # Promotion is keyed by a single archetype name; only substitute
+        # when the hop pins the node to exactly one candidate type
+        # (`[?:Tweet]`), never for an untyped or multi-type hop
+        # (`[?:Tweet|Channel]`) where the same field name could mean two
+        # different promoted columns.
+        pred_arch = (
+            str(getattr(nd_types_l[0], '__name__', ''))
+                if len(nd_types_l) == 1 else ''
+        );
         for (j, p) in enumerate(hop.preds) {
-            cond = _pred_cond(nd_alias, p, params, f"h{n}np{j}");
+            pcol = (
+                _promoted_column(promotions, pred_arch, p.field)
+                    if PROMOTED_PREDICATES else None
+            );
+            cond = _pred_cond(nd_alias, p, params, f"h{n}np{j}", pcol);
             if cond is None {
                 out.residual.setdefault(i, []).append(p);
             } else {

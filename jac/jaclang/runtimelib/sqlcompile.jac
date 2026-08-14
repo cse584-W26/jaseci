@@ -16,5 +16,8 @@ obj CompiledQuery {
 
 
 def compile_query(
-    q: GraphQuery, upto: int, mirror: (dict | None) = None
+    q: GraphQuery,
+    upto: int,
+    mirror: (dict | None) = None,
+    promotions: dict[str, list[str]] = {}
 ) -> CompiledQuery;

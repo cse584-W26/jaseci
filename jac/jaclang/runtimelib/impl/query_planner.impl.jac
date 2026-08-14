@@ -65,7 +65,7 @@ impl _sql_pairs(
         return [];
     }
     mem.read_barrier();
-    cq = compile_query(q, upto);
+    cq = compile_query(q, upto, promotions=getattr(store, 'promotions', {}));
     if cq.residual {
         logger.warning(
             f"graph query has non-pushable predicates at hops "
@@ -440,7 +440,7 @@ impl _try_stream(
     if store is None or not hasattr(store, 'load_props') {
         return None;
     }
-    cq = compile_query(q, len(q.hops));
+    cq = compile_query(q, len(q.hops), promotions=getattr(store, 'promotions', {}));
     if cq.residual {
         return None;   # residual predicates need materialized values
     }
@@ -616,7 +616,9 @@ impl _try_stream_fused(
             limit_active = True;
         }
     }
-    cq = compile_query(q, len(q.hops), mirror=mirror_spec);
+    cq = compile_query(
+        q, len(q.hops), mirror=mirror_spec, promotions=getattr(store, 'promotions', {})
+    );
     if cq.residual {
         return None;
     }
