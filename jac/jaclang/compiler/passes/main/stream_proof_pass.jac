@@ -95,6 +95,15 @@ def _slice_upper(sl: object) -> (int | None) {
 
 def _lambda_field(lam: object) -> (str | None) {
     body = getattr(lam, 'body', None);
+    if not isinstance(body, uni.Expr) {
+        # Braced lambda body - `lambda (t: Tweet) { t.created_at; }`, the
+        # idiomatic jac spelling used by the littleX walkers. body is then a
+        # statement list, not an Expr. LambdaExpr.tail_return_expr is the
+        # implicit return and already refuses anything but a single
+        # expression statement, which is exactly this rule's admissibility
+        # condition - so no soundness is given up by accepting it.
+        body = lam.tail_return_expr();
+    }
     if isinstance(body, uni.AtomTrailer) and isinstance(body.right, uni.Name)
         and isinstance(body.target, uni.Name) {
         return str(body.right.value);
@@ -109,6 +118,10 @@ class StreamProofPass(UniPass) {
             return;
         }
         fields = self._audit_walker(nd);
+        import os;
+        if os.environ.get('JAC_STREAM_DEBUG') {
+            print('STREAMPROOF', str(nd.name), fields);
+        }
         if fields is not None {
             nd.stream_fields = tuple(sorted(fields));
         }

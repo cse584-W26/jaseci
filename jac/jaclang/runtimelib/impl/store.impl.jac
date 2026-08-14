@@ -905,7 +905,21 @@ impl PgStore.ensure_mirror(cls: type) -> bool {
     table = spec['table'];
     cols = spec['cols'];
     at = getattr(cls, '__name__', '');
+    # Mirror creation is one-time schema bootstrap, not request work, so it
+    # runs on its OWN connection rather than self._run's. Two reasons:
+    # (1) a read-only request transaction (JAC_RO_WALKERS ->
+    #     SNAPSHOT_READ_ONLY) refuses DDL outright - 25006, and the failure
+    #     was then cached for the process lifetime, so a read-only serving
+    #     arm could never build a mirror at all;
+    # (2) on a read-write request the DDL would otherwise join that request's
+    #     transaction and be rolled back with it.
+    # The DDL is idempotent (IF NOT EXISTS / OR REPLACE / DO NOTHING) and
+    # CREATE TRIGGER's SHARE ROW EXCLUSIVE on anchors does not conflict with
+    # the ACCESS SHARE a concurrent read holds.
+    ddl_conn: Any = None;
     try {
+        self._ensure_ready();
+        ddl_conn = self._connect();
         col_list: list = [];
         for c in cols.values() {
             col_list.append(c);
@@ -916,15 +930,14 @@ impl PgStore.ensure_mirror(cls: type) -> bool {
         }
         col_ddl = ', '.join(ddl_parts);
         empty_obj = "'{}'::jsonb";
-        self._run(
+        ddl_conn.run(
             'CREATE TABLE IF NOT EXISTS ' + table + ' ('
                 + 'id uuid PRIMARY KEY, root_id uuid, '
                 + 'acl_all smallint NOT NULL DEFAULT -1, '
                 + 'acl_spec boolean NOT NULL DEFAULT false, '
                 + "frag text NOT NULL DEFAULT '[]', "
                 + col_ddl
-                + ')',
-            {}
+                + ')'
         );
         all_cols: list = _mirror_base_cols();
         for c in col_list {
@@ -961,38 +974,34 @@ impl PgStore.ensure_mirror(cls: type) -> bool {
             upd_parts.append(c + ' = EXCLUDED.' + c);
         }
         upd = ', '.join(upd_parts);
-        self._run(
+        ddl_conn.run(
             'CREATE OR REPLACE FUNCTION ' + table + '_sync() RETURNS trigger AS $$ '
                 + 'BEGIN IF TG_OP = ' + "'DELETE'" + ' THEN '
                 + 'DELETE FROM ' + table + ' WHERE id = OLD.id; RETURN OLD; END IF; '
                 + 'INSERT INTO ' + table + ' (id, ' + set_cols + ') '
                 + 'VALUES (NEW.id, ' + vals_sql + ') '
                 + 'ON CONFLICT (id) DO UPDATE SET ' + upd + '; RETURN NEW; '
-                + 'END $$ LANGUAGE plpgsql',
-            {}
+                + 'END $$ LANGUAGE plpgsql'
         );
-        self._run(
+        ddl_conn.run(
             'CREATE OR REPLACE TRIGGER ' + table + '_ins '
                 + 'AFTER INSERT OR UPDATE ON anchors FOR EACH ROW '
                 + "WHEN (NEW.kind = 'NodeAnchor' AND NEW.arch_type = '" + at + "') "
-                + 'EXECUTE FUNCTION ' + table + '_sync()',
-            {}
+                + 'EXECUTE FUNCTION ' + table + '_sync()'
         );
-        self._run(
+        ddl_conn.run(
             'CREATE OR REPLACE TRIGGER ' + table + '_del '
                 + 'AFTER DELETE ON anchors FOR EACH ROW '
                 + "WHEN (OLD.kind = 'NodeAnchor' AND OLD.arch_type = '" + at + "') "
-                + 'EXECUTE FUNCTION ' + table + '_sync()',
-            {}
+                + 'EXECUTE FUNCTION ' + table + '_sync()'
         );
         # triggers first, THEN backfill with DO NOTHING: concurrent writes win
         sel_sql = vals_sql.replace('NEW.', 'a.');
-        self._run(
+        ddl_conn.run(
             'INSERT INTO ' + table + ' (id, ' + set_cols + ') '
                 + 'SELECT a.id, ' + sel_sql + ' FROM anchors a '
                 + "WHERE a.kind = 'NodeAnchor' AND a.arch_type = '" + at + "' "
-                + 'ON CONFLICT (id) DO NOTHING',
-            {}
+                + 'ON CONFLICT (id) DO NOTHING'
         );
         _mirror_state[cls] = {'ok': True, 'table': table, 'cols': cols};
         return True;
@@ -1000,6 +1009,12 @@ impl PgStore.ensure_mirror(cls: type) -> bool {
         logger.warning(f"mirror setup for {at} failed (falling back): {e}");
         _mirror_state[cls] = {'ok': False};
         return False;
+    } finally {
+        if ddl_conn is not None {
+            try {
+                ddl_conn.close();
+            } except Exception { }
+        }
     }
 }
 
