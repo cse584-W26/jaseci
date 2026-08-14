@@ -41,7 +41,9 @@ def _acl_read_ok(anchor: Anchor) -> bool;
 def _prefetch_acl_roots(mem: Session, anchors: list[Anchor]) -> None;
 
 
-def _try_stream_fused(mem: Session, q: GraphQuery) -> (list[Anchor] | None);
+def _try_stream_fused(
+    mem: Session, q: GraphQuery, use_pipe: bool = True
+) -> (list[Anchor] | None);
 
 
 def _try_stream(

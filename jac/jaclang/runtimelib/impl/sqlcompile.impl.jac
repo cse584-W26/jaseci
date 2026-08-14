@@ -284,13 +284,44 @@ impl compile_query(
     } else {
         sel = f"n{n}.id, e{n}.id";
     }
+    trav_order = 'f0.ord, ' + ', '.join(order);
+    base_sql = (
+        'FROM unnest(CAST(:origin AS uuid[])) WITH ORDINALITY AS f0(id, ord) '
+        + 'LEFT JOIN anchors s1 ON s1.id = f0.id '
+        + ' '.join(joins)
+    );
+    if mirror is not None and mirror.get('order_col') is not None {
+        # Distributed top-K: keep only this source's top-(limit+slack) by the
+        # pipeline's sort column, tie-broken by traversal order (matching the
+        # walker's stable sort), then restore traversal order for the caller.
+        dirn = 'DESC' if mirror.get('desc') else 'ASC';
+        cap = int(mirror.get('limit', 0)) + int(mirror.get('slack', 0));
+        ord_alias_parts: list = [];
+        ord_inner_parts: list = [];
+        ord_names = trav_order.split(', ');
+        k = 0;
+        for oc in ord_names {
+            k += 1;
+            ord_alias_parts.append(oc + ' AS _tk' + str(k));
+            ord_inner_parts.append('_tk' + str(k));
+        }
+        inner_sel = sel + ', ' + ', '.join(ord_alias_parts);
+        out.sql = (
+            'SELECT * FROM ('
+            + 'SELECT ' + inner_sel + ' ' + base_sql
+            + ' ORDER BY n' + str(n) + '.' + mirror['order_col'] + ' ' + dirn
+            + ', ' + trav_order
+            + ' LIMIT ' + str(cap)
+            + ') _topk ORDER BY ' + ', '.join(ord_inner_parts)
+        );
+        out.params = params;
+        return out;
+    }
     out.sql = (
         'SELECT ' + sel + ' '
-        f"FROM unnest(CAST(:origin AS uuid[])) WITH ORDINALITY AS f0(id, ord) "
-        f"LEFT JOIN anchors s1 ON s1.id = f0.id "
-        + ' '.join(joins)
-        + ' ORDER BY f0.ord, '
-        + ', '.join(order)
+        + base_sql
+        + ' ORDER BY '
+        + trav_order
     );
     out.params = params;
     return out;

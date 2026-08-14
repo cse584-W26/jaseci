@@ -72,6 +72,27 @@ def _single_field_key(fn_node: object) -> (str | None) {
 }
 
 
+def _slice_upper(sl: object) -> (int | None) {
+    # [:K] with literal integer K and no start/step
+    try {
+        slices = getattr(sl, 'slices', None) or [];
+        if len(slices) != 1 {
+            return None;
+        }
+        one = slices[0];
+        if getattr(one, 'start', None) is not None
+            or getattr(one, 'step', None) is not None {
+            return None;
+        }
+        stop = getattr(one, 'stop', None);
+        v = getattr(stop, 'value', None);
+        return int(v) if v is not None else None;
+    } except Exception {
+        return None;
+    }
+}
+
+
 def _lambda_field(lam: object) -> (str | None) {
     body = getattr(lam, 'body', None);
     if isinstance(body, uni.AtomTrailer) and isinstance(body.right, uni.Name)
@@ -113,20 +134,38 @@ class StreamProofPass(UniPass) {
             return None;
         }
         fields: set = set();
+        pipe: dict = {};
         found_chain = False;
         for ab in abilities {
-            got = self._audit_ability(ab, fields);
+            got = self._audit_ability(ab, fields, pipe);
             if got is None {
                 return None;
             }
             found_chain = found_chain or got;
         }
-        return fields if found_chain else None;
+        if not found_chain {
+            return None;
+        }
+        # ordered-slice pipeline: exactly one single-field sort followed (in
+        # source order) by exactly one constant-bound report slice of the
+        # SAME tainted list family -> the runtime may bound each chain fetch
+        # to the per-source top-K (distributed top-K containment; runtime
+        # re-guards with drop-count refill, so this is advisory).
+        sorts = pipe.get('sorts', []);
+        slices = pipe.get('slices', []);
+        if len(sorts) == 1 and len(slices) == 1 {
+            (sf, srev, sline) = sorts[0];
+            (upper, pline) = slices[0];
+            if upper is not None and sline < pline {
+                w.stream_pipeline = (str(sf), bool(srev), int(upper));
+            }
+        }
+        return fields;
     }
 
-    def _audit_ability(self: StreamProofPass, ab: uni.Ability, fields: set) -> (
-        bool | None
-    ) {
+    def _audit_ability(
+        self: StreamProofPass, ab: uni.Ability, fields: set, pipe: dict
+    ) -> (bool | None) {
         chains = ab.get_all_sub_nodes(uni.EdgeRefTrailer);
         if not chains {
             return False;
@@ -191,7 +230,7 @@ class StreamProofPass(UniPass) {
                     for d in list(getattr(s, 'defn', []))
                     if _ancestor(d, (uni.Assignment, )) is not None
                 ] {
-                    if not self._use_ok(use, kind, fields, taint_sym) {
+                    if not self._use_ok(use, kind, fields, taint_sym, pipe) {
                         return None;
                     }
                 }
@@ -207,7 +246,8 @@ class StreamProofPass(UniPass) {
         use: object,
         kind: str,
         fields: set,
-        taint_sym: object
+        taint_sym: object,
+        pipe: dict
     ) -> bool {
         parent = getattr(use, 'parent', None);
 
@@ -248,6 +288,13 @@ class StreamProofPass(UniPass) {
 
         # -- inside a report: serialization sink (dict/list literals included)
         if _ancestor(use, (uni.ReportStmt, )) is not None {
+            if kind == 'list' and isinstance(parent, uni.AtomTrailer)
+                and parent.target is use
+                and isinstance(getattr(parent, 'right', None), uni.IndexSlice) {
+                pipe.setdefault('slices', []).append(
+                    (_slice_upper(parent.right), parent.loc.first_line)
+                );
+            }
             return True;
         }
 
@@ -284,7 +331,15 @@ class StreamProofPass(UniPass) {
                         return True;
                     }
                 }
-                return _ancestor(parent, (uni.ReportStmt, )) is not None;
+                if _ancestor(parent, (uni.ReportStmt, )) is not None {
+                    if kind == 'list' {
+                        pipe.setdefault('slices', []).append(
+                            (_slice_upper(right), parent.loc.first_line)
+                        );
+                    }
+                    return True;
+                }
+                return False;
             }
             # X.method(...) or t.field
             if isinstance(right, uni.Name) {
@@ -299,7 +354,7 @@ class StreamProofPass(UniPass) {
                         return True;
                     }
                     if mname == 'sort' {
-                        return self._sort_ok(call, fields);
+                        return self._sort_ok(call, fields, pipe);
                     }
                     return False;
                 }
@@ -360,7 +415,9 @@ class StreamProofPass(UniPass) {
         return False;
     }
 
-    def _sort_ok(self: StreamProofPass, call: uni.FuncCall, fields: set) -> bool {
+    def _sort_ok(
+        self: StreamProofPass, call: uni.FuncCall, fields: set, pipe: dict
+    ) -> bool {
         key_field: (str | None) = None;
         for p in list(getattr(call, 'params', []) or []) {
             if isinstance(p, uni.KWPair) {
@@ -386,6 +443,17 @@ class StreamProofPass(UniPass) {
                         return False;
                     }
                     fields.add(key_field);
+                    reverse = False;
+                    for p2 in list(getattr(call, 'params', []) or []) {
+                        if isinstance(p2, uni.KWPair)
+                            and str(getattr(p2.key, 'value', '')) == 'reverse' {
+                            rv = getattr(p2, 'value', None);
+                            reverse = bool(getattr(rv, 'value', None) == 'True');
+                        }
+                    }
+                    pipe.setdefault('sorts', []).append(
+                        (key_field, reverse, call.loc.first_line)
+                    );
                     continue;
                 }
                 return False;

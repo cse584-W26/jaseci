@@ -533,7 +533,9 @@ impl _try_stream(
 }
 
 
-impl _try_stream_fused(mem: Session, q: GraphQuery) -> (list[Anchor] | None) {
+impl _try_stream_fused(
+    mem: Session, q: GraphQuery, use_pipe: bool = True
+) -> (list[Anchor] | None) {
     # R3: one statement for traversal + mirror fetch. Eligibility mirrors
     # _try_stream plus: single-class final hop with NO node predicates and NO
     # registered subtypes beyond the class itself (mirror membership must
@@ -591,9 +593,30 @@ impl _try_stream_fused(mem: Session, q: GraphQuery) -> (list[Anchor] | None) {
         }
         fcols.append(c);
     }
-    cq = compile_query(
-        q, len(q.hops), mirror={'table': info['table'], 'fcols': fcols}
-    );
+    mirror_spec: dict = {'table': info['table'], 'fcols': fcols};
+    pipe = getattr(type(wlk), '__jac_stream_pipeline__', None) if use_pipe else None;
+    limit_active = False;
+    if (
+        pipe is not None
+        and len(pipe) == 3
+        and not mem._dirty
+        and q.slc is None
+        and q.hops[-1].only is None
+    ) {
+        ocol = info['cols'].get(str(pipe[0]));
+        if ocol is not None {
+            # distributed top-K: the walker's merged sort+[:K] only ever
+            # needs each source's top-K under the same (field, traversal)
+            # order. Fetch top-(K+slack); the assembly below falls back to
+            # an unlimited rerun if drops exceed the slack.
+            mirror_spec['order_col'] = ocol;
+            mirror_spec['desc'] = bool(pipe[1]);
+            mirror_spec['limit'] = int(pipe[2]);
+            mirror_spec['slack'] = max(40, int(pipe[2]) * 2);
+            limit_active = True;
+        }
+    }
+    cq = compile_query(q, len(q.hops), mirror=mirror_spec);
     if cq.residual {
         return None;
     }
@@ -623,6 +646,7 @@ impl _try_stream_fused(mem: Session, q: GraphQuery) -> (list[Anchor] | None) {
         logger.warning(f"fused stream query failed (falling back): {e}");
         return None;
     }
+    drops = 0;
     for r in raw {
         nid = intern_uuid(r[0]);
         if nid in seen_ids {
@@ -630,6 +654,7 @@ impl _try_stream_fused(mem: Session, q: GraphQuery) -> (list[Anchor] | None) {
         }
         seen_ids.add(nid);
         if nid in mem._deleted {
+            drops += 1;
             continue;
         }
         a = local.get(nid) or mem.__mem__.get(nid);
@@ -650,7 +675,17 @@ impl _try_stream_fused(mem: Session, q: GraphQuery) -> (list[Anchor] | None) {
         resident[a.id] = a;
         ids.append(a.id);
     }
-    return _stream_from_mirror(mem, q, ids, resident, mrows, fields);
+    out = _stream_from_mirror(mem, q, ids, resident, mrows, fields);
+    if limit_active and out is not None {
+        cap = mirror_spec['limit'] + mirror_spec['slack'];
+        acl_drops = drops + (len(ids) - len(out));
+        if len(raw) >= cap and acl_drops > mirror_spec['slack'] {
+            # ACL/delete drops may have pushed true top-K items below the
+            # fetched prefix: rerun this source unlimited (rare)
+            out = _try_stream_fused(mem, q, False);
+        }
+    }
+    return out;
 }
 
 
