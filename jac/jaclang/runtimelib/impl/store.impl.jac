@@ -6,6 +6,9 @@
 glob _uuid_cache: dict = {};
 
 
+glob _mirror_state: dict = {};
+
+
 impl intern_uuid(s: object) -> UUID {
     key = s if isinstance(s, str) else str(s);
     if (hit := _uuid_cache.get(key)) is not None {
@@ -787,6 +790,199 @@ impl PgStore.load_full(ids: list[UUID]) -> dict[UUID, AnchorRow] {
         out[row.id] = row;
     }
     return out;
+}
+
+
+# --- R1/R2 typed mirrors -----------------------------------------------------
+# Per-node-archetype mirror tables, trigger-maintained from `anchors` in the
+# SAME transaction as every write (anchors stays the source of truth; mirrors
+# are derived state, rebuildable by re-running the backfill). Each row carries
+# the prebuilt api response fragment (R2) and the ACL scalars the exact fast
+# path needs (R4), plus one jsonb column per declared field so the stream path
+# can fetch the proof's field set as typed columns instead of parsing props.
+def _mirror_table_for(cls: type) -> (dict | None) {
+    # -> {'table': name, 'cols': {field: column}} or None if unmappable
+    import from hashlib { md5 }
+    import from jaclang.runtimelib.typecache { field_names }
+    tname = getattr(cls, '__name__', '');
+    mod = getattr(cls, '__module__', '');
+    if not tname or not mod {
+        return None;
+    }
+    names = field_names(cls);
+    if not names {
+        return None;
+    }
+    cols: dict = {};
+    seen: set = set();
+    for f in names {
+        c = 'f_' + _sanitize_ident(str(f));
+        if c in seen or not f {
+            return None;   # sanitised collision: refuse rather than guess
+        }
+        seen.add(c);
+        cols[str(f)] = c;
+    }
+    table = 'g_n_' + _sanitize_ident(tname) + '_' + md5(mod.encode()).hexdigest()[:6];
+    return {'table': table, 'cols': cols};
+}
+
+
+def _mirror_base_cols -> list {
+    out: list = [];
+    for c in ('root_id', 'acl_all', 'acl_spec', 'frag') {
+        out.append(c);
+    }
+    return out;
+}
+
+
+impl PgStore.ensure_mirror(cls: type) -> bool {
+    cached = _mirror_state.get(cls);
+    if cached is not None {
+        return cached['ok'];
+    }
+    spec = _mirror_table_for(cls);
+    if spec is None {
+        _mirror_state[cls] = {'ok': False};
+        return False;
+    }
+    table = spec['table'];
+    cols = spec['cols'];
+    at = getattr(cls, '__name__', '');
+    try {
+        col_list: list = [];
+        for c in cols.values() {
+            col_list.append(c);
+        }
+        ddl_parts: list = [];
+        for c in col_list {
+            ddl_parts.append(c + ' jsonb');
+        }
+        col_ddl = ', '.join(ddl_parts);
+        empty_obj = "'{}'::jsonb";
+        self._run(
+            'CREATE TABLE IF NOT EXISTS ' + table + ' ('
+                + 'id uuid PRIMARY KEY, root_id uuid, '
+                + 'acl_all smallint NOT NULL DEFAULT -1, '
+                + 'acl_spec boolean NOT NULL DEFAULT false, '
+                + "frag text NOT NULL DEFAULT '[]', "
+                + col_ddl
+                + ')',
+            {}
+        );
+        all_cols: list = _mirror_base_cols();
+        for c in col_list {
+            all_cols.append(c);
+        }
+        set_cols = ', '.join(all_cols);
+        acl_all_expr = (
+            "CASE WHEN jsonb_typeof(NEW.props->'access'->'all') = 'number' "
+            + "THEN (NEW.props->'access'->>'all')::smallint ELSE -1 END"
+        );
+        acl_spec_expr = (
+            "COALESCE(NEW.props->'access'->'roots'->'anchors', " + empty_obj
+            + ') <> ' + empty_obj
+        );
+        frag_expr = (
+            '(COALESCE((SELECT jsonb_object_agg(k.key, k.value) '
+            + "FROM jsonb_each(COALESCE(NEW.props->'archetype', " + empty_obj
+            + ")) k WHERE left(k.key, 2) <> '__'), " + empty_obj + ') '
+            + "|| jsonb_build_object('_jac_type', NEW.arch_type, "
+            + "'_jac_id', replace(NEW.id::text, '-', ''), "
+            + "'_jac_archetype', 'node'))::text"
+        );
+        val_list: list = [];
+        val_list.append('NEW.root_id');
+        val_list.append(acl_all_expr);
+        val_list.append(acl_spec_expr);
+        val_list.append(frag_expr);
+        for f in cols.keys() {
+            val_list.append("NEW.props->'archetype'->'" + f + "'");
+        }
+        vals_sql = ', '.join(val_list);
+        upd_parts: list = [];
+        for c in all_cols {
+            upd_parts.append(c + ' = EXCLUDED.' + c);
+        }
+        upd = ', '.join(upd_parts);
+        self._run(
+            'CREATE OR REPLACE FUNCTION ' + table + '_sync() RETURNS trigger AS $$ '
+                + 'BEGIN IF TG_OP = ' + "'DELETE'" + ' THEN '
+                + 'DELETE FROM ' + table + ' WHERE id = OLD.id; RETURN OLD; END IF; '
+                + 'INSERT INTO ' + table + ' (id, ' + set_cols + ') '
+                + 'VALUES (NEW.id, ' + vals_sql + ') '
+                + 'ON CONFLICT (id) DO UPDATE SET ' + upd + '; RETURN NEW; '
+                + 'END $$ LANGUAGE plpgsql',
+            {}
+        );
+        self._run(
+            'CREATE OR REPLACE TRIGGER ' + table + '_ins '
+                + 'AFTER INSERT OR UPDATE ON anchors FOR EACH ROW '
+                + "WHEN (NEW.kind = 'NodeAnchor' AND NEW.arch_type = '" + at + "') "
+                + 'EXECUTE FUNCTION ' + table + '_sync()',
+            {}
+        );
+        self._run(
+            'CREATE OR REPLACE TRIGGER ' + table + '_del '
+                + 'AFTER DELETE ON anchors FOR EACH ROW '
+                + "WHEN (OLD.kind = 'NodeAnchor' AND OLD.arch_type = '" + at + "') "
+                + 'EXECUTE FUNCTION ' + table + '_sync()',
+            {}
+        );
+        # triggers first, THEN backfill with DO NOTHING: concurrent writes win
+        sel_sql = vals_sql.replace('NEW.', 'a.');
+        self._run(
+            'INSERT INTO ' + table + ' (id, ' + set_cols + ') '
+                + 'SELECT a.id, ' + sel_sql + ' FROM anchors a '
+                + "WHERE a.kind = 'NodeAnchor' AND a.arch_type = '" + at + "' "
+                + 'ON CONFLICT (id) DO NOTHING',
+            {}
+        );
+        _mirror_state[cls] = {'ok': True, 'table': table, 'cols': cols};
+        return True;
+    } except Exception as e {
+        logger.warning(f"mirror setup for {at} failed (falling back): {e}");
+        _mirror_state[cls] = {'ok': False};
+        return False;
+    }
+}
+
+
+impl PgStore.load_mirror_rows(
+    cls: type, ids: list[UUID], fields: tuple
+) -> (list[tuple] | None) {
+    st = _mirror_state.get(cls);
+    if not st or not st['ok'] {
+        return None;
+    }
+    table = st['table'];
+    cols = st['cols'];
+    sel_list: list = [];
+    sel_list.append('id');
+    for c in _mirror_base_cols() {
+        sel_list.append(c);
+    }
+    for f in fields {
+        c = cols.get(str(f));
+        if c is None {
+            return None;   # proof field unknown to the mirror: fall back
+        }
+        sel_list.append(c);
+    }
+    sel = ', '.join(sel_list);
+    try {
+        return list(
+            self._run(
+                'SELECT ' + sel + ' FROM ' + table
+                    + ' WHERE id = ANY(CAST(:ids AS uuid[]))',
+                {'ids': [str(i) for i in ids]}
+            )
+        );
+    } except Exception as e {
+        logger.warning(f"mirror read for {table} failed (falling back): {e}");
+        return None;
+    }
 }
 
 

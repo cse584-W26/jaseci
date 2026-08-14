@@ -154,6 +154,10 @@ obj PgStore(Store) {
     def txn_isolation -> (TxnIsolation | None);
     def load_full(ids: list[UUID]) -> dict[UUID, AnchorRow];
     def load_props(ids: list[UUID]) -> dict[UUID, AnchorRow];
+    def ensure_mirror(cls: type) -> bool;
+    def load_mirror_rows(
+        cls: type, ids: list[UUID], fields: tuple
+    ) -> (list[tuple] | None);
     def upsert(rows_in: list[AnchorRow]) -> None;
     def delete(ids: list[UUID]) -> None;
     def existing(ids: list[UUID]) -> set[UUID];

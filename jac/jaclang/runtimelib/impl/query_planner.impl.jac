@@ -279,6 +279,140 @@ def _stream_class_ok(module_name: str, type_name: str) -> bool {
 }
 
 
+def _stream_from_mirror(
+    mem: Session,
+    q: GraphQuery,
+    ids: list[UUID],
+    resident: dict,
+    mrows: list,
+    fields: tuple
+) -> (list[Anchor] | None) {
+    # Exact ACL fast path over mirror scalars, replicating
+    # check_access_level's read decision for rows WITHOUT per-anchor
+    # specific grants: owner passes; otherwise the per-root contribution is
+    # rc = root.access.roots.check(user) which OVERRIDES, else
+    # max(anchor.all, root.all); readable iff level >= 0 (> NO_ACCESS).
+    # Rows WITH specifics (acl_spec) take the full per-row path via
+    # batch_get + _acl_read_ok. System root / unauthenticated contexts keep
+    # the generic path entirely.
+    import from jaclang.jac0core.runtime { JacRuntimeInterface }
+    import from jaclang.runtimelib.streamnode { StreamNode }
+    try {
+        jctx = JacRuntimeInterface.get_context();
+    } except Exception {
+        return None;
+    }
+    ur = jctx?.user_root;
+    gated = _acl_gated();
+    if gated and ur is None {
+        return None;
+    }
+    # anchors owned by the SHARED root carry runtime-level floor semantics
+    # (CONNECT floor, resolver-driven) that live outside the access blobs;
+    # never fast-path them - route through the full per-row check below.
+    shared_id = None;
+    try {
+        import from jaclang.jac0core.runtime { _shared_root_resolver }
+        sr = _shared_root_resolver[1];
+        if isinstance(sr, str) {
+            shared_id = UUID(sr);
+        } elif _shared_root_resolver[0] is not None {
+            srid = _shared_root_resolver[0]();
+            if isinstance(srid, str) {
+                shared_id = UUID(srid);
+            }
+        }
+    } except Exception {
+        shared_id = None;
+    }
+    by_id: dict = {};
+    for r in mrows {
+        by_id[r[0]] = r;
+    }
+    # prefetch distinct owner roots once (real anchors; ~#users, cheap)
+    root_ids = list({r[1] for r in mrows if r[1] is not None});
+    roots = mem.batch_get(root_ids) if (gated and root_ids) else {};
+    ur_key = str(ur.id) if ur is not None else '';
+    root_contrib: dict = {};
+    for (rid, ra) in roots.items() {
+        rc = ra.access.roots.check(ur_key);
+        root_contrib[rid] = (
+            rc.value if rc is not None else None,
+            ra.access.all.value
+        );
+    }
+    specials: list[UUID] = [];
+    picked: dict = {};
+    import from jaclang.runtimelib.store { intern_uuid }
+    for r in mrows {
+        # normalise driver differences: the pure-Python driver returns uuid
+        # columns as strings and psycopg returns UUID objects; key everything
+        # by interned UUIDs or the final assembly misses picked rows
+        aid = intern_uuid(r[0]);
+        root_id = intern_uuid(r[1]) if r[1] else None;
+        acl_all = int(r[2]) if r[2] is not None else -1;
+        acl_spec = (r[3] is True) or r[3] == 't';
+        frag = r[4];
+        if gated {
+            if acl_spec or (shared_id is not None and root_id == shared_id) {
+                specials.append(aid);
+                continue;
+            }
+            if ur is not None and (root_id == ur.id or aid == ur.id) {
+                ;   # owner (or the caller's own root): WRITE
+            } else {
+                (rc, rall) = root_contrib.get(root_id, (None, -1));
+                level = rc if rc is not None else max(acl_all, int(rall));
+                if level < 0 {
+                    continue;
+                }
+            }
+        }
+        anchor = NodeAnchor.__new__(NodeAnchor);
+        ad = anchor.__dict__;
+        ad['id'] = aid;
+        ad['root'] = root_id;
+        ad['persistent'] = True;
+        ad['hash'] = 1;
+        ad['edges'] = [];
+        ad['version'] = 0;
+        fvals: dict = {};
+        for (i, f) in enumerate(fields) {
+            fvals[str(f)] = r[5 + i];
+        }
+        ad['archetype'] = StreamNode(fvals, anchor, frag);
+        picked[aid] = anchor;
+    }
+    if specials {
+        # full-fidelity fallback for rows carrying per-anchor grants
+        got = mem.batch_get(specials);
+        for sid in specials {
+            sa = got.get(sid);
+            if sa is not None and sa.is_populated() and _acl_read_ok(sa) {
+                picked[sid] = sa;
+            }
+        }
+    }
+    out: list[Anchor] = [];
+    for i in ids {
+        if (ra := resident.get(i)) is not None {
+            if ra.is_populated() and ra.archetype is not None
+                and (not gated or _acl_read_ok(ra)) {
+                out.append(ra);
+            }
+            continue;
+        }
+        if (pa := picked.get(i)) is not None {
+            out.append(pa);
+        }
+    }
+    if q.slc is not None {
+        out = out[q.slc];
+    }
+    return out;
+}
+
+
 impl _try_stream(
     mem: Session, q: GraphQuery, ids: list[UUID], local: dict[UUID, Anchor]
 ) -> (list[Anchor] | None) {
@@ -321,6 +455,29 @@ impl _try_stream(
         }
     }
     mem.read_barrier();
+    # R1/R2/R4 mirror fast path: single-class final hop with a ready mirror
+    # serves (proof fields + prebuilt fragment + ACL scalars) from typed
+    # columns - no props parse, no Permission objects. Any miss falls
+    # through to the generic path below.
+    nd_last = q.hops[-1].nd if q.hops else None;
+    if (
+        need
+        and isinstance(nd_last, type)
+        and _stream_class_ok(
+            getattr(nd_last, '__module__', ''), getattr(nd_last, '__name__', '')
+        )
+        and hasattr(store, 'ensure_mirror')
+        and store.ensure_mirror(nd_last)
+    ) {
+        fields = getattr(type(wlk), '__jac_stream_fields__', ()) or ();
+        mrows = store.load_mirror_rows(nd_last, need, tuple(fields));
+        if mrows is not None {
+            out2 = _stream_from_mirror(mem, q, ids, resident, mrows, fields);
+            if out2 is not None {
+                return out2;
+            }
+        }
+    }
     rows = store.load_props(need) if need else {};
     import from jaclang.runtimelib.serializer { Serializer }
     import from jaclang.runtimelib.streamnode { StreamNode }

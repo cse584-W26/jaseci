@@ -155,6 +155,21 @@ impl Serializer._serialize_value(
     }
 
     if isinstance(val, StreamNode) {
+        # Mirror-backed nodes carry the response fragment PREBUILT by the
+        # database trigger (R2): hand it to orjson verbatim - zero parse,
+        # zero dict building. Falls to the dict path when orjson is absent
+        # or the serialize mode is not the plain api response.
+        frag_txt = val.__dict__.get('_sn_frag');
+        if frag_txt is not None and api_mode and not include_type
+            and not ref_mode and _seen is None {
+            try {
+                import orjson;
+                return orjson.Fragment(frag_txt.encode('utf-8'));
+            } except ImportError {
+                import json as _json;
+                return _json.loads(frag_txt);
+            }
+        }
         # Proof-gated stream fragment: identity from the slim anchor, field
         # values straight from stored props. Scalars pass through; anything
         # nested is round-tripped (deserialize -> serialize), which is by

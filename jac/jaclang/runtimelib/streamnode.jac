@@ -17,14 +17,34 @@ import from typing { Any }
 
 
 class StreamNode {
-    def __init__(self: StreamNode, props: dict, anchor: Any) {
+    def __init__(
+        self: StreamNode, props: dict, anchor: Any, frag: (str | None) = None
+    ) {
         d = self.__dict__;
         d['_sn_props'] = props;
         d['__jac__'] = anchor;
+        if frag is not None {
+            # mirror-backed: props holds only the walker's PROVEN field set
+            # and _sn_frag carries the prebuilt api response fragment text
+            d['_sn_frag'] = frag;
+        }
     }
 
     def __getattr__(self: StreamNode, name: str) -> Any {
         props = self.__dict__['_sn_props'];
+        if name not in props and '_sn_frag' in self.__dict__ {
+            # mirror-backed nodes carry only the PROVEN field set eagerly,
+            # but the fragment text holds every field: a read outside the
+            # proof (e.g. a comprehension the pass approved via the report
+            # sink) lazily inflates it once instead of failing
+            import json;
+            full = json.loads(self.__dict__['_sn_frag']);
+            for (k, v) in full.items() {
+                if not k.startswith('_jac_') and k not in props {
+                    props[k] = v;
+                }
+            }
+        }
         if name in props {
             v = props[name];
             if v is None or type(v) in (str, int, float, bool) {
