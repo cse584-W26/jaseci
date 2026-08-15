@@ -27,6 +27,7 @@ import from jaclang.runtimelib.serving.multipart {
 import from jaclang.runtimelib.serving.router { Router }
 import from jaclang.runtimelib.serving.sse { sse_frame_stream }
 import from jaclang.runtimelib.transport { TransportResponse }
+import from jaclang.runtimelib { stagetimer }
 
 
 glob _logger: logging.Logger = logging.getLogger("jaclang.runtimelib.serving.app");
@@ -92,6 +93,14 @@ def transport_to_response(tr: TransportResponse) -> JSONResponse {
     if timing_hdrs is not None {
         resp.headers.set('x-server-total-ms', str(timing_hdrs[0]));
         resp.headers.set('x-server-commit-ms', str(timing_hdrs[1]));
+    }
+    if stagetimer.ON {
+        stg = stagetimer.headers();
+        if stg {
+            for (k, v) in stg.items() {
+                resp.headers.set(k, str(v));
+            }
+        }
     }
     return resp;
 }
@@ -205,6 +214,9 @@ obj ServingApp {
     }
 
     async def dispatch(request: Request) -> Response {
+        if stagetimer.ON {
+            stagetimer.start();
+        }
         handler: any = self._route_and_call;
         for mw in self.middlewares {
             handler = self._wrap_middleware(mw, handler);

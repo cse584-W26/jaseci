@@ -366,11 +366,16 @@ impl ExecutionManager._finalize_call_response(
         return reports;
     }
 
+    import from jaclang.runtimelib { stagetimer }
+    _ser_t = stagetimer.acc_begin() if stagetimer.ON else 0.0;
     envelope: dict[str, JsonValue] = {};
     if os.environ.get('JAC_API_LEAN_RESPONSE') != '1' {
         envelope['result'] = Serializer.serialize(result, api_mode=True);
     }
     envelope['reports'] = Serializer.serialize(reports, api_mode=True);
+    if stagetimer.ON {
+        stagetimer.acc_ser(_ser_t);
+    }
     ctx = Jac.get_context();
     if ctx.diagnostics {
         envelope['warnings'] = [d.to_dict() for d in ctx.diagnostics];
@@ -388,11 +393,18 @@ async def _run_function_with_occ(
     include_traceback: bool = False
 ) -> dict[str, JsonValue] | Generator | AsyncGenerator {
     import from time { perf_counter }
+    import from jaclang.runtimelib { stagetimer }
     _timing_on = os.environ.get('JAC_TIMING_HEADERS') == '1';
     _t0 = perf_counter();
+    if stagetimer.ON {
+        stagetimer.span_begin();
+    }
     resolved = await _abegin_user_request_context(mgr.user_manager, username);
     if isinstance(resolved, dict) {
         return resolved;
+    }
+    if stagetimer.ON {
+        stagetimer.prep_begin();
     }
     (ctx, req_token, root_id) = resolved;
     ctx.mem.unit_enter();
@@ -409,6 +421,9 @@ async def _run_function_with_occ(
             call_state = ctx.call_state.get();
             try {
                 out = await run_attempt(call_state, ctx);
+                if stagetimer.ON {
+                    stagetimer.finish(ctx._commit_ms);
+                }
                 if _timing_on and isinstance(out, dict) {
                     _whole_ms = (perf_counter() - _t0) * 1000.0;
                     out['_server_commit_ms'] = round(ctx._commit_ms, 3);

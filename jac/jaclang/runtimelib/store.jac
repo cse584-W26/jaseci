@@ -7,6 +7,7 @@ import from typing { Any }
 import from uuid { UUID }
 
 import from jaclang.runtimelib.pgwire { PgWireError }
+import from jaclang.runtimelib { stagetimer as _stg }
 
 glob logger = logging.getLogger(__name__),
      SCHEMA_VERSION = 1,

@@ -509,30 +509,42 @@ impl Session.commit(anchor: (Anchor | None) = None) -> None {
         return;
     }
     import from time { perf_counter }
+    import from jaclang.runtimelib { stagetimer }
     _t0 = perf_counter();
-    with self._lock {
-        if self.store is not None {
-            attempt = 0;
-            while True {
-                try {
-                    self.flush(full=True);
-                    self.store.commit();
-                    break;
-                } except Exception as e {
-                    if not _is_serialization_conflict(e) or attempt >= MAX_RETRIES {
-                        raise;
+    # commit-phase SQL (the flush UPDATEs + COMMIT) is charged to
+    # x-stg-commit-ms via this wall timer, so it must not also land in
+    # x-stg-db-ms: flip the phase for the duration.
+    _stg_prev = stagetimer.phase('commit') if stagetimer.ON else '';
+    try {
+        with self._lock {
+            if self.store is not None {
+                attempt = 0;
+                while True {
+                    try {
+                        self.flush(full=True);
+                        self.store.commit();
+                        break;
+                    } except Exception as e {
+                        if not _is_serialization_conflict(e)
+                            or attempt >= MAX_RETRIES {
+                            raise;
+                        }
+                        attempt += 1;
+                        self._recover_conflict();
                     }
-                    attempt += 1;
-                    self._recover_conflict();
                 }
+                self._txn_changed.clear();
+            } else {
+                self._dirty.clear();
+                self._deleted.clear();
             }
-            self._txn_changed.clear();
-        } else {
-            self._dirty.clear();
-            self._deleted.clear();
+        }
+    } finally {
+        if stagetimer.ON {
+            stagetimer.phase(_stg_prev);
         }
     }
-    if os.environ.get('JAC_TIMING_HEADERS') == '1' {
+    if os.environ.get('JAC_TIMING_HEADERS') == '1' or stagetimer.ON {
         try {
             import from jaclang.jac0core.runtime { JacRuntimeInterface }
             ctx = JacRuntimeInterface.get_context();

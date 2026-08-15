@@ -437,52 +437,66 @@ def _conn_dead(e: Exception) -> bool {
 
 
 impl PgStore._run(sql: str, params: dict) -> list {
-    self._ensure_ready();
-    with self._lock {
-        conn: Any = None;
-        try {
-            conn = self._main();
-        } except Exception as e {
-            if not (_conn_dead(e) and self.ensure_cb is not None) {
+    # JAC_STAGE_HEADERS: the single choke point for every main-connection
+    # statement, so it is where x-stg-db-ms is accumulated. q_enter returns
+    # None (no timing) unless the request is in its data-query phase and the
+    # statement is not transaction control - see stagetimer.py.
+    _stg_h = _stg.q_enter(sql) if _stg.ON else None;
+    try {
+        self._ensure_ready();
+        with self._lock {
+            conn: Any = None;
+            try {
+                conn = self._main();
+            } except Exception as e {
+                if not (_conn_dead(e) and self.ensure_cb is not None) {
+                    raise;
+                }
+                self._conn = None;
+                try {
+                    self.conninfo = self.ensure_cb();
+                } except Exception { }
+                conn = self._main();
+            }
+            try {
+                return conn.run(sql, **params) or [];
+            } except Exception as e {
+                if _conn_dead(e) {
+                    try {
+                        conn.close();
+                    } except Exception { }
+                    self._conn = None;
+                    was_txn = self._in_txn;
+                    self._in_txn = False;
+                    if self.ensure_cb is not None {
+                        try {
+                            self.conninfo = self.ensure_cb();
+                        } except Exception { }
+                    }
+                    if was_txn {
+                        import from jaclang.runtimelib.pgwire { PgWireError }
+                        raise PgWireError(
+                            {
+                                'C': '08006',
+                                'M': 'connection lost mid-transaction; retry'
+                            }
+                        ) from e;
+                    }
+                    conn2: Any = self._main();
+                    return conn2.run(sql, **params) or [];
+                }
+                if self._in_txn {
+                    try {
+                        conn.run('ROLLBACK');
+                    } except Exception { }
+                    self._in_txn = False;
+                }
                 raise;
             }
-            self._conn = None;
-            try {
-                self.conninfo = self.ensure_cb();
-            } except Exception { }
-            conn = self._main();
         }
-        try {
-            return conn.run(sql, **params) or [];
-        } except Exception as e {
-            if _conn_dead(e) {
-                try {
-                    conn.close();
-                } except Exception { }
-                self._conn = None;
-                was_txn = self._in_txn;
-                self._in_txn = False;
-                if self.ensure_cb is not None {
-                    try {
-                        self.conninfo = self.ensure_cb();
-                    } except Exception { }
-                }
-                if was_txn {
-                    import from jaclang.runtimelib.pgwire { PgWireError }
-                    raise PgWireError(
-                        {'C': '08006', 'M': 'connection lost mid-transaction; retry'}
-                    ) from e;
-                }
-                conn2: Any = self._main();
-                return conn2.run(sql, **params) or [];
-            }
-            if self._in_txn {
-                try {
-                    conn.run('ROLLBACK');
-                } except Exception { }
-                self._in_txn = False;
-            }
-            raise;
+    } finally {
+        if _stg_h is not None {
+            _stg.q_exit(_stg_h);
         }
     }
 }
