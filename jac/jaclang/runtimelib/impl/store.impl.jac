@@ -828,14 +828,18 @@ impl PgStore.load_full(ids: list[UUID]) -> dict[UUID, AnchorRow] {
         return {};
     }
     out: dict[UUID, AnchorRow] = {};
+    # F2/lazy adjacency: this SELECT deliberately carries NO edge list. The
+    # old `string_agg(e.id) WHERE e.src=a.id OR e.dst=a.id` subquery was an
+    # O(node's lifetime edge count) scan+sort+aggregate run on EVERY load of
+    # EVERY node, whether or not the walker ever traversed from it (TPC-C's
+    # Warehouse: 100,064 edges rebuilt on 100% of new_order/payment, which
+    # only read w_tax off it). `adjacency=None` now means "not fetched" -
+    # Session._materialize installs a LazyEdges proxy that fetches once, on
+    # first actual read of anchor.edges, via PgStore.load_adjacency.
     rows = self._run(
         """
         SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,
-               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text,
-               CASE WHEN a.kind = 'NodeAnchor' THEN
-                   (SELECT string_agg(e.id::text, ',' ORDER BY e.seq, e.id)
-                      FROM anchors e WHERE e.src = a.id OR e.dst = a.id)
-               END
+               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text
         FROM anchors a WHERE a.id = ANY(CAST(:ids AS uuid[]))
         """,
         {'ids': [str(i) for i in ids]}
@@ -845,19 +849,6 @@ impl PgStore.load_full(ids: list[UUID]) -> dict[UUID, AnchorRow] {
         props: dict = (
             raw_props if isinstance(raw_props, dict) else json.loads(str(raw_props))
         );
-        adjacency: (list[UUID] | None) = None;
-        if str(r[1]) == 'NodeAnchor' {
-            adjacency = [];
-            if r[11] {
-                seen_e: set[str] = set();
-                for tok in str(r[11]).split(',') {
-                    if tok and tok not in seen_e {
-                        seen_e.add(tok);
-                        adjacency.append(intern_uuid(tok));
-                    }
-                }
-            }
-        }
         row = AnchorRow(
             id=intern_uuid(r[0]),
             kind=str(r[1]),
@@ -870,11 +861,29 @@ impl PgStore.load_full(ids: list[UUID]) -> dict[UUID, AnchorRow] {
             dst=intern_uuid(r[7]) if r[7] else None,
             undirected=bool(r[8]),
             version=int(str(r[10])),
-            adjacency=adjacency
+            adjacency=None
         );
         out[row.id] = row;
     }
     return out;
+}
+
+
+impl PgStore.load_adjacency(id: UUID) -> list[UUID] {
+    # The lazy half of load_full: one node's edge ids, fetched only when
+    # something actually reads anchor.edges. Runs on the SAME connection and
+    # therefore the SAME transaction/snapshot as the request that triggered
+    # it, so it can never observe rows the caller's snapshot cannot see.
+    # idx_anchors_src / idx_anchors_dst cover both arms of the OR.
+    rows = self._run(
+        """
+        SELECT e.id FROM anchors e
+        WHERE e.src = CAST(:id AS uuid) OR e.dst = CAST(:id AS uuid)
+        ORDER BY e.seq, e.id
+        """,
+        {'id': str(id)}
+    );
+    return [intern_uuid(r[0]) for r in rows];
 }
 
 

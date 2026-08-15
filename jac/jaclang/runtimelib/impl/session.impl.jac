@@ -995,20 +995,27 @@ impl Session._materialize(
     }
     anchor: Anchor = got;
     if isinstance(anchor, NodeAnchor) and self.store is not None {
-        adj = edge_ids if edge_ids is not None else [];
-        live = [
-            i
-            for i in adj
-            if i not in self._deleted
-        ];
-        edges = [];
-        for eid in live {
-            if (stub := Serializer._id_to_stub(EdgeAnchor, str(eid))) is not None
-                and isinstance(stub, EdgeAnchor) {
-                edges.append(stub);
+        if edge_ids is None {
+            # The store did not hand back an edge list (PgStore.load_full no
+            # longer runs its per-load string_agg over the node's whole
+            # adjacency). Install the proxy that fetches exactly once, and
+            # only if something actually reads anchor.edges.
+            anchor.edges = LazyEdges(self, row.id);
+        } else {
+            live = [
+                i
+                for i in edge_ids
+                if i not in self._deleted
+            ];
+            edges = [];
+            for eid in live {
+                if (stub := Serializer._id_to_stub(EdgeAnchor, str(eid))) is not None
+                    and isinstance(stub, EdgeAnchor) {
+                    edges.append(stub);
+                }
             }
+            anchor.edges = edges;
         }
-        anchor.edges = edges;
     }
     self.__mem__[row.id] = anchor;
     if row.version {

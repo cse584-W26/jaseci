@@ -40,6 +40,202 @@ glob logger = logging.getLogger(__name__),
      ];
 
 
+class LazyEdges(list) {
+    """A NodeAnchor's `edges` list that fetches its DB half on first read.
+
+    Loading a node used to fetch its ENTIRE adjacency eagerly (PgStore.
+    load_full's `string_agg` over anchors.src/dst) and turn every id into an
+    EdgeAnchor stub, on every load, whether or not the walker ever traversed
+    from that node. On TPC-C's Warehouse that is 100,064 edges rebuilt by
+    100% of new_order/payment transactions, which only read `w_tax` off it.
+
+    Why a list subclass and not an explicit `ensure_adjacency()` call at each
+    traversal site: every remaining consumer of `.edges` lives in jac0core
+    (JacGraph.disconnect, JacPersistence.save/destroy, NodeAnchor.remove_edge/
+    __getstate__, osp_graph_sv.sv_register_hydrated) which this branch does
+    not edit, and `NodeAnchor.is_populated()` is literally `'edges' in
+    self.__dict__` - so the attribute must exist and must quack like a list
+    from the moment the anchor is built. Subclassing `list` keeps
+    isinstance(x, list), slicing, enumerate(), set(), pop() and friends
+    working unchanged.
+
+    Read-your-writes: `append` is the ONE list operation that does NOT
+    trigger the fetch, because it is how JacGraph.build_edge attaches an
+    edge created in this session. Those appended edges are held aside and
+    re-appended after the DB half arrives, so a walker that creates an edge
+    and then traverses from either endpoint sees it. Edges deleted in this
+    session are dropped via Session._deleted at fill time.
+
+    Snapshot consistency: the fetch goes through the session's own store,
+    i.e. the same connection and open transaction as the rest of the
+    request, so it can never see rows outside the caller's snapshot.
+    """
+    def __init__(self: LazyEdges, sess: Any, node_id: UUID) -> None {
+        list.__init__(self);
+        d = self.__dict__;
+        d['_le_sess'] = sess;
+        d['_le_id'] = node_id;
+        d['_le_filled'] = False;
+    }
+
+    def _le_fill(self: LazyEdges) -> None {
+        d = self.__dict__;
+        if d['_le_filled'] {
+            return;
+        }
+        # flip BEFORE fetching: _id_to_stub and the store call must not be
+        # able to re-enter this method and fetch twice
+        d['_le_filled'] = True;
+        sess = d['_le_sess'];
+        store = sess.store if sess is not None else None;
+        if store is None {
+            return;
+        }
+        import from jaclang.runtimelib.serializer { Serializer }
+        # edges attached in THIS session (build_edge appends without
+        # filling); they win over the DB row for the same id
+        pending = list.copy(self);
+        have: set = set(e.id for e in pending);
+        stubs: list = [];
+        for eid in store.load_adjacency(d['_le_id']) {
+            if eid in have or eid in sess._deleted {
+                continue;
+            }
+            have.add(eid);
+            if (stub := Serializer._id_to_stub(EdgeAnchor, str(eid))) is not None
+                and isinstance(stub, EdgeAnchor) {
+                stubs.append(stub);
+            }
+        }
+        # stored adjacency first (seq order, as load_full used to yield it),
+        # session-local attachments after
+        list.clear(self);
+        list.extend(self, stubs + pending);
+    }
+
+    # --- read surface: every one of these fills first --------------------
+    # `append` is deliberately absent (see class docstring).
+    def __iter__(self: LazyEdges) -> Any {
+        self._le_fill();
+        return list.__iter__(self);
+    }
+
+    def __len__(self: LazyEdges) -> int {
+        self._le_fill();
+        return list.__len__(self);
+    }
+
+    def __getitem__(self: LazyEdges, k: Any) -> Any {
+        self._le_fill();
+        return list.__getitem__(self, k);
+    }
+
+    def __contains__(self: LazyEdges, v: Any) -> bool {
+        self._le_fill();
+        return list.__contains__(self, v);
+    }
+
+    def __reversed__(self: LazyEdges) -> Any {
+        self._le_fill();
+        return list.__reversed__(self);
+    }
+
+    def __eq__(self: LazyEdges, other: Any) -> Any {
+        self._le_fill();
+        return list.__eq__(self, other);
+    }
+
+    def __ne__(self: LazyEdges, other: Any) -> Any {
+        self._le_fill();
+        return list.__ne__(self, other);
+    }
+
+    def __repr__(self: LazyEdges) -> str {
+        if not self.__dict__['_le_filled'] {
+            return '[<lazy adjacency, not fetched>]';
+        }
+        return list.__repr__(self);
+    }
+
+    def __setitem__(self: LazyEdges, k: Any, v: Any) -> None {
+        self._le_fill();
+        list.__setitem__(self, k, v);
+    }
+
+    def __delitem__(self: LazyEdges, k: Any) -> None {
+        self._le_fill();
+        list.__delitem__(self, k);
+    }
+
+    def __add__(self: LazyEdges, other: Any) -> Any {
+        self._le_fill();
+        return list.__add__(self, other);
+    }
+
+    def __iadd__(self: LazyEdges, other: Any) -> Any {
+        self._le_fill();
+        return list.__iadd__(self, other);
+    }
+
+    def __mul__(self: LazyEdges, n: Any) -> Any {
+        self._le_fill();
+        return list.__mul__(self, n);
+    }
+
+    def pop(self: LazyEdges, i: int = -1) -> Any {
+        self._le_fill();
+        return list.pop(self, i);
+    }
+
+    def remove(self: LazyEdges, v: Any) -> None {
+        self._le_fill();
+        list.remove(self, v);
+    }
+
+    def insert(self: LazyEdges, i: int, v: Any) -> None {
+        self._le_fill();
+        list.insert(self, i, v);
+    }
+
+    def index(self: LazyEdges, *a: Any) -> int {
+        self._le_fill();
+        return list.index(self, *a);
+    }
+
+    def count(self: LazyEdges, v: Any) -> int {
+        self._le_fill();
+        return list.count(self, v);
+    }
+
+    def sort(self: LazyEdges, **kw: Any) -> None {
+        self._le_fill();
+        list.sort(self, **kw);
+    }
+
+    def reverse(self: LazyEdges) -> None {
+        self._le_fill();
+        list.reverse(self);
+    }
+
+    def copy(self: LazyEdges) -> list {
+        self._le_fill();
+        return list.copy(self);
+    }
+
+    def clear(self: LazyEdges) -> None {
+        # a clear() means "no edges", so the pending fetch is moot - mark it
+        # done rather than fetching a list we are about to throw away
+        self.__dict__['_le_filled'] = True;
+        list.clear(self);
+    }
+
+    def extend(self: LazyEdges, it: Any) -> None {
+        # same contract as append: attachment, not observation
+        list.extend(self, it);
+    }
+}
+
+
 obj ScratchLease {
     has database: str,
         reset: bool = False;
