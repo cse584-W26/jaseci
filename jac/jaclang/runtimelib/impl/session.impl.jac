@@ -974,6 +974,11 @@ impl Session._materialize(
     if existing is not None and existing.is_populated() {
         return existing;
     }
+    # Rows written before the persisted payload dropped `edges` still carry
+    # the array (a hub node's runs to 33k ids). Deserializing it builds that
+    # many EdgeAnchor stubs which the recompute below throws away, so drop it
+    # up front - the adjacency this method installs comes from row.adjacency.
+    row.props.pop('edges', None);
     got = Serializer.deserialize(row.props, fingerprint=row.fingerprint);
     if not isinstance(got, Anchor) {
         logger.warning(

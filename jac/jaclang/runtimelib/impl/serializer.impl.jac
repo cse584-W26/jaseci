@@ -140,8 +140,19 @@ impl Serializer._serialize_value(
                 );
         }
         if isinstance(val, NodeAnchor) {
-            result['edges'] = [str(e.id) for e in val.edges];
-
+            # `edges` is dead weight in the PERSISTED payload: the store
+            # recomputes adjacency from anchors.src/dst (PgStore.load_full's
+            # string_agg) and Session._materialize overwrites anchor.edges
+            # with it unconditionally; _persist_hash already strips the field
+            # before hashing; the bulk loader never writes it (Gate-3 passed
+            # without it). On hub nodes the array reached 33k ids / 1.3MB
+            # avg, re-serialized and rewritten on EVERY child write.
+            # include_type=True is exactly the persistence mode (its only
+            # callers are _persist_hash / Session._serialize / _compute_hash),
+            # so api-mode responses are unaffected.
+            if not include_type {
+                result['edges'] = [str(e.id) for e in val.edges];
+            }
             result['version'] = val.version;
         }
         if isinstance(val, EdgeAnchor) {
@@ -895,13 +906,6 @@ impl Serializer._deserialize_anchor(
                 }
                 anchor.edges = edges;
             }
-
-            setattr(
-                anchor,
-                '_initial_edge_ids',
-                frozenset(intern_uuid(eid) for eid in (edge_ids or []))
-            );
-
             anchor.version = data.get('version', 0);
         }
         if isinstance(anchor, EdgeAnchor) {
