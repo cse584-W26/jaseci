@@ -343,7 +343,14 @@ def _stream_from_mirror(
     }
     specials: list[UUID] = [];
     picked: dict = {};
+    import json;
     import from jaclang.runtimelib.store { intern_uuid }
+    # The mirror's f_* columns are jsonb, selected AS TEXT by both feeders
+    # (store.load_mirror_rows and the fused sqlcompile SELECT), so every row
+    # carries each field's JSON *text*. Decode it back to the value the
+    # props path would have produced - without this a str field reaches the
+    # walker still quoted ('"Ada"') and an int reaches it as '42'.
+    jload = json.loads;
     for r in mrows {
         # normalise driver differences: the pure-Python driver returns uuid
         # columns as strings and psycopg returns UUID objects; key everything
@@ -378,7 +385,8 @@ def _stream_from_mirror(
         ad['version'] = 0;
         fvals: dict = {};
         for (i, f) in enumerate(fields) {
-            fvals[str(f)] = r[5 + i];
+            raw = r[5 + i];
+            fvals[str(f)] = jload(raw) if raw is not None else None;
         }
         ad['archetype'] = StreamNode(fvals, anchor, frag);
         picked[aid] = anchor;

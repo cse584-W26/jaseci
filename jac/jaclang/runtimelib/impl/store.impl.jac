@@ -1083,7 +1083,13 @@ impl PgStore.load_mirror_rows(
         if c is None {
             return None;   # proof field unknown to the mirror: fall back
         }
-        sel_list.append(c);
+        # ::text pins the wire format of the jsonb field columns. Left as
+        # jsonb, psycopg decodes them and the pure-python pgwire driver does
+        # not, so the caller would have to guess whether '"Ada"' is a quoted
+        # string or a string that happens to look like one. As text both
+        # drivers hand back the field's JSON text and the caller decodes it
+        # exactly once (query_planner._stream_from_mirror).
+        sel_list.append(c + '::text');
     }
     sel = ', '.join(sel_list);
     try {
