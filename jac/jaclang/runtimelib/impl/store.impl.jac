@@ -131,6 +131,22 @@ def _sanitize_ident(name: str) -> str {
 }
 
 
+def _bare_ident(name: str) -> bool {
+    # unlike _sanitize_ident this does not rewrite: it answers whether `name`
+    # is already safe to paste into DDL (archetype names are CamelCase, so
+    # sanitising would never round-trip).
+    if not name or name[0].isdigit() {
+        return False;
+    }
+    for ch in name {
+        if not (ch.isalnum() or ch == '_') {
+            return False;
+        }
+    }
+    return True;
+}
+
+
 def _store_ns(info: ConnInfo) -> str {
     return f"{info.unix_socket_dir or info.host}:{info.port}/{info.database}";
 }
@@ -1061,6 +1077,210 @@ impl PgStore.mirror_info(cls: type) -> (dict | None) {
         return None;
     }
     return {'table': st['table'], 'cols': st['cols']};
+}
+
+
+# --- R5 endpoint column ------------------------------------------------------
+# A stream chain's final hop is `<prev node> -[E]-> <mirrored node>`, and the
+# generic form has to join `anchors` to walk it: for a 50-source page that is
+# one index scan per source PLUS one mirror PK lookup per candidate row - at
+# t200 that is 10,000 lookups / 32,126 buffers to return 60 rows, because the
+# sort column only exists on the mirror and the planner cannot cut before the
+# join (EXPLAIN, PROGRESS.log PHASE10).
+#
+# `src_endpoint` denormalises the E-edge's src onto the mirror row, so the
+# final hop becomes an index range scan of (src_endpoint, <sort col>) that
+# stops after `cap` rows per source: 3,000 rows / 684 buffers for the same
+# page, 22.9ms -> 3.8ms.
+#
+# The column is single-valued, so it is CLAIMED by exactly one edge archetype
+# per mirror. The claiming edge type is DERIVED from live data rather than
+# taken on trust, because the hop that wants it is usually untyped
+# (`[-->(?:Tweet)]`). Three probes must all hold, or the mirror is marked
+# never-claimable and every query keeps the flat join:
+#   1. exactly ONE edge archetype lands on this node type
+#   2. no edge touching this node type on EITHER end is undirected (one
+#      column cannot represent a hop that is traversable both ways)
+#   3. no node of this type currently has two inbound edges of that type
+#      (the column has room for one src)
+# If the hop DOES name an edge type it must equal the derived one.
+#
+# ponytail: probe 3 is checked at claim time and never again - nothing stops
+# a later write from giving a node a second inbound edge, after which
+# src_endpoint holds whichever src was written last and that node's rows can
+# go missing from a page. The sound version is a real (src, dst, sort)
+# adjacency index rather than a column; that, and having the compiler plan
+# which mirrors get one instead of the first stream query claiming it
+# lazily, are the upgrade path. Keep this flag-gated until then.
+impl PgStore.ensure_mirror_endpoint(
+    cls: type, edge_type: str, order_col: str
+) -> (str | None) {
+    st = _mirror_state.get(cls);
+    if not st or not st['ok'] {
+        return None;
+    }
+    claim = st.get('ep');
+    if claim is not None {
+        # claimed: usable only by the edge type it was built for (an untyped
+        # hop passes ''), and only once an index exists for THIS sort column
+        if not claim['edge'] or (edge_type and claim['edge'] != edge_type) {
+            return None;
+        }
+        if order_col in claim['ords'] {
+            return 'src_endpoint';
+        }
+    }
+    # interpolated into DDL below; refuse anything that is not already a bare
+    # identifier rather than quoting-by-guess
+    if not _bare_ident(order_col) or (edge_type and not _bare_ident(edge_type)) {
+        return None;
+    }
+    table = st['table'];
+    at = getattr(cls, '__name__', '');
+    tries = int(st.get('ep_tries', 0));
+    if tries >= 8 {
+        return None;   # kept failing; stop paying for the attempt
+    }
+    st['ep_tries'] = tries + 1;
+    ddl_conn: Any = None;
+    try {
+        self._ensure_ready();
+        ddl_conn = self._connect();
+        # ADD COLUMN needs ACCESS EXCLUSIVE on the mirror, and the request
+        # that triggered this may already hold ACCESS SHARE on it (e.g. the
+        # ensure_mirror completeness probe runs on the request's own
+        # connection). Without a lock_timeout the DDL waits on the very
+        # request that is waiting for it, until the CLIENT times out - which
+        # then strands the backend and blocks every later attempt too.
+        # Fail fast and let a later request, holding no such lock, do it.
+        ddl_conn.run("SET lock_timeout = '250ms'");
+        if claim is None {
+            # `refuse` = the shape itself cannot be represented by one column,
+            # which no retry changes; an EXCEPTION below is a different thing
+            # (busy lock) and is retried, hence the marker is only set here.
+            refuse = {'edge': '', 'ords': set()};
+            kinds = ddl_conn.run(
+                "SELECT DISTINCT arch_type FROM anchors WHERE kind = 'EdgeAnchor' "
+                    + "AND dst_type = '" + at + "' LIMIT 2"
+            );
+            if len(kinds) != 1 {
+                st['ep'] = refuse;
+                return None;
+            }
+            derived = str(kinds[0][0]);
+            if (
+                not _bare_ident(derived)
+                or (edge_type and derived != edge_type)
+            ) {
+                st['ep'] = refuse;
+                return None;
+            }
+            edge_type = derived;
+            # either endpoint: an undirected edge stored as src=<at> is still
+            # traversable INTO <at>, and probe 1's dst_type scan cannot see it
+            bad = ddl_conn.run(
+                "SELECT 1 FROM anchors WHERE kind = 'EdgeAnchor' AND undirected "
+                    + "AND (dst_type = '" + at + "' OR src_type = '" + at + "') LIMIT 1"
+            );
+            if bad {
+                st['ep'] = refuse;
+                return None;
+            }
+            multi = ddl_conn.run(
+                "SELECT 1 FROM anchors WHERE kind = 'EdgeAnchor' AND arch_type = '"
+                    + edge_type + "' AND dst IS NOT NULL "
+                    + 'GROUP BY dst HAVING count(*) > 1 LIMIT 1'
+            );
+            if multi {
+                st['ep'] = refuse;
+                return None;
+            }
+            ddl_conn.run(
+                'ALTER TABLE ' + table + ' ADD COLUMN IF NOT EXISTS src_endpoint uuid'
+            );
+            # Maintained by the same in-transaction trigger discipline as the
+            # rest of the mirror, but driven off the EDGE row rather than the
+            # node row. The node row and its edge land in the same flush with
+            # no ordering guarantee between them, so this upserts rather than
+            # updates; the node trigger's own ON CONFLICT list does not
+            # mention src_endpoint, so neither clobbers the other.
+            ddl_conn.run(
+                'CREATE OR REPLACE FUNCTION ' + table + '_ep() RETURNS trigger AS $$ '
+                    + "BEGIN IF TG_OP = 'DELETE' THEN "
+                    + 'UPDATE ' + table + ' SET src_endpoint = NULL '
+                    + 'WHERE id = OLD.dst AND src_endpoint = OLD.src; RETURN OLD; '
+                    + 'END IF; '
+                    + 'INSERT INTO ' + table + ' (id, src_endpoint) '
+                    + 'VALUES (NEW.dst, NEW.src) ON CONFLICT (id) DO UPDATE SET '
+                    + 'src_endpoint = EXCLUDED.src_endpoint; RETURN NEW; '
+                    + 'END $$ LANGUAGE plpgsql'
+            );
+            ddl_conn.run(
+                'CREATE OR REPLACE TRIGGER ' + table + '_ep_ins '
+                    + 'AFTER INSERT OR UPDATE ON anchors FOR EACH ROW '
+                    + "WHEN (NEW.kind = 'EdgeAnchor' AND NEW.arch_type = '"
+                    + edge_type + "' AND NEW.dst_type = '" + at + "') "
+                    + 'EXECUTE FUNCTION ' + table + '_ep()'
+            );
+            ddl_conn.run(
+                'CREATE OR REPLACE TRIGGER ' + table + '_ep_del '
+                    + 'AFTER DELETE ON anchors FOR EACH ROW '
+                    + "WHEN (OLD.kind = 'EdgeAnchor' AND OLD.arch_type = '"
+                    + edge_type + "' AND OLD.dst_type = '" + at + "') "
+                    + 'EXECUTE FUNCTION ' + table + '_ep()'
+            );
+            # triggers first, THEN backfill: a concurrent write is already
+            # covered by the trigger, and re-setting it to the same value is
+            # idempotent
+            ddl_conn.run(
+                'UPDATE ' + table + ' m SET src_endpoint = e.src FROM anchors e '
+                    + 'WHERE e.dst = m.id AND e.kind = ' + "'EdgeAnchor' "
+                    + 'AND e.arch_type = ' + "'" + edge_type + "' "
+                    + 'AND m.src_endpoint IS DISTINCT FROM e.src'
+            );
+            claim = {'edge': edge_type, 'ords': set()};
+            st['ep'] = claim;
+        }
+        ddl_conn.run(
+            'CREATE INDEX IF NOT EXISTS ' + table + '_ep_' + order_col
+                + ' ON ' + table + ' (src_endpoint, ' + order_col + ')'
+        );
+        ddl_conn.run('ANALYZE ' + table);
+        # Same hazard ensure_mirror guards, and worse here: the DDL and
+        # backfill committed on a connection of their own, so a request whose
+        # snapshot was already taken sees the COLUMN (catalog lookups resolve
+        # against a fresh snapshot) but not the backfilled VALUES - and a NULL
+        # src_endpoint does not fail, it silently drops that row from the
+        # page. Confirm completeness from the caller's own snapshot; if it is
+        # not there yet, this request falls back to the flat join and the next
+        # one - whose snapshot is newer than the backfill commit - succeeds.
+        # Deliberately not cached, so the retry re-probes.
+        incomplete = self._run(
+            "SELECT 1 FROM anchors e WHERE e.kind = 'EdgeAnchor' "
+                + 'AND e.arch_type = :et AND e.dst IS NOT NULL AND NOT EXISTS ('
+                + 'SELECT 1 FROM ' + table + ' m '
+                + 'WHERE m.id = e.dst AND m.src_endpoint = e.src) LIMIT 1',
+            {'et': claim['edge']}
+        );
+        if incomplete {
+            return None;
+        }
+        claim['ords'].add(order_col);
+        st['ep_tries'] = 0;
+        return 'src_endpoint';
+    } except Exception as e {
+        # transient (lock_timeout, a concurrent claimer) vs structural: both
+        # look like an exception here, so retry a bounded number of times
+        # rather than poisoning the mirror on the first busy moment.
+        logger.warning(f"mirror endpoint column for {at} deferred: {e}");
+        return None;
+    } finally {
+        if ddl_conn is not None {
+            try {
+                ddl_conn.close();
+            } except Exception { }
+        }
+    }
 }
 
 

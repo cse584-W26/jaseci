@@ -622,6 +622,30 @@ impl _try_stream_fused(
             mirror_spec['limit'] = int(pipe[2]);
             mirror_spec['slack'] = max(40, int(pipe[2]) * 2);
             limit_active = True;
+            # R5: ask the store for a denormalised endpoint column on the
+            # final hop's edge, which lets the compiler walk the last hop as
+            # a per-source index range scan instead of joining `anchors`
+            # (see PgStore.ensure_mirror_endpoint). Only for a plain OUTGOING
+            # hop with no edge predicates - anything else is not expressible
+            # as one column, and the flat join stays the answer. The hop's
+            # edge type is passed when it names one ([->:Post:->]) and left
+            # empty when it does not ([-->(?:Tweet)], the common case); the
+            # store derives and verifies it from the data either way.
+            if (
+                last.dir == 2
+                and not last.epreds
+                and hasattr(store, 'ensure_mirror_endpoint')
+            ) {
+                epc = store.ensure_mirror_endpoint(
+                    nd_last,
+                    str(getattr(last.`edge, '__name__', ''))
+                        if last.`edge is not None else '',
+                    ocol
+                );
+                if epc is not None {
+                    mirror_spec['endpoint_col'] = epc;
+                }
+            }
         }
     }
     cq = compile_query(

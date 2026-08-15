@@ -156,6 +156,9 @@ obj PgStore(Store) {
     def load_full(ids: list[UUID]) -> dict[UUID, AnchorRow];
     def load_props(ids: list[UUID]) -> dict[UUID, AnchorRow];
     def ensure_mirror(cls: type) -> bool;
+    def ensure_mirror_endpoint(
+        cls: type, edge_type: str, order_col: str
+    ) -> (str | None);
     def mirror_info(cls: type) -> (dict | None);
     def load_mirror_rows(
         cls: type, ids: list[UUID], fields: tuple

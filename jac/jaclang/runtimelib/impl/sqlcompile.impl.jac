@@ -104,6 +104,18 @@ def _promoted_predicates_enabled -> bool {
 glob PROMOTED_PREDICATES: bool = _promoted_predicates_enabled();
 
 
+# JAC_STREAM_LATERAL=1: emit the final mirror hop as a per-source LATERAL
+# top-K instead of a flat join (see compile_query). Default off.
+def _stream_lateral_enabled -> bool {
+    import os;
+    return os.environ.get('JAC_STREAM_LATERAL', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+
+glob STREAM_LATERAL: bool = _stream_lateral_enabled();
+
+
 # Mirrors PgStore._sanitize_ident (store.impl.jac) exactly - the promoted
 # column name has to be derived identically here and at DDL time or the
 # predicate references a column that was never created. Duplicated rather
@@ -272,15 +284,26 @@ impl compile_query(
     order: list[str] = [];
     fid = 'f0.id';
     n = 0;
-    # R4: distributed top-K pushdown. When the final hop is a mirror fetch
-    # with a pipeline sort column, the final hop's edge+mirror join is
-    # emitted as a LATERAL correlated to the previous hop's id instead of a
-    # flat join, so each source row only materializes its own top-cap
-    # candidates. Safe: any row inside the global top-cap (still cut by the
-    # unchanged _topk wrapper below) is necessarily inside its own source's
-    # top-cap too. Only fires when order_col is set; the no-order_col mirror
-    # fetch and the non-mirror path are untouched.
-    lateral_used = mirror is not None and mirror.get('order_col') is not None;
+    # R4/R5: distributed top-K pushdown. When the final hop is a mirror fetch
+    # with a pipeline sort column AND the store maintains the endpoint column
+    # (PgStore.ensure_mirror_endpoint), that hop is emitted as a LATERAL
+    # correlated to the previous hop's id, keyed on the mirror's src_endpoint
+    # and ordered by the sort column - a per-source index range scan that
+    # stops after cap rows, with no `anchors` join inside it at all. Safe: any
+    # row inside the global top-cap (still cut by the unchanged _topk wrapper
+    # below) is necessarily inside its own source's top-cap too.
+    #
+    # BOTH conditions are required. The endpoint column is what makes this
+    # cheaper; the same LATERAL over an edge join does the SAME number of
+    # mirror lookups plus a sort per source, and measured 30% SLOWER at t200
+    # (PROGRESS.log PHASE9/PHASE10 A/Bs) - so without it the flat join wins
+    # and stays the fallback.
+    lateral_used = (
+        STREAM_LATERAL
+        and mirror is not None
+        and mirror.get('order_col') is not None
+        and mirror.get('endpoint_col') is not None
+    );
     for (i, hop) in enumerate(q.hops[:upto]) {
         n = i + 1;
         e = f"e{n}";
@@ -316,9 +339,9 @@ impl compile_query(
             }
         }
         if not lateral_final {
-            # In the lateral_final case this edge join moves inside the
-            # LATERAL subquery below instead (it must NOT also appear here
-            # flat, or e{n} would be joined twice).
+            # The lateral_final case replaces this edge join entirely with the
+            # mirror's endpoint column (the whole point of R5), so emitting it
+            # here would put back exactly the work being removed.
             joins.append(f"JOIN anchors {e} ON {' AND '.join(econds)}");
         }
         nconds = [
@@ -371,9 +394,12 @@ impl compile_query(
                 lat_sel_parts.append(f"{nd_alias}." + c + '::text');
             }
             lat_sel_parts.append(f"{nd_alias}." + mirror['order_col'] + ' AS _ordcol');
-            lat_sel_parts.append(f"{e}.seq AS _eseq");
-            lat_sel_parts.append(f"{e}.id AS _eid");
-            lat_mconds = [f"{nd_alias}.id = {_other_expr(e, fid)}"];
+            # ponytail: the edge row is gone, so its (seq, id) can no longer
+            # break ties between two rows of the SAME source - the mirror's own
+            # id stands in. Only observable when one source has two rows with
+            # an identical sort value; the page-parity oracle gates it.
+            lat_sel_parts.append(f"{nd_alias}.id AS _eid");
+            lat_mconds = [f"{nd_alias}.{mirror['endpoint_col']} = {fid}"];
             want_m = hop.only_ids();
             if want_m is not None {
                 key_m = f"h{n}only";
@@ -384,15 +410,12 @@ impl compile_query(
             lat_cap = int(mirror.get('limit', 0)) + int(mirror.get('slack', 0));
             joins.append(
                 'JOIN LATERAL (SELECT ' + ', '.join(lat_sel_parts)
-                + ' FROM anchors ' + e
-                + ' JOIN ' + mirror['table'] + ' ' + nd_alias + ' ON '
-                    + ' AND '.join(lat_mconds)
-                + ' WHERE ' + ' AND '.join(econds)
+                + ' FROM ' + mirror['table'] + ' ' + nd_alias
+                + ' WHERE ' + ' AND '.join(lat_mconds)
                 + ' ORDER BY ' + nd_alias + '.' + mirror['order_col'] + ' ' + lat_dirn
                 + ' LIMIT ' + str(lat_cap)
                 + ') t' + str(n) + ' ON true'
             );
-            order.append('t' + str(n) + '._eseq');
             order.append('t' + str(n) + '._eid');
         } elif mirror is not None and is_final {
             mconds = [f"{nd_alias}.id = {_other_expr(e, fid)}"];
@@ -469,9 +492,14 @@ impl compile_query(
             ord_inner_parts.append('_tk' + str(k));
         }
         inner_sel = sel + ', ' + ', '.join(ord_alias_parts);
-        # lateral_used is always true here (same condition as this whole
-        # `if`), so the sort column is always the LATERAL-exposed alias.
-        sort_col = 't' + str(n) + '._ordcol';
+        # With the LATERAL the sort column is only reachable through the
+        # t{n} alias it exposes; the flat join sorts on the mirror column
+        # directly.
+        sort_col = (
+            ('t' + str(n) + '._ordcol')
+                if lateral_used
+                else ('n' + str(n) + '.' + mirror['order_col'])
+        );
         out.sql = (
             'SELECT * FROM ('
             + 'SELECT ' + inner_sel + ' ' + base_sql
