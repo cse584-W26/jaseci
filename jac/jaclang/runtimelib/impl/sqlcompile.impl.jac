@@ -272,11 +272,22 @@ impl compile_query(
     order: list[str] = [];
     fid = 'f0.id';
     n = 0;
+    # R4: distributed top-K pushdown. When the final hop is a mirror fetch
+    # with a pipeline sort column, the final hop's edge+mirror join is
+    # emitted as a LATERAL correlated to the previous hop's id instead of a
+    # flat join, so each source row only materializes its own top-cap
+    # candidates. Safe: any row inside the global top-cap (still cut by the
+    # unchanged _topk wrapper below) is necessarily inside its own source's
+    # top-cap too. Only fires when order_col is set; the no-order_col mirror
+    # fetch and the non-mirror path are untouched.
+    lateral_used = mirror is not None and mirror.get('order_col') is not None;
     for (i, hop) in enumerate(q.hops[:upto]) {
         n = i + 1;
         e = f"e{n}";
         nd_alias = f"n{n}";
         pfx_e = f"h{n}e";
+        is_final = (i == len(q.hops[:upto]) - 1);
+        lateral_final = is_final and mirror is not None and lateral_used;
         nd_names = [
             str(getattr(nt, '__name__', ''))
             for nt in _nd_types(hop)
@@ -304,7 +315,12 @@ impl compile_query(
                 econds.append(cond);
             }
         }
-        joins.append(f"JOIN anchors {e} ON {' AND '.join(econds)}");
+        if not lateral_final {
+            # In the lateral_final case this edge join moves inside the
+            # LATERAL subquery below instead (it must NOT also appear here
+            # flat, or e{n} would be joined twice).
+            joins.append(f"JOIN anchors {e} ON {' AND '.join(econds)}");
+        }
         nconds = [
             f"{nd_alias}.id = {_other_expr(e, fid)}",
             f"{nd_alias}.kind = 'NodeAnchor'"
@@ -343,8 +359,42 @@ impl compile_query(
             params[key] = [str(x) for x in want];
             nconds.append(f"{nd_alias}.id = ANY(CAST(:{key} AS uuid[]))");
         }
-        is_final = (i == len(q.hops[:upto]) - 1);
-        if mirror is not None and is_final {
+        if lateral_final {
+            lat_sel_parts: list = [
+                f"{nd_alias}.id", f"{nd_alias}.root_id", f"{nd_alias}.acl_all",
+                f"{nd_alias}.acl_spec", f"{nd_alias}.frag"
+            ];
+            for c in mirror['fcols'] {
+                # ::text here (not at the outer SELECT) - same wire-format
+                # pin as the flat-mirror branch below; the outer sel just
+                # forwards the already-text column through t{n}.
+                lat_sel_parts.append(f"{nd_alias}." + c + '::text');
+            }
+            lat_sel_parts.append(f"{nd_alias}." + mirror['order_col'] + ' AS _ordcol');
+            lat_sel_parts.append(f"{e}.seq AS _eseq");
+            lat_sel_parts.append(f"{e}.id AS _eid");
+            lat_mconds = [f"{nd_alias}.id = {_other_expr(e, fid)}"];
+            want_m = hop.only_ids();
+            if want_m is not None {
+                key_m = f"h{n}only";
+                params[key_m] = [str(x) for x in want_m];
+                lat_mconds.append(f"{nd_alias}.id = ANY(CAST(:{key_m} AS uuid[]))");
+            }
+            lat_dirn = 'DESC' if mirror.get('desc') else 'ASC';
+            lat_cap = int(mirror.get('limit', 0)) + int(mirror.get('slack', 0));
+            joins.append(
+                'JOIN LATERAL (SELECT ' + ', '.join(lat_sel_parts)
+                + ' FROM anchors ' + e
+                + ' JOIN ' + mirror['table'] + ' ' + nd_alias + ' ON '
+                    + ' AND '.join(lat_mconds)
+                + ' WHERE ' + ' AND '.join(econds)
+                + ' ORDER BY ' + nd_alias + '.' + mirror['order_col'] + ' ' + lat_dirn
+                + ' LIMIT ' + str(lat_cap)
+                + ') t' + str(n) + ' ON true'
+            );
+            order.append('t' + str(n) + '._eseq');
+            order.append('t' + str(n) + '._eid');
+        } elif mirror is not None and is_final {
             mconds = [f"{nd_alias}.id = {_other_expr(e, fid)}"];
             want_m = hop.only_ids();
             if want_m is not None {
@@ -356,11 +406,13 @@ impl compile_query(
                 'JOIN ' + mirror['table'] + f" {nd_alias} ON "
                     + ' AND '.join(mconds)
             );
+            order.append(f"{e}.seq");
+            order.append(f"{e}.id");
         } else {
             joins.append(f"JOIN anchors {nd_alias} ON {' AND '.join(nconds)}");
+            order.append(f"{e}.seq");
+            order.append(f"{e}.id");
         }
-        order.append(f"{e}.seq");
-        order.append(f"{e}.id");
         fid = f"{nd_alias}.id";
     }
     if n == 0 {
@@ -372,13 +424,24 @@ impl compile_query(
     }
     if mirror is not None {
         sel_parts: list = [];
-        sel_parts.append(f"n{n}.id");
-        sel_parts.append(f"n{n}.root_id");
-        sel_parts.append(f"n{n}.acl_all");
-        sel_parts.append(f"n{n}.acl_spec");
-        sel_parts.append(f"n{n}.frag");
+        # lateral_used: the final hop's mirror row lives inside the t{n}
+        # LATERAL alias (built above), already ::text-cast there. Otherwise
+        # (no order_col - flat mirror join, unchanged) it's the plain n{n}.
+        src_alias = ('t' + str(n)) if lateral_used else f"n{n}";
+        sel_parts.append(f"{src_alias}.id");
+        sel_parts.append(f"{src_alias}.root_id");
+        sel_parts.append(f"{src_alias}.acl_all");
+        sel_parts.append(f"{src_alias}.acl_spec");
+        sel_parts.append(f"{src_alias}.frag");
         for c in mirror['fcols'] {
-            sel_parts.append(f"n{n}." + c);
+            # ::text: same wire-format pin as store.load_mirror_rows - both
+            # paths feed query_planner._stream_from_mirror, which decodes.
+            # (The ORDER BY below still sorts on the raw jsonb column.)
+            if lateral_used {
+                sel_parts.append(f"{src_alias}." + c);
+            } else {
+                sel_parts.append(f"{src_alias}." + c + '::text');
+            }
         }
         sel = ', '.join(sel_parts);
     } else {
@@ -406,10 +469,13 @@ impl compile_query(
             ord_inner_parts.append('_tk' + str(k));
         }
         inner_sel = sel + ', ' + ', '.join(ord_alias_parts);
+        # lateral_used is always true here (same condition as this whole
+        # `if`), so the sort column is always the LATERAL-exposed alias.
+        sort_col = 't' + str(n) + '._ordcol';
         out.sql = (
             'SELECT * FROM ('
             + 'SELECT ' + inner_sel + ' ' + base_sql
-            + ' ORDER BY n' + str(n) + '.' + mirror['order_col'] + ' ' + dirn
+            + ' ORDER BY ' + sort_col + ' ' + dirn
             + ', ' + trav_order
             + ' LIMIT ' + str(cap)
             + ') _topk ORDER BY ' + ', '.join(ord_inner_parts)
