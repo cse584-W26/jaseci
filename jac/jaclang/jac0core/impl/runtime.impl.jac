@@ -485,6 +485,29 @@ impl JacPersistence.get_object(id: str) -> (Archetype | None) {
     return None;
 }
 
+impl JacPersistence.get_objects_many(ids: list[str]) -> list[(Archetype | None)] {
+    # ponytail: batch counterpart of get_object -- one mem.batch_get round
+    # trip instead of N single-id lookups (Session.find/get_object idiom gap).
+    ctx = JacRuntimeInterface.get_context();
+    mem = ctx.mem;
+    uuid_ids = [UUID(i) for i in ids if i != 'root'];
+    found = mem.batch_get(uuid_ids) if uuid_ids else {};
+    out: list[(Archetype | None)] = [];
+    for id in ids {
+        if (id == 'root') {
+            out.append(ctx.user_root.archetype);
+            continue;
+        }
+        `obj = found.get(UUID(id));
+        if `obj is not None and JacRuntimeInterface.check_read_access(`obj) {
+            out.append(`obj.archetype);
+        } else {
+            out.append(None);
+        }
+    }
+    return out;
+}
+
 impl JacPersistence.aget_object(id: str) -> (Archetype | None) {
     if (id == 'root') {
         return JacRuntimeInterface.get_context().user_root.archetype;

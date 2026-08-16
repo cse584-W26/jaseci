@@ -426,8 +426,11 @@ impl Session.find(
     ids: (UUID | Iterable[UUID]), filter: (Callable[[Anchor], Anchor] | None) = None
 ) -> Generator[Anchor, None, None] {
     id_list = [ids] if isinstance(ids, UUID) else list(ids);
+    # ponytail: one batch_get round trip instead of N self.get() calls;
+    # batch_get already does the ANY(:ids) SQL, find() just wasn't using it.
+    found = self.batch_get(id_list);
     for id in id_list {
-        if (anchor := self.get(id)) {
+        if (anchor := found.get(id)) is not None {
             if filter is None or filter(anchor) {
                 yield anchor;
             }
