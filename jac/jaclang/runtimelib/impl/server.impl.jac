@@ -25,6 +25,12 @@ impl UserManager.postinit -> None {
     self._conn = None;
 
     self._lock = threading.RLock();
+
+    self._root_memo_enabled = os.environ.get('JAC_ROOT_MEMO', '').strip().lower() in (
+        '1', 'true', 'yes', 'on'
+    );
+    self._memo_token_user = {};
+    self._memo_username_root = {};
 }
 
 impl UserManager._ensure_connection -> None {
@@ -64,6 +70,11 @@ impl UserManager.create_user(username: str, password: str) -> dict[str, str] {
         if cursor.fetchone() {
             return {'error': 'User already exists'};
         }
+        # username reuse (e.g. a deleted-then-recreated account) must not
+        # serve a stale root_id from the memo.
+        if self._root_memo_enabled {
+            self._memo_username_root.pop(username, None);
+        }
         ctx = Jac.get_context();
         user_root = Root();
         root_anchor = user_root.__jac__;
@@ -101,6 +112,11 @@ impl UserManager.reset_root(username: str) -> (str | None) {
             "UPDATE users SET root_id = ? WHERE username = ?", (root_id, username)
         );
         self._conn.commit();
+        if self._root_memo_enabled {
+            # token->username is unaffected by a root reset (same account,
+            # same token); only the username->root_id half is now stale.
+            self._memo_username_root.pop(username, None);
+        }
         return root_id;
     }
 }
@@ -125,6 +141,14 @@ impl UserManager.authenticate(
 }
 
 impl UserManager.validate_token(token: str) -> (str | None) {
+    if self._root_memo_enabled {
+        with self._lock {
+            cached = self._memo_token_user.get(token);
+        }
+        if cached is not None {
+            return cached;
+        }
+    }
     self._ensure_connection();
     assert self._conn is not None;
     with self._lock {
@@ -132,11 +156,22 @@ impl UserManager.validate_token(token: str) -> (str | None) {
             "SELECT username FROM users WHERE token = ?", (token, )
         );
         row = cursor.fetchone();
+        if row and self._root_memo_enabled {
+            self._memo_token_user[token] = row[0];
+        }
     }
     return row[0] if row else None;
 }
 
 impl UserManager.get_root_id(username: str) -> (str | None) {
+    if self._root_memo_enabled {
+        with self._lock {
+            cached = self._memo_username_root.get(username);
+        }
+        if cached is not None {
+            return cached;
+        }
+    }
     self._ensure_connection();
     assert self._conn is not None;
     with self._lock {
@@ -144,11 +179,25 @@ impl UserManager.get_root_id(username: str) -> (str | None) {
             "SELECT root_id FROM users WHERE username = ?", (username, )
         );
         row = cursor.fetchone();
+        if row and self._root_memo_enabled {
+            self._memo_username_root[username] = row[0];
+        }
     }
     return row[0] if row else None;
 }
 
 impl UserManager.aget_root_id(username: str) -> (str | None) {
+    if self._root_memo_enabled {
+        # skip the to_thread executor round trip entirely on a cache hit -
+        # this is the actual event-loop-unblocking win, not just the SQLite
+        # query itself (thread-pool dispatch has its own latency floor).
+        with self._lock {
+            cached = self._memo_username_root.get(username);
+        }
+        if cached is not None {
+            return cached;
+        }
+    }
     return await asyncio.to_thread(self.get_root_id, username);
 }
 

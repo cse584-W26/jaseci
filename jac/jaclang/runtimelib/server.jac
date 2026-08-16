@@ -61,7 +61,14 @@ obj UserManager {
     has base_path: str,
         _db_path: str postinit,
         _conn: (sqlite3.Connection | None) postinit,
-        _lock: threading.RLock postinit;
+        _lock: threading.RLock postinit,
+        # JAC_ROOT_MEMO=1: in-process memo for the two SQLite round trips
+        # every authenticated request makes (token->username on the event
+        # loop, username->root_id via to_thread) - see validate_token /
+        # get_root_id. Default off.
+        _root_memo_enabled: bool postinit,
+        _memo_token_user: dict[str, str] postinit,
+        _memo_username_root: dict[str, str] postinit;
 
     def postinit -> None;
     def _ensure_connection -> None;

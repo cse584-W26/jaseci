@@ -34,9 +34,32 @@ impl JacScaleUserManager.postinit -> None {
         );
     }
     self._identity_storage = PgIdentityStorage(store=store);
+
+    # JAC_ROOT_MEMO=1: persistent (cross-request) memo for get_root_id, on
+    # top of the existing per-request _root_id_request_cache ContextVar
+    # below. get_root_id here is a real Postgres round trip (identity
+    # metadata, NOT the root anchor itself - that existence probe is
+    # separate and untouched), reached via aget_root_id's to_thread on
+    # every request. base UserManager already declares these fields (this
+    # class inherits from it); this postinit just has to populate them
+    # since it does not call super().postinit().
+    import threading;
+    import os;
+    self._lock = threading.RLock();
+    self._root_memo_enabled = os.environ.get('JAC_ROOT_MEMO', '').strip().lower() in (
+        '1', 'true', 'yes', 'on'
+    );
+    self._memo_username_root = {};
 }
 
 impl JacScaleUserManager.create_user(username: str, password: str) -> dict[str, any] {
+    if self._root_memo_enabled {
+        # username reuse (deleted-then-recreated account) must not serve a
+        # stale root_id from the memo.
+        with self._lock {
+            self._memo_username_root.pop(username, None);
+        }
+    }
     return self.create_user_with_identities(
         identities=[{'type': 'username', 'value': username}],
         credential={'type': 'password', 'password': password}
@@ -91,6 +114,14 @@ impl JacScaleUserManager.get_user(user_id: str) -> dict[str, any] | None {
 }
 
 impl JacScaleUserManager.get_root_id(user_id: str) -> str | None {
+    if self._root_memo_enabled {
+        with self._lock {
+            cached = self._memo_username_root.get(user_id);
+        }
+        if cached is not None {
+            return cached;
+        }
+    }
     if user_id == '__system__' {
         return Con.SUPER_ROOT_UUID;
     }
@@ -109,6 +140,11 @@ impl JacScaleUserManager.get_root_id(user_id: str) -> str | None {
         new_cache = dict(cache) if cache is not None else {};
         new_cache[user_id] = result;
         _root_id_request_cache.set(new_cache);
+        if self._root_memo_enabled {
+            with self._lock {
+                self._memo_username_root[user_id] = result;
+            }
+        }
     }
     return result;
 }
@@ -123,6 +159,15 @@ impl JacScaleUserManager.reset_root(identifier: str) -> str | None {
         cache = _root_id_request_cache.get();
         if cache is not None {
             _root_id_request_cache.set(None);
+        }
+        if self._root_memo_enabled {
+            # get_root_id's cache key is whatever string the caller passed
+            # (username in the guest-healing path, possibly the resolved
+            # user_id elsewhere) - drop both so neither can serve stale.
+            with self._lock {
+                self._memo_username_root.pop(identifier, None);
+                self._memo_username_root.pop(str(user.get('user_id') or ''), None);
+            }
         }
     }
     return new_root;
