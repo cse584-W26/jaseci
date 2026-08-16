@@ -295,6 +295,17 @@ impl compile_query(
     out = CompiledQuery();
     params: dict = {};
     params['origin'] = [];
+    # mirror['acl'] (JAC_SQL_ACL, built by query_planner._acl_sql_ctx): the
+    # read decision as a predicate on the mirror row, `%M%` standing in for
+    # whichever alias the final hop ends up with. It is appended to the mirror
+    # join's ON list - inside the LATERAL when there is one - so it is applied
+    # BEFORE that subquery's LIMIT and before the _topk wrapper. All-bound
+    # params, so the statement text stays fixed-shape for prepared-statement
+    # reuse.
+    acl_sql = mirror.get('acl') if mirror is not None else None;
+    if acl_sql is not None {
+        params.update(mirror.get('acl_params', {}));
+    }
     joins: list[str] = [];
     order: list[str] = [];
     fid = 'f0.id';
@@ -421,6 +432,9 @@ impl compile_query(
                 params[key_m] = [str(x) for x in want_m];
                 lat_mconds.append(f"{nd_alias}.id = ANY(CAST(:{key_m} AS uuid[]))");
             }
+            if acl_sql is not None {
+                lat_mconds.append(acl_sql.replace('%M%', nd_alias));
+            }
             lat_dirn = 'DESC' if mirror.get('desc') else 'ASC';
             lat_cap_key = f"h{n}lcap";
             # bound param, not an inlined literal: the cap can vary per call
@@ -443,6 +457,9 @@ impl compile_query(
                 key_m = f"h{n}only";
                 params[key_m] = [str(x) for x in want_m];
                 mconds.append(f"{nd_alias}.id = ANY(CAST(:{key_m} AS uuid[]))");
+            }
+            if acl_sql is not None {
+                mconds.append(acl_sql.replace('%M%', nd_alias));
             }
             joins.append(
                 'JOIN ' + mirror['table'] + f" {nd_alias} ON "

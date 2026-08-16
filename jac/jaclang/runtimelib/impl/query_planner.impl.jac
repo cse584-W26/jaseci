@@ -18,6 +18,182 @@ impl _acl_read_ok(anchor: Anchor) -> bool {
 }
 
 
+def _shared_root_id -> (UUID | None) {
+    # The shared root's id, or None when no resolver is registered (library /
+    # CLI runs, where root.shared IS the caller's root).
+    try {
+        import from jaclang.jac0core.runtime { _shared_root_resolver }
+        sr = _shared_root_resolver[1];
+        if isinstance(sr, str) {
+            return UUID(sr);
+        }
+        if _shared_root_resolver[0] is not None {
+            srid = _shared_root_resolver[0]();
+            if isinstance(srid, str) {
+                return UUID(srid);
+            }
+        }
+    } except Exception {
+        return None;
+    }
+    return None;
+}
+
+
+# --- JAC_SQL_ACL: the read decision as a SQL predicate -----------------------
+# check_access_level (jac0core/impl/runtime.impl.jac) decides, for caller root
+# U and a persistent anchor with no custom __jac_access__:
+#
+#   owner (U == anchor.root, or U IS the anchor)      -> WRITE
+#   else L = max(anchor.access.all, root.access.all)
+#        if root.access.roots[U]   exists: L = it     (OVERRIDES - can lower)
+#        if anchor.access.roots[U] exists: L = it     (OVERRIDES - can lower)
+#   readable iff L >= 0
+#
+# The per-root half of that is anchor-INDEPENDENT, which is what makes this
+# expressible without joining anything. For a fixed U every owner root falls
+# into exactly one of three classes:
+#
+#   rc >= 0, or rc absent and root.all >= 0  -> EVERY row under it is readable
+#   rc < 0                                   -> NO row under it is readable
+#   rc absent and root.all < 0               -> reduces to anchor.acl_all >= 0
+#
+# (rc = root.access.roots[U]; the classes are disjoint). So two uuid arrays
+# carry the whole root contribution and the mirror's own acl_all column
+# carries the rest - no root mirror table, no per-row jsonb extraction, and
+# no `anchors` join, which matters because the endpoint-column LATERAL exists
+# precisely to have removed that join.
+#
+# Rows the predicate cannot judge from mirror scalars - those carrying
+# per-anchor grants (acl_spec) and those owned by the shared root - are
+# ADMITTED unconditionally and re-checked in python by the unchanged
+# `specials` path. Over-admission is sound; under-admission would not be.
+#
+# CASE, not an AND/OR chain, specifically for NULL root_id: a NULL condition
+# is "not matched" and falls through to the acl_all arm, which is what
+# check_access_level does (`if to.root and ...`). The OR form would evaluate
+# to NULL and silently drop the row.
+#
+# Arm ORDER is load-bearing: owner first, because an anchor under the caller's
+# own root is WRITE even if it carries a self-revoke in its own grant map.
+glob _acl_sql_engaged = [False],
+     _ACL_SQL_CASE = (
+         'CASE WHEN %M%.root_id = CAST(:acl_self AS uuid) THEN true'
+         + ' WHEN %M%.acl_spec THEN true'
+         + ' WHEN %M%.root_id = CAST(:acl_shared AS uuid) THEN true'
+         + ' WHEN %M%.root_id = ANY(CAST(:acl_open AS uuid[])) THEN true'
+         + ' WHEN %M%.root_id = ANY(CAST(:acl_closed AS uuid[])) THEN false'
+         + ' ELSE %M%.acl_all >= 0 END'
+     ),
+     # One indexed pass over Root anchors (idx_anchors_kind_type), narrowed to
+     # the roots that actually say something about this caller - on an app that
+     # only ever calls grant() (littleX) it returns zero rows. Runs on the main
+     # connection, so it shares the request's transaction and therefore its
+     # snapshot with the mirror query it parameterises.
+     #
+     # jsonb_typeof guards both int casts for the same reason the mirror's
+     # acl_all trigger expression does: a legacy or hand-written blob holding
+     # "READ" instead of 0 would otherwise raise mid-request. `->> ... IS NOT
+     # NULL` rather than the `?` containment operator, deliberately - `?`
+     # collides with placeholder scanning in one of the two drivers.
+     _ACL_ROOTS_SQL = (
+         "SELECT a.id, CASE WHEN jsonb_typeof("
+         + "a.props->'access'->'roots'->'anchors'->CAST(:acl_u AS text)"
+         + ") = 'number' THEN (a.props->'access'->'roots'->'anchors'->>"
+         + "CAST(:acl_u AS text))::int END, CASE WHEN jsonb_typeof("
+         + "a.props->'access'->'all') = 'number' THEN "
+         + "(a.props->'access'->>'all')::int ELSE -1 END "
+         + "FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' "
+         + "AND (a.props->'access'->'roots'->'anchors'->>CAST(:acl_u AS text) "
+         + "IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')"
+     );
+
+
+def _acl_sql_ctx(mem: Session) -> (dict | None) {
+    # -> {'sql': <CASE text, %M% = mirror alias>, 'params': {...}} or None,
+    # None meaning "leave the ACL decision in python exactly as before". Every
+    # failure mode returns None, so the flag can only ever add a filter that
+    # agrees with the python one or fall back to it wholesale.
+    import os;
+    if os.environ.get('JAC_SQL_ACL', '0').strip().lower()
+        not in ('1', 'on', 'true') {
+        return None;
+    }
+    if not _acl_gated() {
+        return None;   # system root / unauthenticated: no filtering at all
+    }
+    import from jaclang.jac0core.runtime { JacRuntimeInterface }
+    try {
+        jctx = JacRuntimeInterface.get_context();
+    } except Exception {
+        return None;
+    }
+    ur = jctx?.user_root;
+    store = mem.store;
+    if ur is None or store is None or not hasattr(store, 'rows') {
+        return None;
+    }
+    u = str(ur.id);
+    # Flush first: the caller's own uncommitted grants have to be inside the
+    # transaction (and through the mirror triggers) before either this
+    # prefetch or the query it parameterises reads anything, or a walker
+    # could fail to see a permission it just granted itself.
+    mem.read_barrier();
+    open_ids: list = [];
+    closed_ids: list = [];
+    try {
+        for r in store.rows(_ACL_ROOTS_SQL, {'acl_u': u}) {
+            rid = str(r[0]);
+            rc = int(r[1]) if r[1] is not None else None;
+            rall = int(r[2]) if r[2] is not None else -1;
+            if rc is not None {
+                if rc >= 0 {
+                    open_ids.append(rid);
+                } else {
+                    closed_ids.append(rid);
+                }
+            } elif rall >= 0 {
+                open_ids.append(rid);
+            }
+        }
+    } except Exception as e {
+        logger.warning(
+            f"sql-acl root prefetch failed (falling back to the python "
+            f"check): {e}"
+        );
+        return None;
+    }
+    shared = _shared_root_id();
+    # Every other exit from this function is a SILENT fallback to the python
+    # check, which is exactly what makes "is the flag actually doing anything?"
+    # unanswerable from the outside. Say so once per process on the way in.
+    if not _acl_sql_engaged[0] {
+        _acl_sql_engaged[0] = True;
+        logger.info(
+            "JAC_SQL_ACL engaged: mirror reads now carry the access predicate "
+            "as SQL (rows with per-anchor grants and shared-root rows are "
+            "still re-checked in python)"
+        );
+    }
+    # ponytail: recomputed per graph query rather than memoised. One indexed
+    # pass over ~#users rows that returns nothing at all unless somebody
+    # granted at root level, versus a memo whose invalidation surface is the
+    # whole transaction lifecycle (commit clears _txn_changed, rollback and
+    # _recover_conflict rewind it, _ensure_txn can downgrade the isolation
+    # and take a NEW snapshot mid-request). Memoise it keyed on a snapshot
+    # sequence added to Session if this ever shows up in a profile.
+    return {
+        'sql': _ACL_SQL_CASE,
+        'params': {
+            'acl_self': u,
+            'acl_shared': str(shared) if shared is not None else None,
+            'acl_open': open_ids,
+            'acl_closed': closed_ids
+        }
+    };
+}
+
+
 impl _prefetch_acl_roots(mem: Session, anchors: list[Anchor]) -> None {
     # check_access_level() reads the owner Root of each anchor to consult its
     # access blob. Left alone that is one single-row round trip per distinct
@@ -285,7 +461,8 @@ def _stream_from_mirror(
     ids: list[UUID],
     resident: dict,
     mrows: list,
-    fields: tuple
+    fields: tuple,
+    sql_filtered: bool = False
 ) -> (list[Anchor] | None) {
     # Exact ACL fast path over mirror scalars, replicating
     # check_access_level's read decision for rows WITHOUT per-anchor
@@ -310,28 +487,18 @@ def _stream_from_mirror(
     # anchors owned by the SHARED root carry runtime-level floor semantics
     # (CONNECT floor, resolver-driven) that live outside the access blobs;
     # never fast-path them - route through the full per-row check below.
-    shared_id = None;
-    try {
-        import from jaclang.jac0core.runtime { _shared_root_resolver }
-        sr = _shared_root_resolver[1];
-        if isinstance(sr, str) {
-            shared_id = UUID(sr);
-        } elif _shared_root_resolver[0] is not None {
-            srid = _shared_root_resolver[0]();
-            if isinstance(srid, str) {
-                shared_id = UUID(srid);
-            }
-        }
-    } except Exception {
-        shared_id = None;
-    }
+    shared_id = _shared_root_id();
     by_id: dict = {};
     for r in mrows {
         by_id[r[0]] = r;
     }
-    # prefetch distinct owner roots once (real anchors; ~#users, cheap)
+    # prefetch distinct owner roots once (real anchors; ~#users, cheap).
+    # sql_filtered: the query already applied the exact same rule as a WHERE
+    # (see _acl_sql_ctx), so there is nothing left for the per-root
+    # contribution to decide and this whole batch_get disappears.
     root_ids = list({r[1] for r in mrows if r[1] is not None});
-    roots = mem.batch_get(root_ids) if (gated and root_ids) else {};
+    roots = mem.batch_get(root_ids)
+        if (gated and root_ids and not sql_filtered) else {};
     ur_key = str(ur.id) if ur is not None else '';
     root_contrib: dict = {};
     for (rid, ra) in roots.items() {
@@ -367,7 +534,7 @@ def _stream_from_mirror(
             }
             if ur is not None and (root_id == ur.id or aid == ur.id) {
                 ;   # owner (or the caller's own root): WRITE
-            } else {
+            } elif not sql_filtered {
                 (rc, rall) = root_contrib.get(root_id, (None, -1));
                 level = rc if rc is not None else max(acl_all, int(rall));
                 if level < 0 {
@@ -602,6 +769,16 @@ impl _try_stream_fused(
         fcols.append(c);
     }
     mirror_spec: dict = {'table': info['table'], 'fcols': fcols};
+    # JAC_SQL_ACL: push the read decision into the mirror join / LATERAL. It
+    # has to be decided HERE, before compile_query, because the predicate must
+    # sit INSIDE the per-source LATERAL - i.e. before its LIMIT - or rejected
+    # rows keep eating the fetch cap, which is the whole reason `slack`
+    # exists. None = unchanged behaviour, python decides.
+    acl = _acl_sql_ctx(mem);
+    if acl is not None {
+        mirror_spec['acl'] = acl['sql'];
+        mirror_spec['acl_params'] = acl['params'];
+    }
     pipe = getattr(type(wlk), '__jac_stream_pipeline__', None) if use_pipe else None;
     limit_active = False;
     if (
@@ -620,7 +797,20 @@ impl _try_stream_fused(
             mirror_spec['order_col'] = ocol;
             mirror_spec['desc'] = bool(pipe[1]);
             mirror_spec['limit'] = int(pipe[2]);
-            mirror_spec['slack'] = max(40, int(pipe[2]) * 2);
+            # Slack sizing. With the ACL in python the filter runs AFTER the
+            # LATERAL's LIMIT, so a page whose top rows are all unreadable can
+            # lose true top-K items off the fetched prefix - hence a slack of
+            # a whole extra K (min 40). With the ACL in SQL the filter is
+            # inside the LIMIT and the only residual drops are the rows the
+            # predicate deliberately over-admits for python to re-check
+            # (per-anchor grants, shared-root ownership) plus session-deleted
+            # ids, so a small constant covers it. The unlimited-rerun backstop
+            # below is what makes ANY value here safe; it is not an
+            # optimisation, it is the correctness net, and it stays.
+            _slack_dflt = 8 if acl is not None else max(40, int(pipe[2]) * 2);
+            mirror_spec['slack'] = int(
+                os.environ.get('JAC_ACL_SLACK', str(_slack_dflt))
+            );
             limit_active = True;
             # R5: ask the store for a denormalised endpoint column on the
             # final hop's edge, which lets the compiler walk the last hop as
@@ -709,7 +899,9 @@ impl _try_stream_fused(
         resident[a.id] = a;
         ids.append(a.id);
     }
-    out = _stream_from_mirror(mem, q, ids, resident, mrows, fields);
+    out = _stream_from_mirror(
+        mem, q, ids, resident, mrows, fields, sql_filtered=acl is not None
+    );
     if limit_active and out is not None {
         cap = mirror_spec['limit'] + mirror_spec['slack'];
         acl_drops = drops + (len(ids) - len(out));
