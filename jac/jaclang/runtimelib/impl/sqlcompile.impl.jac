@@ -162,13 +162,12 @@ def _pred_cond(
         if p.op == 'in' {
             vals = list(p.value) if isinstance(p.value, (list, tuple, set)) else [p.value];
             if vals and all(isinstance(v, str) for v in vals) {
-                parts: list[str] = [];
-                for (i, v) in enumerate(vals) {
-                    key = f"{pfx}v{i}";
-                    params[key] = v;
-                    parts.append(f":{key}");
-                }
-                return f"{alias}.{promoted_col} IN ({', '.join(parts)})";
+                # fixed-shape: one array param regardless of len(vals), so
+                # the SQL text (and psycopg's prepared-statement cache key)
+                # doesn't change with list length.
+                key = f"{pfx}v";
+                params[key] = vals;
+                return f"{alias}.{promoted_col} = ANY(CAST(:{key} AS text[]))";
             }
         } elif isinstance(p.value, str) {
             key = f"{pfx}v";
@@ -185,14 +184,30 @@ def _pred_cond(
     expr = f"{alias}.props->'archetype'->'{p.field}'";
     if p.op == 'in' {
         vals = list(p.value) if isinstance(p.value, (list, tuple, set)) else [p.value];
-        parts: list[str] = [];
-        for (i, v) in enumerate(vals) {
-            key = f"{pfx}v{i}";
-            params[key] = _scalar(v);
-            parts.append(f"to_jsonb(CAST(:{key} AS {_sql_type_of(v)}))");
-        }
-        if not parts {
+        if not vals {
             return 'FALSE';
+        }
+        scalars = [_scalar(v) for v in vals];
+        sql_types = {_sql_type_of(v) for v in scalars};
+        if len(sql_types) == 1 {
+            # fixed-shape: one array param regardless of len(vals) - only
+            # possible when every value shares a SQL type (the common case).
+            sql_type = sql_types.pop();
+            key = f"{pfx}v";
+            params[key] = scalars;
+            return (
+                f"{expr} = ANY(SELECT to_jsonb(x) FROM "
+                f"unnest(CAST(:{key} AS {sql_type}[])) AS x)"
+            );
+        }
+        # ponytail: mixed-type IN list - rare (predicate values normally
+        # share a type). Falls back to one literal per value, same as
+        # before; not on the prepared-statement-reuse hot path.
+        parts: list[str] = [];
+        for (i, v) in enumerate(scalars) {
+            key = f"{pfx}v{i}";
+            params[key] = v;
+            parts.append(f"to_jsonb(CAST(:{key} AS {_sql_type_of(v)}))");
         }
         return f"{expr} IN ({', '.join(parts)})";
     }
@@ -407,13 +422,17 @@ impl compile_query(
                 lat_mconds.append(f"{nd_alias}.id = ANY(CAST(:{key_m} AS uuid[]))");
             }
             lat_dirn = 'DESC' if mirror.get('desc') else 'ASC';
-            lat_cap = int(mirror.get('limit', 0)) + int(mirror.get('slack', 0));
+            lat_cap_key = f"h{n}lcap";
+            # bound param, not an inlined literal: the cap can vary per call
+            # (page-size pipelines) - a literal would make the SQL text (and
+            # psycopg's prepared-statement cache key) different every time.
+            params[lat_cap_key] = int(mirror.get('limit', 0)) + int(mirror.get('slack', 0));
             joins.append(
                 'JOIN LATERAL (SELECT ' + ', '.join(lat_sel_parts)
                 + ' FROM ' + mirror['table'] + ' ' + nd_alias
                 + ' WHERE ' + ' AND '.join(lat_mconds)
                 + ' ORDER BY ' + nd_alias + '.' + mirror['order_col'] + ' ' + lat_dirn
-                + ' LIMIT ' + str(lat_cap)
+                + f' LIMIT :{lat_cap_key}'
                 + ') t' + str(n) + ' ON true'
             );
             order.append('t' + str(n) + '._eid');
@@ -481,7 +500,8 @@ impl compile_query(
         # pipeline's sort column, tie-broken by traversal order (matching the
         # walker's stable sort), then restore traversal order for the caller.
         dirn = 'DESC' if mirror.get('desc') else 'ASC';
-        cap = int(mirror.get('limit', 0)) + int(mirror.get('slack', 0));
+        cap_key = 'topk_cap';
+        params[cap_key] = int(mirror.get('limit', 0)) + int(mirror.get('slack', 0));
         ord_alias_parts: list = [];
         ord_inner_parts: list = [];
         ord_names = trav_order.split(', ');
@@ -505,7 +525,7 @@ impl compile_query(
             + 'SELECT ' + inner_sel + ' ' + base_sql
             + ' ORDER BY ' + sort_col + ' ' + dirn
             + ', ' + trav_order
-            + ' LIMIT ' + str(cap)
+            + f' LIMIT :{cap_key}'
             + ') _topk ORDER BY ' + ', '.join(ord_inner_parts)
         );
         out.params = params;

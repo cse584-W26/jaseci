@@ -263,8 +263,14 @@ def _translate_cached(sql: str, names: tuple[str, ...]) -> tuple[str, bool]:
 def _array_literal(vals: Any) -> str:
     parts = []
     for v in vals:
-        s = str(v)
-        parts.append('"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"')
+        if v is None:
+            # unquoted NULL keyword, not the literal text "None" - a quoted
+            # "None" is a real 4-char string to postgres and fails any
+            # non-text array cast (e.g. CAST(:root_ids AS uuid[])).
+            parts.append("NULL")
+        else:
+            s = str(v)
+            parts.append('"' + s.replace("\\", "\\\\").replace('"', '\\"') + '"')
     return "{" + ",".join(parts) + "}"
 
 

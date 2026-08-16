@@ -1380,61 +1380,63 @@ impl PgStore.upsert(rows_in: list[AnchorRow]) -> None {
     by_id: dict[UUID, AnchorRow] = {row.id: row for row in rows_in};
     rows = list(by_id.values());
     chunk = 200;
+    # Fixed-shape statement (unnest over column arrays) instead of a
+    # VALUES-list sized to the batch: the SQL text is identical for any
+    # batch size 1..200, so psycopg/postgres see the SAME statement every
+    # call and can actually reuse a prepared plan (JAC_PG_PREPARE_THRESHOLD)
+    # instead of re-parsing a fresh N-row text each time.
+    upsert_sql = """
+        INSERT INTO anchors
+            (id, kind, arch_type, arch_module, fingerprint, root_id,
+             src, dst, undirected, props, format_version, updated_at,
+             src_type, dst_type)
+        SELECT id, kind, arch_type, arch_module, fingerprint, root_id,
+               src, dst, undirected, props, :fmt_version, now(),
+               src_type, dst_type
+        FROM unnest(
+            CAST(:ids AS uuid[]), CAST(:kinds AS text[]),
+            CAST(:arch_types AS text[]), CAST(:arch_modules AS text[]),
+            CAST(:fps AS text[]), CAST(:root_ids AS uuid[]),
+            CAST(:srcs AS uuid[]), CAST(:dsts AS uuid[]),
+            CAST(:undirecteds AS boolean[]), CAST(:propses AS jsonb[]),
+            CAST(:src_types AS text[]), CAST(:dst_types AS text[])
+        ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id,
+               src, dst, undirected, props, src_type, dst_type)
+        ON CONFLICT (id) DO UPDATE SET
+            kind = EXCLUDED.kind,
+            arch_type = EXCLUDED.arch_type,
+            arch_module = EXCLUDED.arch_module,
+            fingerprint = EXCLUDED.fingerprint,
+            root_id = EXCLUDED.root_id,
+            src = EXCLUDED.src,
+            dst = EXCLUDED.dst,
+            undirected = EXCLUDED.undirected,
+            props = EXCLUDED.props,
+            format_version = EXCLUDED.format_version,
+            updated_at = now(),
+            -- an edge re-saved while its endpoints are unpopulated stubs
+            -- carries NULL types; keep whatever was recorded earlier
+            src_type = COALESCE(EXCLUDED.src_type, anchors.src_type),
+            dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)
+        """;
     for start in range(0, len(rows), chunk) {
         batch = rows[start:start + chunk];
-        values: list[str] = [];
-        params: dict = {};
-        for (i, row) in enumerate(batch) {
-            values.append(
-                f"(CAST(:id{i} AS uuid), :kind{i}, :arch_type{i}, "
-                f":arch_module{i}, :fp{i}, CAST(:root_id{i} AS uuid), "
-                f"CAST(:src{i} AS uuid), CAST(:dst{i} AS uuid), "
-                f":undirected{i}, CAST(:props{i} AS jsonb), :fv{i}, now(), "
-                f":src_type{i}, :dst_type{i})"
-            );
-            params[f"id{i}"] = str(row.id);
-            params[f"kind{i}"] = row.kind;
-            params[f"arch_type{i}"] = row.arch_type;
-            params[f"arch_module{i}"] = row.arch_module;
-            params[f"fp{i}"] = row.fingerprint;
-            params[f"root_id{i}"] = str(row.root_id) if row.root_id else None;
-            params[f"src{i}"] = str(row.src) if row.src else None;
-            params[f"dst{i}"] = str(row.dst) if row.dst else None;
-            params[f"undirected{i}"] = row.undirected;
-            params[f"props{i}"] = json.dumps(row.props, default=_jsonable);
-            params[f"fv{i}"] = SCHEMA_VERSION;
-            params[f"src_type{i}"] = row.src_type;
-            params[f"dst_type{i}"] = row.dst_type;
-        }
-        self._run(
-            """
-            INSERT INTO anchors
-                (id, kind, arch_type, arch_module, fingerprint, root_id,
-                 src, dst, undirected, props, format_version, updated_at,
-                 src_type, dst_type)
-            VALUES
-            """
-                + ',\n'.join(values)
-                + """
-            ON CONFLICT (id) DO UPDATE SET
-                kind = EXCLUDED.kind,
-                arch_type = EXCLUDED.arch_type,
-                arch_module = EXCLUDED.arch_module,
-                fingerprint = EXCLUDED.fingerprint,
-                root_id = EXCLUDED.root_id,
-                src = EXCLUDED.src,
-                dst = EXCLUDED.dst,
-                undirected = EXCLUDED.undirected,
-                props = EXCLUDED.props,
-                format_version = EXCLUDED.format_version,
-                updated_at = now(),
-                -- an edge re-saved while its endpoints are unpopulated stubs
-                -- carries NULL types; keep whatever was recorded earlier
-                src_type = COALESCE(EXCLUDED.src_type, anchors.src_type),
-                dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)
-            """,
-            params
-        );
+        params = {
+            'fmt_version': SCHEMA_VERSION,
+            'ids': [str(row.id) for row in batch],
+            'kinds': [row.kind for row in batch],
+            'arch_types': [row.arch_type for row in batch],
+            'arch_modules': [row.arch_module for row in batch],
+            'fps': [row.fingerprint for row in batch],
+            'root_ids': [str(row.root_id) if row.root_id else None for row in batch],
+            'srcs': [str(row.src) if row.src else None for row in batch],
+            'dsts': [str(row.dst) if row.dst else None for row in batch],
+            'undirecteds': [row.undirected for row in batch],
+            'propses': [json.dumps(row.props, default=_jsonable) for row in batch],
+            'src_types': [row.src_type for row in batch],
+            'dst_types': [row.dst_type for row in batch],
+        };
+        self._run(upsert_sql, params);
     }
     pairs: list[tuple[str, str]] = [];
     seen_pairs: set[tuple[str, str]] = set();
@@ -1449,18 +1451,18 @@ impl PgStore.upsert(rows_in: list[AnchorRow]) -> None {
         }
     }
     if pairs {
-        tvals: list[str] = [];
-        tparams: dict = {};
-        for (i, pair) in enumerate(pairs) {
-            tvals.append(f"(:t{i}, :a{i})");
-            tparams[f"t{i}"] = pair[0];
-            tparams[f"a{i}"] = pair[1];
-        }
+        # same fixed-shape trick: unnest two parallel arrays instead of a
+        # VALUES-list sized to len(pairs).
         self._run(
-            'INSERT INTO graph_types (type_name, ancestor) VALUES '
-                + ', '.join(tvals)
-                + ' ON CONFLICT DO NOTHING',
-            tparams
+            """
+            INSERT INTO graph_types (type_name, ancestor)
+            SELECT * FROM unnest(CAST(:types AS text[]), CAST(:ancestors AS text[]))
+            ON CONFLICT DO NOTHING
+            """,
+            {
+                'types': [p[0] for p in pairs],
+                'ancestors': [p[1] for p in pairs],
+            }
         );
         for pair in pairs {
             self._known_types.add(pair[0]);

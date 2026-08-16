@@ -29,9 +29,16 @@ impl _encode_param(v: any) -> (bytes | None) {
 impl _array_literal(vals: any) -> str {
     parts: list[str] = [];
     for v in vals {
-        s = str(v);
-        escaped = s.replace('\\', '\\\\').replace('"', '\\"');
-        parts.append(f'"{escaped}"');
+        if v is None {
+            # unquoted NULL keyword, not the literal text "None" - a quoted
+            # "None" is a real 4-char string to postgres and fails any
+            # non-text array cast (e.g. CAST(:root_ids AS uuid[])).
+            parts.append('NULL');
+        } else {
+            s = str(v);
+            escaped = s.replace('\\', '\\\\').replace('"', '\\"');
+            parts.append(f'"{escaped}"');
+        }
     }
     return '{' + ','.join(parts) + '}';
 }
