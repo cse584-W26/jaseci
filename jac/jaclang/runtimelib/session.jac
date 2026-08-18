@@ -20,6 +20,7 @@ import from jaclang.runtimelib.utils { request_read_only }
 
 glob logger = logging.getLogger(__name__),
      MAX_RETRIES = 5,
+     _STICKY_DENY = os.environ.get('JAC_STICKY_DENY') == '1',
      SCRATCH_ENV = 'JAC_DB_SCRATCH',
      RETENTION_ENV = 'JAC_DB_RETENTION_DAYS',
      __all__ = [
@@ -284,7 +285,8 @@ obj Session {
         _active_units: int postinit,
         _flushing: (int | None) postinit,
         _read_scopes: int postinit,
-        _snapshot_reads: set[UUID] postinit;
+        _snapshot_reads: set[UUID] postinit,
+        _write_denied: set[UUID] postinit;
 
     def postinit -> None;
     def data_location -> (str | None);

@@ -249,6 +249,7 @@ impl Session.postinit -> None {
     self._flushing = None;
     self._read_scopes = 0;
     self._snapshot_reads = set();
+    self._write_denied = set();
     if self.store is None and self.base_path {
         url = os.environ.get('JAC_DB_URL', '');
         promos = promotions_for(self.base_path);
@@ -338,6 +339,9 @@ impl Session.mark_dirty(anchor: Anchor) -> None {
         }
         self._dirty[anchor.id] = None;
         self._clean.discard(anchor.id);
+        # a fresh mutation re-opens the access question (the app may have
+        # called grant() in between), so a past denial stops being sticky
+        self._write_denied.discard(anchor.id);
         # a mutated anchor no longer matches its stored row, so the
         # (id, row_version) response-fragment memo must not serve it
         anchor.__dict__.pop('_row_version', None);
@@ -883,7 +887,21 @@ impl Session._flush_locked(full: bool) -> None {
             }
 
             import from jaclang { JacRuntimeInterface as JacRI }
+            # STICKY DENIAL (JAC_STICKY_DENY=1). Without it a write the
+            # permission system refused is re-proposed on every later flush of
+            # the same session -- including Session.close's, which runs after
+            # the request context is gone, so check_access_level sees
+            # user_root == system_root and grants WRITE. Net effect flag-off:
+            # the denial is reported to the caller (twice, once per flush) and
+            # then the write happens anyway, in a SECOND transaction with its
+            # own fsync. Re-denying is also the wrong answer to "we already
+            # said no": mark_dirty clears the flag, so a grant() followed by a
+            # real mutation still writes.
+            if _STICKY_DENY and id in self._write_denied {
+                continue;
+            }
             if not JacRI.check_write_access(anchor, op_hint="field_write") {
+                self._write_denied.add(id);
                 continue;
             }
             rows.append(self._serialize(anchor));
