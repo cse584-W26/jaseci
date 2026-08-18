@@ -670,18 +670,26 @@ impl JacPersistence.get_topk_inbound(
         tkey = 't' + str(i);
         params[tkey] = str(getattr(cls, '__name__', ''));
         ord_expr = "(m." + ocol + " #>> '{}')::bigint";
+        tie_expr = "(m." + tcol + " #>> '{}')::bigint";
         sel = (
             'SELECT m.id AS id, ' + ord_expr + ' AS ord, '
-            + "(m." + tcol + " #>> '{}')::bigint AS tie"
+            + tie_expr + ' AS tie'
         );
         if src_field {
             # DENORMALISED arm: the mirror carries the edge's far endpoint as
-            # a scalar, so the edge table drops out of the plan entirely and
-            # the whole arm is one index range scan of
-            # (src_field, order_field DESC, tie) that stops after :lim rows.
+            # a scalar, so the edge table drops out of the plan entirely.
             # The edge-join arm below has to visit the mirror by PK once per
             # CANDIDATE just to read the sort key - 17876 lookups / 33701
-            # buffers / 109ms for SNB ic2 at SF1, against 8.8ms here.
+            # buffers / 109ms for SNB ic2 at SF1.
+            #
+            # LATERAL, not `scol = ANY(:jids)`: the mirror index is an
+            # EXPRESSION index and a scalar-array-op against it is only a
+            # Bitmap Index Scan, so the flat form materialises EVERY message
+            # of every dst (17876 rows) and top-N sorts them - 16.7ms warm.
+            # Unnesting the dst list and driving one ORDERED index scan per
+            # dst lets each arm stop after :lim rows: 360 rows, 0.64ms warm
+            # (26x). Same answer, because a row in the global top-K is
+            # necessarily in its own dst's top-K.
             scol = info['cols'].get(src_field);
             if not scol {
                 raise RuntimeError(
@@ -690,10 +698,14 @@ impl JacPersistence.get_topk_inbound(
                 );
             }
             arms.append(
-                sel + ' FROM ' + info['table'] + ' m'
-                + " WHERE (m." + scol + " #>> '{}')"
-                + ' = ANY(CAST(:jids AS text[]))'
+                'SELECT t.id AS id, t.ord AS ord, t.tie AS tie FROM'
+                + ' unnest(CAST(:jids AS text[])) AS j(jid)'
+                + ' CROSS JOIN LATERAL ('
+                + sel + ' FROM ' + info['table'] + ' m'
+                + " WHERE (m." + scol + " #>> '{}') = j.jid"
                 + ' AND ' + ord_expr + ' <= :maxv'
+                + ' ORDER BY ' + ord_expr + ' DESC, ' + tie_expr + ' ASC'
+                + ' LIMIT :lim) t'
             );
         } else {
             arms.append(
