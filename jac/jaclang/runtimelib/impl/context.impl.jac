@@ -8,6 +8,14 @@ import from jaclang.jac0core.constant { Constants as Con }
 import from jaclang.runtimelib.exceptions { MissingAnchorError }
 import from jaclang.runtimelib.session { Session }
 
+def _lazy_txn_enabled -> bool {
+    return os.environ.get('JAC_LAZY_TXN', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+
+glob LAZY_TXN: bool = _lazy_txn_enabled();
+
 impl ExecutionContext.postinit -> None {
     import from jaclang.jac0core.runtime { JacRuntime }
     if self._parent is not None {
@@ -147,6 +155,30 @@ impl ExecutionContext._aget_anchor(anchor_id: str) -> NodeAnchor {
 
 impl ExecutionContext.aset_user_root(root_id: str) -> None {
     self._resolve_roots();
+    if LAZY_TXN {
+        # JAC_LAZY_TXN: the eager user-root fetch is what opens per-request DB
+        # state -- census of a noop littleX request shows BEGIN ISOLATION LEVEL
+        # SERIALIZABLE / SET LOCAL lock_timeout / 2x SELECT FROM anchors / COMMIT
+        # before the walker body runs, for a walker that reads nothing.
+        #
+        # ponytail: reuse the anchor stub idiom already in the codebase
+        # (Anchor.make_stub / Anchor.__getattr__ -> populate). An unpopulated
+        # NodeAnchor carries only .id; the first read of any other attribute
+        # (.archetype/.edges) calls populate() -> ctx.mem.get(id), which is the
+        # SAME fetch through the SAME Session.read_barrier/_ensure_txn. Nothing
+        # about isolation or the read barrier changes -- only WHEN the snapshot
+        # is acquired. Identity/permission code reads .id only and stays SQL-free.
+        #
+        # CEILING: a root_id absent from the anchor store now raises from
+        # populate() inside the walker instead of MissingAnchorError here, so the
+        # guest-root self-heal in _abegin_user_request_context does not fire.
+        # Flag is the guard; default off keeps the eager path byte-identical.
+        stub = object.__new__(NodeAnchor);
+        stub.id = UUID(root_id);
+        self._user_root = stub;
+        self._entry_node = stub;
+        return;
+    }
     self._user_root = await self._aget_anchor(root_id);
     self._entry_node = self._user_root;
 }

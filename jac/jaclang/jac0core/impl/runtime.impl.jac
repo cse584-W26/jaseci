@@ -611,7 +611,8 @@ SELECT b.id, MIN(b.depth) FROM bfs b""" + join_sql + """
 
 impl JacPersistence.get_topk_inbound(
     dsts: list[str], edge_type: str, specs: list[tuple],
-    order_field: str, max_value: int, limit: int, src_field: str = ''
+    order_field: str, max_value: int, limit: int, src_field: str = '',
+    tie_desc: bool = False
 ) -> list[str] {
     # Top-K over the nodes pointing AT a set of nodes: SNB ic2 is "the 20 most
     # recent messages written by any of this person's friends", and the visit
@@ -653,6 +654,9 @@ impl JacPersistence.get_topk_inbound(
         'lim': int(limit)
     };
     arms: list = [];
+    # Tie-break direction. Default ASC keeps every existing caller byte-identical;
+    # SNB is2 wants the tie broken DESC (highest message id first).
+    tdir = ' DESC' if tie_desc else ' ASC';
     for (i, spec) in enumerate(specs) {
         (cls, tie_field) = (spec[0], spec[1]);
         if not store.ensure_mirror(cls) {
@@ -704,7 +708,7 @@ impl JacPersistence.get_topk_inbound(
                 + sel + ' FROM ' + info['table'] + ' m'
                 + " WHERE (m." + scol + " #>> '{}') = j.jid"
                 + ' AND ' + ord_expr + ' <= :maxv'
-                + ' ORDER BY ' + ord_expr + ' DESC, ' + tie_expr + ' ASC'
+                + ' ORDER BY ' + ord_expr + ' DESC, ' + tie_expr + tdir
                 + ' LIMIT :lim) t'
             );
         } else {
@@ -720,7 +724,7 @@ impl JacPersistence.get_topk_inbound(
     mem.read_barrier();
     sql = (
         'SELECT id FROM (' + ' UNION ALL '.join(arms)
-        + ') u ORDER BY ord DESC, tie ASC LIMIT :lim'
+        + ') u ORDER BY ord DESC, tie' + tdir + ' LIMIT :lim'
     );
     rows = store.rows(sql, params);
     return [str(r[0]).replace('-', '') for r in rows];
