@@ -116,6 +116,41 @@ def _stream_lateral_enabled -> bool {
 glob STREAM_LATERAL: bool = _stream_lateral_enabled();
 
 
+# JAC_PROMOTED_DRIVE=1: when a hop's node carries a promoted-column EQUALITY
+# predicate, emit the node join BEFORE the edge join and pin the edge's far
+# endpoint to the node alias, instead of deriving the node id from the edge
+# with _other_expr's CASE.
+#
+# Why this exists (TPC-C P6 turn 1 census). `n1.id = CASE WHEN e1.src = f0.id
+# THEN e1.dst ELSE e1.src END` is opaque to the planner: it cannot be inverted,
+# so the ONLY legal drive order is origin -> every edge -> one anchors_pkey
+# probe per neighbour -> filter. The promotion index is then unreachable and
+# the promoted column degrades from an access path into a post-materialisation
+# filter. Measured on TPC-C Payment-by-c_last: 3000 Index Searches / 12000
+# buffers to return 3 rows, 9.5ms per request, while the hand-tuned arm's
+# equivalent index lookup is 0.06ms.
+#
+# The pinned form `(e.src = f0.id AND e.dst = n1.id) OR (e.undirected AND
+# e.dst = f0.id AND e.src = n1.id)` is the SAME predicate written so both
+# endpoints are plain equalities, which lets the planner start at the
+# promotion index and confirm the edge through idx_anchors_{src,dst}. Row set
+# and ORDER BY are unchanged (the ORDER is still the edge's seq/id), so the
+# result is identical - it is purely a drive-order enabler.
+#
+# ponytail: gated on an EQUALITY promoted predicate only. Range/!= promoted
+# predicates are not selective enough to be worth inverting the drive order,
+# and an unfiltered hop would be strictly worse driven node-first (it would
+# scan the whole archetype). Default off.
+def _promoted_drive_enabled -> bool {
+    import os;
+    return os.environ.get('JAC_PROMOTED_DRIVE', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+
+glob PROMOTED_DRIVE: bool = _promoted_drive_enabled();
+
+
 # Mirrors PgStore._sanitize_ident (store.impl.jac) exactly - the promoted
 # column name has to be derived identically here and at DDL time or the
 # predicate references a column that was never created. Duplicated rather
@@ -271,6 +306,40 @@ def _other_expr(alias: str, fid: str) -> str {
 }
 
 
+def _dir_cond_pinned(
+    alias: str,
+    fid: str,
+    other: str,
+    dir: int,
+    to_dst: (str | None) = None,
+    to_src: (str | None) = None
+) -> str {
+    # _dir_cond, but each arm also pins the far endpoint to `other` (the node
+    # alias) rather than leaving it to _other_expr's CASE. Same row set: on the
+    # arm where the near endpoint is `src`, _other_expr yields `dst`, so
+    # `dst = other` is exactly the join the CASE encodes - and vice versa.
+    # See PROMOTED_DRIVE above.
+    def arm(near: str, far: str, cond: (str | None)) -> str {
+        base = f"{alias}.{near} = {fid} AND {alias}.{far} = {other}";
+        return f"({base})" if cond is None else f"({base} AND {cond})";
+    }
+
+    if dir == 1 {
+        return (
+            f"({arm('dst', 'src', to_src)} OR ({alias}.undirected "
+            f"AND {arm('src', 'dst', to_dst)}))"
+        );
+    }
+    if dir == 3 {
+        return f"({arm('src', 'dst', to_dst)} OR {arm('dst', 'src', to_src)})";
+    }
+    return (
+        f"({arm('src', 'dst', to_dst)} OR "
+        f"({alias}.undirected AND {arm('dst', 'src', to_src)}))"
+    );
+}
+
+
 def _nd_types(hop: QHop) -> list {
     nd = hop.nd;
     if nd is None {
@@ -364,11 +433,18 @@ impl compile_query(
                 econds.append(cond);
             }
         }
+        # The edge join's slot is reserved now but filled after the node
+        # predicates are known: PROMOTED_DRIVE may want the node join to come
+        # first (see the flag's comment). With the flag off the slot is filled
+        # with exactly the string this used to append, in the same position,
+        # so the SQL text is byte-identical.
+        edge_slot = -1;
         if not lateral_final {
             # The lateral_final case replaces this edge join entirely with the
             # mirror's endpoint column (the whole point of R5), so emitting it
             # here would put back exactly the work being removed.
-            joins.append(f"JOIN anchors {e} ON {' AND '.join(econds)}");
+            edge_slot = len(joins);
+            joins.append('');
         }
         nconds = [
             f"{nd_alias}.id = {_other_expr(e, fid)}",
@@ -390,6 +466,7 @@ impl compile_query(
             str(getattr(nd_types_l[0], '__name__', ''))
                 if len(nd_types_l) == 1 else ''
         );
+        drive_node = False;
         for (j, p) in enumerate(hop.preds) {
             pcol = (
                 _promoted_column(promotions, pred_arch, p.field)
@@ -400,6 +477,9 @@ impl compile_query(
                 out.residual.setdefault(i, []).append(p);
             } else {
                 nconds.append(cond);
+                if pcol is not None and p.op in ('==', 'in') {
+                    drive_node = True;
+                }
             }
         }
         want = hop.only_ids();
@@ -468,9 +548,48 @@ impl compile_query(
             order.append(f"{e}.seq");
             order.append(f"{e}.id");
         } else {
-            joins.append(f"JOIN anchors {nd_alias} ON {' AND '.join(nconds)}");
+            if PROMOTED_DRIVE and drive_node {
+                # Node join FIRST (drivable from the promotion index), edge
+                # join second with both endpoints pinned. nconds[0] is the
+                # _other_expr CASE equality - the pinned edge condition
+                # replaces it, so it is dropped here rather than duplicated.
+                #
+                # The exact-type conjunct is what actually unlocks the index:
+                # PgStore._apply_promotions builds the promotion index PARTIAL
+                # on `arch_type = '<Arch>'`, and postgres will only use a
+                # partial index when it can PROVE the predicate. _type_cond's
+                # polymorphic `(= :t OR IN (SELECT ... ancestor = :t))` is not
+                # provable, so without this line the node join degrades to a
+                # Parallel Seq Scan over every anchor - measured 110ms vs
+                # 18.8ms unflagged, i.e. WORSE than doing nothing. Reuses
+                # _type_cond's own param key (:h{n}n0t) so no new bind is
+                # added and the statement stays fixed-shape.
+                #
+                # ponytail: this narrows the hop to the EXACT promoted
+                # archetype - a registered SUBTYPE of it would be matched by
+                # the flag-off polymorphic test but missed here. That is the
+                # same exactness the promotion index itself already assumes,
+                # and no bench declares a subtype of a promoted archetype.
+                # Ceiling declared, not solved: if a promoted archetype ever
+                # gains subtypes, either widen the index predicate to
+                # `g_<col> IS NOT NULL` (provable from the equality) or drop
+                # this branch for that archetype.
+                nconds.append(f"{nd_alias}.arch_type = :h{n}n0t");
+                joins[edge_slot] = (
+                    f"JOIN anchors {nd_alias} ON {' AND '.join(nconds[1:])}"
+                );
+                econds[1] = _dir_cond_pinned(
+                    e, fid, f"{nd_alias}.id", hop.dir, to_dst, to_src
+                );
+                joins.append(f"JOIN anchors {e} ON {' AND '.join(econds)}");
+            } else {
+                joins.append(f"JOIN anchors {nd_alias} ON {' AND '.join(nconds)}");
+            }
             order.append(f"{e}.seq");
             order.append(f"{e}.id");
+        }
+        if edge_slot >= 0 and joins[edge_slot] == '' {
+            joins[edge_slot] = f"JOIN anchors {e} ON {' AND '.join(econds)}";
         }
         fid = f"{nd_alias}.id";
     }
