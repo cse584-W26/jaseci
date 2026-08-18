@@ -26,6 +26,8 @@ def _get_jobj -> Callable[..., any];
 
 def _get_jobj_many -> Callable[..., any];
 
+def _get_jclosure -> Callable[..., any];
+
 def jref(id_or_obj: any) -> any;
 
 def _get_jref -> Callable[..., any];
@@ -95,6 +97,7 @@ glob __all__ = [
          'jid',
          'jobj',
          'jobj_many',
+         'jclosure',
          'jref',
          'grant',
          'revoke',

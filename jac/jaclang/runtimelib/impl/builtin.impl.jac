@@ -78,6 +78,8 @@ impl __getattr__(name: str) -> object {
         return _get_jobj();
     } elif (name == 'jobj_many') {
         return _get_jobj_many();
+    } elif (name == 'jclosure') {
+        return _get_jclosure();
     } elif (name == 'jref') {
         return _get_jref();
     } elif (name == 'grant') {
@@ -181,6 +183,10 @@ impl _get_jobj -> Callable[..., any] {
 
 impl _get_jobj_many -> Callable[..., any] {
     return _get_jac().get_objects_many;
+}
+
+impl _get_jclosure -> Callable[..., any] {
+    return _get_jac().get_closure;
 }
 
 impl _get_jref -> Callable[..., any] {

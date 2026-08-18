@@ -508,6 +508,69 @@ impl JacPersistence.get_objects_many(ids: list[str]) -> list[(Archetype | None)]
     return out;
 }
 
+impl JacPersistence.get_closure(
+    start: str, edge_type: str, node_type: str, max_depth: int
+) -> list[tuple[str, int]] {
+    # Depth-capped uniform-edge BFS closure as ONE recursive CTE over the
+    # anchors edge rows, instead of one adjacency round trip per visited node
+    # (SNB ic1 at SF1: 16527 statements/request -> 1). Returns (jid, min depth)
+    # ONLY -- no property fetch here; the caller hydrates through the normal
+    # batch object-load path, so ACL/read-access stays exactly where it was.
+    #
+    # ponytail: three deliberate ceilings, all superset-safe for the closure's
+    # ONE caller shape (a read-only walker doing a typed BFS):
+    #  - superset by ACL: the CTE walks edges the requester may not be allowed
+    #    to read. Hydration drops those nodes, so the RESULT is a subset of
+    #    what the caller can see -- but a node hidden mid-path is still
+    #    traversed THROUGH, unlike a visit-based walker. Fine while the caller
+    #    is single-root; push a root/acl predicate in here if that changes.
+    #  - exact type match, not subtype: the endpoint filter is an equality on
+    #    the edge row's src_type/dst_type, whereas `[?:T]` in walker syntax is
+    #    an isinstance test. Join graph_types if a subtyped node needs this.
+    #  - DB state only: uncommitted session-local edges are invisible. The
+    #    read_barrier below flushes pending writes first, which makes that
+    #    true rather than merely likely.
+    ctx = JacRuntimeInterface.get_context();
+    mem = ctx.mem;
+    store = getattr(mem, 'store', None);
+    if store is None {
+        raise RuntimeError('get_closure: session has no store');
+    }
+    mem.read_barrier();
+    # Fixed text, all values bound -> one server-side prepared statement no
+    # matter the start node or depth (15ed6253b convention).
+    sql = """
+WITH RECURSIVE bfs(id, depth) AS (
+    SELECT CAST(:start AS uuid), 0
+  UNION
+    SELECT nb.nid, b.depth + 1
+      FROM bfs b
+      CROSS JOIN LATERAL (
+          SELECT e.dst AS nid FROM anchors e
+           WHERE e.src = b.id AND e.arch_type = :et AND e.dst_type = :nt
+          UNION ALL
+          SELECT e.src AS nid FROM anchors e
+           WHERE e.dst = b.id AND e.arch_type = :et AND e.src_type = :nt
+      ) nb
+     WHERE b.depth < :maxd
+)
+SELECT id, MIN(depth) FROM bfs
+ WHERE depth > 0 AND id <> CAST(:start AS uuid)
+ GROUP BY id
+""";
+    rows = store.rows(
+        sql,
+        {
+            'start': str(UUID(start)),
+            'et': edge_type,
+            'nt': node_type,
+            'maxd': int(max_depth)
+        }
+    );
+    # .hex to match object_ref()/jid(), so the ids round-trip through jobj*.
+    return [(str(r[0]).replace('-', ''), int(r[1])) for r in rows];
+}
+
 impl JacPersistence.aget_object(id: str) -> (Archetype | None) {
     if (id == 'root') {
         return JacRuntimeInterface.get_context().user_root.archetype;

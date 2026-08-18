@@ -176,6 +176,9 @@ class JacPersistence {
     static def on_commit(callback: Callable) -> None;
     static def get_object(id: str) -> (Archetype | None);
     static def get_objects_many(ids: list[str]) -> list[(Archetype | None)];
+    static def get_closure(
+        start: str, edge_type: str, node_type: str, max_depth: int
+    ) -> list[tuple[str, int]];
     static async def aget_object(id: str) -> (Archetype | None);
     static def object_ref(`obj: Archetype) -> str;
     static def save(`obj: (Archetype | Anchor)) -> None;
