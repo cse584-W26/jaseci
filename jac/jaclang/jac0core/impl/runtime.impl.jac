@@ -611,7 +611,7 @@ SELECT b.id, MIN(b.depth) FROM bfs b""" + join_sql + """
 
 impl JacPersistence.get_topk_inbound(
     dsts: list[str], edge_type: str, specs: list[tuple],
-    order_field: str, max_value: int, limit: int
+    order_field: str, max_value: int, limit: int, src_field: str = ''
 ) -> list[str] {
     # Top-K over the nodes pointing AT a set of nodes: SNB ic2 is "the 20 most
     # recent messages written by any of this person's friends", and the visit
@@ -647,6 +647,7 @@ impl JacPersistence.get_topk_inbound(
     }
     params: dict = {
         'dsts': [str(UUID(d)) for d in dsts],
+        'jids': [str(UUID(d).hex) for d in dsts],
         'et': edge_type,
         'maxv': int(max_value),
         'lim': int(limit)
@@ -669,14 +670,40 @@ impl JacPersistence.get_topk_inbound(
         tkey = 't' + str(i);
         params[tkey] = str(getattr(cls, '__name__', ''));
         ord_expr = "(m." + ocol + " #>> '{}')::bigint";
-        arms.append(
+        sel = (
             'SELECT m.id AS id, ' + ord_expr + ' AS ord, '
             + "(m." + tcol + " #>> '{}')::bigint AS tie"
-            + ' FROM anchors e JOIN ' + info['table'] + ' m ON m.id = e.src'
-            + ' WHERE e.dst = ANY(CAST(:dsts AS uuid[]))'
-            + ' AND e.arch_type = :et AND e.src_type = :' + tkey
-            + ' AND ' + ord_expr + ' <= :maxv'
         );
+        if src_field {
+            # DENORMALISED arm: the mirror carries the edge's far endpoint as
+            # a scalar, so the edge table drops out of the plan entirely and
+            # the whole arm is one index range scan of
+            # (src_field, order_field DESC, tie) that stops after :lim rows.
+            # The edge-join arm below has to visit the mirror by PK once per
+            # CANDIDATE just to read the sort key - 17876 lookups / 33701
+            # buffers / 109ms for SNB ic2 at SF1, against 8.8ms here.
+            scol = info['cols'].get(src_field);
+            if not scol {
+                raise RuntimeError(
+                    'get_topk_inbound: ' + str(cls) + ' has no field '
+                    + src_field
+                );
+            }
+            arms.append(
+                sel + ' FROM ' + info['table'] + ' m'
+                + " WHERE (m." + scol + " #>> '{}')"
+                + ' = ANY(CAST(:jids AS text[]))'
+                + ' AND ' + ord_expr + ' <= :maxv'
+            );
+        } else {
+            arms.append(
+                sel
+                + ' FROM anchors e JOIN ' + info['table'] + ' m ON m.id = e.src'
+                + ' WHERE e.dst = ANY(CAST(:dsts AS uuid[]))'
+                + ' AND e.arch_type = :et AND e.src_type = :' + tkey
+                + ' AND ' + ord_expr + ' <= :maxv'
+            );
+        }
     }
     mem.read_barrier();
     sql = (

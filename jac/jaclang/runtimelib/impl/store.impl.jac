@@ -66,13 +66,26 @@ glob _SCHEMA_SQL = [
          # lets the hop prune here instead. Measured on littleX (2550-tweet
          # feed): 5000 target probes -> 2500, 18.7k buffers -> 8.3k, 12.9ms ->
          # 6.2ms.
+         #
+         # INCLUDE the OPPOSITE endpoint (P6 turn 2): every hop reads the far
+         # end of the edge it just found, and that column lives in the heap,
+         # so a scan returning n edges paid n random heap fetches. Carrying it
+         # in the index leaf makes the hop an Index Only Scan. Measured on the
+         # SNB ic1 depth-3 Knows closure (2761 expansions, ~30 edges each):
+         # 83k heap fetches -> ~4.5k, 125-135ms -> 65-72ms warm.
+         # ponytail: INCLUDE disables btree deduplication, so these indexes
+         # roughly double on disk (136MB -> 539MB for dst_typed on SF1). Worth
+         # it while reads dominate; a write-heavy store would want the plain
+         # form back.
          """
     CREATE INDEX IF NOT EXISTS idx_anchors_src_typed
-        ON anchors (src, arch_type, dst_type) WHERE src IS NOT NULL
+        ON anchors (src, arch_type, dst_type) INCLUDE (dst)
+        WHERE src IS NOT NULL
     """,
          """
     CREATE INDEX IF NOT EXISTS idx_anchors_dst_typed
-        ON anchors (dst, arch_type, src_type) WHERE dst IS NOT NULL
+        ON anchors (dst, arch_type, src_type) INCLUDE (src)
+        WHERE dst IS NOT NULL
     """,
          """
     CREATE INDEX IF NOT EXISTS idx_anchors_root

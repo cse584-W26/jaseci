@@ -182,7 +182,7 @@ class JacPersistence {
     ) -> list[tuple[str, int]];
     static def get_topk_inbound(
         dsts: list[str], edge_type: str, specs: list[tuple],
-        order_field: str, max_value: int, limit: int
+        order_field: str, max_value: int, limit: int, src_field: str = ''
     ) -> list[str];
     static async def aget_object(id: str) -> (Archetype | None);
     static def object_ref(`obj: Archetype) -> str;
