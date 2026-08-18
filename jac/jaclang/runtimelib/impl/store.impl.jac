@@ -1102,6 +1102,62 @@ impl PgStore.mirror_info(cls: type) -> (dict | None) {
 }
 
 
+# JAC_FUSED_FEED's access path: the sort column on its OWN, so a top-K over an
+# arbitrary membership set can be answered by walking the index in order and
+# stopping, instead of per-source range scans under
+# (src_endpoint, <order_col>). Deliberately a second index rather than a
+# widening of that one - the endpoint index is still the right access path for
+# single-source queries, and neither can serve the other's drive order.
+impl PgStore.ensure_mirror_order_index(cls: type, order_col: str) -> bool {
+    st = _mirror_state.get(cls);
+    if not st or not st['ok'] {
+        return False;
+    }
+    done = st.setdefault('gords', set());
+    if order_col in done {
+        return True;
+    }
+    if not _bare_ident(order_col) {
+        return False;
+    }
+    table = st['table'];
+    tries = int(st.get('gord_tries', 0));
+    if tries >= 8 {
+        return False;
+    }
+    st['gord_tries'] = tries + 1;
+    ddl_conn: Any = None;
+    try {
+        self._ensure_ready();
+        ddl_conn = self._connect();
+        # same self-deadlock guard as ensure_mirror_endpoint: the calling
+        # request may already hold ACCESS SHARE on this mirror
+        ddl_conn.run("SET lock_timeout = '250ms'");
+        ddl_conn.run(
+            'CREATE INDEX IF NOT EXISTS ' + table + '_gord_' + order_col
+                + ' ON ' + table + ' (' + order_col + ' DESC)'
+        );
+        ddl_conn.run('ANALYZE ' + table);
+        done.add(order_col);
+        st['gord_tries'] = 0;
+        return True;
+    } except Exception as e {
+        # No completeness probe needed, unlike the endpoint column: an index
+        # is either visible to the caller's snapshot and complete, or not
+        # visible and the planner simply picks another path. Nothing can be
+        # silently dropped from a page by a half-built index.
+        logger.warning(f"mirror order index for {table}.{order_col} deferred: {e}");
+        return False;
+    } finally {
+        if ddl_conn is not None {
+            try {
+                ddl_conn.close();
+            } except Exception { }
+        }
+    }
+}
+
+
 # --- R5 endpoint column ------------------------------------------------------
 # A stream chain's final hop is `<prev node> -[E]-> <mirrored node>`, and the
 # generic form has to join `anchors` to walk it: for a 50-source page that is

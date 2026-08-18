@@ -834,6 +834,22 @@ impl _try_stream_fused(
                 );
                 if epc is not None {
                     mirror_spec['endpoint_col'] = epc;
+                    # JAC_FUSED_FEED (sqlcompile._fused_feed_enabled): drive
+                    # the statement from ONE ordered scan of the sort index
+                    # and demote the traversal to a membership filter. Only
+                    # worth it when there IS a traversal to demote - a
+                    # single-hop query already reaches its one source's
+                    # top-K through the (endpoint, sort) index directly, and
+                    # the global form would only add a filter to it.
+                    if (
+                        os.environ.get('JAC_FUSED_FEED', '').strip().lower()
+                            in ('1', 'true', 'yes', 'on')
+                        and len(q.hops) >= 2
+                        and hasattr(store, 'ensure_mirror_order_index')
+                        and store.ensure_mirror_order_index(nd_last, ocol)
+                    ) {
+                        mirror_spec['global_topk'] = True;
+                    }
                 }
             }
         }

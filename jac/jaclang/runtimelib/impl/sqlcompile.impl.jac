@@ -116,6 +116,38 @@ def _stream_lateral_enabled -> bool {
 glob STREAM_LATERAL: bool = _stream_lateral_enabled();
 
 
+# JAC_FUSED_FEED=1: for a MULTI-hop stream query whose final hop is a
+# top-K mirror fetch off the endpoint column, drive the whole statement from
+# ONE ordered index scan on the sort column and demote the traversal to an
+# `= ANY(ARRAY(...))` InitPlan membership filter, instead of a per-source
+# LATERAL top-K (JAC_STREAM_LATERAL).
+#
+# Why (W3 feed_page census, snb0818): the LATERAL fetches cap rows per SOURCE
+# and throws away all but the global cap - 54 followees x 28 = 1512 wide rows
+# materialised to return 28, i.e. 2700 heap rows / 413 buffers per request.
+# The global form reads the sort index in order and stops at the cap: 53 rows
+# examined, 28 returned. EXPLAIN ANALYZE on the t50 fixture: 3.127ms -> 0.141ms.
+# This is the shape the hand-tuned pg arm uses (`WHERE author_id IN (...)
+# ORDER BY created_at DESC LIMIT 20`).
+#
+# ponytail: trades per-source bounded work for membership SELECTIVITY. The
+# scan walks the sort index until it has found cap admitted rows, so a caller
+# whose traversal reaches a vanishing fraction of the mirror walks
+# proportionally further (worst case, the whole index) where the LATERAL was
+# bounded by sources x cap. Fine at feed shapes (a follow set is a sizeable
+# slice of the corpus) and the flag is the guard; the principled fix is a
+# planner cost estimate off the mirror's row count vs the traversal's
+# cardinality, which needs statistics the planner does not carry yet.
+def _fused_feed_enabled -> bool {
+    import os;
+    return os.environ.get('JAC_FUSED_FEED', '').strip().lower()
+        in ('1', 'true', 'yes', 'on');
+}
+
+
+glob FUSED_FEED: bool = _fused_feed_enabled();
+
+
 # JAC_PROMOTED_DRIVE=1: when a hop's node carries a promoted-column EQUALITY
 # predicate, emit the node join BEFORE the edge join and pin the edge's far
 # endpoint to the node alias, instead of deriving the node id from the edge
@@ -393,18 +425,35 @@ impl compile_query(
     # mirror lookups plus a sort per source, and measured 30% SLOWER at t200
     # (PROGRESS.log PHASE9/PHASE10 A/Bs) - so without it the flat join wins
     # and stays the fallback.
+    # JAC_FUSED_FEED (see the flag): same preconditions as the LATERAL plus a
+    # traversal to demote (>=2 hops) and the global sort index the planner
+    # asked the store for. Wins the tie - it subsumes the LATERAL's shape,
+    # hence lateral_used stands down when it is on.
+    global_used = mirror is not None and bool(mirror.get('global_topk'));
     lateral_used = (
         STREAM_LATERAL
+        and not global_used
         and mirror is not None
         and mirror.get('order_col') is not None
         and mirror.get('endpoint_col') is not None
     );
+    src_fid = 'f0.id';
     for (i, hop) in enumerate(q.hops[:upto]) {
         n = i + 1;
         e = f"e{n}";
         nd_alias = f"n{n}";
         pfx_e = f"h{n}e";
         is_final = (i == len(q.hops[:upto]) - 1);
+        if is_final and global_used {
+            # The final hop IS the driving scan, emitted below off the
+            # endpoint column - it joins nothing here, exactly as the LATERAL
+            # branch replaces its edge join. `src_fid` is the id the traversal
+            # subquery hands it (mirror membership == the hop's type test is
+            # the caller's precondition, same as the LATERAL).
+            src_fid = fid;
+            fid = f"{nd_alias}.id";
+            continue;
+        }
         lateral_final = is_final and mirror is not None and lateral_used;
         nd_names = [
             str(getattr(nt, '__name__', ''))
@@ -626,6 +675,40 @@ impl compile_query(
         sel = f"n{n}.id, e{n}.id";
     }
     trav_order = 'f0.ord, ' + ', '.join(order);
+    if global_used {
+        # ARRAY(subquery), not IN (subquery), deliberately: IN lets the planner
+        # hash-join the traversal to the mirror, which throws the sort index
+        # away and re-sorts every candidate row (measured 1.72ms vs 0.14ms).
+        # ARRAY() is an InitPlan - evaluated once, then a plain
+        # `= ANY(<const array>)` FILTER on top of an ordered index scan that
+        # stops at the cap.
+        cap_key = 'topk_cap';
+        params[cap_key] = int(mirror.get('limit', 0)) + int(mirror.get('slack', 0));
+        gconds = [
+            f"n{n}." + mirror['endpoint_col'] + ' = ANY(ARRAY(SELECT ' + src_fid
+                + ' FROM unnest(CAST(:origin AS uuid[])) WITH ORDINALITY AS '
+                + 'f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id '
+                + ' '.join(joins) + '))'
+        ];
+        if acl_sql is not None {
+            gconds.append(acl_sql.replace('%M%', f"n{n}"));
+        }
+        # No traversal-order tie-break to restore: the edge rows are not in
+        # this statement at all. Rows come back in sort-column order, which is
+        # the order the caller's pipeline wants anyway; ties between two rows
+        # with the SAME sort value now break on nothing in particular where
+        # they used to break on (edge seq, edge id). Same class of change the
+        # LATERAL branch already declares, and gated by the page-parity oracle.
+        out.sql = (
+            'SELECT ' + sel + ' FROM ' + mirror['table'] + f" n{n} WHERE "
+            + ' AND '.join(gconds)
+            + ' ORDER BY ' + f"n{n}." + mirror['order_col'] + ' '
+            + ('DESC' if mirror.get('desc') else 'ASC')
+            + f' LIMIT :{cap_key}'
+        );
+        out.params = params;
+        return out;
+    }
     base_sql = (
         'FROM unnest(CAST(:origin AS uuid[])) WITH ORDINALITY AS f0(id, ord) '
         + 'LEFT JOIN anchors s1 ON s1.id = f0.id '
