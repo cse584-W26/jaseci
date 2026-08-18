@@ -177,8 +177,13 @@ class JacPersistence {
     static def get_object(id: str) -> (Archetype | None);
     static def get_objects_many(ids: list[str]) -> list[(Archetype | None)];
     static def get_closure(
-        start: str, edge_type: str, node_type: str, max_depth: int
+        start: str, edge_type: str, node_type: (str | type), max_depth: int,
+        prop_name: str = '', prop_value: str = ''
     ) -> list[tuple[str, int]];
+    static def get_topk_inbound(
+        dsts: list[str], edge_type: str, specs: list[tuple],
+        order_field: str, max_value: int, limit: int
+    ) -> list[str];
     static async def aget_object(id: str) -> (Archetype | None);
     static def object_ref(`obj: Archetype) -> str;
     static def save(`obj: (Archetype | Anchor)) -> None;

@@ -509,7 +509,8 @@ impl JacPersistence.get_objects_many(ids: list[str]) -> list[(Archetype | None)]
 }
 
 impl JacPersistence.get_closure(
-    start: str, edge_type: str, node_type: str, max_depth: int
+    start: str, edge_type: str, node_type: (str | type), max_depth: int,
+    prop_name: str = '', prop_value: str = ''
 ) -> list[tuple[str, int]] {
     # Depth-capped uniform-edge BFS closure as ONE recursive CTE over the
     # anchors edge rows, instead of one adjacency round trip per visited node
@@ -530,15 +531,60 @@ impl JacPersistence.get_closure(
     #  - DB state only: uncommitted session-local edges are invisible. The
     #    read_barrier below flushes pending writes first, which makes that
     #    true rather than merely likely.
+    #
+    # `prop_name`/`prop_value` (optional) push the CALLER'S OWN predicate into
+    # the same statement: the closure is joined to node_type's mirror table and
+    # only rows whose f_<prop> equals the value come back. Without it the
+    # caller hydrates the whole neighbourhood to keep the handful that match
+    # (SNB ic1: 9036 objects loaded, 18 reported). With it, hydration is the
+    # size of the ANSWER. Passing a predicate requires node_type to be the
+    # ARCHETYPE, not its name -- the mirror table/column names are resolved
+    # through store.ensure_mirror/mirror_info from the class, never spelled
+    # here. Value comparison is string equality (jsonb text scalar).
     ctx = JacRuntimeInterface.get_context();
     mem = ctx.mem;
     store = getattr(mem, 'store', None);
     if store is None {
         raise RuntimeError('get_closure: session has no store');
     }
+    tname = (
+        node_type if isinstance(node_type, str)
+        else str(getattr(node_type, '__name__', ''))
+    );
+    params: dict = {
+        'start': str(UUID(start)),
+        'et': edge_type,
+        'nt': tname,
+        'maxd': int(max_depth)
+    };
+    join_sql = '';
+    if prop_name {
+        if isinstance(node_type, str) {
+            raise RuntimeError(
+                'get_closure: a property filter needs the node archetype, '
+                'not its name'
+            );
+        }
+        if not store.ensure_mirror(node_type) {
+            raise RuntimeError('get_closure: no mirror for ' + tname);
+        }
+        info = store.mirror_info(node_type);
+        col = info['cols'].get(prop_name);
+        if not col {
+            raise RuntimeError(
+                'get_closure: ' + tname + ' has no field ' + prop_name
+            );
+        }
+        join_sql = (
+            ' JOIN ' + info['table'] + ' m ON m.id = b.id'
+            + ' AND m.' + col + ' = to_jsonb(CAST(:pval AS text))'
+        );
+        params['pval'] = str(prop_value);
+    }
     mem.read_barrier();
     # Fixed text, all values bound -> one server-side prepared statement no
-    # matter the start node or depth (15ed6253b convention).
+    # matter the start node or depth (15ed6253b convention). The join fragment
+    # is derived from the mirror catalogue, so it is fixed per call SITE too.
     sql = """
 WITH RECURSIVE bfs(id, depth) AS (
     SELECT CAST(:start AS uuid), 0
@@ -554,21 +600,91 @@ WITH RECURSIVE bfs(id, depth) AS (
       ) nb
      WHERE b.depth < :maxd
 )
-SELECT id, MIN(depth) FROM bfs
- WHERE depth > 0 AND id <> CAST(:start AS uuid)
- GROUP BY id
+SELECT b.id, MIN(b.depth) FROM bfs b""" + join_sql + """
+ WHERE b.depth > 0 AND b.id <> CAST(:start AS uuid)
+ GROUP BY b.id
 """;
-    rows = store.rows(
-        sql,
-        {
-            'start': str(UUID(start)),
-            'et': edge_type,
-            'nt': node_type,
-            'maxd': int(max_depth)
-        }
-    );
+    rows = store.rows(sql, params);
     # .hex to match object_ref()/jid(), so the ids round-trip through jobj*.
     return [(str(r[0]).replace('-', ''), int(r[1])) for r in rows];
+}
+
+impl JacPersistence.get_topk_inbound(
+    dsts: list[str], edge_type: str, specs: list[tuple],
+    order_field: str, max_value: int, limit: int
+) -> list[str] {
+    # Top-K over the nodes pointing AT a set of nodes: SNB ic2 is "the 20 most
+    # recent messages written by any of this person's friends", and the visit
+    # form loads EVERY message of every friend (17876 objects at SF1) to keep
+    # 20. Same trick as get_closure one level up -- ONE statement joins the
+    # inbound edge rows to each source type's mirror, applies the date bound,
+    # the ordering and the LIMIT in SQL, and returns only the surviving jids
+    # in order; the caller hydrates those through the ordinary batch path, so
+    # read-access checks stay exactly where they were.
+    #
+    # `specs` = [(source archetype, tie-break field name), ...] -- one UNION
+    # ALL arm per inbound node type, because the tie-break field is per type
+    # (Post.post_id / Comment.comment_id). Ordering is (order_field DESC,
+    # tie ASC), i.e. exactly a python sort(key=(-order, tie)).
+    #
+    # ponytail: get_closure's ceilings, plus two of its own:
+    #  - ACL is applied AFTER the limit, so a caller who may not read one of
+    #    the top K gets FEWER than K rows rather than the next-best row.
+    #    Sound for the single-root reader this has; a multi-root one needs the
+    #    acl predicate in the SQL (the mirror carries acl_all/acl_spec for
+    #    exactly that) before the LIMIT.
+    #  - order/tie fields must be numeric: the mirror column is jsonb, read
+    #    with #>> '{}' and cast to bigint. A text sort key would need its own
+    #    arm rather than a cast.
+    ctx = JacRuntimeInterface.get_context();
+    mem = ctx.mem;
+    store = getattr(mem, 'store', None);
+    if store is None {
+        raise RuntimeError('get_topk_inbound: session has no store');
+    }
+    if not dsts or not specs {
+        return [];
+    }
+    params: dict = {
+        'dsts': [str(UUID(d)) for d in dsts],
+        'et': edge_type,
+        'maxv': int(max_value),
+        'lim': int(limit)
+    };
+    arms: list = [];
+    for (i, spec) in enumerate(specs) {
+        (cls, tie_field) = (spec[0], spec[1]);
+        if not store.ensure_mirror(cls) {
+            raise RuntimeError('get_topk_inbound: no mirror for ' + str(cls));
+        }
+        info = store.mirror_info(cls);
+        ocol = info['cols'].get(order_field);
+        tcol = info['cols'].get(tie_field);
+        if not ocol or not tcol {
+            raise RuntimeError(
+                'get_topk_inbound: ' + str(cls) + ' has no field '
+                + order_field + '/' + tie_field
+            );
+        }
+        tkey = 't' + str(i);
+        params[tkey] = str(getattr(cls, '__name__', ''));
+        ord_expr = "(m." + ocol + " #>> '{}')::bigint";
+        arms.append(
+            'SELECT m.id AS id, ' + ord_expr + ' AS ord, '
+            + "(m." + tcol + " #>> '{}')::bigint AS tie"
+            + ' FROM anchors e JOIN ' + info['table'] + ' m ON m.id = e.src'
+            + ' WHERE e.dst = ANY(CAST(:dsts AS uuid[]))'
+            + ' AND e.arch_type = :et AND e.src_type = :' + tkey
+            + ' AND ' + ord_expr + ' <= :maxv'
+        );
+    }
+    mem.read_barrier();
+    sql = (
+        'SELECT id FROM (' + ' UNION ALL '.join(arms)
+        + ') u ORDER BY ord DESC, tie ASC LIMIT :lim'
+    );
+    rows = store.rows(sql, params);
+    return [str(r[0]).replace('-', '') for r in rows];
 }
 
 impl JacPersistence.aget_object(id: str) -> (Archetype | None) {
