@@ -62,6 +62,24 @@ impl ExecutionContext._resolve_roots -> None {
         self._entry_node = outer.entry_node;
         return;
     }
+    if LAZY_TXN {
+        # JAC_LAZY_TXN: this existence probe is a per-request anchor SELECT
+        # (and it is what opens the request's BEGIN ISOLATION LEVEL
+        # SERIALIZABLE + SET LOCAL lock_timeout) even for a walker that
+        # never reads the system root -- littleX's noop census showed it as
+        # statement 1 of 5. Same stub idiom as aset_user_root: identity
+        # (.id / root comparisons) is SQL-free, and the first real read of
+        # .archetype/.access/.edges populates through the same
+        # Session.read_barrier. CEILING: the mem.put self-heal for a MISSING
+        # super root no longer fires -- an absent super root now raises from
+        # populate() at first use instead of being minted here.
+        stub = object.__new__(NodeAnchor);
+        stub.id = UUID(Con.SUPER_ROOT_UUID);
+        self._system_root = stub;
+        self._user_root = stub;
+        self._entry_node = stub;
+        return;
+    }
     seed = cast(NodeAnchor, Root().__jac__);
     seed.id = UUID(Con.SUPER_ROOT_UUID);
     self._system_root = seed;
