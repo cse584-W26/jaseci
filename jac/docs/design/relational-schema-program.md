@@ -101,16 +101,40 @@ through the .jir cache (`_build_interop_dict` / restore -- the cache
 persists manifest fields explicitly; forgetting that is silent schema
 loss on cache-hit loads). Inspect with `jac db schema <file.jac>`.
 
+## A2 shadow storage (shipped)
+
+`runtimelib/relational.jac`: with `JAC_RELATIONAL=shadow` every
+`PgStore.upsert`/`delete` also routes rows relationally in the SAME
+transaction -- nodes directory + per-archetype typed table (created
+lazily: `CREATE IF NOT EXISTS` + per-column `ADD COLUMN IF NOT EXISTS`,
+catalogued in `graph_tables`) + edges -- so anchors and the relational
+copy can never diverge across a commit boundary. Table plans resolve
+manifest-first (the compiler's graph_schema via the loaded module),
+reflection-fallback (`Serializer._get_class` + `get_field_types`), so
+dynamically created types still route; a type with neither stays
+directory-only. Value coercion is guarded per tier: a value that does
+not match its column type lands in the row's `extra` jsonb instead of
+failing the write. `frag` is deliberately NOT prebuilt here -- it lands
+with PR-B where its consumer lives (additive ALTER).
+
+`relational_parity(store)` (and `jac db parity`) compares anchors
+against the relational copy: directory presence/type/root, edge
+endpoints/type/undirected, and typed scalar/enum/ref columns against
+the props projection. It is read-only and flag-independent. Shadow
+verification: the entire existing PG persistence surface (session,
+unit-of-work, lifecycle, migration e2e, dangling-ref heal, graph query,
+OSP suites) passes with the flag ON, plus dedicated tests in
+tests/runtimelib/test_relational_shadow.jac.
+
 ## Remaining PR-A stages
 
-- **A2 storage**: upsert routing by (kind, arch_type) into
-  directory + typed tables / edges; DDL from the merged manifests at
-  ensure_schema (additive ALTERs automatic, destructive surfaced);
-  generic anchors-shaped fallback table for schema-less types; shadow
-  dual-write with parity check against `anchors` before cutover.
 - **A3 read path**: sqlcompile joins over edges + typed tables,
   `graph_types` stays the subtype oracle (hierarchy = UNION ALL over
   concrete-type tables), batch_get via directory batched per type.
+  Cutover order: backfill (INSERT..SELECT from anchors), validate FKs,
+  flip reads, then anchors becomes the fallback for walkers/objects and
+  schema-less types only.
+- Obj side tables (flat-scalar tier) remain queued behind cutover.
 - Order preservation: `seq` on edges is traversal insertion order.
 
 ## Postgres features queued behind the reorg
