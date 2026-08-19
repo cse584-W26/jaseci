@@ -126,6 +126,48 @@ unit-of-work, lifecycle, migration e2e, dangling-ref heal, graph query,
 OSP suites) passes with the flag ON, plus dedicated tests in
 tests/runtimelib/test_relational_shadow.jac.
 
+## Measured: where the DB gain actually is (2026-08-18, littleX 100-user)
+
+Two independent levers on read cost, measured on Aaron's harness with a
+statement-counting matrix (`load_feed` loop form vs a `load_feed_chain`
+that writes the followee-tweets hop as one chain expression):
+
+| workload | baseline (anchors) | JAC_RELATIONAL=on (hybrid) |
+|---|---|---|
+| feed, loop form | 281 ms / **309 stmts** | 402 ms / 512 stmts |
+| feed, chain form | 133 ms / **10 stmts** | 145 ms / 14 stmts |
+| create_tweet | 15 ms / 9 stmts | 18 ms / 15 stmts |
+| follow_user | 51 ms / 13 stmts | 43 ms / 19 stmts |
+| like_tweet | 52 ms / 13 stmts | 44 ms / 20 stmts |
+
+**Lever 1 -- call count (app-side, ships today, no runtime change):**
+the loop issues one traversal per frontier node (309 statements); the
+same reachability as one chain expression fuses to 10, **281 -> 133 ms,
+2.1x**, byte-identical. This is the dominant cost and it is invisible to
+the storage layer.
+
+**Lever 2 -- query shape (the relational layout).** A3 as-built is a
+*hybrid*: it keeps anchors as the source of truth, so a relational
+traversal adds anchors semi-joins for the dangling-ref guard and the
+load reconstructs props in two statements instead of one fat SELECT.
+Net, `on` is slightly *slower* than baseline - it pays for both table
+sets. The layout gain only appears when a query targets the typed tables
+*alone*. Measured at the pure DB layer (EXPLAIN/driver, identical data,
+app+wire stripped):
+
+| DB-layer query (same 316-tweet feed) | median |
+|---|---|
+| anchors 2-hop traversal only | 16.0 ms |
+| anchors traversal + fat props/adjacency load | **21.2 ms** |
+| typed-tables single join, columns inline | **1.4 ms** |
+
+**~15x at the DB layer** - but *only* for the fused, guard-free,
+columns-inline query. That query is precisely PR-B's output. So the
+program's shape is now empirically pinned: A2/A3 are correctness +
+substrate and cost a small hybrid tax; the ~15x is unlocked by (a) the
+planner fusing chains, (b) cutover dropping the anchors guard, (c)
+SQL-side fragment assembly so props never round-trip.
+
 ## Remaining PR-A stages
 
 - **A3 read path**: sqlcompile joins over edges + typed tables,
