@@ -12,6 +12,9 @@ glob _mirror_state: dict = {};
 glob _adj_state: dict = {};
 
 
+glob _adjtbl_state: dict = {};
+
+
 impl intern_uuid(s: object) -> UUID {
     key = s if isinstance(s, str) else str(s);
     if (hit := _uuid_cache.get(key)) is not None {
@@ -1234,6 +1237,186 @@ impl PgStore.ensure_adjacency_index(edge_type: str, node_type: str) -> bool {
             } except Exception { }
         }
     }
+}
+
+
+# --- R7 adjacency TABLE ------------------------------------------------------
+# One rung above R6. R6 kept the edge rows where they were and gave the hop a
+# narrow access path; R7 materialises the adjacency itself: `adj_<edge>`, two
+# rows per edge (both directions), PK(src,dst). The closure's hop then stops
+# being a two-arm `CROSS JOIN LATERAL (src-probe UNION ALL dst-probe)` and
+# becomes ONE join against ONE index - because "the other direction" is a row
+# now, not a second query. Measured on the SNB ic1 depth-3 Knows closure at SF1
+# (PHASE_A.md, warm psql, n=7 interleaved): 2761+2761 Index Searches -> 2761,
+# closure statement 43.3 -> 35.1ms (-18.8%) and 25,902 -> 9,022 buffers
+# (-65.2%); whole ic1 statement 54.6 -> 38.4ms (-29.7%), 53,013 -> 9,687
+# buffers (-81.7%). Storage is the honest price: 43MB (21MB table + 22MB PK)
+# vs R6's 17.5MB of index, i.e. ~2.5x, because this is a second physical copy
+# of the edge set rather than index pages over the first one.
+#
+# Maintenance is a pair of row triggers on `anchors` in the ensure_mirror
+# idiom - the projection is kept correct by the DB, in the writer's own
+# transaction, not by app code remembering to.
+#
+# ponytail: four declared ceilings.
+#  - ONE table per EDGE type, claimed by the first endpoint type that asks. A
+#    second endpoint type for the same edge would need its own row set; it is
+#    refused (falls back to R6) rather than silently answered from the wrong
+#    one.
+#  - HOMOGENEOUS edges only. The closure's two arms filter dst_type on the
+#    forward arm and src_type on the reverse, so an edge with only ONE endpoint
+#    of the wanted type contributes in one direction only - which a symmetric
+#    row pair cannot express. Probed for, and refused if found.
+#  - endpoints are assumed IMMUTABLE: the UPDATE trigger re-inserts the current
+#    pair but does not retract a previous one. No path in this runtime rewrites
+#    an edge anchor's src/dst; add an OLD-pair delete here if one ever does.
+#  - nothing ever drops it, so every edge insert of this type pays two extra
+#    row inserts forever (measured at SF1, add_friendship n=50 with the trigger
+#    live vs disabled: |delta| < 1.1ms on both client and server p50, i.e.
+#    BELOW the fsync jitter floor - no rank claim).
+#  - the memo is per PROCESS, so every boot re-pays the whole ensure: 1135ms
+#    for the first ic1 of a boot at SF1 (502ms idempotent backfill + 307ms
+#    completeness anti-join + 35ms ANALYZE + DDL no-ops), even when the table
+#    is already complete. Absorbed by any warm pass, so left alone; the fix if
+#    it ever matters is to run the completeness anti-join FIRST, on the
+#    caller's own connection, and skip the DDL connection entirely when it
+#    comes back empty (~310ms instead of 1135ms).
+impl PgStore.ensure_adjacency_table(edge_type: str, node_type: str) -> (str | None) {
+    st = _adjtbl_state.get(edge_type);
+    if st is not None {
+        if st['node'] != node_type {
+            return None;
+        }
+        if 'ok' in st {
+            return st['table'] if st['ok'] else None;
+        }
+        if int(st['tries']) >= 8 {
+            return None;
+        }
+    }
+    if not _bare_ident(edge_type) or not _bare_ident(node_type) {
+        _adjtbl_state[edge_type] = {'node': node_type, 'ok': False};
+        return None;
+    }
+    table = 'adj_' + _sanitize_ident(edge_type);
+    _adjtbl_state[edge_type] = {
+        'node': node_type,
+        'tries': (int(st['tries']) + 1) if st is not None else 1
+    };
+    # literal-inlined, not bound: these two strings are per-call-SITE constants
+    # and both the DDL and the trigger WHEN clauses need them proven, not
+    # merely equal - the same provability lesson ensure_adjacency_index and
+    # JAC_PROMOTED_DRIVE paid for. Both went through _bare_ident above.
+    et = "'" + edge_type + "'";
+    nt = "'" + node_type + "'";
+    rowset = (
+        "e.kind = 'EdgeAnchor' AND e.arch_type = " + et
+        + ' AND e.src_type = ' + nt + ' AND e.dst_type = ' + nt
+        + ' AND e.src IS NOT NULL AND e.dst IS NOT NULL'
+    );
+    ddl_conn: Any = None;
+    try {
+        self._ensure_ready();
+        ddl_conn = self._connect();
+        # same self-deadlock guard as the mirror DDL: the request that
+        # triggered this already holds ACCESS SHARE on anchors
+        ddl_conn.run("SET lock_timeout = '250ms'");
+        mixed = ddl_conn.run(
+            "SELECT 1 FROM anchors e WHERE e.kind = 'EdgeAnchor' "
+                + 'AND e.arch_type = ' + et
+                + " AND (COALESCE(e.src_type, '') = " + nt
+                + ") <> (COALESCE(e.dst_type, '') = " + nt + ') LIMIT 1'
+        );
+        if mixed {
+            # structural, not transient: a symmetric row pair cannot express a
+            # one-directional contribution. Cached as a refusal.
+            _adjtbl_state[edge_type] = {'node': node_type, 'ok': False};
+            return None;
+        }
+        ddl_conn.run(
+            'CREATE TABLE IF NOT EXISTS ' + table
+                + ' (src uuid NOT NULL, dst uuid NOT NULL, '
+                + 'PRIMARY KEY (src, dst))'
+        );
+        # DELETE retracts a direction only when NO other edge of this type
+        # still justifies it (parallel edges between the same pair), so the
+        # projection stays exactly `EXISTS an edge` rather than a refcount the
+        # first delete would zero out. AFTER DELETE, so OLD's own row is
+        # already gone and needs no exclusion.
+        ddl_conn.run(
+            'CREATE OR REPLACE FUNCTION ' + table + '_sync() RETURNS trigger '
+                + 'AS $$ BEGIN IF TG_OP = ' + "'DELETE'" + ' THEN '
+                + 'DELETE FROM ' + table + ' a WHERE (a.src, a.dst) IN '
+                + '((OLD.src, OLD.dst), (OLD.dst, OLD.src)) '
+                + 'AND NOT EXISTS (SELECT 1 FROM anchors e WHERE ' + rowset
+                + ' AND ((e.src = a.src AND e.dst = a.dst) '
+                + 'OR (e.src = a.dst AND e.dst = a.src))); '
+                + 'RETURN OLD; END IF; '
+                + 'INSERT INTO ' + table + ' (src, dst) VALUES '
+                + '(NEW.src, NEW.dst), (NEW.dst, NEW.src) '
+                + 'ON CONFLICT DO NOTHING; RETURN NEW; '
+                + 'END $$ LANGUAGE plpgsql'
+        );
+        ddl_conn.run(
+            'CREATE OR REPLACE TRIGGER ' + table + '_ins '
+                + 'AFTER INSERT OR UPDATE ON anchors FOR EACH ROW '
+                + "WHEN (NEW.kind = 'EdgeAnchor' AND NEW.arch_type = " + et
+                + ' AND NEW.src_type = ' + nt + ' AND NEW.dst_type = ' + nt
+                + ' AND NEW.src IS NOT NULL AND NEW.dst IS NOT NULL) '
+                + 'EXECUTE FUNCTION ' + table + '_sync()'
+        );
+        ddl_conn.run(
+            'CREATE OR REPLACE TRIGGER ' + table + '_del '
+                + 'AFTER DELETE ON anchors FOR EACH ROW '
+                + "WHEN (OLD.kind = 'EdgeAnchor' AND OLD.arch_type = " + et
+                + ' AND OLD.src_type = ' + nt + ' AND OLD.dst_type = ' + nt
+                + ' AND OLD.src IS NOT NULL AND OLD.dst IS NOT NULL) '
+                + 'EXECUTE FUNCTION ' + table + '_sync()'
+        );
+        # triggers first, THEN backfill with DO NOTHING: a concurrent write is
+        # already covered by the trigger, and re-inserting is idempotent.
+        ddl_conn.run(
+            'INSERT INTO ' + table + ' (src, dst) '
+                + 'SELECT e.src, e.dst FROM anchors e WHERE ' + rowset
+                + ' UNION '
+                + 'SELECT e.dst, e.src FROM anchors e WHERE ' + rowset
+                + ' ON CONFLICT DO NOTHING'
+        );
+        ddl_conn.run('ANALYZE ' + table);
+    } except Exception as e {
+        # transient (lock_timeout, concurrent claimer): not cached as a
+        # refusal, the `tries` counter bounds the retries instead.
+        logger.warning(
+            f"adjacency table for {edge_type}/{node_type} deferred: {e}"
+        );
+        return None;
+    } finally {
+        if ddl_conn is not None {
+            try {
+                ddl_conn.close();
+            } except Exception { }
+        }
+    }
+    # Same hazard ensure_mirror guards, and it bites HARDER here than for an
+    # index: the DDL committed on a connection of its own, so a request whose
+    # snapshot was already taken sees the TABLE (catalog lookups resolve
+    # against a fresh snapshot) but not the backfilled ROWS - and a missing
+    # adjacency row does not fail, it silently drops nodes from the closure.
+    # Confirm completeness from the caller's own snapshot; if it is not there
+    # yet this request falls back to the R6 index path (correct, just slower)
+    # and the next one - whose snapshot is newer than the backfill commit -
+    # succeeds. Deliberately not cached, so the retry re-probes.
+    incomplete = self._run(
+        'SELECT 1 FROM anchors e WHERE ' + rowset + ' AND NOT EXISTS ('
+            + 'SELECT 1 FROM ' + table + ' a '
+            + 'WHERE a.src = e.src AND a.dst = e.dst) LIMIT 1',
+        {}
+    );
+    if incomplete {
+        return None;
+    }
+    _adjtbl_state[edge_type] = {'node': node_type, 'ok': True, 'table': table};
+    return table;
 }
 
 

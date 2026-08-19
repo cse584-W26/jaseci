@@ -180,7 +180,7 @@ class JacPersistence {
     static def get_objects_many(ids: list[str]) -> list[(Archetype | None)];
     static def get_closure(
         start: str, edge_type: str, node_type: (str | type), max_depth: int,
-        prop_name: str = '', prop_value: str = ''
+        prop_name: str = '', prop_value: str = '', limit: int = 0
     ) -> list[tuple[str, int]];
     static def get_topk_inbound(
         dsts: list[str], edge_type: str, specs: list[tuple],

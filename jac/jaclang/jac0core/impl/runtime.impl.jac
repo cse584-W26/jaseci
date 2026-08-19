@@ -510,7 +510,7 @@ impl JacPersistence.get_objects_many(ids: list[str]) -> list[(Archetype | None)]
 
 impl JacPersistence.get_closure(
     start: str, edge_type: str, node_type: (str | type), max_depth: int,
-    prop_name: str = '', prop_value: str = ''
+    prop_name: str = '', prop_value: str = '', limit: int = 0
 ) -> list[tuple[str, int]] {
     # Depth-capped uniform-edge BFS closure as ONE recursive CTE over the
     # anchors edge rows, instead of one adjacency round trip per visited node
@@ -541,6 +541,13 @@ impl JacPersistence.get_closure(
     # ARCHETYPE, not its name -- the mirror table/column names are resolved
     # through store.ensure_mirror/mirror_info from the class, never spelled
     # here. Value comparison is string equality (jsonb text scalar).
+    #
+    # `limit` (optional, additive - 0 keeps every existing caller on the single
+    # full CTE) declares how many of the NEAREST matches the caller will
+    # actually keep. It is a SUFFICIENCY threshold, not a SQL LIMIT: the result
+    # may be larger. It only enables the iterative-deepening shortcut below,
+    # and only when the store has the adjacency projection and a property
+    # filter is in play.
     ctx = JacRuntimeInterface.get_context();
     mem = ctx.mem;
     store = getattr(mem, 'store', None);
@@ -557,23 +564,9 @@ impl JacPersistence.get_closure(
         'nt': tname,
         'maxd': int(max_depth)
     };
-    # Narrow per-edge-type adjacency indexes (store R6): 8.8MB of bare-uuid key
-    # instead of a descent through the 550MB all-edges typed index. They are
-    # PARTIAL on exactly these two equalities, and postgres only uses a partial
-    # index when it can PROVE the predicate - which a bound `:et` stops doing
-    # the moment this statement goes generic-plan. So when the store has them,
-    # spell the two type equalities as literals instead. Still fixed text per
-    # call SITE (edge/node type are per-site constants), so the one-prepared-
-    # statement convention holds; it is now one statement per (site, edge type).
-    et_cond = ':et';
-    nt_cond = ':nt';
-    if store.ensure_adjacency_index(edge_type, tname) {
-        et_cond = "'" + edge_type + "'";
-        nt_cond = "'" + tname + "'";
-        del params['et'];
-        del params['nt'];
-    }
     join_sql = '';
+    mtable = '';
+    mcol = '';
     if prop_name {
         if isinstance(node_type, str) {
             raise RuntimeError(
@@ -591,32 +584,119 @@ impl JacPersistence.get_closure(
                 'get_closure: ' + tname + ' has no field ' + prop_name
             );
         }
+        mtable = info['table'];
+        mcol = col;
         join_sql = (
-            ' JOIN ' + info['table'] + ' m ON m.id = b.id'
-            + ' AND m.' + col + ' = to_jsonb(CAST(:pval AS text))'
+            ' JOIN ' + mtable + ' m ON m.id = b.id'
+            + ' AND m.' + mcol + ' = to_jsonb(CAST(:pval AS text))'
         );
         params['pval'] = str(prop_value);
     }
-    mem.read_barrier();
-    # Fixed text, all values bound -> one server-side prepared statement no
-    # matter the start node or depth (15ed6253b convention). The join fragment
-    # is derived from the mirror catalogue, so it is fixed per call SITE too.
-    sql = """
-WITH RECURSIVE bfs(id, depth) AS (
-    SELECT CAST(:start AS uuid), 0
-  UNION
+    # Adjacency PROJECTION (store R7): `adj_<edge>` holds both directions of
+    # every edge of this type as its own rows, so the hop is ONE join against
+    # ONE index instead of a two-arm probe of `anchors`. When the store can
+    # give us that, take it; otherwise fall back to R6's narrow partial
+    # indexes over `anchors`, which are PARTIAL on exactly these two
+    # equalities - and postgres only uses a partial index when it can PROVE
+    # the predicate, which a bound `:et` stops doing the moment this statement
+    # goes generic-plan. So that arm spells the two type equalities as
+    # literals. Either way the text is fixed per call SITE (edge/node type are
+    # per-site constants), so the one-prepared-statement convention holds.
+    adj = store.ensure_adjacency_table(edge_type, tname);
+    if adj {
+        del params['et'];
+        del params['nt'];
+        rec_sql = """
+    SELECT nb.dst, b.depth + 1
+      FROM bfs b
+      JOIN """ + adj + """ nb ON nb.src = b.id
+     WHERE b.depth < :maxd""";
+    } else {
+        et_cond = ':et';
+        nt_cond = ':nt';
+        if store.ensure_adjacency_index(edge_type, tname) {
+            et_cond = "'" + edge_type + "'";
+            nt_cond = "'" + tname + "'";
+            del params['et'];
+            del params['nt'];
+        }
+        rec_sql = """
     SELECT nb.nid, b.depth + 1
       FROM bfs b
       CROSS JOIN LATERAL (
           SELECT e.dst AS nid FROM anchors e
            WHERE e.src = b.id AND e.arch_type = """ + et_cond
-        + """ AND e.dst_type = """ + nt_cond + """
+            + """ AND e.dst_type = """ + nt_cond + """
           UNION ALL
           SELECT e.src AS nid FROM anchors e
            WHERE e.dst = b.id AND e.arch_type = """ + et_cond
-        + """ AND e.src_type = """ + nt_cond + """
+            + """ AND e.src_type = """ + nt_cond + """
       ) nb
-     WHERE b.depth < :maxd
+     WHERE b.depth < :maxd""";
+    }
+    mem.read_barrier();
+    if adj and limit > 0 and mtable and max_depth > 2 {
+        # ITERATIVE DEEPENING, two levels, for the SUFFICIENCY case: a caller
+        # that filters AND keeps only the `limit` NEAREST matches does not need
+        # the whole depth-3 closure once depth<=2 already yields `limit` of
+        # them. Levels 1 and 2 are two flat frontier expansions of the
+        # adjacency table (bound uuid[], dedup in python - a growing
+        # `NOT (x = ANY(:seen))` anti-join costs far more than the walk it
+        # saves, 7.7s worst case in PHASE_A).
+        #
+        # SOUNDNESS: the decision is taken only after level 2 is COMPLETE,
+        # never mid-level. `depths` therefore holds EVERY node within distance
+        # 2 with its true min distance (BFS first-visit == min depth == the
+        # full closure's MIN(depth)), so `hits` below is exactly the full
+        # closure's depth<=2 match set. The caller's sort key is distance
+        # FIRST, so when there are `limit` or more of those, no depth-3 node
+        # can enter the top `limit` - nothing deeper displaces something
+        # nearer. With fewer, this falls through and the full CTE runs from
+        # scratch: the layered work is discarded, not merged, so the answer is
+        # bit-for-bit the one this function would have returned anyway.
+        seen: set = {params['start']};
+        depths: dict = {};
+        frontier: list = [params['start']];
+        for d in (1, 2) {
+            if not frontier {
+                break;
+            }
+            nxt: list = [];
+            for r in store.rows(
+                'SELECT DISTINCT nb.dst FROM ' + adj + ' nb'
+                    + ' WHERE nb.src = ANY(CAST(:f AS uuid[]))',
+                {'f': frontier}
+            ) {
+                nid = str(r[0]);
+                if nid not in seen {
+                    seen.add(nid);
+                    depths[nid] = d;
+                    nxt.append(nid);
+                }
+            }
+            frontier = nxt;
+        }
+        if depths {
+            # one statement, not count-then-fetch: the matched ids ARE the
+            # count, and the losing branch discards at most `limit`-1 rows.
+            hits = store.rows(
+                'SELECT m.id FROM ' + mtable + ' m'
+                    + ' WHERE m.id = ANY(CAST(:ids AS uuid[]))'
+                    + ' AND m.' + mcol + ' = to_jsonb(CAST(:pval AS text))',
+                {'ids': list(depths), 'pval': str(prop_value)}
+            );
+            if len(hits) >= limit {
+                return [
+                    (str(h[0]).replace('-', ''), depths[str(h[0])])
+                    for h in hits
+                ];
+            }
+        }
+    }
+    sql = """
+WITH RECURSIVE bfs(id, depth) AS (
+    SELECT CAST(:start AS uuid), 0
+  UNION""" + rec_sql + """
 )
 SELECT b.id, MIN(b.depth) FROM bfs b""" + join_sql + """
  WHERE b.depth > 0 AND b.id <> CAST(:start AS uuid)
