@@ -1379,7 +1379,25 @@ impl JacGraph.build_edge(
         # Archetype.__setattr__ and would otherwise leave an
         # already-persistent endpoint unmarked. Mark both ends explicitly so
         # change tracking does not depend on re-hashing every anchor.
-        _ctx = JacRuntimeInterface.peek_context();
+        #
+        # EDGE-ONLY DIRTY (JAC_EDGE_ONLY_DIRTY=1): vestigial on a backend that
+        # stores edges as their own anchor rows. On pg `anchors.src/dst` is the
+        # adjacency truth, Session._serialize emits no `edges` key into props
+        # and _persist_hash pops it, so re-writing an endpoint node row after
+        # an attach stores nothing new. When the endpoint belongs to ANOTHER
+        # root it is worse than useless: check_write_access denies the write,
+        # reports the denial to the caller, and (without JAC_STICKY_DENY)
+        # replays it at Session.close under system-root privileges in a second
+        # transaction with its own fsync. The edge anchor itself is marked by
+        # JacPersistence.save -> Session.put below, so nothing that must
+        # persist stops persisting.
+        # CEILING: pg-shaped. A backend that persists adjacency INSIDE the node
+        # blob (the mongo/GTI lineage) must leave this flag off, or an attach
+        # would never reach the store. Detach is deliberately NOT gated: its
+        # endpoint marks are equally redundant on pg, but an aborted detach
+        # would leave a resident endpoint missing an edge that still exists,
+        # which _evict_uncommitted cannot repair.
+        _ctx = None if _EDGE_ONLY_DIRTY else JacRuntimeInterface.peek_context();
         if _ctx is not None {
             _md = _ctx.mem?.mark_dirty;
             if _md is not None {

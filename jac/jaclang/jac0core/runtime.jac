@@ -79,6 +79,8 @@ glob logger = getLogger(__name__),
      _default_full_target_path: list = [None],
      _shared_root_resolver: list = [None, None];
 
+glob _EDGE_ONLY_DIRTY = os.environ.get('JAC_EDGE_ONLY_DIRTY') == '1';
+
 glob _scale_provider_cache: list = [];
 
 glob _persistent_memory_provider: list = [None];

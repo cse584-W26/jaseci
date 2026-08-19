@@ -588,6 +588,22 @@ impl Session._evict_uncommitted -> None {
             if isinstance(anchor, EdgeAnchor) {
                 import from jaclang.jac0core.osp_graph_sv { sv_forget_edge }
                 sv_forget_edge(anchor, self);
+                # JacGraph.build_edge appended this stub to both endpoints'
+                # in-memory `edges`. Under JAC_EDGE_ONLY_DIRTY the endpoints
+                # are not marked dirty, so they survive this eviction and
+                # would keep a phantom edge that _walk_memory can still
+                # traverse on the OCC retry that follows an abort. Unlink it
+                # with list.remove, which reaches the session-local appends
+                # WITHOUT filling a LazyEdges proxy (NodeAnchor.remove_edge
+                # iterates, which would fetch the whole DB adjacency here).
+                for end in (anchor.source, anchor.target) {
+                    ed = end.__dict__.get('edges') if end is not None else None;
+                    if isinstance(ed, list) {
+                        try {
+                            list.remove(ed, anchor);
+                        } except ValueError { }
+                    }
+                }
             }
             self.__mem__.pop(id, None);
             self._flushed_hash.pop(id, None);
