@@ -9,6 +9,9 @@ glob _uuid_cache: dict = {};
 glob _mirror_state: dict = {};
 
 
+glob _adj_state: dict = {};
+
+
 impl intern_uuid(s: object) -> UUID {
     key = s if isinstance(s, str) else str(s);
     if (hit := _uuid_cache.get(key)) is not None {
@@ -1147,6 +1150,82 @@ impl PgStore.ensure_mirror_order_index(cls: type, order_col: str) -> bool {
         # visible and the planner simply picks another path. Nothing can be
         # silently dropped from a page by a half-built index.
         logger.warning(f"mirror order index for {table}.{order_col} deferred: {e}");
+        return False;
+    } finally {
+        if ddl_conn is not None {
+            try {
+                ddl_conn.close();
+            } except Exception { }
+        }
+    }
+}
+
+
+# --- R6 adjacency projection -------------------------------------------------
+# A typed hop's access path is idx_anchors_{src,dst}_typed, keyed
+# (endpoint, arch_type, endpoint_type) INCLUDE (other endpoint) over EVERY edge
+# row in the store. At SNB SF1 that is 11M entries / 539-561MB, of which the
+# Knows edges a friendship hop actually wants are 180,665 (1.6%) - so the hop
+# pays a wide-key btree descent one level deeper than its own edge type needs.
+#
+# Same rows, one index per (edge type, endpoint type): the two type equalities
+# move OUT of the key and into the index PREDICATE, leaving a bare uuid key.
+# 8.8MB instead of 550MB, and one descent level shorter. Measured on the SNB
+# ic1 depth-3 Knows closure (2761 expansions, warm psql, n=10 interleaved):
+# hop buffers 31,791 -> 25,902, recursion node 55.4ms -> 40.6ms (-27%), whole
+# closure statement 71.8ms -> 57.3ms (-20%). Build is 2.1s for both at SF1 and
+# needs no ANALYZE (a plain-column index's relpages/reltuples are set by
+# CREATE INDEX itself).
+#
+# ponytail: the CALLER must spell those two equalities as LITERALS. Postgres
+# only uses a partial index when it can PROVE the predicate, and `arch_type =
+# :et` proves nothing once the statement goes generic-plan - the same lesson
+# JAC_PROMOTED_DRIVE (c3377f78e) paid for. get_closure does exactly that and
+# is the only caller. Two more ceilings: nothing ever drops these, so a store
+# whose writes dominate its typed-hop reads pays index maintenance on every
+# edge insert forever; and the build takes SHARE on `anchors`, blocking writes
+# for those 2s the first time an edge type is traversed.
+impl PgStore.ensure_adjacency_index(edge_type: str, node_type: str) -> bool {
+    key = (edge_type, node_type);
+    if (hit := _adj_state.get(key)) is not None {
+        return hit;
+    }
+    # interpolated into DDL below, and the caller interpolates the same two
+    # strings into its WHERE clause - refuse anything not already a bare
+    # identifier rather than quoting-by-guess (archetype names are CamelCase)
+    if not _bare_ident(edge_type) or not _bare_ident(node_type) {
+        _adj_state[key] = False;
+        return False;
+    }
+    stem = 'idx_adj_' + _sanitize_ident(edge_type) + '_' + _sanitize_ident(node_type);
+    ddl_conn: Any = None;
+    try {
+        self._ensure_ready();
+        ddl_conn = self._connect();
+        # same self-deadlock guard as the mirror DDL: the request that
+        # triggered this already holds ACCESS SHARE on anchors
+        ddl_conn.run("SET lock_timeout = '250ms'");
+        ddl_conn.run(
+            'CREATE INDEX IF NOT EXISTS ' + stem + '_src ON anchors (src) '
+                + "INCLUDE (dst) WHERE arch_type = '" + edge_type
+                + "' AND dst_type = '" + node_type + "'"
+        );
+        ddl_conn.run(
+            'CREATE INDEX IF NOT EXISTS ' + stem + '_dst ON anchors (dst) '
+                + "INCLUDE (src) WHERE arch_type = '" + edge_type
+                + "' AND src_type = '" + node_type + "'"
+        );
+        _adj_state[key] = True;
+        return True;
+    } except Exception as e {
+        # Not cached as a refusal: unlike the endpoint COLUMN, an index is
+        # either visible to the caller's snapshot and complete, or invisible
+        # and the planner picks the wide index instead. Nothing can be
+        # silently dropped from a result by a half-built one, so a busy-lock
+        # failure is simply retried on the next closure.
+        logger.warning(
+            f"adjacency index for {edge_type}/{node_type} deferred: {e}"
+        );
         return False;
     } finally {
         if ddl_conn is not None {

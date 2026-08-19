@@ -162,6 +162,7 @@ obj PgStore(Store) {
         cls: type, edge_type: str, order_col: str
     ) -> (str | None);
     def ensure_mirror_order_index(cls: type, order_col: str) -> bool;
+    def ensure_adjacency_index(edge_type: str, node_type: str) -> bool;
     def mirror_info(cls: type) -> (dict | None);
     def load_mirror_rows(
         cls: type, ids: list[UUID], fields: tuple

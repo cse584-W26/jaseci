@@ -557,6 +557,22 @@ impl JacPersistence.get_closure(
         'nt': tname,
         'maxd': int(max_depth)
     };
+    # Narrow per-edge-type adjacency indexes (store R6): 8.8MB of bare-uuid key
+    # instead of a descent through the 550MB all-edges typed index. They are
+    # PARTIAL on exactly these two equalities, and postgres only uses a partial
+    # index when it can PROVE the predicate - which a bound `:et` stops doing
+    # the moment this statement goes generic-plan. So when the store has them,
+    # spell the two type equalities as literals instead. Still fixed text per
+    # call SITE (edge/node type are per-site constants), so the one-prepared-
+    # statement convention holds; it is now one statement per (site, edge type).
+    et_cond = ':et';
+    nt_cond = ':nt';
+    if store.ensure_adjacency_index(edge_type, tname) {
+        et_cond = "'" + edge_type + "'";
+        nt_cond = "'" + tname + "'";
+        del params['et'];
+        del params['nt'];
+    }
     join_sql = '';
     if prop_name {
         if isinstance(node_type, str) {
@@ -593,10 +609,12 @@ WITH RECURSIVE bfs(id, depth) AS (
       FROM bfs b
       CROSS JOIN LATERAL (
           SELECT e.dst AS nid FROM anchors e
-           WHERE e.src = b.id AND e.arch_type = :et AND e.dst_type = :nt
+           WHERE e.src = b.id AND e.arch_type = """ + et_cond
+        + """ AND e.dst_type = """ + nt_cond + """
           UNION ALL
           SELECT e.src AS nid FROM anchors e
-           WHERE e.dst = b.id AND e.arch_type = :et AND e.src_type = :nt
+           WHERE e.dst = b.id AND e.arch_type = """ + et_cond
+        + """ AND e.src_type = """ + nt_cond + """
       ) nb
      WHERE b.depth < :maxd
 )
