@@ -97,6 +97,27 @@ impl Serializer._serialize_value(
     }
 
     if isinstance(val, (list, tuple)) {
+        # JAC_FRAG_AGG: every element is a mirror-backed node whose response
+        # fragment the DB trigger already built, and the per-element branch
+        # below would hand each one to orjson as its own Fragment. Splice them
+        # once instead - byte-identical by construction, since orjson emits a
+        # Fragment list as exactly `[f0,f1,...]` with no whitespace.
+        if _frag_agg_enabled() and val and api_mode and not include_type
+            and not ref_mode and _seen is None
+            and all(
+                type(v) is StreamNode and '_sn_frag' in v.__dict__ for v in val
+            ) {
+            try {
+                import orjson;
+                return orjson.Fragment(
+                    b'['
+                        + b','.join(
+                            v.__dict__['_sn_frag'].encode('utf-8') for v in val
+                        )
+                        + b']'
+                );
+            } except ImportError { }
+        }
         return [
             Serializer._serialize_value(v, include_type, api_mode, ref_mode, _seen)
             for v in val
@@ -974,7 +995,21 @@ impl Serializer._deserialize_access(data: object) -> Access {
 }
 
 glob _trusted_plan_cache: dict = {},
-     _frag_cache: dict = {};
+     _frag_cache: dict = {},
+     _frag_agg_state: dict = {};
+
+
+def _frag_agg_enabled() -> bool {
+    # JAC_FRAG_AGG: assemble a mirror-backed node list into ONE json fragment
+    # instead of one orjson.Fragment per element. Default off.
+    if (hit := _frag_agg_state.get('on')) is None {
+        import os;
+        hit = os.environ.get('JAC_FRAG_AGG', '').strip().lower()
+            in ('1', 'true', 'yes', 'on');
+        _frag_agg_state['on'] = hit;
+    }
+    return hit;
+}
 
 
 def _bulk_fill_ok(cls: type, names: list) -> bool {
