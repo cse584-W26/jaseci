@@ -243,6 +243,7 @@ impl PgStore.postinit -> None {
     self._in_txn = False;
     self._isolation = None;
     self._known_types = set();
+    self._subtype_names_cache = {};
     self._listeners = [];
     self._listen_thread = None;
     self._listen_stop = None;
@@ -611,6 +612,7 @@ impl PgStore.reset_data -> None {
             self.kv_put(SCHEMA_STAMP_KEY, stamp);
         }
         self._known_types = set();
+        self._subtype_names_cache = {};
     }
 }
 
@@ -1798,6 +1800,13 @@ impl PgStore.upsert(rows_in: list[AnchorRow]) -> None {
         for pair in pairs {
             self._known_types.add(pair[0]);
         }
+        # P1-ITEM3: a newly-seen (type, ancestor) pair can change some
+        # ancestor's subtype set -- drop the whole memoized cache rather
+        # than reason about which ancestor keys are affected (rare event:
+        # only fires the first time any archetype instance is ever
+        # written, all benchmark archetypes are already known by request 1
+        # of a seeded run).
+        self._subtype_names_cache = {};
     }
 }
 
@@ -1838,6 +1847,17 @@ impl PgStore.root_ids -> list[UUID] {
 
 
 impl PgStore.subtype_names(type_name: str) -> list[str] {
+    # P1-ITEM3 (standalone-type-resolution-redundant-refetch): memoized per
+    # store instance. graph_types is schema-stable at request granularity --
+    # only grows when a brand-new archetype is written for the first time
+    # ever (upsert's _known_types tail, which clears this cache when that
+    # happens) -- so a cache hit here removes an entire standalone round
+    # trip that the caller (e.g. query_planner's fast-path eligibility
+    # check) previously issued on every request, only to discard the rows.
+    cached = self._subtype_names_cache.get(type_name);
+    if cached is not None {
+        return list(cached);
+    }
     rows = self._run(
         'SELECT type_name FROM graph_types WHERE ancestor = :t', {'t': type_name}
     );
@@ -1845,7 +1865,8 @@ impl PgStore.subtype_names(type_name: str) -> list[str] {
     if type_name not in names {
         names.append(type_name);
     }
-    return names;
+    self._subtype_names_cache[type_name] = names;
+    return list(names);
 }
 
 
