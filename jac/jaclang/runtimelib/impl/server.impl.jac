@@ -416,16 +416,19 @@ impl ExecutionManager._finalize_call_response(
     }
 
     import from jaclang.runtimelib { stagetimer }
+    import from time { perf_counter }
     _ser_t = stagetimer.acc_begin() if stagetimer.ON else 0.0;
+    ctx = Jac.get_context();
+    _ser0 = perf_counter();
     envelope: dict[str, JsonValue] = {};
     if os.environ.get('JAC_API_LEAN_RESPONSE') != '1' {
         envelope['result'] = Serializer.serialize(result, api_mode=True);
     }
     envelope['reports'] = Serializer.serialize(reports, api_mode=True);
+    ctx._ser_ms += (perf_counter() - _ser0) * 1000.0;
     if stagetimer.ON {
         stagetimer.acc_ser(_ser_t);
     }
-    ctx = Jac.get_context();
     if ctx.diagnostics {
         envelope['warnings'] = [d.to_dict() for d in ctx.diagnostics];
         ctx.diagnostics.clear();
@@ -476,8 +479,9 @@ async def _run_function_with_occ(
                 if _timing_on and isinstance(out, dict) {
                     _whole_ms = (perf_counter() - _t0) * 1000.0;
                     out['_server_commit_ms'] = round(ctx._commit_ms, 3);
+                    out['_server_ser_ms'] = round(ctx._ser_ms, 3);
                     out['_server_total_ms'] = round(
-                        max(_whole_ms - ctx._commit_ms, 0.0), 3
+                        max(_whole_ms - ctx._commit_ms - ctx._ser_ms, 0.0), 3
                     );
                 }
                 return out;

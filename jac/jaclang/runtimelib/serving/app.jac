@@ -38,7 +38,8 @@ def transport_to_response(tr: TransportResponse) -> JSONResponse {
     if isinstance(tr.data, dict) and '_server_total_ms' in tr.data {
         timing_hdrs = (
             tr.data.pop('_server_total_ms'),
-            tr.data.pop('_server_commit_ms', 0.0)
+            tr.data.pop('_server_commit_ms', 0.0),
+            tr.data.pop('_server_ser_ms', 0.0)
         );
     }
     status = 200 if tr.ok else 500;
@@ -93,6 +94,7 @@ def transport_to_response(tr: TransportResponse) -> JSONResponse {
     if timing_hdrs is not None {
         resp.headers.set('x-server-total-ms', str(timing_hdrs[0]));
         resp.headers.set('x-server-commit-ms', str(timing_hdrs[1]));
+        resp.headers.set('x-server-ser-ms', str(timing_hdrs[2]));
     }
     if stagetimer.ON {
         stg = stagetimer.headers();
