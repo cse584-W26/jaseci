@@ -578,6 +578,10 @@ impl ExecutionManager.spawn_walker_sync(
 
     async def run_attempt(call_state: CallState, ctx: ExecutionContext) {
         `walker = walker_cls(**fields);
+        import from jaclang.runtimelib.utils { RO_WALKERS }
+        if walker_cls.__name__ in RO_WALKERS {
+            ctx.request_read_only = True;
+        }
         if target_node_id {
             target_node = await Jac.aget_object(target_node_id);
             if not isinstance(target_node, NodeArchetype) {
@@ -585,10 +589,6 @@ impl ExecutionManager.spawn_walker_sync(
             }
         } else {
             target_node = ctx.get_root();
-        }
-        import from jaclang.runtimelib.utils { RO_WALKERS }
-        if walker_cls.__name__ in RO_WALKERS {
-            ctx.request_read_only = True;
         }
         result = await asyncio.to_thread(Jac.spawn, `walker, target_node);
 
@@ -616,6 +616,10 @@ impl ExecutionManager.spawn_walker_async(
 
     async def run_attempt(call_state: CallState, ctx: ExecutionContext) {
         `walker = walker_cls(**fields);
+        import from jaclang.runtimelib.utils { RO_WALKERS }
+        if walker_cls.__name__ in RO_WALKERS {
+            ctx.request_read_only = True;
+        }
         if target_node_id {
             target_node = await Jac.aget_object(target_node_id);
             if not isinstance(target_node, NodeArchetype) {
@@ -623,10 +627,6 @@ impl ExecutionManager.spawn_walker_async(
             }
         } else {
             target_node = ctx.get_root();
-        }
-        import from jaclang.runtimelib.utils { RO_WALKERS }
-        if walker_cls.__name__ in RO_WALKERS {
-            ctx.request_read_only = True;
         }
         spawn_result = Jac.spawn(`walker, target_node);
         if iscoroutine(spawn_result) {
