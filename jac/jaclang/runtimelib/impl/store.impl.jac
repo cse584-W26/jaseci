@@ -952,19 +952,213 @@ def _mirror_base_cols -> list {
 }
 
 
+# --- memo guard --------------------------------------------------------------
+# _mirror_state / _adj_state / _adjtbl_state each assert that a projection
+# EXISTS in the database, but they live for the lifetime of the PROCESS. Any
+# path that removes one behind the runtime's back leaves the memo naming an
+# object that is gone and the ensure is never re-run:
+# benchmark/scripts/pg_bulk_load.py --mode full DROPs every g_n_* mirror table
+# while the app server is up (its own output says "RESTART the app server
+# before serving reads"), and a hand-dropped index is invisible to any error
+# path at all - it just plans a seq scan. night0823 F2: littleX feed_page 382ms
+# vs 2.9ms, SNB is2 563ms vs 2.2ms, both healed only by a reboot.
+#
+# The guard is one throttled existence probe over the names the memos have
+# claimed so far. Anything missing invalidates ALL THREE memos, not just the
+# one that names it - deliberately: the bulk loader drops the mirrors but keeps
+# adj_* tables while suppressing their triggers for the whole COPY, so that
+# table survives MISSING EVERY BULK ROW with no signal of its own. The signal
+# has to be allowed to arrive from a sibling. Over-clearing costs one re-run of
+# a set of ensures that are all idempotent (CREATE ... IF NOT EXISTS / OR
+# REPLACE / ON CONFLICT DO NOTHING), which is what a reseed wants anyway.
+#
+# Cost: ONE statement per JAC_MEMO_TTL_SECS (default 5), on the request's own
+# connection, and only when an ensure_* is consulted - zero statements on a
+# request that does not reach one.
+#
+# ponytail: detects DISAPPEARANCE, not silent replacement. Nothing in this tree
+# drops-and-recreates a memoised name behind the runtime's back (the loader's
+# DROP INDEX / recreate-from-pg_get_indexdef pair rebuilds objects whose
+# content is correct), so existence is enough. Upgrade path if that changes:
+# record to_regclass(n)::oid at DDL time and compare oids - same one statement
+# per TTL, one extra SELECT per successful ensure.
+#
+# Rejected: keying on pg_database.oid or pg_class.oid of `anchors`. Neither
+# flips on ANY live-process path - dropping the database needs zero live
+# connections (which is exactly why every harness reset script kills the server
+# first) and no path drops `anchors`. Also rejected: a generation row bumped by
+# the loaders - it needs harness edits, still misses a hand-dropped index, and
+# makes runtime correctness depend on external cooperation.
+def _memo_ttl -> float {
+    import os;
+    try {
+        return float(os.environ.get('JAC_MEMO_TTL_SECS', '') or 5);
+    } except Exception {
+        return 5.0;
+    }
+}
+
+
+# one dict, never rebound: every field is mutated in place, so no global
+# rebinding is needed inside the helpers below
+glob _MEMO_MAX_TRIES = 8,
+     _memo: dict = {
+         'ttl': _memo_ttl(),
+         'gate': _make_lock(),
+         'objs': set(),
+         'at': 0.0,
+         'warned': set()
+     };
+
+
+def _memo_track(names: list) -> None {
+    with _memo['gate'] {
+        for n in names {
+            if _bare_ident(str(n)) {
+                _memo['objs'].add(str(n));
+            }
+        }
+    }
+}
+
+
+def _memo_check(store: Any) -> None {
+    import time;
+    if time.monotonic() - float(_memo['at']) < float(_memo['ttl']) {
+        return;
+    }
+    names: list = [];
+    with _memo['gate'] {
+        if time.monotonic() - float(_memo['at']) < float(_memo['ttl']) {
+            return;
+        }
+        _memo['at'] = time.monotonic();
+        names = sorted(_memo['objs']);
+    }
+    if not names {
+        return;
+    }
+    vals: list = [];
+    for n in names {
+        vals.append("('" + n + "')");
+    }
+    try {
+        rows = store._run(
+            'SELECT count(*) FROM (VALUES ' + ', '.join(vals) + ') v(n) '
+                + 'WHERE to_regclass(v.n) IS NULL',
+            {}
+        );
+    } except Exception as e {
+        # a probe that cannot run is not evidence of anything; keep the memos
+        logger.debug(f"memo guard probe failed (memos kept): {e}");
+        return;
+    }
+    gone = int(rows[0][0]) if rows else 0;
+    if not gone {
+        return;
+    }
+    logger.warning(
+        f"memo guard: {gone} of {len(names)} memoised projections vanished from"
+        ' the database (external reseed?); clearing every ensure_* memo'
+    );
+    with _memo['gate'] {
+        _memo['objs'] = set();
+        _memo['warned'] = set();
+    }
+    _mirror_state.clear();
+    _adj_state.clear();
+    _adjtbl_state.clear();
+}
+
+
+def _memo_log_once(what: str, reason: str) -> None {
+    key = what + '|' + reason;
+    msg = f"{what}: {reason}";
+    if key in _memo['warned'] {
+        logger.debug(msg);
+    } else {
+        _memo['warned'].add(key);
+        logger.warning(msg);
+    }
+}
+
+
+# Pre-increment before a build attempt, matching the gord_tries/ep_tries/tries
+# discipline this replaces: a DDL connection that HANGS rather than raises is
+# only bounded by a counter written before the attempt.
+def _memo_attempt(st: dict) -> dict {
+    st['ok'] = False;
+    st['retryable'] = True;
+    st['retry_at'] = 0.0;
+    st['tries'] = int(st.get('tries', 0)) + 1;
+    return st;
+}
+
+
+def _memo_refused(st: Any) -> bool {
+    import time;
+    if not isinstance(st, dict) or st.get('ok') is not False {
+        return False;
+    }
+    if not st.get('retryable') or int(st.get('tries', 0)) >= _MEMO_MAX_TRIES {
+        return True;
+    }
+    return time.monotonic() < float(st.get('retry_at', 0.0));
+}
+
+
+def _memo_refuse(st: dict, what: str, reason: str, retryable: bool) -> dict {
+    import time;
+    tries = int(st.get('tries', 0));
+    if not retryable {
+        tries += 1;   # a retryable attempt already counted itself
+    }
+    st['ok'] = False;
+    st['tries'] = tries;
+    st['reason'] = reason;
+    st['retryable'] = retryable;
+    st['retry_at'] = time.monotonic() + min(60.0, float(2 ** tries));
+    capped = (not retryable) or tries >= _MEMO_MAX_TRIES;
+    _memo_log_once(
+        what,
+        f"refused ({reason}); tries={tries}"
+            + (
+                ' - giving up until the database changes'
+                    if capped
+                    else ' - will retry'
+            )
+    );
+    return st;
+}
+
+
 impl PgStore.ensure_mirror(cls: type) -> bool {
+    _memo_check(self);
+    at = getattr(cls, '__name__', '');
     cached = _mirror_state.get(cls);
     if cached is not None {
-        return cached['ok'];
+        if cached['ok'] {
+            return True;
+        }
+        if _memo_refused(cached) {
+            return False;
+        }
     }
+    # a live refusal record is carried forward so its try count survives
+    prev = cached if (cached is not None and cached.get('ok') is False) else {};
     spec = _mirror_table_for(cls);
     if spec is None {
-        _mirror_state[cls] = {'ok': False};
+        _mirror_state[cls] = _memo_refuse(
+            prev,
+            f"mirror for {at}",
+            'field names collide after sanitisation, or the type has none',
+            False
+        );
         return False;
     }
     table = spec['table'];
     cols = spec['cols'];
-    at = getattr(cls, '__name__', '');
+    _memo_attempt(prev);
     # Mirror creation is one-time schema bootstrap, not request work, so it
     # runs on its OWN connection rather than self._run's. Two reasons:
     # (1) a read-only request transaction (JAC_RO_WALKERS ->
@@ -1086,10 +1280,12 @@ impl PgStore.ensure_mirror(cls: type) -> bool {
             return False;
         }
         _mirror_state[cls] = {'ok': True, 'table': table, 'cols': cols};
+        _memo_track([table]);
         return True;
     } except Exception as e {
-        logger.warning(f"mirror setup for {at} failed (falling back): {e}");
-        _mirror_state[cls] = {'ok': False};
+        _mirror_state[cls] = _memo_refuse(
+            prev, f"mirror for {at}", str(e), True
+        );
         return False;
     } finally {
         if ddl_conn is not None {
@@ -1125,15 +1321,21 @@ impl PgStore.ensure_mirror_order_index(cls: type, order_col: str) -> bool {
     if order_col in done {
         return True;
     }
-    if not _bare_ident(order_col) {
-        return False;
-    }
     table = st['table'];
-    tries = int(st.get('gord_tries', 0));
-    if tries >= 8 {
+    rf = st.setdefault('gord_refuse', {});
+    if _memo_refused(rf.get(order_col)) {
         return False;
     }
-    st['gord_tries'] = tries + 1;
+    if not _bare_ident(order_col) {
+        rf[order_col] = _memo_refuse(
+            rf.get(order_col) or {},
+            f"mirror order index {table}.{order_col}",
+            'order column is not a bare identifier',
+            False
+        );
+        return False;
+    }
+    _memo_attempt(rf.setdefault(order_col, {}));
     ddl_conn: Any = None;
     try {
         self._ensure_ready();
@@ -1147,14 +1349,105 @@ impl PgStore.ensure_mirror_order_index(cls: type, order_col: str) -> bool {
         );
         ddl_conn.run('ANALYZE ' + table);
         done.add(order_col);
-        st['gord_tries'] = 0;
+        rf.pop(order_col, None);
+        _memo_track([table + '_gord_' + order_col]);
         return True;
     } except Exception as e {
         # No completeness probe needed, unlike the endpoint column: an index
         # is either visible to the caller's snapshot and complete, or not
         # visible and the planner simply picks another path. Nothing can be
         # silently dropped from a page by a half-built index.
-        logger.warning(f"mirror order index for {table}.{order_col} deferred: {e}");
+        rf[order_col] = _memo_refuse(
+            rf.setdefault(order_col, {}),
+            f"mirror order index {table}.{order_col}",
+            str(e),
+            True
+        );
+        return False;
+    } finally {
+        if ddl_conn is not None {
+            try {
+                ddl_conn.close();
+            } except Exception { }
+        }
+    }
+}
+
+
+# get_topk_inbound's LATERAL src_field arm (jac0core/impl/runtime.impl.jac)
+# drives one ordered index scan per source, per dst, stopping at :lim - same
+# trick as ensure_mirror_order_index's global top-k arm, one level narrower
+# (per-source instead of whole-mirror). Without it: seq scan of the whole
+# mirror inside every LATERAL - SNB is2 563ms / ic2 5.9s at SF1 (night0823
+# F1, hand-built as idx_g_n_post_d2a57d_creator_created /
+# idx_g_n_comment_d2a57d_creator_created to unblock the run; this grows the
+# same shape at first use instead).
+#
+# The index expressions below MUST stay textually identical (module the `m.`
+# alias, which postgres resolves to the same Var regardless of spelling) to
+# ord_expr/scol in get_topk_inbound, or the planner cannot prove the match -
+# the same lesson JAC_PROMOTED_DRIVE and get_closure's adjacency comment
+# already paid for.
+#
+# ponytail: two columns (src, ord DESC), matching the hand-built DDL this
+# replaces. EXPLAIN (ANALYZE, BUFFERS) against SNB SF1 showed a third (tie)
+# column made no difference to the plan - ties on a millisecond timestamp are
+# rare enough that the extra sort, when the planner needs one at all, is over
+# 1-2 rows. Add tie back into the index if a workload with frequent
+# order-field ties shows a regression (see item3_jtopk/RESULT.md gate a).
+impl PgStore.ensure_topk_index(
+    cls: type, src_field: str, ord_field: str, tie_field: str
+) -> bool {
+    st = _mirror_state.get(cls);
+    if not st or not st['ok'] {
+        return False;
+    }
+    key = (src_field, ord_field);
+    done = st.setdefault('topk', set());
+    if key in done {
+        return True;
+    }
+    table = st['table'];
+    rf = st.setdefault('topk_refuse', {});
+    if _memo_refused(rf.get(key)) {
+        return False;
+    }
+    cols = st['cols'];
+    scol = cols.get(src_field);
+    ocol = cols.get(ord_field);
+    what = f"topk index {table}.{src_field}/{ord_field}";
+    if not scol or not ocol or not _bare_ident(scol) or not _bare_ident(ocol) {
+        rf[key] = _memo_refuse(
+            rf.get(key) or {}, what,
+            'source or order field is not a mapped bare-identifier column',
+            False
+        );
+        return False;
+    }
+    _memo_attempt(rf.setdefault(key, {}));
+    name = (
+        table + '_topk_' + _sanitize_ident(src_field) + '_'
+            + _sanitize_ident(ord_field)
+    );
+    ddl_conn: Any = None;
+    try {
+        self._ensure_ready();
+        ddl_conn = self._connect();
+        # same self-deadlock guard as ensure_mirror_order_index: the calling
+        # request may already hold ACCESS SHARE on this mirror
+        ddl_conn.run("SET lock_timeout = '250ms'");
+        ddl_conn.run(
+            'CREATE INDEX IF NOT EXISTS ' + name + ' ON ' + table
+                + ' ((' + scol + " #>> '{}'), (((" + ocol
+                + " #>> '{}'))::bigint) DESC)"
+        );
+        ddl_conn.run('ANALYZE ' + table);
+        done.add(key);
+        rf.pop(key, None);
+        _memo_track([name]);
+        return True;
+    } except Exception as e {
+        rf[key] = _memo_refuse(rf.setdefault(key, {}), what, str(e), True);
         return False;
     } finally {
         if ddl_conn is not None {
@@ -1191,17 +1484,30 @@ impl PgStore.ensure_mirror_order_index(cls: type, order_col: str) -> bool {
 # edge insert forever; and the build takes SHARE on `anchors`, blocking writes
 # for those 2s the first time an edge type is traversed.
 impl PgStore.ensure_adjacency_index(edge_type: str, node_type: str) -> bool {
+    _memo_check(self);
     key = (edge_type, node_type);
-    if (hit := _adj_state.get(key)) is not None {
-        return hit;
+    hit = _adj_state.get(key);
+    if hit is True {
+        return True;
     }
+    if _memo_refused(hit) {
+        return False;
+    }
+    what = f"adjacency index for {edge_type}/{node_type}";
     # interpolated into DDL below, and the caller interpolates the same two
     # strings into its WHERE clause - refuse anything not already a bare
     # identifier rather than quoting-by-guess (archetype names are CamelCase)
     if not _bare_ident(edge_type) or not _bare_ident(node_type) {
-        _adj_state[key] = False;
+        _adj_state[key] = _memo_refuse(
+            hit if isinstance(hit, dict) else {},
+            what,
+            'edge or node type is not a bare identifier',
+            False
+        );
         return False;
     }
+    prev = _memo_attempt(hit if isinstance(hit, dict) else {});
+    _adj_state[key] = prev;
     stem = 'idx_adj_' + _sanitize_ident(edge_type) + '_' + _sanitize_ident(node_type);
     ddl_conn: Any = None;
     try {
@@ -1221,16 +1527,16 @@ impl PgStore.ensure_adjacency_index(edge_type: str, node_type: str) -> bool {
                 + "' AND src_type = '" + node_type + "'"
         );
         _adj_state[key] = True;
+        _memo_track([stem + '_src', stem + '_dst']);
         return True;
     } except Exception as e {
-        # Not cached as a refusal: unlike the endpoint COLUMN, an index is
+        # Retryable, not structural: unlike the endpoint COLUMN, an index is
         # either visible to the caller's snapshot and complete, or invisible
         # and the planner picks the wide index instead. Nothing can be
         # silently dropped from a result by a half-built one, so a busy-lock
-        # failure is simply retried on the next closure.
-        logger.warning(
-            f"adjacency index for {edge_type}/{node_type} deferred: {e}"
-        );
+        # failure is retried on the next closure - bounded by the try cap so a
+        # permanently-failing DDL stops costing every request an attempt.
+        _adj_state[key] = _memo_refuse(prev, what, str(e), True);
         return False;
     } finally {
         if ddl_conn is not None {
@@ -1284,27 +1590,30 @@ impl PgStore.ensure_adjacency_index(edge_type: str, node_type: str) -> bool {
 #    caller's own connection, and skip the DDL connection entirely when it
 #    comes back empty (~310ms instead of 1135ms).
 impl PgStore.ensure_adjacency_table(edge_type: str, node_type: str) -> (str | None) {
+    _memo_check(self);
     st = _adjtbl_state.get(edge_type);
     if st is not None {
         if st['node'] != node_type {
             return None;
         }
-        if 'ok' in st {
-            return st['table'] if st['ok'] else None;
+        if st.get('ok') is True {
+            return st['table'];
         }
-        if int(st['tries']) >= 8 {
+        if _memo_refused(st) {
             return None;
         }
     }
+    what = f"adjacency table for {edge_type}/{node_type}";
+    prev = st if (st is not None and st.get('ok') is False) else {};
+    prev['node'] = node_type;
     if not _bare_ident(edge_type) or not _bare_ident(node_type) {
-        _adjtbl_state[edge_type] = {'node': node_type, 'ok': False};
+        _adjtbl_state[edge_type] = _memo_refuse(
+            prev, what, 'edge or node type is not a bare identifier', False
+        );
         return None;
     }
     table = 'adj_' + _sanitize_ident(edge_type);
-    _adjtbl_state[edge_type] = {
-        'node': node_type,
-        'tries': (int(st['tries']) + 1) if st is not None else 1
-    };
+    _adjtbl_state[edge_type] = _memo_attempt(prev);
     # literal-inlined, not bound: these two strings are per-call-SITE constants
     # and both the DDL and the trigger WHEN clauses need them proven, not
     # merely equal - the same provability lesson ensure_adjacency_index and
@@ -1332,7 +1641,9 @@ impl PgStore.ensure_adjacency_table(edge_type: str, node_type: str) -> (str | No
         if mixed {
             # structural, not transient: a symmetric row pair cannot express a
             # one-directional contribution. Cached as a refusal.
-            _adjtbl_state[edge_type] = {'node': node_type, 'ok': False};
+            _adjtbl_state[edge_type] = _memo_refuse(
+                prev, what, 'edge type has mixed endpoint types', False
+            );
             return None;
         }
         ddl_conn.run(
@@ -1386,11 +1697,9 @@ impl PgStore.ensure_adjacency_table(edge_type: str, node_type: str) -> (str | No
         );
         ddl_conn.run('ANALYZE ' + table);
     } except Exception as e {
-        # transient (lock_timeout, concurrent claimer): not cached as a
-        # refusal, the `tries` counter bounds the retries instead.
-        logger.warning(
-            f"adjacency table for {edge_type}/{node_type} deferred: {e}"
-        );
+        # transient (lock_timeout, concurrent claimer): retryable, bounded by
+        # the same try cap as everything else.
+        _adjtbl_state[edge_type] = _memo_refuse(prev, what, str(e), True);
         return None;
     } finally {
         if ddl_conn is not None {
@@ -1418,6 +1727,7 @@ impl PgStore.ensure_adjacency_table(edge_type: str, node_type: str) -> (str | No
         return None;
     }
     _adjtbl_state[edge_type] = {'node': node_type, 'ok': True, 'table': table};
+    _memo_track([table]);
     return table;
 }
 
@@ -1479,11 +1789,11 @@ impl PgStore.ensure_mirror_endpoint(
     }
     table = st['table'];
     at = getattr(cls, '__name__', '');
-    tries = int(st.get('ep_tries', 0));
-    if tries >= 8 {
+    what = f"mirror endpoint column for {at}";
+    if _memo_refused(st.get('ep_refuse')) {
         return None;   # kept failing; stop paying for the attempt
     }
-    st['ep_tries'] = tries + 1;
+    _memo_attempt(st.setdefault('ep_refuse', {}));
     ddl_conn: Any = None;
     try {
         self._ensure_ready();
@@ -1507,6 +1817,9 @@ impl PgStore.ensure_mirror_endpoint(
             );
             if len(kinds) != 1 {
                 st['ep'] = refuse;
+                _memo_log_once(
+                    what, 'refused (probe 1: not exactly one inbound edge type)'
+                );
                 return None;
             }
             derived = str(kinds[0][0]);
@@ -1515,6 +1828,11 @@ impl PgStore.ensure_mirror_endpoint(
                 or (edge_type and derived != edge_type)
             ) {
                 st['ep'] = refuse;
+                _memo_log_once(
+                    what,
+                    f"refused (derived edge type '{derived}' is not a bare"
+                        f" identifier, or does not match the hop's '{edge_type}')"
+                );
                 return None;
             }
             edge_type = derived;
@@ -1526,6 +1844,9 @@ impl PgStore.ensure_mirror_endpoint(
             );
             if bad {
                 st['ep'] = refuse;
+                _memo_log_once(
+                    what, 'refused (probe 2: an undirected edge touches this type)'
+                );
                 return None;
             }
             multi = ddl_conn.run(
@@ -1535,6 +1856,9 @@ impl PgStore.ensure_mirror_endpoint(
             );
             if multi {
                 st['ep'] = refuse;
+                _memo_log_once(
+                    what, 'refused (probe 3: a node has two inbound edges)'
+                );
                 return None;
             }
             ddl_conn.run(
@@ -1608,13 +1932,16 @@ impl PgStore.ensure_mirror_endpoint(
             return None;
         }
         claim['ords'].add(order_col);
-        st['ep_tries'] = 0;
+        st.pop('ep_refuse', None);
+        _memo_track([table + '_ep_' + order_col]);
         return 'src_endpoint';
     } except Exception as e {
         # transient (lock_timeout, a concurrent claimer) vs structural: both
         # look like an exception here, so retry a bounded number of times
         # rather than poisoning the mirror on the first busy moment.
-        logger.warning(f"mirror endpoint column for {at} deferred: {e}");
+        st['ep_refuse'] = _memo_refuse(
+            st.setdefault('ep_refuse', {}), what, str(e), True
+        );
         return None;
     } finally {
         if ddl_conn is not None {

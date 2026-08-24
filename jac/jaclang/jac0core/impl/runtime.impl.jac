@@ -758,7 +758,16 @@ impl JacPersistence.get_topk_inbound(
     for (i, spec) in enumerate(specs) {
         (cls, tie_field) = (spec[0], spec[1]);
         if not store.ensure_mirror(cls) {
-            raise RuntimeError('get_topk_inbound: no mirror for ' + str(cls));
+            # ensure_mirror's own contract (store.impl.jac, "this request
+            # falls back to the non-mirror path") is broken by raising here:
+            # False means either a first-ever build in flight (a memo-guard
+            # heal, or plain first-boot lazy build) whose DDL hasn't reached
+            # this request's snapshot yet, not a permanent condition. Skip
+            # this spec's arm for THIS request only - the answer temporarily
+            # under-represents this source type instead of 500ing, and the
+            # next request (newer snapshot) sees the completed mirror and
+            # resumes normally.
+            continue;
         }
         info = store.mirror_info(cls);
         ocol = info['cols'].get(order_field);
@@ -799,6 +808,11 @@ impl JacPersistence.get_topk_inbound(
                     + src_field
                 );
             }
+            # best-effort: result ignored, the LATERAL below is correct
+            # either way (seq scan of the mirror vs an ordered index scan),
+            # only the plan differs. Lazy, same idiom as get_closure's
+            # ensure_adjacency_index.
+            store.ensure_topk_index(cls, src_field, order_field, tie_field);
             arms.append(
                 'SELECT t.id AS id, t.ord AS ord, t.tie AS tie FROM'
                 + ' unnest(CAST(:jids AS text[])) AS j(jid)'
@@ -818,6 +832,11 @@ impl JacPersistence.get_topk_inbound(
                 + ' AND ' + ord_expr + ' <= :maxv'
             );
         }
+    }
+    if not arms {
+        # every spec's mirror was mid-build for this request's snapshot -
+        # correct degraded answer is "no matches yet", not a 500
+        return [];
     }
     mem.read_barrier();
     sql = (
