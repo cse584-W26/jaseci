@@ -79,7 +79,28 @@ glob logger = getLogger(__name__),
      _default_full_target_path: list = [None],
      _shared_root_resolver: list = [None, None];
 
-glob _EDGE_ONLY_DIRTY = os.environ.get('JAC_EDGE_ONLY_DIRTY') == '1';
+glob _EDGE_ONLY_DIRTY_ENV = os.environ.get('JAC_EDGE_ONLY_DIRTY');
+
+glob _edge_only_dirty_is_pg_cache: list = [];
+
+def _edge_only_dirty_pg -> bool {
+    # JAC_EDGE_ONLY_DIRTY: '0'/'1' are hard, backend-agnostic overrides.
+    # Unset defaults on ONLY when the live store is PgStore (see the CEILING
+    # comment at the JacGraph.build_edge call site) - a mongo/GTI-lineage
+    # backend still needs the endpoint dirty marks. Backend kind is fixed
+    # per process, so the probe runs once and is cached.
+    if _edge_only_dirty_is_pg_cache {
+        return _edge_only_dirty_is_pg_cache[0];
+    }
+    ctx = JacRuntimeInterface.peek_context();
+    if ctx is None {
+        return False;
+    }
+    import from jaclang.runtimelib.store { PgStore }
+    is_pg = isinstance(getattr(ctx.mem, 'store', None), PgStore);
+    _edge_only_dirty_is_pg_cache.append(is_pg);
+    return is_pg;
+}
 
 glob _scale_provider_cache: list = [];
 
