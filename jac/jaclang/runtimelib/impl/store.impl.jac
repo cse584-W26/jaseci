@@ -1732,6 +1732,321 @@ impl PgStore.ensure_adjacency_table(edge_type: str, node_type: str) -> (str | No
 }
 
 
+# --- R5b outbound endpoint column (item #23) ---------------------------------
+# Same denormalisation as `src_endpoint` above, one hop the other way round:
+# for `A -[E]-> B` (SNB authorship: `Post -[HasCreator]-> Person`) the mirror
+# of A carries B's id as a scalar, so a top-K over "everything these B's
+# authored" is an ordered index range scan per B instead of a join through
+# `anchors` plus one mirror PK lookup per candidate (17876 lookups / 33701
+# buffers / 109ms for SNB ic2 at SF1).
+#
+# Why this is a SEPARATE claim from `src_endpoint` and not a fourth probe on
+# it: `src_endpoint`'s probe 1 asks "does exactly ONE edge archetype land on
+# this node type", which is (a) the wrong direction for authorship - HasCreator
+# points OUT of Post - and (b) the wrong QUESTION. What makes a scalar column
+# correct is a per-edge-type cardinality property, not a whole-node-type
+# uniqueness property. Post has >=3 inbound edge types (ContainerOf, ReplyOf,
+# Likes) and would be refused forever while still satisfying "every Post has
+# exactly one HasCreator". So the claim here is keyed by (edge type,
+# direction), the edge type is NAMED by the caller rather than derived, and
+# the probes are:
+#   C1 no A has two outbound E edges          (the column has room for one dst)
+#   C2 no undirected edge touches A on either end
+# and the trigger below keeps C1 true for every FUTURE write instead of
+# trusting the claim-time snapshot - which is the hole the `src_endpoint`
+# ponytail note above admits and parks behind a flag.
+#
+# On violation the trigger does NOT just NULL the column: a NULL is
+# indistinguishable from "no edge", so the violating node would silently
+# vanish from a legitimate author's page - the exact wrong-answer class the
+# refusal policy forbids. It records the source in `jac_ep_violation` and
+# get_topk_inbound gates its fast arm on that table being empty for this
+# (mirror, edge type), with the ordinary edge-join arm gated the other way.
+# Both guards are uncorrelated subqueries, so postgres evaluates them once per
+# statement as a One-Time Filter and skips the disabled arm's children
+# entirely; the cost when nothing is wrong is one seq scan of a 0-page table.
+#
+# ponytail: the claim never un-refuses. Deleting the extra edge leaves the
+# `jac_ep_violation` row in place and this (mirror, edge type) stays on the
+# slow arm until the row is removed by hand or the memo guard clears. Correct
+# and boring; automatic recovery would need a full re-verification pass, and
+# a violation is supposed to be a bug in the app, not a routine event.
+def _ensure_ep_outbound(
+    store: Any, cls: type, edge_type: str, order_col: str
+) -> (str | None) {
+    st = _mirror_state.get(cls);
+    if not st or not st['ok'] {
+        return None;
+    }
+    at = getattr(cls, '__name__', '');
+    what = f"outbound endpoint column for {at} -[{edge_type}]->";
+    # everything below is interpolated into DDL; refuse anything that is not
+    # already a bare identifier rather than quoting-by-guess. An unnamed edge
+    # type is refused outright: unlike the inbound claim there is nothing to
+    # derive it from, and guessing a direction AND a type is not a proof.
+    if (
+        not edge_type
+        or not _bare_ident(edge_type)
+        or not _bare_ident(order_col)
+        or not _bare_ident(at)
+    ) {
+        _memo_log_once(
+            what,
+            'refused (an outbound endpoint claim needs a named edge type, and'
+                ' edge type / order column / node type must all be bare'
+                ' identifiers)'
+        );
+        return None;
+    }
+    col = 'dst_endpoint_' + _sanitize_ident(edge_type);
+    claims = st.setdefault('epo', {});
+    claim = claims.get(edge_type);
+    if claim is not None and order_col in claim['ords'] {
+        return col;
+    }
+    rf = st.setdefault('epo_refuse', {});
+    if _memo_refused(rf.get(edge_type)) {
+        return None;   # kept failing; stop paying for the attempt
+    }
+    table = st['table'];
+    _memo_attempt(rf.setdefault(edge_type, {}));
+    ddl_conn: Any = None;
+    short = False;
+    try {
+        store._ensure_ready();
+        ddl_conn = store._connect();
+        # same self-deadlock guard as ensure_mirror_endpoint: ADD COLUMN wants
+        # ACCESS EXCLUSIVE and the request that triggered this may already
+        # hold ACCESS SHARE on the same mirror. Fail fast, let a later request
+        # holding no such lock do it.
+        ddl_conn.run("SET lock_timeout = '250ms'");
+        # The claim is DURABLE: the column plus a live trigger maintaining it
+        # is the database's own record that C1/C2 were proved and have been
+        # enforced on every write since. Re-deriving that in a fresh process
+        # costs MINUTES at SNB SF1 (the C1 GROUP BY has no supporting index),
+        # and would be paid on the first request after every boot, so the
+        # catalog answers instead - two syscache lookups. `epo_full` is the
+        # escape hatch: if the completeness anti-join below ever fails after a
+        # shortcut, the next attempt takes the full path and re-backfills
+        # (edges bulk-COPYed into a surviving mirror with triggers suppressed
+        # is exactly that case).
+        trig = table + '_epo_' + _sanitize_ident(edge_type) + '_iu';
+        if claim is None and edge_type not in st.get('epo_full', set()) {
+            have = ddl_conn.run(
+                'SELECT (SELECT count(*) FROM pg_attribute a WHERE a.attrelid'
+                    + " = to_regclass('" + table + "') AND a.attname = '" + col
+                    + "' AND NOT a.attisdropped) + (SELECT count(*) FROM"
+                    + " pg_trigger t WHERE t.tgname = '" + trig
+                    + "' AND NOT t.tgisinternal)"
+            );
+            short = bool(have) and int(have[0][0]) == 2;
+        }
+        # The two probes below are minutes of work at SNB SF1 (a GROUP BY over
+        # 3M edge rows), and the ADD COLUMN after them fails with a lock
+        # timeout on the FIRST request that also built the mirror - that
+        # request is still holding ACCESS SHARE on it from ensure_mirror's own
+        # completeness probe, exactly as the guard above intends. So the SHAPE
+        # verdict is memoised separately from the BUILD: the retry that lands
+        # on a request holding no such lock re-runs the DDL, not the proof.
+        proven = st.setdefault('epo_proven', set());
+        if claim is None and not short and edge_type not in proven {
+            # C1: cardinality. Stricter than "one creator" on purpose - two
+            # edges to the SAME dst also trip it, and that is exactly the case
+            # where the column arm (one row) and the edge-join arm (the row
+            # twice) would disagree.
+            multi = ddl_conn.run(
+                "SELECT 1 FROM anchors WHERE kind = 'EdgeAnchor' AND arch_type = '"
+                    + edge_type + "' AND src_type = '" + at + "' "
+                    + 'AND src IS NOT NULL '
+                    + 'GROUP BY src HAVING count(*) > 1 LIMIT 1'
+            );
+            if multi {
+                rf[edge_type] = _memo_refuse(
+                    rf.get(edge_type) or {}, what,
+                    'C1 cardinality: a ' + at + ' already has two outbound '
+                        + edge_type + ' edges',
+                    False
+                );
+                return None;
+            }
+            # C2: an undirected edge stored either way round is traversable
+            # both ways, and one column cannot represent that.
+            bad = ddl_conn.run(
+                "SELECT 1 FROM anchors WHERE kind = 'EdgeAnchor' AND undirected "
+                    + "AND (src_type = '" + at + "' OR dst_type = '" + at
+                    + "') LIMIT 1"
+            );
+            if bad {
+                rf[edge_type] = _memo_refuse(
+                    rf.get(edge_type) or {}, what,
+                    'C2: an undirected edge touches this type', False
+                );
+                return None;
+            }
+            proven.add(edge_type);
+        }
+        # unconditional: get_topk_inbound's fallback guard reads this table on
+        # every statement, so it has to exist on the shortcut path too
+        ddl_conn.run(
+            'CREATE TABLE IF NOT EXISTS jac_ep_violation ('
+                + 'tbl text NOT NULL, edge_type text NOT NULL, '
+                + 'src uuid NOT NULL, '
+                + 'noticed_at timestamptz NOT NULL DEFAULT now(), '
+                + 'PRIMARY KEY (tbl, edge_type, src))'
+        );
+        if claim is None and not short {
+            ddl_conn.run(
+                'ALTER TABLE ' + table + ' ADD COLUMN IF NOT EXISTS ' + col
+                    + ' uuid'
+            );
+            # Maintained inside the writer's own transaction, driven off the
+            # EDGE row. UPDATE and DELETE both retract what OLD contributed
+            # first, so an UPDATE is (retract, re-assert) and can never look
+            # like a second edge - which is what makes the violation test
+            # below free: "the column already holds a DIFFERENT non-null
+            # value" IS the second-edge signal, no probe of `anchors` needed.
+            # The read takes FOR UPDATE so two concurrent inserters against an
+            # existing mirror row serialise and the second one sees, and
+            # flags, the first's value.
+            # Upsert rather than update: the node row and its edge land in the
+            # same flush with no ordering guarantee between them, and the node
+            # trigger's own ON CONFLICT set-list does not mention this column,
+            # so neither clobbers the other.
+            ddl_conn.run(
+                'CREATE OR REPLACE FUNCTION ' + table + '_epo_'
+                    + _sanitize_ident(edge_type)
+                    + '() RETURNS trigger AS $jacepo$ '
+                    + 'DECLARE cur uuid; BEGIN '
+                    # The mirror can be DROPPED behind this trigger's back -
+                    # pg_bulk_load.py --mode full drops every g_n_* table and
+                    # CASCADEs only the <mirror>_sync function, not this one -
+                    # which would otherwise turn every later edge write into
+                    # "relation does not exist". Nothing to maintain when the
+                    # projection is gone; ensure_mirror rebuilds it and this
+                    # ensure re-backfills before any reader can use it again.
+                    + "IF to_regclass('" + table
+                    + "') IS NULL THEN RETURN COALESCE(NEW, OLD); END IF; "
+                    + "IF TG_OP <> 'INSERT' THEN "
+                    + 'UPDATE ' + table + ' SET ' + col + ' = NULL '
+                    + 'WHERE id = OLD.src AND ' + col + ' = OLD.dst; '
+                    + "IF TG_OP = 'DELETE' THEN RETURN OLD; END IF; "
+                    + 'END IF; '
+                    + 'SELECT ' + col + ' INTO cur FROM ' + table
+                    + ' WHERE id = NEW.src FOR UPDATE; '
+                    + 'IF cur IS NOT NULL AND cur <> NEW.dst THEN '
+                    + 'INSERT INTO jac_ep_violation (tbl, edge_type, src) '
+                    + "VALUES ('" + table + "', '" + edge_type + "', NEW.src) "
+                    + 'ON CONFLICT DO NOTHING; '
+                    + 'UPDATE ' + table + ' SET ' + col + ' = NULL '
+                    + 'WHERE id = NEW.src; '
+                    + "RAISE WARNING 'jac: " + table + '.' + col
+                    + ' cardinality violated at % - a second ' + edge_type
+                    + ' edge appeared; endpoint column disabled for this'
+                    + " mirror', NEW.src; "
+                    + 'RETURN NEW; END IF; '
+                    + 'INSERT INTO ' + table + ' (id, ' + col + ') '
+                    + 'VALUES (NEW.src, NEW.dst) ON CONFLICT (id) DO UPDATE '
+                    + 'SET ' + col + ' = EXCLUDED.' + col + '; '
+                    + 'RETURN NEW; END $jacepo$ LANGUAGE plpgsql'
+            );
+            ddl_conn.run(
+                'CREATE OR REPLACE TRIGGER ' + table + '_epo_'
+                    + _sanitize_ident(edge_type) + '_iu '
+                    + 'AFTER INSERT OR UPDATE ON anchors FOR EACH ROW '
+                    + "WHEN (NEW.kind = 'EdgeAnchor' AND NEW.arch_type = '"
+                    + edge_type + "' AND NEW.src_type = '" + at + "') "
+                    + 'EXECUTE FUNCTION ' + table + '_epo_'
+                    + _sanitize_ident(edge_type) + '()'
+            );
+            ddl_conn.run(
+                'CREATE OR REPLACE TRIGGER ' + table + '_epo_'
+                    + _sanitize_ident(edge_type) + '_d '
+                    + 'AFTER DELETE ON anchors FOR EACH ROW '
+                    + "WHEN (OLD.kind = 'EdgeAnchor' AND OLD.arch_type = '"
+                    + edge_type + "' AND OLD.src_type = '" + at + "') "
+                    + 'EXECUTE FUNCTION ' + table + '_epo_'
+                    + _sanitize_ident(edge_type) + '()'
+            );
+            # triggers first, THEN backfill: a concurrent write is already
+            # covered by the trigger and re-setting the same value is
+            # idempotent
+            ddl_conn.run(
+                'UPDATE ' + table + ' m SET ' + col + ' = e.dst FROM anchors e '
+                    + "WHERE e.src = m.id AND e.kind = 'EdgeAnchor' "
+                    + "AND e.arch_type = '" + edge_type + "' "
+                    + "AND e.src_type = '" + at + "' "
+                    + 'AND m.' + col + ' IS DISTINCT FROM e.dst'
+            );
+        }
+        if claim is None {
+            claim = {'ords': set()};
+            claims[edge_type] = claim;
+        }
+        # (endpoint, order DESC). The order expression MUST stay textually
+        # identical to get_topk_inbound's ord_expr or the planner cannot prove
+        # the match - the same lesson JAC_PROMOTED_DRIVE and ensure_topk_index
+        # already paid for. That is also why this index is built here and not
+        # by ensure_topk_index: the source here is a plain uuid column, not
+        # that one's `#>> '{}'` expression.
+        iname = (
+            table + '_epo_' + _sanitize_ident(edge_type) + '_'
+                + _sanitize_ident(order_col)
+        );
+        ddl_conn.run(
+            'CREATE INDEX IF NOT EXISTS ' + iname + ' ON ' + table
+                + ' (' + col + ', (((' + order_col + " #>> '{}'))::bigint) DESC)"
+        );
+        if not short {
+            ddl_conn.run('ANALYZE ' + table);
+        }
+        # Same hazard ensure_mirror_endpoint guards: the DDL and backfill
+        # committed on a connection of their own, so a request whose snapshot
+        # predates that commit sees the COLUMN but not the VALUES - and a NULL
+        # does not fail, it silently drops the row from the page. Confirm
+        # completeness from the caller's own snapshot. `src_type` scoping is
+        # required and not optional: HasCreator originates from BOTH Post and
+        # Comment, so the Post mirror's probe must not be failed by Comment's
+        # edges. Deliberately not cached, so the retry re-probes.
+        incomplete = store._run(
+            "SELECT 1 FROM anchors e WHERE e.kind = 'EdgeAnchor' "
+                + 'AND e.arch_type = :et AND e.src_type = :at '
+                + 'AND e.src IS NOT NULL AND NOT EXISTS ('
+                + 'SELECT 1 FROM ' + table + ' m '
+                + 'WHERE m.id = e.src AND m.' + col + ' = e.dst) LIMIT 1',
+            {'et': edge_type, 'at': at}
+        );
+        if incomplete {
+            if short {
+                # the shortcut trusted a column the data does not back; make
+                # the next attempt do the probes and the backfill for real
+                st.setdefault('epo_full', set()).add(edge_type);
+                claims.pop(edge_type, None);
+            }
+            return None;
+        }
+        claim['ords'].add(order_col);
+        rf.pop(edge_type, None);
+        st.setdefault('epo_full', set()).discard(edge_type);
+        _memo_track([iname, 'jac_ep_violation']);
+        return col;
+    } except Exception as e {
+        # transient (lock_timeout, a concurrent claimer) vs structural: both
+        # look like an exception here, so retry a bounded number of times
+        # rather than poisoning the claim on the first busy moment.
+        rf[edge_type] = _memo_refuse(
+            rf.setdefault(edge_type, {}), what, str(e), True
+        );
+        return None;
+    } finally {
+        if ddl_conn is not None {
+            try {
+                ddl_conn.close();
+            } except Exception { }
+        }
+    }
+}
+
+
 # --- R5 endpoint column ------------------------------------------------------
 # A stream chain's final hop is `<prev node> -[E]-> <mirrored node>`, and the
 # generic form has to join `anchors` to walk it: for a 50-source page that is
@@ -1765,8 +2080,14 @@ impl PgStore.ensure_adjacency_table(edge_type: str, node_type: str) -> (str | No
 # which mirrors get one instead of the first stream query claiming it
 # lazily, are the upgrade path. Keep this flag-gated until then.
 impl PgStore.ensure_mirror_endpoint(
-    cls: type, edge_type: str, order_col: str
+    cls: type, edge_type: str, order_col: str, outbound: bool = False
 ) -> (str | None) {
+    if outbound {
+        # `A -[E]-> B`, the hop the other way round: a separate claim keyed by
+        # (edge type, direction) with its own probes and its own trigger.
+        # Nothing below this line changes for the inbound/untyped path.
+        return _ensure_ep_outbound(self, cls, edge_type, order_col);
+    }
     st = _mirror_state.get(cls);
     if not st or not st['ok'] {
         return None;

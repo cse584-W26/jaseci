@@ -160,7 +160,7 @@ obj PgStore(Store) {
     def load_props(ids: list[UUID]) -> dict[UUID, AnchorRow];
     def ensure_mirror(cls: type) -> bool;
     def ensure_mirror_endpoint(
-        cls: type, edge_type: str, order_col: str
+        cls: type, edge_type: str, order_col: str, outbound: bool = False
     ) -> (str | None);
     def ensure_mirror_order_index(cls: type, order_col: str) -> bool;
     def ensure_topk_index(

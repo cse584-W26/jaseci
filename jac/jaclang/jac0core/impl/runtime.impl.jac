@@ -786,7 +786,52 @@ impl JacPersistence.get_topk_inbound(
             'SELECT m.id AS id, ' + ord_expr + ' AS ord, '
             + tie_expr + ' AS tie'
         );
-        if src_field {
+        join_arm = (
+            sel
+            + ' FROM anchors e JOIN ' + info['table'] + ' m ON m.id = e.src'
+            + ' WHERE e.dst = ANY(CAST(:dsts AS uuid[]))'
+            + ' AND e.arch_type = :et AND e.src_type = :' + tkey
+            + ' AND ' + ord_expr + ' <= :maxv'
+        );
+        # item #23: ask the store to GROW the denormalised far endpoint as a
+        # column on this mirror, instead of the app declaring a hand-
+        # maintained `creator_jid` field and passing its name in as src_field.
+        # The store proves cardinality-1 for (this edge type, outbound) and
+        # keeps it true with a trigger; None means it could not prove it and
+        # the arms below stay exactly what they were.
+        epcol = '';
+        if edge_type and hasattr(store, 'ensure_mirror_endpoint') {
+            epcol = store.ensure_mirror_endpoint(cls, edge_type, ocol, True)
+                or '';
+        }
+        if epcol {
+            # Two arms, exactly one of which runs. Both guards are
+            # UNCORRELATED, so postgres evaluates each once per statement as a
+            # One-Time Filter and never executes the losing arm's children.
+            # The point is that a cardinality violation discovered at WRITE
+            # time (a second creator edge) cannot produce a wrong READ: the
+            # trigger NULLs the column and records the source, and from that
+            # moment this arm is the ordinary edge join again - slower, and
+            # right. A NULL alone would have made the violating node silently
+            # vanish from its legitimate author's page.
+            bkey = 'tb' + str(i);
+            params[bkey] = str(info['table']);
+            vio = (
+                'EXISTS (SELECT 1 FROM jac_ep_violation v WHERE v.tbl = :'
+                + bkey + ' AND v.edge_type = :et)'
+            );
+            arms.append(
+                'SELECT t.id AS id, t.ord AS ord, t.tie AS tie FROM'
+                + ' unnest(CAST(:dsts AS uuid[])) AS j(did)'
+                + ' CROSS JOIN LATERAL ('
+                + sel + ' FROM ' + info['table'] + ' m'
+                + ' WHERE m.' + epcol + ' = j.did'
+                + ' AND ' + ord_expr + ' <= :maxv'
+                + ' ORDER BY ' + ord_expr + ' DESC, ' + tie_expr + tdir
+                + ' LIMIT :lim) t WHERE NOT ' + vio
+            );
+            arms.append(join_arm + ' AND ' + vio);
+        } elif src_field {
             # DENORMALISED arm: the mirror carries the edge's far endpoint as
             # a scalar, so the edge table drops out of the plan entirely.
             # The edge-join arm below has to visit the mirror by PK once per
@@ -824,13 +869,7 @@ impl JacPersistence.get_topk_inbound(
                 + ' LIMIT :lim) t'
             );
         } else {
-            arms.append(
-                sel
-                + ' FROM anchors e JOIN ' + info['table'] + ' m ON m.id = e.src'
-                + ' WHERE e.dst = ANY(CAST(:dsts AS uuid[]))'
-                + ' AND e.arch_type = :et AND e.src_type = :' + tkey
-                + ' AND ' + ord_expr + ' <= :maxv'
-            );
+            arms.append(join_arm);
         }
     }
     if not arms {
