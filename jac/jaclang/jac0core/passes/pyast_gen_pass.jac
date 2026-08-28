@@ -231,6 +231,11 @@ obj PyastGenPass(BaseAstGenPass[ast3.AST]) {
     def exit_finally_stmt(nd: uni.FinallyStmt) -> None;
     def exit_iter_for_stmt(nd: uni.IterForStmt) -> None;
     def exit_in_for_stmt(nd: uni.InForStmt) -> None;
+    def _clone_py(node: object) -> object;
+    def _pure_ref_root(expr: uni.UniNode) -> (str | None);
+    def _is_pure_projection(expr: uni.UniNode, loop_var: str) -> bool;
+    def _jobj_prefetch_hits(nd: uni.InForStmt) -> list[uni.Expr];
+    def _prefetch_hint_stmt(nd: uni.InForStmt) -> (ast3.AST | None);
     def exit_while_stmt(nd: uni.WhileStmt) -> None;
     def exit_forever_stmt(nd: uni.ForeverStmt) -> None;
     def exit_with_stmt(nd: uni.WithStmt) -> None;

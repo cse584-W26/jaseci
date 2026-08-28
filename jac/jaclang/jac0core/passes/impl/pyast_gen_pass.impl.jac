@@ -2485,7 +2485,12 @@ impl PyastGenPass.exit_iter_for_stmt(nd: uni.IterForStmt) -> None {
 
 impl PyastGenPass.exit_in_for_stmt(nd: uni.InForStmt) -> None {
     for_node = ast3.AsyncFor if nd.is_async else ast3.For;
-    nd.gen.py_ast = [
+    py_nodes: list[ast3.AST] = [];
+    hint = self._prefetch_hint_stmt(nd);
+    if hint is not None {
+        py_nodes.append(hint);
+    }
+    py_nodes.append(
         self.sync(
             for_node(
                 target=cast(ast3.expr, self.py_ast_val(nd.target)),
@@ -2498,7 +2503,194 @@ impl PyastGenPass.exit_in_for_stmt(nd: uni.InForStmt) -> None {
                     else []
             )
         )
-    ];
+    );
+    nd.gen.py_ast = py_nodes;
+}
+
+impl PyastGenPass._clone_py(node: object) -> object {
+    # Structural-only clone of a py_ast subtree via _fields (ast3.iter_fields)
+    # -- NOT copy.deepcopy, which would also walk the dynamic `jac_link`
+    # attr self.sync() stamps onto every node and drag the whole jac uni
+    # AST (parent-linked) along with it. Locations are unset on the clone;
+    # the caller re-stamps the whole tree with one sync(..., deep=True).
+    if isinstance(node, ast3.AST) {
+        cloned = type(node)();
+        for (field, value) in ast3.iter_fields(node) {
+            setattr(cloned, field, self._clone_py(value));
+        }
+        return cloned;
+    } elif isinstance(node, list) {
+        return [self._clone_py(v) for v in node];
+    }
+    return node;
+}
+
+impl PyastGenPass._pure_ref_root(expr: uni.UniNode) -> (str | None) {
+    # Chain of attribute reads / literal-key subscripts rooted at a bare
+    # Name -- no calls, no comprehensions, no range slices, no arithmetic.
+    # Returns the root Name's text, or None if expr is not such a chain.
+    #
+    # Used for two DIFFERENT purposes: (1) a jobj() id argument must be a
+    # pure projection of the LOOP VAR specifically (checked by
+    # _is_pure_projection below); (2) the loop's own COLLECTION expression
+    # must be a pure ref of ANY root, full stop -- _prefetch_hint_stmt
+    # clones nd.collection into a SECOND comprehension that iterates it
+    # again (see _clone_py), so the collection expression is evaluated
+    # TWICE. `for l in self.lines` is harmless to re-evaluate (an
+    # attribute read), but `for l in fetch_lines()` would call fetch_lines
+    # twice, and `for l in some_generator()` would have the prefetch
+    # EXHAUST the iterator, leaving the real loop body running zero times
+    # -- a silent wrong answer, which is exactly what refusal-over-
+    # wrongness forbids. Only a bare name / attribute-or-subscript chain is
+    # provably side-effect-free and idempotent to re-evaluate; anything
+    # else (FuncCall, comprehension, range slice, binary expr, ...)
+    # returns None here and the caller declines the whole hint.
+    if isinstance(expr, uni.Name) {
+        return str(expr.value);
+    }
+    if isinstance(expr, uni.AtomTrailer) {
+        if expr.is_attr {
+            if isinstance(expr.right, uni.Name) {
+                return self._pure_ref_root(expr.target);
+            }
+            return None;
+        }
+        if (
+            isinstance(expr.right, uni.IndexSlice)
+            and not expr.right.is_range
+            and len(expr.right.slices) == 1
+        ) {
+            slc = expr.right.slices[0];
+            # String literals parse as MultiString (a Sequence[String|FString]
+            # -- adjacent-literal concatenation support), even a single plain
+            # "key" -- bare uni.String never appears standalone here. Accept
+            # it only when every part is a plain String (no FString
+            # interpolation, which would not be a compile-time constant).
+            is_literal_key = (
+                isinstance(slc.start, uni.Int)
+                or (
+                    isinstance(slc.start, uni.MultiString)
+                    and all(isinstance(p, uni.String) for p in slc.start.strings)
+                )
+            );
+            if slc.stop is None and slc.step is None and is_literal_key {
+                return self._pure_ref_root(expr.target);
+            }
+        }
+    }
+    return None;
+}
+
+impl PyastGenPass._is_pure_projection(expr: uni.UniNode, loop_var: str) -> bool {
+    # #21 Rule C precondition: the id expression must be a syntactically
+    # pure projection of the loop variable specifically. Computable for
+    # every iteration before the loop starts, no call/side effect.
+    return self._pure_ref_root(expr) == loop_var;
+}
+
+impl PyastGenPass._jobj_prefetch_hits(nd: uni.InForStmt) -> list[uni.Expr] {
+    # ponytail: scans only the loop's TOP-LEVEL statements (no descent into
+    # nested if/for/while). Misses a hint one level deeper -- never WRONG,
+    # jobj() still works unhinted, it's just not pre-warmed. Widen to a
+    # full-body walk if a real workload needs it.
+    if not isinstance(nd.target, uni.Name) {
+        return [];
+    }
+    # Double-eval guard (see _pure_ref_root's docstring): decline the whole
+    # hint unless the collection itself is a pure ref, since the prefetch
+    # re-evaluates it a second time.
+    if self._pure_ref_root(nd.collection) is None {
+        return [];
+    }
+    loop_var = str(nd.target.value);
+    # A rebind of the loop var inside the body (`l = ...`) would make the
+    # hint's per-iteration id (computed against the loop's OWN l) diverge
+    # from what a later jobj() call in the same iteration actually reads
+    # once l has been reassigned -- not a wrong ANSWER (jobj() still
+    # fetches whatever id it is given, prefetch or not), just a wasted /
+    # misdirected prefetch. Decline outright rather than reason about
+    # statement order within the body.
+    for stmt in (nd.body or []) {
+        if (
+            isinstance(stmt, uni.Assignment)
+            and any(
+                isinstance(t, uni.Name) and str(t.value) == loop_var
+                for t in stmt.target
+            )
+        ) {
+            return [];
+        }
+    }
+    hits: list[uni.Expr] = [];
+    for stmt in (nd.body or []) {
+        if not isinstance(stmt, uni.Assignment) or stmt.value is None {
+            continue;
+        }
+        call = stmt.value;
+        if (
+            not isinstance(call, uni.FuncCall)
+            or not isinstance(call.target, uni.Name)
+            or str(call.target.value) != 'jobj'
+        ) {
+            continue;
+        }
+        params = call.params or [];
+        if len(params) != 1 or isinstance(params[0], uni.KWPair) {
+            continue;
+        }
+        arg = cast(uni.Expr, params[0]);
+        if self._is_pure_projection(arg, loop_var) {
+            hits.append(arg);
+        }
+    }
+    return hits;
+}
+
+impl PyastGenPass._prefetch_hint_stmt(nd: uni.InForStmt) -> (ast3.AST | None) {
+    # #21 Rule C: warm Session.__mem__ (L1) for every jobj(id) the loop will
+    # call, via ONE jobj_many() round trip issued before the loop starts.
+    # jobj()'s call sites and semantics are UNCHANGED -- Session.get already
+    # checks __mem__ before hitting the store (session.impl.jac), so once
+    # jobj_many has materialized these ids, the loop's own jobj() calls are
+    # in-memory hits. Read-your-writes holds because __mem__ holds live
+    # anchor references: a write earlier in the same walker mutates the
+    # SAME object this prefetch already cached, not a stale copy.
+    hits = self._jobj_prefetch_hits(nd);
+    if not hits {
+        return None;
+    }
+    outer_gen = ast3.comprehension(
+        target=cast(ast3.expr, self._clone_py(self.py_ast_val(nd.target))),
+        iter=cast(ast3.expr, self._clone_py(self.py_ast_val(nd.collection))),
+        ifs=[],
+        is_async=0
+    );
+    if len(hits) == 1 {
+        elt = cast(ast3.expr, self._clone_py(self.py_ast_val(hits[0])));
+        generators = [outer_gen];
+    } else {
+        # Rule B heterogeneous merge: N id-projections out of the same loop
+        # collapse into ONE jobj_many call (one ANY($1) round trip) via a
+        # second comprehension generator over a synthetic per-iteration
+        # tuple -- `[x for l in lines for x in (ids_a(l), ids_b(l))]`.
+        elt = ast3.Name(id='__jac_pf_id', ctx=ast3.Load());
+        inner_gen = ast3.comprehension(
+            target=ast3.Name(id='__jac_pf_id', ctx=ast3.Store()),
+            iter=ast3.Tuple(
+                elts=[
+                    cast(ast3.expr, self._clone_py(self.py_ast_val(h)))
+                    for h in hits
+                ],
+                ctx=ast3.Load()
+            ),
+            ifs=[],
+            is_async=0
+        );
+        generators = [outer_gen, inner_gen];
+    }
+    listcomp = ast3.ListComp(elt=cast(ast3.expr, elt), generators=generators);
+    call = ast3.Call(func=self.builtin_name('jobj_many'), args=[listcomp], keywords=[]);
+    return self.sync(ast3.Expr(value=cast(ast3.expr, call)), jac_node=nd, deep=True);
 }
 
 impl PyastGenPass.exit_while_stmt(nd: uni.WhileStmt) -> None {
