@@ -1552,6 +1552,23 @@ impl PyastGenPass.exit_archetype(nd: uni.Archetype) -> None {
             )
         );
     }
+    if getattr(nd, 'effect_readonly', False) {
+        # EffectPass proved this walker writes nothing: surface the proof to
+        # the runtime the same way as __jac_async__/__jac_stream_fields__.
+        body.insert(
+            0,
+            self.sync(
+                ast3.Assign(
+                    targets=[
+                        self.sync(
+                            ast3.Name(id='__jac_readonly__', ctx=ast3.Store())
+                        )
+                    ],
+                    value=self.sync(ast3.Constant(value=True))
+                )
+            )
+        );
+    }
     if (stream_fields := getattr(nd, 'stream_fields', None)) is not None {
         # StreamProofPass approved this walker's chain results for the
         # zero-materialization path; surface the proof to the runtime as a

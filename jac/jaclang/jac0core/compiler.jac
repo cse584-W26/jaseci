@@ -191,6 +191,7 @@ def get_ir_gen_sched(
         import from jaclang.compiler.passes.main.stream_proof_pass {
             StreamProofPass
         }
+        import from jaclang.compiler.passes.main.effect_pass { EffectPass }
 
         import jaclang.compiler.symbol_utils;
         import jaclang.compiler.passes.main.layout_pass;
@@ -204,6 +205,7 @@ def get_ir_gen_sched(
             SemanticAnalysisPass,
             SemDefMatchPass,
             CFGBuildPass,
+            EffectPass,
             StreamProofPass
         ];
         if gen_mtir {

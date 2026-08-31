@@ -583,7 +583,10 @@ impl ExecutionManager.spawn_walker_sync(
     async def run_attempt(call_state: CallState, ctx: ExecutionContext) {
         `walker = walker_cls(**fields);
         import from jaclang.runtimelib.utils { RO_WALKERS }
-        if walker_cls.__name__ in RO_WALKERS {
+        # compiler stamp (EffectPass proof) OR env override list; the env
+        # list survives one release as an escape hatch, then dies
+        if walker_cls.__name__ in RO_WALKERS
+            or getattr(walker_cls, '__jac_readonly__', False) {
             ctx.request_read_only = True;
         }
         if target_node_id {
@@ -621,7 +624,9 @@ impl ExecutionManager.spawn_walker_async(
     async def run_attempt(call_state: CallState, ctx: ExecutionContext) {
         `walker = walker_cls(**fields);
         import from jaclang.runtimelib.utils { RO_WALKERS }
-        if walker_cls.__name__ in RO_WALKERS {
+        # compiler stamp (EffectPass proof) OR env override list, as above
+        if walker_cls.__name__ in RO_WALKERS
+            or getattr(walker_cls, '__jac_readonly__', False) {
             ctx.request_read_only = True;
         }
         if target_node_id {

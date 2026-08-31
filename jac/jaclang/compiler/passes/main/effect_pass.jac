@@ -1,0 +1,512 @@
+"""EffectPass: prove a walker performs no persistent-store effect.
+
+For each walker archetype, audits every ability body (impl-file bodies
+resolved through the decl's `body` link, since they are not in the decl's
+subtree) plus the archetype's own subtree. If NO construct that can write
+the store is found - topology ops (connect/disconnect/delete), spawn,
+grant/revoke, an attribute store whose target is anything but the walker's
+own `self`, an index store into anything but a provably walker-local
+container, or a call that cannot be resolved to a provably effect-free
+callee - the walker is stamped `effect_readonly`, which PyastGenPass emits
+as a `__jac_readonly__` class attribute. The server consults the stamp at
+spawn (OR'd with the JAC_RO_WALKERS env override list for one release) and
+runs the request in SNAPSHOT READ ONLY isolation, skipping the commit
+funnel.
+
+Unlike StreamProofPass (which is stricter: it also forbids `visit`, since
+it must prove chain elements are only trivially observed), a read-only
+walker MAY traverse: `visit` moves the walker, it writes nothing. When a
+walker visits, every node/edge entry-ability in the module must itself
+audit effect-free, because visiting fires them.
+
+Distinct from EndpointEffectPass (jac0core/passes), which classifies
+endpoints for the interop manifest and IGNORES what it cannot resolve:
+this pass must PROVE, so anything unresolvable declines the stamp.
+
+Soundness stance: REFUSAL OVER WRONGNESS. Any construct the audit does
+not understand - a dynamic call, an unresolvable symbol, a method on a
+receiver whose provenance is not a fresh walker-local container -
+withholds the stamp and the walker keeps today's read-write path (the
+status quo). The enforcement layer is fail-loud (a field write inside a
+read-only request raises ReadOnlyWalkerError, and Postgres rejects writes
+in a READ ONLY transaction), so even a wrong approval degrades to a loud
+error, never to a silent lost write.
+"""
+import jaclang.jac0core.unitree as uni;
+import from jaclang.jac0core.constant { SymbolType }
+import from jaclang.jac0core.passes { UniPass }
+
+# Tokens whose presence anywhere in an audited body is a walker-wide kill.
+# 'visit' is deliberately absent (walker scopes may traverse; callee scopes
+# still refuse it via the VisitStmt check).
+glob _KILL_TOKENS: tuple = ('spawn', 'disconnect', 'del', 'grant', 'revoke', 'destroy');
+
+# Calls provably free of store effects: object loads (jobj/jclosure/jtopk
+# read through the same access-checked runtime path), identity, and pure
+# python builtins over already-loaded values.
+glob _PURE_CALLS: tuple = (
+    'jobj', 'jobj_many', 'jclosure', 'jtopk', 'jid', 'isinstance', 'len',
+    'range', 'list', 'set', 'dict', 'tuple', 'int', 'str', 'float', 'bool',
+    'sorted', 'min', 'max', 'abs', 'sum', 'round', 'enumerate', 'zip',
+    'cast', 'repr'
+);
+
+# module.attr calls that read the clock only
+glob _PURE_MODULE_ATTRS: tuple = (
+    ('time', 'perf_counter'), ('time', 'time'), ('time', 'monotonic')
+);
+
+# Methods that mutate (or read) only the container they are called on. Safe
+# ONLY when the receiver is provably a walker-local container (see
+# _recv_safe); a node stored inside such a container defines none of these,
+# and a hypothetical collision still lands on the fail-loud read-only
+# enforcement, never on a silent write.
+glob _CONTAINER_METHODS: tuple = (
+    'append', 'add', 'extend', 'insert', 'sort', 'reverse', 'clear', 'pop',
+    'popitem', 'update', 'setdefault', 'remove', 'discard', 'get', 'keys',
+    'values', 'items', 'count', 'index', 'copy'
+);
+
+# constructors of fresh (walker-local) containers
+glob _FRESH_CTORS: tuple = ('list', 'set', 'dict', 'tuple', 'sorted');
+
+# special vars that alias graph state: never a safe mutation receiver
+glob _GRAPH_VARS: tuple = ('here', 'visitor', 'root', 'entry', 'exit');
+
+
+def _ancestor(n: object, kinds: tuple) -> (object | None) {
+    p = getattr(n, 'parent', None);
+    while p is not None {
+        if isinstance(p, kinds) {
+            return p;
+        }
+        p = getattr(p, 'parent', None);
+    }
+    return None;
+}
+
+
+def _enclosing_ability(d: object) -> (object | None) {
+    if d is None {
+        return None;
+    }
+    if isinstance(d, uni.Ability) {
+        return d;
+    }
+    return _ancestor(d, (uni.Ability, ));
+}
+
+
+def _resolved_bodies(owner: object) -> list {
+    # audit roots for an archetype/ability: impl-file bodies are linked, not
+    # nested, so the decl subtree alone is NOT sufficient
+    resolver = getattr(owner, '_get_impl_resolved_body', None);
+    if resolver is not None {
+        try {
+            resolved = resolver();
+            if isinstance(resolved, list) {
+                return resolved;
+            }
+        } except Exception {
+        }
+    }
+    body = getattr(owner, 'body', None);
+    if isinstance(body, list) {
+        return list(body);
+    }
+    if isinstance(body, uni.ImplDef) {
+        return [body];
+    }
+    return [];
+}
+
+
+class EffectPass(UniPass) {
+
+    def before_pass(self: EffectPass) -> None {
+        self._callee_memo: dict = {};
+        self._module_nodes_verdict: dict = {};
+    }
+
+    def enter_archetype(self: EffectPass, nd: uni.Archetype) -> None {
+        if nd.arch_type.name != 'KW_WALKER' {
+            return;
+        }
+        try {
+            reason = self._audit_walker(nd);
+        } except Exception as e {
+            reason = 'internal: ' + str(e);
+        }
+        import os;
+        import sys;
+        if os.environ.get('JAC_EFFECT_DEBUG') {
+            verdict = 'RO' if reason is None else ('decline: ' + reason);
+            sys.stderr.write('EFFECTPASS ' + str(nd.name) + ' ' + verdict + chr(10));
+        }
+        if reason is None {
+            nd.effect_readonly = True;
+        }
+    }
+
+    def _audit_walker(self: EffectPass, w: uni.Archetype) -> (str | None) {
+        saw_visit = False;
+        for scope in self._scopes_of(w) {
+            if scope is None {
+                return 'unresolved ability body';
+            }
+            reason = self._audit_scope(scope, False, True);
+            if reason is not None {
+                return reason;
+            }
+            if isinstance(scope, uni.VisitStmt)
+                or UniPass.get_all_sub_nodes(nd=scope, typ=uni.VisitStmt) {
+                saw_visit = True;
+            }
+        }
+        if saw_visit {
+            # visiting fires node/edge entry abilities: they must all be
+            # effect-free too, or the walker's traversal writes by proxy
+            return self._module_nodes_clean(w);
+        }
+        return None;
+    }
+
+    def _scopes_of(self: EffectPass, arch: uni.Archetype) -> list {
+        # the archetype subtree covers inline bodies and has-defaults;
+        # impl-file bodies hang off each ability's `body` link instead
+        scopes: list = [arch];
+        for ab in UniPass.get_all_sub_nodes(nd=arch, typ=uni.Ability) {
+            if getattr(ab, 'is_abstract', False) {
+                continue;
+            }
+            stmts = _resolved_bodies(ab);
+            if not stmts and getattr(ab, 'body', None) is None {
+                scopes.append(None);   # declared, never implemented: refuse
+                continue;
+            }
+            for st in stmts {
+                if isinstance(st, uni.UniNode) and st is not ab {
+                    scopes.append(st);
+                }
+            }
+        }
+        return scopes;
+    }
+
+    def _audit_scope(
+        self: EffectPass, nd_root: uni.UniNode, graph_self: bool, allow_visit: bool
+    ) -> (str | None) {
+        if isinstance(nd_root, (uni.ConnectOp, uni.DisconnectOp, uni.DeleteStmt))
+            or UniPass.get_all_sub_nodes(nd=nd_root, typ=uni.ConnectOp)
+            or UniPass.get_all_sub_nodes(nd=nd_root, typ=uni.DisconnectOp)
+            or UniPass.get_all_sub_nodes(nd=nd_root, typ=uni.DeleteStmt) {
+            return 'topology write';
+        }
+        if not allow_visit
+            and (isinstance(nd_root, uni.VisitStmt)
+                 or UniPass.get_all_sub_nodes(nd=nd_root, typ=uni.VisitStmt)) {
+            return 'visit outside walker scope';
+        }
+        for tok in UniPass.get_all_sub_nodes(nd=nd_root, typ=uni.Token) {
+            if str(getattr(tok, 'value', '')) in _KILL_TOKENS {
+                return 'token ' + str(tok.value);
+            }
+        }
+        asgs = UniPass.get_all_sub_nodes(nd=nd_root, typ=uni.Assignment);
+        if isinstance(nd_root, uni.Assignment) {
+            asgs = [nd_root] + asgs;
+        }
+        for asg in asgs {
+            for t in list(getattr(asg, 'target', []) or []) {
+                reason = self._target_ok(t, graph_self);
+                if reason is not None {
+                    return reason;
+                }
+            }
+        }
+        calls = UniPass.get_all_sub_nodes(nd=nd_root, typ=uni.FuncCall);
+        if isinstance(nd_root, uni.FuncCall) {
+            calls = [nd_root] + calls;
+        }
+        for fc in calls {
+            reason = self._call_ok(fc, graph_self);
+            if reason is not None {
+                return reason;
+            }
+        }
+        return None;
+    }
+
+    def _target_ok(self: EffectPass, t: object, graph_self: bool) -> (str | None) {
+        if isinstance(t, uni.Name) {
+            return None;   # plain local rebind
+        }
+        if isinstance(t, uni.TupleVal) {
+            for v in list(getattr(t, 'values', []) or []) {
+                reason = self._target_ok(v, graph_self);
+                if reason is not None {
+                    return reason;
+                }
+            }
+            return None;
+        }
+        if isinstance(t, uni.AtomTrailer) {
+            tright = getattr(t, 'right', None);
+            if isinstance(tright, uni.IndexSlice) {
+                # X[k] = v: only into a provably walker-local container
+                if self._recv_safe(t.target, graph_self) {
+                    return None;
+                }
+                return 'index store into unproven container';
+            }
+            if isinstance(tright, uni.Name) {
+                # X.field = v: walker state only - in a node/edge method
+                # `self` IS the graph, so no attribute store is admissible
+                if not graph_self and isinstance(t.target, uni.Name)
+                    and str(getattr(t.target, 'sym_name', '')) == 'self' {
+                    return None;
+                }
+                return 'attribute store to ' + str(tright.value);
+            }
+        }
+        return 'unrecognized store target';
+    }
+
+    def _call_ok(self: EffectPass, fc: uni.FuncCall, graph_self: bool) -> (str | None) {
+        tgt = getattr(fc, 'target', None);
+        if isinstance(tgt, uni.Name) {
+            nm = str(getattr(tgt, 'sym_name', '') or tgt.value);
+            if nm in _PURE_CALLS {
+                return None;
+            }
+            decl = getattr(fc, 'callee_decl', None);
+            if isinstance(decl, uni.Ability) {
+                return self._audit_callee(decl);
+            }
+            s = getattr(tgt, 'sym', None);
+            if s is not None and getattr(s, 'sym_type', None) is not None {
+                if s.sym_type == SymbolType.OBJECT_ARCH {
+                    # plain data constructor: binds fields, touches no store
+                    return None;
+                }
+                if s.sym_type in (SymbolType.NODE_ARCH, SymbolType.EDGE_ARCH,
+                                  SymbolType.WALKER_ARCH) {
+                    return 'constructor of ' + nm;
+                }
+            }
+            ab = _enclosing_ability(getattr(s, 'decl', None) if s is not None else None);
+            if isinstance(ab, uni.Ability) {
+                return self._audit_callee(ab);
+            }
+            return 'unresolved call ' + nm;
+        }
+        if isinstance(tgt, uni.AtomTrailer) {
+            tright = getattr(tgt, 'right', None);
+            if isinstance(tright, uni.Name) {
+                m = str(tright.value);
+                base = getattr(tgt, 'target', None);
+                if isinstance(base, uni.Name)
+                    and (str(base.value), m) in _PURE_MODULE_ATTRS {
+                    return None;
+                }
+                if m in _CONTAINER_METHODS and self._recv_safe(base, graph_self) {
+                    return None;
+                }
+                decl = getattr(fc, 'callee_decl', None);
+                if isinstance(decl, uni.Ability) {
+                    return self._audit_callee(decl);
+                }
+                s = getattr(tright, 'sym', None);
+                ab = _enclosing_ability(getattr(s, 'decl', None) if s is not None else None);
+                if isinstance(ab, uni.Ability) {
+                    return self._audit_callee(ab);
+                }
+                # last resort: name-directed over the module's archetypes -
+                # sound because EVERY same-named method must audit clean
+                return self._audit_methods_named(fc, m);
+            }
+        }
+        return 'dynamic call';
+    }
+
+    def _audit_methods_named(self: EffectPass, fc: uni.FuncCall, m: str) -> (str | None) {
+        mod = _ancestor(fc, (uni.Module, ));
+        if mod is None {
+            return 'unresolved method ' + m;
+        }
+        found = 0;
+        for arch in UniPass.get_all_sub_nodes(nd=mod, typ=uni.Archetype) {
+            for ab in UniPass.get_all_sub_nodes(nd=arch, typ=uni.Ability) {
+                nr = getattr(ab, 'name_ref', None);
+                if nr is None or str(getattr(nr, 'sym_name', '')) != m {
+                    continue;
+                }
+                found += 1;
+                reason = self._audit_callee(ab);
+                if reason is not None {
+                    return 'method ' + m + ': ' + reason;
+                }
+            }
+        }
+        if found == 0 {
+            return 'unresolved method ' + m;
+        }
+        return None;
+    }
+
+    def _audit_callee(self: EffectPass, ab: uni.Ability) -> (str | None) {
+        key = id(ab);
+        cached = self._callee_memo.get(key, None);
+        if cached == 'ok' {
+            return None;
+        }
+        if cached == 'pending' {
+            return 'recursive callee';
+        }
+        if cached is not None {
+            return cached;
+        }
+        self._callee_memo[key] = 'pending';
+        owner = getattr(ab, 'method_owner', None);
+        g_self = isinstance(owner, uni.Archetype)
+            and owner.arch_type.name in ('KW_NODE', 'KW_EDGE');
+        stmts = _resolved_bodies(ab);
+        reason = None;
+        if not stmts {
+            reason = 'callee without body';
+        } else {
+            for st in stmts {
+                if not isinstance(st, uni.UniNode) {
+                    continue;
+                }
+                reason = self._audit_scope(st, g_self, False);
+                if reason is not None {
+                    break;
+                }
+            }
+        }
+        self._callee_memo[key] = 'ok' if reason is None else reason;
+        return reason;
+    }
+
+    def _module_nodes_clean(self: EffectPass, w: uni.Archetype) -> (str | None) {
+        mod = _ancestor(w, (uni.Module, ));
+        if mod is None {
+            return 'no module';
+        }
+        key = id(mod);
+        cached = self._module_nodes_verdict.get(key, None);
+        if cached is not None {
+            return None if cached == 'ok' else cached;
+        }
+        verdict = None;
+        for arch in UniPass.get_all_sub_nodes(nd=mod, typ=uni.Archetype) {
+            if arch.arch_type.name not in ('KW_NODE', 'KW_EDGE') {
+                continue;
+            }
+            for ab in UniPass.get_all_sub_nodes(nd=arch, typ=uni.Ability) {
+                if not isinstance(getattr(ab, 'signature', None), uni.EventSignature) {
+                    continue;
+                }
+                reason = self._audit_callee(ab);
+                if reason is not None {
+                    verdict = 'node ability ' + str(ab.name_ref) + ': ' + reason;
+                    break;
+                }
+            }
+            if verdict is not None {
+                break;
+            }
+        }
+        self._module_nodes_verdict[key] = 'ok' if verdict is None else verdict;
+        return verdict;
+    }
+
+    def _recv_safe(self: EffectPass, e: object, graph_self: bool) -> bool {
+        return self._recv_safe_g(e, graph_self, set());
+    }
+
+    def _recv_safe_g(self: EffectPass, e: object, graph_self: bool, seen: set) -> bool {
+        if isinstance(e, uni.Name) {
+            nm = str(getattr(e, 'sym_name', '') or e.value);
+            if nm == 'self' or nm in _GRAPH_VARS {
+                return False;
+            }
+            return self._local_fresh(e, seen);
+        }
+        if isinstance(e, uni.AtomTrailer) {
+            eright = getattr(e, 'right', None);
+            # self.<field> in a walker: walker state, not graph state
+            if isinstance(eright, uni.Name) and not graph_self
+                and isinstance(e.target, uni.Name)
+                and str(getattr(e.target, 'sym_name', '')) == 'self' {
+                return True;
+            }
+            # element of a safe container (X[k].add(...))
+            if isinstance(eright, uni.IndexSlice) {
+                return self._recv_safe_g(e.target, graph_self, seen);
+            }
+        }
+        # chained container method: X.setdefault(k, []).append(v)
+        if isinstance(e, uni.FuncCall) {
+            t2 = getattr(e, 'target', None);
+            if isinstance(t2, uni.AtomTrailer)
+                and isinstance(getattr(t2, 'right', None), uni.Name)
+                and str(t2.right.value) in _CONTAINER_METHODS {
+                return self._recv_safe_g(t2.target, graph_self, seen);
+            }
+        }
+        return False;
+    }
+
+    def _local_fresh(self: EffectPass, name_node: uni.Name, seen: set) -> bool {
+        s = getattr(name_node, 'sym', None);
+        if s is None {
+            return False;
+        }
+        if id(s) in seen {
+            return True;   # cycle: every other def already being verified
+        }
+        seen.add(id(s));
+        defs = list(getattr(s, 'defn', []) or []);
+        if not defs {
+            return False;
+        }
+        for d in defs {
+            asg = _ancestor(d, (uni.Assignment, ));
+            if asg is None
+                or not any((t is d) for t in list(getattr(asg, 'target', []) or [])) {
+                return False;   # for-target / param / unknown def form
+            }
+            v = getattr(asg, 'value', None);
+            if isinstance(v, uni.Name) {
+                if not self._local_fresh(v, seen) {
+                    return False;
+                }
+                continue;
+            }
+            if not self._fresh_expr(v) {
+                return False;
+            }
+        }
+        return True;
+    }
+
+    def _fresh_expr(self: EffectPass, v: object) -> bool {
+        if isinstance(v, (
+            uni.ListVal, uni.SetVal, uni.DictVal, uni.TupleVal,
+            uni.ListCompr, uni.DictCompr, uni.EdgeRefTrailer
+        )) {
+            return True;
+        }
+        if isinstance(v, uni.BinaryExpr)
+            and str(getattr(getattr(v, 'op', None), 'value', '')) == '+' {
+            return self._fresh_expr(v.left) and self._fresh_expr(v.right);
+        }
+        if isinstance(v, uni.FuncCall) and isinstance(v.target, uni.Name)
+            and str(v.target.value) in _FRESH_CTORS {
+            return True;
+        }
+        return False;
+    }
+}
