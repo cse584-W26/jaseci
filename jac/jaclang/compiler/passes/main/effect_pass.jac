@@ -45,7 +45,8 @@ glob _KILL_TOKENS: tuple = ('spawn', 'disconnect', 'del', 'grant', 'revoke', 'de
 # read through the same access-checked runtime path), identity, and pure
 # python builtins over already-loaded values.
 glob _PURE_CALLS: tuple = (
-    'jobj', 'jobj_many', 'jclosure', 'jtopk', 'jid', 'isinstance', 'len',
+    'jobj', 'jobj_many', 'jclosure', 'jtopk', 'jroot', 'jroot_many',
+    'jid', 'isinstance', 'len',
     'range', 'list', 'set', 'dict', 'tuple', 'int', 'str', 'float', 'bool',
     'sorted', 'min', 'max', 'abs', 'sum', 'round', 'enumerate', 'zip',
     'cast', 'repr'

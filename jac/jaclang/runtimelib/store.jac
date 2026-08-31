@@ -162,6 +162,9 @@ obj PgStore(Store) {
     def ensure_mirror_endpoint(
         cls: type, edge_type: str, order_col: str, outbound: bool = False
     ) -> (str | None);
+    def ensure_root_column(
+        cls: type, edge_type: str, root_type: str
+    ) -> (str | None);
     def ensure_mirror_order_index(cls: type, order_col: str) -> bool;
     def ensure_topk_index(
         cls: type, src_field: str, ord_field: str, tie_field: str

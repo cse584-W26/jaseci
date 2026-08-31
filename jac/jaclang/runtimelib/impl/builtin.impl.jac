@@ -82,6 +82,10 @@ impl __getattr__(name: str) -> object {
         return _get_jclosure();
     } elif (name == 'jtopk') {
         return _get_jtopk();
+    } elif (name == 'jroot') {
+        return jroot;
+    } elif (name == 'jroot_many') {
+        return jroot_many;
     } elif (name == 'jref') {
         return _get_jref();
     } elif (name == 'grant') {
@@ -194,6 +198,18 @@ impl _get_jclosure -> Callable[..., any] {
 
 impl _get_jtopk -> Callable[..., any] {
     return _get_jac().get_topk_inbound;
+}
+
+
+impl jroot(item: any, edge_type: str, root_type: any) -> str {
+    # far end of the write-once parent chain (item #22); '' when no root
+    got = _get_jac().get_roots([item], edge_type, root_type);
+    return got[0] if got else '';
+}
+
+
+impl jroot_many(items: list, edge_type: str, root_type: any) -> list[str] {
+    return _get_jac().get_roots(list(items), edge_type, root_type);
 }
 
 impl _get_jref -> Callable[..., any] {

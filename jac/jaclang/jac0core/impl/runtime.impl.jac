@@ -886,6 +886,110 @@ impl JacPersistence.get_topk_inbound(
     return [str(r[0]).replace('-', '') for r in rows];
 }
 
+impl JacPersistence.get_roots(
+    items: list, edge_type: str, root_type: (str | type)
+) -> list[str] {
+    # Item #22: the far end of a write-once parent chain `x -[E]-> ... -> R`
+    # (SNB is2: a Comment's root Post), for a BATCH of chased nodes, without
+    # the app carrying a hand-maintained denormalised field. Fast arm: the
+    # store-grown `root_of_<E>` mirror column (ensure_root_column proves the
+    # shape - cardinality-1, directed, chain closed over {chased, R} - a
+    # trigger maintains it at edge-insert time, and any re-parent/delete
+    # poisons the claim through jac_ep_violation). Slow arm, always correct:
+    # ONE depth-capped recursive CTE over the anchors edge rows for whatever
+    # the fast arm did not answer (NULL rows, poisoned claims, plain-string
+    # ids whose archetype is unknown).
+    #
+    # Same ACL stance as get_closure: this returns IDS ONLY; the caller
+    # hydrates through the ordinary jobj path, where read-access is checked.
+    # Returns hex jids aligned with `items`; '' when the chain reaches no R.
+    ctx = JacRuntimeInterface.get_context();
+    mem = ctx.mem;
+    store = getattr(mem, 'store', None);
+    if store is None {
+        raise RuntimeError('get_roots: session has no store');
+    }
+    if not items {
+        return [];
+    }
+    rt_name = (
+        root_type if isinstance(root_type, str)
+        else str(getattr(root_type, '__name__', ''))
+    );
+    ids: list = [];
+    by_cls: dict = {};
+    for it in items {
+        if isinstance(it, str) {
+            ids.append(str(UUID(it)));
+        } else {
+            uid = str(UUID(JacRuntimeInterface.object_ref(it)));
+            ids.append(uid);
+            by_cls.setdefault(type(it), []).append(uid);
+        }
+    }
+    mem.read_barrier();
+    roots: dict = {};
+    unresolved: set = set(ids);
+    for (cls, cids) in by_cls.items() {
+        col = None;
+        if hasattr(store, 'ensure_root_column') {
+            col = store.ensure_root_column(cls, edge_type, rt_name);
+        }
+        if not col {
+            # The caller's own txn usually holds ACCESS SHARE on this mirror
+            # already (jtopk read it moments before), so the side-connection
+            # ADD COLUMN can NEVER win its ACCESS EXCLUSIVE mid-request -
+            # unlike the endpoint column, whose ensure fires before any
+            # mirror read. Rebuild after THIS request's txn closes instead:
+            # the on_commit hook runs once the snapshot is released, the DDL
+            # is idempotent, and the ensure's own memo bounds the retries.
+            if hasattr(store, 'ensure_root_column') and hasattr(mem, 'on_commit') {
+                def _grow_root(st: object = store, gc: object = cls) -> None {
+                    st.ensure_root_column(gc, edge_type, rt_name);
+                }
+                mem.on_commit(_grow_root);
+            }
+            continue;
+        }
+        info = store.mirror_info(cls);
+        if not info {
+            continue;
+        }
+        rows = store.rows(
+            'SELECT m.id, m.' + col + ' FROM ' + info['table'] + ' m'
+                + ' WHERE m.id = ANY(CAST(:ids AS uuid[]))'
+                + ' AND m.' + col + ' IS NOT NULL'
+                + ' AND NOT EXISTS (SELECT 1 FROM jac_ep_violation v'
+                + ' WHERE v.tbl = :tb AND v.edge_type = :et)',
+            {'ids': cids, 'tb': str(info['table']), 'et': edge_type}
+        );
+        for r in rows {
+            rid = str(r[0]);
+            roots[rid] = str(r[1]).replace('-', '');
+            unresolved.discard(rid);
+        }
+    }
+    if unresolved {
+        rows = store.rows(
+            'WITH RECURSIVE chase(sid, cur, ctype, d) AS ('
+                + 'SELECT e.src, e.dst, e.dst_type, 1 FROM anchors e'
+                + " WHERE e.kind = 'EdgeAnchor' AND e.arch_type = :et"
+                + ' AND e.src = ANY(CAST(:ids AS uuid[]))'
+                + ' UNION ALL '
+                + 'SELECT c.sid, e.dst, e.dst_type, c.d + 1 FROM chase c'
+                + " JOIN anchors e ON e.kind = 'EdgeAnchor'"
+                + ' AND e.arch_type = :et AND e.src = c.cur'
+                + ' WHERE c.ctype <> :rt AND c.d < 64) '
+                + 'SELECT c.sid, c.cur FROM chase c WHERE c.ctype = :rt',
+            {'et': edge_type, 'ids': sorted(unresolved), 'rt': rt_name}
+        );
+        for r in rows {
+            roots[str(r[0])] = str(r[1]).replace('-', '');
+        }
+    }
+    return [roots.get(i, '') for i in ids];
+}
+
 impl JacPersistence.aget_object(id: str) -> (Archetype | None) {
     if (id == 'root') {
         return JacRuntimeInterface.get_context().user_root.archetype;

@@ -2047,6 +2047,256 @@ def _ensure_ep_outbound(
 }
 
 
+# --- R8 write-once parent-chase root column (item #22) -----------------------
+# A walker that climbs `cur -[E]-> parent` until it reaches a node of type R
+# (SNB is2: Comment -ReplyOf-> ... -> Post) pays one round trip per hop. The
+# chain is write-once in every workload that has one (SNB never re-parents a
+# message), so the answer is a constant of the row: materialise `root_of_<E>`
+# on the chased type's mirror, computed at edge-INSERT time from the PARENT'S
+# already-stored root (O(1) per insert), backfilled once by a recursive CTE.
+#
+# Soundness WITHOUT trusting write-once: a non-NULL value is only ever written
+# by (a) the backfill (correct at build) or (b) the insert trigger reading the
+# parent's committed root - so it can only go stale if an E edge is RE-PARENTED
+# or DELETED, and both of those poison the claim via jac_ep_violation (same
+# table + reader-gate idiom as the endpoint column above; descendants are
+# never recomputed, the whole (mirror, E) simply drops to the chase arm).
+# A NULL value promises nothing: readers resolve those rows through the
+# always-correct recursive-CTE fallback. So write-once is the OPTIMIZATION
+# precondition (it keeps the fast arm populated), never a safety one.
+#
+# Flush-order hazard the trigger absorbs: a chain a->b->c created in ONE
+# flush can insert c's edge before b's root exists - c then gets NULL and
+# costs a chase at read time, which is slow-correct, not wrong.
+def _ensure_root_column(
+    store: Any, cls: type, edge_type: str, rt_name: str
+) -> (str | None) {
+    st = _mirror_state.get(cls);
+    if not st or not st['ok'] {
+        return None;
+    }
+    ct = getattr(cls, '__name__', '');
+    what = f"root column for {ct} -[{edge_type}]->* {rt_name}";
+    if (
+        not edge_type
+        or not rt_name
+        or not _bare_ident(edge_type)
+        or not _bare_ident(rt_name)
+        or not _bare_ident(ct)
+    ) {
+        _memo_log_once(
+            what,
+            'refused (a root claim needs bare-identifier edge type, chased'
+                ' type and root type)'
+        );
+        return None;
+    }
+    col = 'root_of_' + _sanitize_ident(edge_type);
+    claims = st.setdefault('rootcol', {});
+    if claims.get(edge_type) {
+        return col;
+    }
+    rf = st.setdefault('rootcol_refuse', {});
+    if _memo_refused(rf.get(edge_type)) {
+        return None;
+    }
+    table = st['table'];
+    _memo_attempt(rf.setdefault(edge_type, {}));
+    ddl_conn: Any = None;
+    short = False;
+    fname = table + '_root_' + _sanitize_ident(edge_type);
+    trig = fname + '_iu';
+    try {
+        store._ensure_ready();
+        ddl_conn = store._connect();
+        ddl_conn.run("SET lock_timeout = '250ms'");
+        # durable-claim shortcut, exactly the endpoint column's: column +
+        # trigger existing IS the record that the probes held and every write
+        # since has been enforced
+        if edge_type not in st.get('rootcol_full', set()) {
+            have = ddl_conn.run(
+                'SELECT (SELECT count(*) FROM pg_attribute a WHERE a.attrelid'
+                    + " = to_regclass('" + table + "') AND a.attname = '" + col
+                    + "' AND NOT a.attisdropped) + (SELECT count(*) FROM"
+                    + " pg_trigger t WHERE t.tgname = '" + trig
+                    + "' AND NOT t.tgisinternal)"
+            );
+            short = bool(have) and int(have[0][0]) == 2;
+        }
+        proven = st.setdefault('rootcol_proven', set());
+        if not short and edge_type not in proven {
+            # C1 cardinality: one outbound E per chased node, or the chase
+            # itself is ambiguous and no scalar column can hold the answer
+            multi = ddl_conn.run(
+                "SELECT 1 FROM anchors WHERE kind = 'EdgeAnchor' AND arch_type = '"
+                    + edge_type + "' AND src_type = '" + ct + "' "
+                    + 'AND src IS NOT NULL '
+                    + 'GROUP BY src HAVING count(*) > 1 LIMIT 1'
+            );
+            if multi {
+                rf[edge_type] = _memo_refuse(
+                    rf.get(edge_type) or {}, what,
+                    'C1 cardinality: a ' + ct + ' already has two outbound '
+                        + edge_type + ' edges',
+                    False
+                );
+                return None;
+            }
+            # C2: undirected E is traversable both ways - not a parent chain
+            bad = ddl_conn.run(
+                "SELECT 1 FROM anchors WHERE kind = 'EdgeAnchor' AND undirected "
+                    + "AND arch_type = '" + edge_type + "' LIMIT 1"
+            );
+            if bad {
+                rf[edge_type] = _memo_refuse(
+                    rf.get(edge_type) or {}, what,
+                    'C2: ' + edge_type + ' has undirected rows', False
+                );
+                return None;
+            }
+            # C3: the chain must be closed over {chased, root} - an E edge
+            # landing on any OTHER type makes "the chain's root" undefined
+            stray = ddl_conn.run(
+                "SELECT 1 FROM anchors WHERE kind = 'EdgeAnchor' AND arch_type = '"
+                    + edge_type + "' AND src_type = '" + ct + "' "
+                    + "AND dst_type NOT IN ('" + ct + "', '" + rt_name + "') "
+                    + 'LIMIT 1'
+            );
+            if stray {
+                rf[edge_type] = _memo_refuse(
+                    rf.get(edge_type) or {}, what,
+                    'C3: an ' + edge_type + ' edge leaves the {' + ct + ', '
+                        + rt_name + '} chain',
+                    False
+                );
+                return None;
+            }
+            proven.add(edge_type);
+        }
+        ddl_conn.run(
+            'CREATE TABLE IF NOT EXISTS jac_ep_violation ('
+                + 'tbl text NOT NULL, edge_type text NOT NULL, '
+                + 'src uuid NOT NULL, '
+                + 'noticed_at timestamptz NOT NULL DEFAULT now(), '
+                + 'PRIMARY KEY (tbl, edge_type, src))'
+        );
+        if not short {
+            ddl_conn.run(
+                'ALTER TABLE ' + table + ' ADD COLUMN IF NOT EXISTS ' + col
+                    + ' uuid'
+            );
+            # INSERT (and the runtime's idempotent edge re-upsert, which
+            # arrives as an UPDATE with src/dst unchanged) recomputes the one
+            # affected row from the parent's stored root. A REAL re-parent or
+            # a DELETE would stale every descendant transitively, so it
+            # poisons the claim instead of pretending to fix it.
+            ddl_conn.run(
+                'CREATE OR REPLACE FUNCTION ' + fname
+                    + '() RETURNS trigger AS $jacroot$ '
+                    + 'DECLARE r uuid; BEGIN '
+                    + "IF to_regclass('" + table
+                    + "') IS NULL THEN RETURN COALESCE(NEW, OLD); END IF; "
+                    + "IF TG_OP = 'DELETE' OR (TG_OP = 'UPDATE' AND "
+                    + '(OLD.src IS DISTINCT FROM NEW.src OR '
+                    + 'OLD.dst IS DISTINCT FROM NEW.dst)) THEN '
+                    + 'INSERT INTO jac_ep_violation (tbl, edge_type, src) '
+                    + "VALUES ('" + table + "', '" + edge_type + "', OLD.src) "
+                    + 'ON CONFLICT DO NOTHING; '
+                    + "RAISE WARNING 'jac: " + table + '.' + col + ' chain '
+                    + 'edge mutated at % (%); root column disabled for this '
+                    + "mirror', OLD.src, TG_OP; "
+                    + 'RETURN COALESCE(NEW, OLD); END IF; '
+                    + "IF NEW.dst_type = '" + rt_name + "' THEN r := NEW.dst; "
+                    + 'ELSE SELECT ' + col + ' INTO r FROM ' + table
+                    + ' WHERE id = NEW.dst; END IF; '
+                    + 'IF r IS NULL THEN RETURN NEW; END IF; '
+                    + 'INSERT INTO ' + table + ' (id, ' + col + ') '
+                    + 'VALUES (NEW.src, r) ON CONFLICT (id) DO UPDATE '
+                    + 'SET ' + col + ' = EXCLUDED.' + col + '; '
+                    + 'RETURN NEW; END $jacroot$ LANGUAGE plpgsql'
+            );
+            ddl_conn.run(
+                'CREATE OR REPLACE TRIGGER ' + trig
+                    + ' AFTER INSERT OR UPDATE ON anchors FOR EACH ROW '
+                    + "WHEN (NEW.kind = 'EdgeAnchor' AND NEW.arch_type = '"
+                    + edge_type + "' AND NEW.src_type = '" + ct + "') "
+                    + 'EXECUTE FUNCTION ' + fname + '()'
+            );
+            ddl_conn.run(
+                'CREATE OR REPLACE TRIGGER ' + fname + '_d '
+                    + 'AFTER DELETE ON anchors FOR EACH ROW '
+                    + "WHEN (OLD.kind = 'EdgeAnchor' AND OLD.arch_type = '"
+                    + edge_type + "' AND OLD.src_type = '" + ct + "') "
+                    + 'EXECUTE FUNCTION ' + fname + '()'
+            );
+            # triggers first, THEN backfill (concurrent writes covered by the
+            # trigger; re-setting the same value is idempotent). ONE recursive
+            # CTE resolves every chased row's root; depth-capped so a cyclic
+            # chain (impossible in a forest, cheap to be safe against) leaves
+            # NULLs - the chase arm - rather than spinning.
+            ddl_conn.run(
+                'WITH RECURSIVE chase(sid, cur, ctype, d) AS ('
+                    + 'SELECT e.src, e.dst, e.dst_type, 1 FROM anchors e '
+                    + "WHERE e.kind = 'EdgeAnchor' AND e.arch_type = '"
+                    + edge_type + "' AND e.src_type = '" + ct + "' "
+                    + 'AND e.src IS NOT NULL AND e.dst IS NOT NULL '
+                    + 'UNION ALL '
+                    + 'SELECT c.sid, e.dst, e.dst_type, c.d + 1 FROM chase c '
+                    + "JOIN anchors e ON e.kind = 'EdgeAnchor' "
+                    + "AND e.arch_type = '" + edge_type + "' "
+                    + 'AND e.src = c.cur '
+                    + "WHERE c.ctype <> '" + rt_name + "' AND c.d < 64) "
+                    + 'UPDATE ' + table + ' m SET ' + col + ' = c.cur '
+                    + "FROM chase c WHERE c.ctype = '" + rt_name + "' "
+                    + 'AND m.id = c.sid AND m.' + col
+                    + ' IS DISTINCT FROM c.cur'
+            );
+            ddl_conn.run('ANALYZE ' + table);
+        }
+        # completeness sanity from the caller's own snapshot, depth-1 subset:
+        # every DIRECT chased->root edge must be reflected. Deeper rows may
+        # legitimately be NULL (flush-order, depth cap) - readers chase those.
+        incomplete = store._run(
+            "SELECT 1 FROM anchors e JOIN " + table + ' m ON m.id = e.src '
+                + "WHERE e.kind = 'EdgeAnchor' AND e.arch_type = :et "
+                + "AND e.src_type = :ct AND e.dst_type = :rt "
+                + 'AND m.' + col + ' IS DISTINCT FROM e.dst LIMIT 1',
+            {'et': edge_type, 'ct': ct, 'rt': rt_name}
+        );
+        if incomplete {
+            if short {
+                st.setdefault('rootcol_full', set()).add(edge_type);
+            }
+            return None;
+        }
+        claims[edge_type] = True;
+        rf.pop(edge_type, None);
+        st.setdefault('rootcol_full', set()).discard(edge_type);
+        _memo_track(['jac_ep_violation']);
+        return col;
+    } except Exception as e {
+        rf[edge_type] = _memo_refuse(
+            rf.setdefault(edge_type, {}), what, str(e), True
+        );
+        if '55P03' in str(e) {
+            # mid-request lock timeout: the CALLER's own snapshot holds
+            # ACCESS SHARE on this mirror (jroot runs after jtopk read it),
+            # so this attempt could never win. get_roots registers a
+            # post-commit retry that runs seconds from now with the lock
+            # released - don't cool that retry down.
+            rf[edge_type]['retry_at'] = 0.0;
+        }
+        return None;
+    } finally {
+        if ddl_conn is not None {
+            try {
+                ddl_conn.close();
+            } except Exception { }
+        }
+    }
+}
+
+
 # --- R5 endpoint column ------------------------------------------------------
 # A stream chain's final hop is `<prev node> -[E]-> <mirrored node>`, and the
 # generic form has to join `anchors` to walk it: for a 50-source page that is
@@ -2079,6 +2329,13 @@ def _ensure_ep_outbound(
 # adjacency index rather than a column; that, and having the compiler plan
 # which mirrors get one instead of the first stream query claiming it
 # lazily, are the upgrade path. Keep this flag-gated until then.
+impl PgStore.ensure_root_column(
+    cls: type, edge_type: str, root_type: str
+) -> (str | None) {
+    return _ensure_root_column(self, cls, edge_type, root_type);
+}
+
+
 impl PgStore.ensure_mirror_endpoint(
     cls: type, edge_type: str, order_col: str, outbound: bool = False
 ) -> (str | None) {

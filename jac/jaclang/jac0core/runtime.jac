@@ -208,6 +208,9 @@ class JacPersistence {
         order_field: str, max_value: int, limit: int, src_field: str = '',
         tie_desc: bool = False
     ) -> list[str];
+    static def get_roots(
+        items: list, edge_type: str, root_type: (str | type)
+    ) -> list[str];
     static async def aget_object(id: str) -> (Archetype | None);
     static def object_ref(`obj: Archetype) -> str;
     static def save(`obj: (Archetype | Anchor)) -> None;

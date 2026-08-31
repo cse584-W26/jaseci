@@ -30,6 +30,10 @@ def _get_jclosure -> Callable[..., any];
 
 def _get_jtopk -> Callable[..., any];
 
+def jroot(item: any, edge_type: str, root_type: any) -> str;
+
+def jroot_many(items: list, edge_type: str, root_type: any) -> list[str];
+
 def jref(id_or_obj: any) -> any;
 
 def _get_jref -> Callable[..., any];
@@ -101,6 +105,8 @@ glob __all__ = [
          'jobj_many',
          'jclosure',
          'jtopk',
+         'jroot',
+         'jroot_many',
          'jref',
          'grant',
          'revoke',
