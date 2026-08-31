@@ -90,12 +90,12 @@ glob RO_WALKERS: frozenset = _parse_ro_walkers();
 
 
 def request_read_only -> bool {
-    # True only when this request was stamped read-only (walker name listed
-    # in JAC_RO_WALKERS at spawn time). No global read-only mode on this
-    # runtime. Outside a request context: False (treated as a write context).
-    if not RO_WALKERS {
-        return False;
-    }
+    # True only when this request was stamped read-only at spawn time -
+    # either the walker's compiler-proved __jac_readonly__ stamp (EffectPass,
+    # #26) or the JAC_RO_WALKERS env override list. No global read-only mode
+    # on this runtime. Outside a request context: False (write context).
+    # NOTE: no RO_WALKERS short-circuit here any more - the stamp path is
+    # live even when the env list is empty.
     try {
         import from jaclang { JacRuntimeInterface as Jac }
         return bool(Jac.get_context().request_read_only);
