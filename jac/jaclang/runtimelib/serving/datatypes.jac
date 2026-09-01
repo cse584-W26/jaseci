@@ -21,6 +21,26 @@ obj WebSocketDisconnect(Exception) {
     }
 }
 
+
+glob _orjson_memo: dict = {};
+
+
+def _orjson_or_none() -> any {
+    # hoisted once-per-process orjson resolution (the per-call import paid
+    # the jac import hook's full module resolution on every response -
+    # session0901 scout finding, same fix as serializer.impl.jac)
+    if 'm' not in _orjson_memo {
+        try {
+            import orjson;
+            _orjson_memo['m'] = orjson;
+        } except ImportError {
+            _orjson_memo['m'] = None;
+        }
+    }
+    return _orjson_memo['m'];
+}
+
+
 class State {}
 
 obj Headers {
@@ -282,12 +302,11 @@ class JSONResponse(Response) {
         # orjson: C-speed single-pass encode (UUID/datetime handled by the
         # str() default, matching stdlib). Falls back to stdlib json if the
         # optional dependency is absent, keeping the zero-dep story.
-        try {
-            import orjson;
-            return orjson.dumps(self.content, default=_json_default);
-        } except ImportError {
-            return dumps(self.content, default=_json_default).encode('utf-8');
+        _oj = _orjson_or_none();
+        if _oj is not None {
+            return _oj.dumps(self.content, default=_json_default);
         }
+        return dumps(self.content, default=_json_default).encode('utf-8');
     }
 }
 

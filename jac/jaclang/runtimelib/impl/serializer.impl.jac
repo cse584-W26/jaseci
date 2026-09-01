@@ -107,16 +107,16 @@ impl Serializer._serialize_value(
             and all(
                 type(v) is StreamNode and '_sn_frag' in v.__dict__ for v in val
             ) {
-            try {
-                import orjson;
-                return orjson.Fragment(
+            _oj2 = _orjson_mod();
+            if _oj2 is not None {
+                return _oj2.Fragment(
                     b'['
                         + b','.join(
                             v.__dict__['_sn_frag'].encode('utf-8') for v in val
                         )
                         + b']'
                 );
-            } except ImportError { }
+            }
         }
         return [
             Serializer._serialize_value(v, include_type, api_mode, ref_mode, _seen)
@@ -194,13 +194,12 @@ impl Serializer._serialize_value(
         frag_txt = val.__dict__.get('_sn_frag');
         if frag_txt is not None and api_mode and not include_type
             and not ref_mode and _seen is None {
-            try {
-                import orjson;
-                return orjson.Fragment(frag_txt.encode('utf-8'));
-            } except ImportError {
-                import json as _json;
-                return _json.loads(frag_txt);
+            _oj = _orjson_mod();
+            if _oj is not None {
+                return _oj.Fragment(frag_txt.encode('utf-8'));
             }
+            import json as _json;
+            return _json.loads(frag_txt);
         }
         # Proof-gated stream fragment: identity from the slim anchor, field
         # values straight from stored props. Scalars pass through; anything
@@ -996,7 +995,26 @@ impl Serializer._deserialize_access(data: object) -> Access {
 
 glob _trusted_plan_cache: dict = {},
      _frag_cache: dict = {},
-     _frag_agg_state: dict = {};
+     _frag_agg_state: dict = {},
+     _orjson_state: dict = {};
+
+
+def _orjson_mod() -> any {
+    # Hoisted orjson resolution (session0901 py-spy scout): the per-call
+    # `import orjson` inside the serialize hot path paid the jac import
+    # hook's FULL module resolution on every serialized node - 51/60
+    # non-idle profile samples were find_spec/path-stat machinery, not
+    # serialization. Resolve once, memo forever; None = orjson absent.
+    if 'm' not in _orjson_state {
+        try {
+            import orjson;
+            _orjson_state['m'] = orjson;
+        } except ImportError {
+            _orjson_state['m'] = None;
+        }
+    }
+    return _orjson_state['m'];
+}
 
 
 def _frag_agg_enabled() -> bool {
