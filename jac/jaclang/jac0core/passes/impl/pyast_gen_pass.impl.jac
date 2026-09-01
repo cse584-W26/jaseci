@@ -2907,6 +2907,128 @@ impl PyastGenPass.exit_yield_expr(nd: uni.YieldExpr) -> None {
 }
 
 impl PyastGenPass.exit_visit_stmt(nd: uni.VisitStmt) -> None {
+    lower = getattr(nd, 'stream_lower', None);
+    if lower {
+        # Item #25: StreamProofPass proved this read-only walker's visit is
+        # observationally a loop (tail position, accumulate-only entry
+        # abilities, no per-node exits) - emit the loop, dispatching the
+        # walker's own entry abilities by isinstance in declaration order,
+        # exactly the engine's per-node dispatch. The chain expression then
+        # sits in ordinary expression position, so the zero-materialization
+        # stream path applies to the visit form with no runtime changes.
+        dispatch_body: list = [];
+        for entry in lower {
+            (tname, aname) = (str(entry[0]), str(entry[1]));
+            # match materialized archetypes by isinstance AND stream
+            # stand-ins by their anchor's _sn_arch_type - under the stream
+            # flags the chain yields StreamNodes, which are not instances
+            # of the archetype class
+            iso_test = self.sync(
+                ast3.Call(
+                    func=self.sync(
+                        ast3.Name(id='isinstance', ctx=ast3.Load())
+                    ),
+                    args=[
+                        self.sync(ast3.Name(id='_jac_sv', ctx=ast3.Load())),
+                        self.sync(ast3.Name(id=tname, ctx=ast3.Load()))
+                    ],
+                    keywords=[]
+                )
+            );
+            sn_test = self.sync(
+                ast3.Compare(
+                    left=self.sync(
+                        ast3.Call(
+                            func=self.sync(
+                                ast3.Name(id='getattr', ctx=ast3.Load())
+                            ),
+                            args=[
+                                self.sync(
+                                    ast3.Call(
+                                        func=self.sync(
+                                            ast3.Name(id='getattr', ctx=ast3.Load())
+                                        ),
+                                        args=[
+                                            self.sync(
+                                                ast3.Name(
+                                                    id='_jac_sv', ctx=ast3.Load()
+                                                )
+                                            ),
+                                            self.sync(
+                                                ast3.Constant(value='__jac__')
+                                            ),
+                                            self.sync(ast3.Constant(value=None))
+                                        ],
+                                        keywords=[]
+                                    )
+                                ),
+                                self.sync(ast3.Constant(value='_sn_arch_type')),
+                                self.sync(ast3.Constant(value=None))
+                            ],
+                            keywords=[]
+                        )
+                    ),
+                    ops=[ast3.Eq()],
+                    comparators=[self.sync(ast3.Constant(value=tname))]
+                )
+            );
+            dispatch_body.append(
+                self.sync(
+                    ast3.If(
+                        `test=self.sync(
+                            ast3.BoolOp(
+                                op=ast3.Or(),
+                                values=[iso_test, sn_test]
+                            )
+                        ),
+                        body=[
+                            self.sync(
+                                ast3.Expr(
+                                    value=self.sync(
+                                        ast3.Call(
+                                            func=self.sync(
+                                                ast3.Attribute(
+                                                    value=self.sync(
+                                                        ast3.Name(
+                                                            id='self',
+                                                            ctx=ast3.Load()
+                                                        )
+                                                    ),
+                                                    attr=aname,
+                                                    ctx=ast3.Load()
+                                                )
+                                            ),
+                                            args=[
+                                                self.sync(
+                                                    ast3.Name(
+                                                        id='_jac_sv',
+                                                        ctx=ast3.Load()
+                                                    )
+                                                )
+                                            ],
+                                            keywords=[]
+                                        )
+                                    )
+                                )
+                            )
+                        ],
+                        orelse=[]
+                    )
+                )
+            );
+        }
+        nd.gen.py_ast = [
+            self.sync(
+                ast3.For(
+                    target=self.sync(ast3.Name(id='_jac_sv', ctx=ast3.Store())),
+                    iter=cast(ast3.expr, self.py_ast_val(nd.target)),
+                    body=cast(`list[ast3.stmt], dispatch_body),
+                    orelse=[]
+                )
+            )
+        ];
+        return;
+    }
     loc = self.sync(
         ast3.Name(id='self', ctx=ast3.Load())
             if nd.from_walker
@@ -4016,11 +4138,18 @@ impl PyastGenPass.exit_func_call(nd: uni.FuncCall) -> None {
         }
         func = self.py_ast_val(nd.target);
         (args, keywords) = self.gen_call_args(nd);
+        call_args = [cast(ast3.expr, arg) for arg in args];
+        if (climit := getattr(nd, 'closure_limit', None)) is not None {
+            # item #24: EffectPass proved the walker's sort+slice makes this
+            # a sound sufficiency threshold for the jclosure call - append
+            # the limit the app no longer spells
+            call_args.append(self.sync(ast3.Constant(value=int(climit))));
+        }
         nd.gen.py_ast = [
             self.sync(
                 ast3.Call(
                     func=cast(ast3.expr, func),
-                    args=[cast(ast3.expr, arg) for arg in args],
+                    args=call_args,
                     keywords=keywords
                 )
             )
@@ -4205,7 +4334,14 @@ impl PyastGenPass.exit_edge_ref_trailer(nd: uni.EdgeRefTrailer) -> None {
     origin = None;
     cur = nd.chain[0];
     chomp = [*nd.chain[1:]];
-    from_visit = bool(isinstance(nd.parent, uni.VisitStmt));
+    # Item #25: a VisitStmt StreamProofPass stamped for lowering iterates
+    # this chain as a plain expression read (the loop replaces the engine),
+    # so it must compile as one - the from_visit form materializes and is
+    # refused by the stream planner.
+    from_visit = bool(
+        isinstance(nd.parent, uni.VisitStmt)
+        and getattr(nd.parent, 'stream_lower', None) is None
+    );
     if not isinstance(cur, uni.EdgeOpRef) {
         origin = self.py_ast_val(cur);
         cur = cast(uni.EdgeOpRef, chomp.pop(0));

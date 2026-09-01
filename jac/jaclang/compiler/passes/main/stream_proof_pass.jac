@@ -24,6 +24,14 @@ import from jaclang.jac0core.passes.uni_pass { UniPass }
 
 glob _JID_NAMES: tuple = ('jid', );
 glob _KILL_TOKENS: tuple = ('visit', 'spawn', 'disconnect', 'del');
+# Item #25: a walker EffectPass has already PROVED read-only may keep its
+# visits - each eligible VisitStmt is lowered by PyastGenPass to a plain
+# for-loop that dispatches the walker's own entry abilities by isinstance,
+# which makes the visit form exactly the chain form this pass already
+# audits. 'visit' therefore stops being a kill token for those walkers;
+# spawn/disconnect/del still kill (they cannot appear in an RO walker
+# anyway, but the belt stays).
+glob _KILL_TOKENS_VISIT_OK: tuple = ('spawn', 'disconnect', 'del');
 
 
 def _ancestor(n: object, kinds: tuple, stop: object = None) -> (object | None) {
@@ -117,14 +125,26 @@ class StreamProofPass(UniPass) {
         if nd.arch_type.name != 'KW_WALKER' {
             return;
         }
-        fields = self._audit_walker(nd);
+        self._pending_visit_stamps: list = [];
+        try {
+            fields = self._audit_walker(nd);
+        } except Exception {
+            fields = None;
+        }
         import os;
         if os.environ.get('JAC_STREAM_DEBUG') {
             print('STREAMPROOF', str(nd.name), fields);
         }
         if fields is not None {
             nd.stream_fields = tuple(sorted(fields));
+            # visit lowering only on a fully approved walker: the loop form
+            # is what the audit vouched for, so stamp the visits together
+            # with the fields, never separately
+            for (vs, dispatch) in self._pending_visit_stamps {
+                vs.stream_lower = tuple(dispatch);
+            }
         }
+        self._pending_visit_stamps = [];
     }
 
     def _audit_walker(
@@ -134,23 +154,62 @@ class StreamProofPass(UniPass) {
         if not abilities {
             return None;
         }
+        # Item #25: visits are admissible ONLY under EffectPass's read-only
+        # proof (schedule runs it first); everything the loop form could
+        # observe is then audited below exactly like chain elements.
+        visit_mode = bool(getattr(w, 'effect_readonly', False));
+        visits = w.get_all_sub_nodes(uni.VisitStmt);
         # cheap walker-wide kills first: any traversal/topology mutation
         # anywhere means chain elements can be arbitrarily observed
+        kill_toks = _KILL_TOKENS_VISIT_OK if (visit_mode and visits) else _KILL_TOKENS;
         for tok in w.get_all_sub_nodes(uni.Token) {
-            if str(getattr(tok, 'value', '')) in _KILL_TOKENS {
+            if str(getattr(tok, 'value', '')) in kill_toks {
                 return None;
             }
         }
-        if w.get_all_sub_nodes(uni.VisitStmt)
-            or w.get_all_sub_nodes(uni.DisconnectOp)
+        if w.get_all_sub_nodes(uni.DisconnectOp)
             or w.get_all_sub_nodes(uni.ConnectOp) {
             return None;
         }
+        elem_abilities: set = set();
+        if visits {
+            if not visit_mode {
+                return None;
+            }
+            dispatch = self._visit_dispatch(w, abilities, elem_abilities);
+            if dispatch is None {
+                return None;
+            }
+            for vs in visits {
+                if not self._visit_ok(vs) {
+                    return None;
+                }
+            }
+            for vs in visits {
+                self._pending_visit_stamps.append((vs, dispatch));
+            }
+        }
+        # item #25: `self.<field>` references have no linked symbol on the
+        # attribute Name, so build the walker-wide use index by shape once;
+        # _audit_field_uses audits a field's every reference on first taint.
+        self._field_refs = {};
+        self._field_ok = set();
+        for at in w.get_all_sub_nodes(uni.AtomTrailer) {
+            if getattr(at, 'is_attr', False)
+                and isinstance(getattr(at, 'right', None), uni.Name)
+                and isinstance(at.target, uni.SpecialVarRef)
+                and str(getattr(at.target, 'sym_name', '')) == 'self' {
+                self._field_refs.setdefault(str(at.right.value), []).append(at);
+            }
+        }
         fields: set = set();
         pipe: dict = {};
-        found_chain = False;
+        found_chain = bool(visits);
         for ab in abilities {
-            got = self._audit_ability(ab, fields, pipe);
+            got = self._audit_ability(
+                ab, fields, pipe,
+                bool(visits), id(ab) in elem_abilities
+            );
             if got is None {
                 return None;
             }
@@ -176,11 +235,119 @@ class StreamProofPass(UniPass) {
         return fields;
     }
 
+    def _visit_dispatch(
+        self: StreamProofPass, w: uni.Archetype, abilities: list, elem_abilities: set
+    ) -> (list | None) {
+        # The loop form dispatches the walker's own entry abilities by
+        # isinstance, in declaration order - the same per-node dispatch the
+        # engine performs. Provable only for the simple shape: every entry
+        # ability tagged with ONE plain type name, one ability per type, no
+        # non-Root exit abilities (they would fire per visited node), and
+        # nested visits only inside Root-tagged abilities (a visit inside a
+        # per-node ability would turn the engine's BFS into this form's DFS
+        # and reorder tie-broken results).
+        dispatch: list = [];
+        seen_types: set = set();
+        for ab in abilities {
+            sig = getattr(ab, 'signature', None);
+            if not isinstance(sig, uni.EventSignature) {
+                continue;   # plain method: never engine-dispatched
+            }
+            ev = str(getattr(getattr(sig, 'event', None), 'name', ''));
+            tag = getattr(sig, 'arch_tag_info', None);
+            tname = '';
+            if isinstance(tag, uni.Name) {
+                tname = str(getattr(tag, 'sym_name', '') or tag.value);
+            }
+            nr = getattr(ab, 'name_ref', None);
+            aname = str(getattr(nr, 'sym_name', '')) if nr is not None else '';
+            if not tname or not aname {
+                return None;
+            }
+            if ev == 'KW_EXIT' {
+                if tname != 'Root' {
+                    return None;
+                }
+                continue;   # Root exit stays engine-driven at spawn end
+            }
+            if ev != 'KW_ENTRY' {
+                return None;
+            }
+            if tname in seen_types {
+                return None;
+            }
+            seen_types.add(tname);
+            if tname != 'Root' {
+                if ab.get_all_sub_nodes(uni.VisitStmt) {
+                    return None;
+                }
+                elem_abilities.add(id(ab));
+            }
+            dispatch.append((tname, aname));
+        }
+        if not dispatch {
+            return None;
+        }
+        return dispatch;
+    }
+
+    def _visit_ok(self: StreamProofPass, vs: uni.VisitStmt) -> bool {
+        # Only the plain tail-position `visit [expr];` form: inline loop
+        # execution is observationally identical to the engine's queue
+        # exactly when nothing runs after the visit but other visits -
+        # queued entry abilities would otherwise fire LATER than the loop.
+        if not getattr(vs, 'from_walker', False) {
+            return False;
+        }
+        if getattr(vs, 'insert_loc', None) is not None
+            or getattr(vs, 'else_body', None) is not None {
+            return False;
+        }
+        c: object = vs;
+        while True {
+            p = getattr(c, 'parent', None);
+            if p is None {
+                return False;
+            }
+            stmts: list = [];
+            terminal = False;
+            if isinstance(p, uni.Ability) or isinstance(p, uni.ImplDef) {
+                body = getattr(p, 'body', None);
+                stmts = list(body) if isinstance(body, (list, tuple)) else [];
+                terminal = True;
+            } elif isinstance(p, (uni.IfStmt, uni.ElseStmt)) {
+                stmts = list(getattr(p, 'body', []) or []);
+            } else {
+                return False;
+            }
+            seen_c = False;
+            in_list = False;
+            for s in stmts {
+                if s is c {
+                    seen_c = True;
+                    in_list = True;
+                    continue;
+                }
+                if seen_c and not isinstance(s, uni.VisitStmt) {
+                    return False;
+                }
+            }
+            if not in_list {
+                return False;   # inside a condition / else branch / unknown slot
+            }
+            if terminal {
+                return True;
+            }
+            c = p;
+        }
+    }
+
     def _audit_ability(
-        self: StreamProofPass, ab: uni.Ability, fields: set, pipe: dict
+        self: StreamProofPass, ab: uni.Ability, fields: set, pipe: dict,
+        visit_mode: bool = False, here_elem: bool = False
     ) -> (bool | None) {
         chains = ab.get_all_sub_nodes(uni.EdgeRefTrailer);
-        if not chains {
+        if not chains and not here_elem {
             return False;
         }
         # taint seeding: sym -> 'list' | 'elem'
@@ -200,6 +367,12 @@ class StreamProofPass(UniPass) {
 
         try {
             for ch in chains {
+                if visit_mode and _ancestor(ch, (uni.VisitStmt, )) is not None {
+                    # the visit target itself: becomes the lowered loop's
+                    # iterable; its ELEMENTS are audited through the entry
+                    # ability's `here` taint below
+                    continue;
+                }
                 asg = _ancestor(ch, (uni.Assignment, ));
                 fr = _ancestor(ch, (uni.InForStmt, ));
                 rpt = _ancestor(ch, (uni.ReportStmt, ));
@@ -235,6 +408,20 @@ class StreamProofPass(UniPass) {
                 }
                 return None;
             }
+            if here_elem {
+                # item #25: in the lowered loop this ability's `here` IS a
+                # chain element. Special vars carry no linked symbol, so the
+                # refs themselves ARE the use list - audit each directly
+                # with the ordinary elem rules (reads recorded, escapes and
+                # mutations decline).
+                for sv in ab.get_all_sub_nodes(uni.SpecialVarRef) {
+                    if str(getattr(sv, 'sym_name', '')) == 'here' {
+                        if not self._use_ok(sv, 'elem', fields, taint_sym, pipe) {
+                            return None;
+                        }
+                    }
+                }
+            }
             # propagate + audit until stable
             while pending {
                 (s, kind) = pending.pop();
@@ -254,6 +441,26 @@ class StreamProofPass(UniPass) {
         return True;
     }
 
+    def _audit_field_uses(
+        self: StreamProofPass, fname: str, fields: set,
+        taint_sym: object, pipe: dict
+    ) -> bool {
+        # A walker field became a serialization-bound container (item #25:
+        # `self.feed.append(here)` in a lowered visit walker). Audit EVERY
+        # `self.<fname>` reference in the walker as a 'list' use - the
+        # trailer node plays the role a local Name plays for chain walkers.
+        if fname in self._field_ok {
+            return True;
+        }
+        self._field_ok.add(fname);   # pre-mark: the refs include the append
+        for tr in self._field_refs.get(fname, []) {
+            if not self._use_ok(tr, 'list', fields, taint_sym, pipe) {
+                return False;
+            }
+        }
+        return True;
+    }
+
     def _use_ok(
         self: StreamProofPass,
         use: object,
@@ -263,6 +470,19 @@ class StreamProofPass(UniPass) {
         pipe: dict
     ) -> bool {
         parent = getattr(use, 'parent', None);
+        # Item #25: a WALKER FIELD reference (`self.feed`) plays the role a
+        # local name plays for chain walkers - visit walkers accumulate into
+        # `has` state instead of locals. Promote the use to the whole
+        # `self.<field>` trailer and audit THAT in its context; every branch
+        # below then applies unchanged (append/sort/report/slice/loop...).
+        if isinstance(parent, uni.AtomTrailer)
+            and getattr(parent, 'right', None) is use
+            and getattr(parent, 'is_attr', False)
+            and isinstance(parent.target, uni.SpecialVarRef)
+            and str(getattr(parent.target, 'sym_name', '')) == 'self' {
+            use = parent;
+            parent = getattr(use, 'parent', None);
+        }
 
         # -- assignment: seeding defn (RHS stream expr) or alias LHS<-RHS
         asg = _ancestor(use, (uni.Assignment, ));
@@ -352,6 +572,12 @@ class StreamProofPass(UniPass) {
                     }
                     return True;
                 }
+                if _ancestor(parent, (uni.EdgeRefTrailer, )) is not None {
+                    # X[i] as the ORIGIN of a chain (`visit [mine[0]-->...]`):
+                    # the element is consumed by the chain's own audit, same
+                    # rule as a bare elem used as a chain origin
+                    return True;
+                }
                 return False;
             }
             # X.method(...) or t.field
@@ -409,6 +635,22 @@ class StreamProofPass(UniPass) {
                 and kind == 'elem' {
                 taint_sym(tgtc.target, 'list');
                 return True;
+            }
+            # self.<field>.append(t): same thing into WALKER state (item #25
+            # visit walkers) - taint the field's symbol; its other uses are
+            # promoted to the full trailer by the normalization above
+            if isinstance(tgtc, uni.AtomTrailer)
+                and isinstance(getattr(tgtc, 'right', None), uni.Name)
+                and str(tgtc.right.value) == 'append'
+                and isinstance(tgtc.target, uni.AtomTrailer)
+                and getattr(tgtc.target, 'is_attr', False)
+                and isinstance(tgtc.target.right, uni.Name)
+                and isinstance(tgtc.target.target, uni.SpecialVarRef)
+                and str(getattr(tgtc.target.target, 'sym_name', '')) == 'self'
+                and kind == 'elem' {
+                return self._audit_field_uses(
+                    str(tgtc.target.right.value), fields, taint_sym, pipe
+                );
             }
             return False;
         }

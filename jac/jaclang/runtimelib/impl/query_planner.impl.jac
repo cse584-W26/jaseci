@@ -518,6 +518,12 @@ def _stream_from_mirror(
     # props path would have produced - without this a str field reaches the
     # walker still quoted ('"Ada"') and an int reaches it as '42'.
     jload = json.loads;
+    # item #25: lowered visit walkers dispatch entry abilities on the
+    # element's type; a mirror-backed stand-in must carry it like the
+    # anchors-backed one does (the mirror is per-archetype, so the query's
+    # terminal node type IS the row type)
+    _tnd = q.hops[-1].nd if getattr(q, 'hops', None) else None;
+    _tname = getattr(_tnd, '__name__', '') if isinstance(_tnd, type) else '';
     for r in mrows {
         # normalise driver differences: the pure-Python driver returns uuid
         # columns as strings and psycopg returns UUID objects; key everything
@@ -550,6 +556,9 @@ def _stream_from_mirror(
         ad['hash'] = 1;
         ad['edges'] = [];
         ad['version'] = 0;
+        if _tname {
+            ad['_sn_arch_type'] = _tname;
+        }
         fvals: dict = {};
         for (i, f) in enumerate(fields) {
             raw = r[5 + i];

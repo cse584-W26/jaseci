@@ -98,6 +98,36 @@ def _enclosing_ability(d: object) -> (object | None) {
 }
 
 
+def _subscript_lit(at: object) -> (int | None) {
+    # AtomTrailer plain single-index subscript -> the literal int index
+    right = getattr(at, 'right', None);
+    if not isinstance(right, uni.IndexSlice) or getattr(right, 'is_range', False) {
+        return None;
+    }
+    slices = list(getattr(right, 'slices', []) or []);
+    if len(slices) != 1 {
+        return None;
+    }
+    v = getattr(getattr(slices[0], 'start', None), 'lit_value', None);
+    return v if isinstance(v, int) else None;
+}
+
+
+def _subscript_lit_str(at: object) -> (str | None) {
+    # AtomTrailer plain single-index subscript -> the literal str key
+    right = getattr(at, 'right', None);
+    if not isinstance(right, uni.IndexSlice) or getattr(right, 'is_range', False) {
+        return None;
+    }
+    slices = list(getattr(right, 'slices', []) or []);
+    if len(slices) != 1 {
+        return None;
+    }
+    v = getattr(getattr(slices[0], 'start', None), 'lit_value', None);
+    return v if isinstance(v, str) else None;
+}
+
+
 def _resolved_bodies(owner: object) -> list {
     # audit roots for an archetype/ability: impl-file bodies are linked, not
     # nested, so the decl subtree alone is NOT sufficient
@@ -146,6 +176,166 @@ class EffectPass(UniPass) {
         }
         if reason is None {
             nd.effect_readonly = True;
+            try {
+                self._stamp_closure_sufficiency(nd);
+            } except Exception {
+                ;   # advisory stamp only: any doubt leaves the call as-is
+            }
+        }
+    }
+
+    def _stamp_closure_sufficiency(self: EffectPass, w: uni.Archetype) -> None {
+        # Item #24 (minimal form): the trailing sufficiency threshold on a
+        # jclosure call restates the walker's own sort+slice for the engine.
+        # When the walker PROVES that restatement - result rows flow into a
+        # list of dicts carrying "distance" from the row's depth (h[1]), the
+        # list is sorted with distance as the DOMINANT key, and the report
+        # slices it to a literal K - the compiler stamps the call and
+        # PyastGenPass appends limit=K itself; the app stops spelling it.
+        # Sound per PHASE_D lever 2: after level d completes, >=K matches at
+        # depth <= d determine the top-K under a distance-first order; the
+        # stamp is withheld for ANY other consumption shape and the builtin
+        # then runs the plain full-depth closure (correct, just unbounded).
+        import os;
+        import sys;
+        calls: list = [];
+        for fc in UniPass.get_all_sub_nodes(nd=w, typ=uni.FuncCall) {
+            t = getattr(fc, 'target', None);
+            if isinstance(t, uni.Name)
+                and str(getattr(t, 'sym_name', '') or t.value) == 'jclosure' {
+                calls.append(fc);
+            }
+        }
+        if len(calls) != 1 {
+            return;
+        }
+        fc = calls[0];
+        params = list(getattr(fc, 'params', []) or []);
+        if len(params) != 6 {
+            return;   # limit already spelled (7), or not the plain shape
+        }
+        for prm in params {
+            if isinstance(prm, uni.KWPair) {
+                return;
+            }
+        }
+        asg = _ancestor(fc, (uni.Assignment, ));
+        if asg is None or getattr(asg, 'value', None) is not fc {
+            return;
+        }
+        tgts = list(getattr(asg, 'target', []) or []);
+        if len(tgts) != 1 or not isinstance(tgts[0], uni.Name) {
+            return;
+        }
+        hsym = getattr(tgts[0], 'sym', None);
+        if hsym is None {
+            return;
+        }
+        # the ONE loop over the closure result
+        loops: list = [];
+        for fr in UniPass.get_all_sub_nodes(nd=w, typ=uni.InForStmt) {
+            coll = getattr(fr, 'collection', None);
+            if isinstance(coll, uni.Name) and getattr(coll, 'sym', None) is hsym {
+                loops.append(fr);
+            }
+        }
+        if len(loops) != 1 or not isinstance(loops[0].target, uni.Name) {
+            return;
+        }
+        hvar_sym = getattr(loops[0].target, 'sym', None);
+        if hvar_sym is None {
+            return;
+        }
+        # rows land as {..., "distance": h[1]} appended to ONE local list
+        fsym = None;
+        for call in UniPass.get_all_sub_nodes(nd=loops[0], typ=uni.FuncCall) {
+            ct = getattr(call, 'target', None);
+            if not (isinstance(ct, uni.AtomTrailer)
+                    and isinstance(getattr(ct, 'right', None), uni.Name)
+                    and str(ct.right.value) == 'append'
+                    and isinstance(ct.target, uni.Name)) {
+                continue;
+            }
+            args = list(getattr(call, 'params', []) or []);
+            if len(args) != 1 or not isinstance(args[0], uni.DictVal) {
+                continue;
+            }
+            for kv in list(getattr(args[0], 'kv_pairs', []) or []) {
+                k = getattr(kv, 'key', None);
+                if str(getattr(k, 'lit_value', '')) != 'distance' {
+                    continue;
+                }
+                v = getattr(kv, 'value', None);
+                if isinstance(v, uni.AtomTrailer)
+                    and isinstance(v.target, uni.Name)
+                    and getattr(v.target, 'sym', None) is hvar_sym
+                    and _subscript_lit(v) == 1 {
+                    fsym = getattr(ct.target, 'sym', None);
+                }
+            }
+        }
+        if fsym is None {
+            return;
+        }
+        # distance is the DOMINANT sort key of that list
+        sort_ok = False;
+        klim = None;
+        for call in UniPass.get_all_sub_nodes(nd=w, typ=uni.FuncCall) {
+            ct = getattr(call, 'target', None);
+            if (isinstance(ct, uni.AtomTrailer)
+                    and isinstance(getattr(ct, 'right', None), uni.Name)
+                    and str(ct.right.value) == 'sort'
+                    and isinstance(ct.target, uni.Name)
+                    and getattr(ct.target, 'sym', None) is fsym) {
+                for prm in list(getattr(call, 'params', []) or []) {
+                    if isinstance(prm, uni.KWPair)
+                        and str(getattr(prm.key, 'value', '')) == 'key'
+                        and isinstance(prm.value, uni.LambdaExpr) {
+                        body = prm.value.tail_return_expr();
+                        if isinstance(body, uni.TupleVal) {
+                            vals = list(getattr(body, 'values', []) or []);
+                            if vals and isinstance(vals[0], uni.AtomTrailer)
+                                and _subscript_lit_str(vals[0]) == 'distance' {
+                                sort_ok = True;
+                            }
+                        }
+                    } elif isinstance(prm, uni.KWPair)
+                        and str(getattr(prm.key, 'value', '')) == 'reverse' {
+                        sort_ok = False;   # distance DESC: containment breaks
+                        break;
+                    }
+                }
+            }
+        }
+        if not sort_ok {
+            return;
+        }
+        # the report keeps the K nearest: F[:K] with literal K
+        for at in UniPass.get_all_sub_nodes(nd=w, typ=uni.AtomTrailer) {
+            if isinstance(at.target, uni.Name)
+                and getattr(at.target, 'sym', None) is fsym
+                and isinstance(getattr(at, 'right', None), uni.IndexSlice)
+                and getattr(at.right, 'is_range', False)
+                and _ancestor(at, (uni.ReportStmt, )) is not None {
+                slices = list(getattr(at.right, 'slices', []) or []);
+                if len(slices) == 1 and getattr(slices[0], 'start', None) is None
+                    and getattr(slices[0], 'step', None) is None {
+                    kv2 = getattr(getattr(slices[0], 'stop', None), 'lit_value', None);
+                    if isinstance(kv2, int) and kv2 > 0 {
+                        klim = kv2;
+                    }
+                }
+            }
+        }
+        if klim is None {
+            return;
+        }
+        fc.closure_limit = int(klim);
+        if os.environ.get('JAC_EFFECT_DEBUG') {
+            sys.stderr.write(
+                'EFFECTPASS ' + str(w.name) + ' closure sufficiency limit='
+                + str(klim) + chr(10)
+            );
         }
     }
 
