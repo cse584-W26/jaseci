@@ -547,7 +547,8 @@ glob NODE_SPECS: tuple = (
              is_name_atom=False,
              fields=(
                  FieldDesc(name="filter_cond", kind=6),
-                 FieldDesc(name="edge_dir", kind=3)
+                 FieldDesc(name="edge_dir", kind=3),
+                 FieldDesc(name="max_hops", kind=6)
              )
          ),
          NodeSpec(

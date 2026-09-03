@@ -468,6 +468,7 @@ obj Parser {
     def parse_edge_ref_chain -> Expr;
     def parse_edge_op_ref -> EdgeOpRef | None;
     def _continue_edge_ref_chain(start_expr: Expr, lsquare_uni: Token) -> Expr;
+    def _check_ranged_chain(ert: EdgeRefTrailer) -> None;
     def parse_comprehension_clauses -> list[InnerCompr];
     def parse_compr_clause -> InnerCompr;
     def parse_lambda_expr -> Expr;

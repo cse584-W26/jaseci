@@ -1990,6 +1990,17 @@ impl TypeEvaluator._get_type_of_expression_core(
         case uni.EdgeRefTrailer():
             if self.prefetch and self.prefetch.list_class {
                 element_type: types.TypeBase = types.AnyType();
+                # T7: a ranged hop yields list[tuple[T, int]], not list[T].
+                # Typing it as list[Any] keeps the tuple unpack in
+                # `for (x, d) in [chain]` from raising a NEW error class.
+                for chain_item in expr.chain {
+                    if isinstance(chain_item, uni.EdgeOpRef)
+                        and chain_item.max_hops is not None {
+                        rlist = self.prefetch.list_class.clone_as_instance();
+                        rlist.private.type_args = [types.AnyType()];
+                        return rlist;
+                    }
+                }
                 for chain_item in expr.chain {
                     if isinstance(chain_item, uni.FilterCompr) and chain_item.f_type {
                         ft = self.get_type_of_expression(chain_item.f_type);

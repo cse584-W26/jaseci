@@ -279,6 +279,12 @@ glob E0001 = _err("E0001", Category.SYNTAX, "Expected '{expected}', got '{got}'"
          help="Component body statements run on every render, and state writes are immediately visible, so this assignment would re-render forever. Move it into a `can` ability, an event handler, or a method.",
          blocks_codegen=True
      ),
+     E0083 = _err(
+         "E0083",
+         Category.SYNTAX,
+         "variable-length hop: {reason}",
+         help="The supported shape is `[origin <-:E:*n:-> [?:T]]` - one origin, one undirected ranged hop, a typed node filter and at most one `field == expr` predicate."
+     ),
      W0060 = _warn(
          "W0060",
          Category.SYNTAX,

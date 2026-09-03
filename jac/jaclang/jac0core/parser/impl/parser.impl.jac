@@ -2452,7 +2452,9 @@ impl Parser._continue_edge_ref_chain(start_expr: Expr, lsquare_uni: Token) -> Ex
         }
     }
     kid.append(self.consume_uni(TokenKind.RSQUARE));
-    return EdgeRefTrailer(chain=chain, edges_only=False, is_async=False, kid=kid);
+    ert_c = EdgeRefTrailer(chain=chain, edges_only=False, is_async=False, kid=kid);
+    self._check_ranged_chain(ert_c);
+    return ert_c;
 }
 
 impl Parser.parse_edge_ref_chain -> Expr {
@@ -2538,9 +2540,11 @@ impl Parser.parse_edge_ref_chain -> Expr {
         }
     }
     kid.append(self.consume_uni(TokenKind.RSQUARE));
-    return EdgeRefTrailer(
+    ert_n = EdgeRefTrailer(
         chain=chain, edges_only=edges_only, is_async=is_async, kid=kid
     );
+    self._check_ranged_chain(ert_n);
+    return ert_n;
 }
 
 impl Parser.parse_edge_op_ref -> EdgeOpRef | None {
@@ -2564,30 +2568,54 @@ impl Parser.parse_edge_op_ref -> EdgeOpRef | None {
         f_type = None;
         compares: list[Expr] = [];
         fcompr_kid: list[UniNode] = [];
+        # T7: `*<expr>` after the type name is a variable-length hop (1..expr).
+        # Its tokens hang off the EdgeOpRef (not the FilterCompr) so that both
+        # formatters, which concatenate kids, round-trip it byte-stable.
+        max_hops: (Expr | None) = None;
+        star_kid: list[UniNode] = [];
+        star_loc = None;
         if self.check_name() or self.is_keyword_token() {
             f_type = self.parse_atom();
             fcompr_kid.append(f_type);
         }
         if self.check(TokenKind.COLON) and not self.check(TokenKind.ARROW_R_P2) {
             self.expect(TokenKind.COLON);
-            fcompr_kid.append(self.make_uni_token(self.previous()));
-            if not self.check(TokenKind.ARROW_R_P2) {
-                cmp = self.parse_compare();
-                compares.append(cmp);
-                fcompr_kid.append(cmp);
-                while self.match_tok(TokenKind.COMMA) {
-                    fcompr_kid.append(self.make_uni_token(self.previous()));
+            colon_uni = self.make_uni_token(self.previous());
+            if self.check(TokenKind.STAR_MUL) {
+                self.expect(TokenKind.STAR_MUL);
+                star_loc = self.previous().loc;
+                star_kid.append(colon_uni);
+                star_kid.append(self.make_uni_token(self.previous()));
+                max_hops = self.parse_atomic_chain();
+                star_kid.append(max_hops);
+            } else {
+                fcompr_kid.append(colon_uni);
+                if not self.check(TokenKind.ARROW_R_P2) {
                     cmp = self.parse_compare();
                     compares.append(cmp);
                     fcompr_kid.append(cmp);
+                    while self.match_tok(TokenKind.COMMA) {
+                        fcompr_kid.append(self.make_uni_token(self.previous()));
+                        cmp = self.parse_compare();
+                        compares.append(cmp);
+                        fcompr_kid.append(cmp);
+                    }
                 }
             }
         }
         fcond = FilterCompr(f_type=f_type, compares=compares, kid=fcompr_kid);
         end_uni = self.consume_uni(TokenKind.ARROW_R_P2);
-        return EdgeOpRef(
-            filter_cond=fcond, edge_dir=EdgeDir.OUT, kid=[start_uni, fcond, end_uni]
+        out_kid: list[UniNode] = [start_uni, fcond];
+        out_kid.extend(star_kid);
+        out_kid.append(end_uni);
+        out_op = EdgeOpRef(
+            filter_cond=fcond,
+            edge_dir=EdgeDir.OUT,
+            max_hops=max_hops,
+            kid=out_kid
         );
+        out_op.range_loc = star_loc;
+        return out_op;
     }
 
     if self.check(TokenKind.ARROW_L_P1) {
@@ -2596,32 +2624,146 @@ impl Parser.parse_edge_op_ref -> EdgeOpRef | None {
         f_type = None;
         compares: list[Expr] = [];
         fcompr_kid: list[UniNode] = [];
+        # T7: `*<expr>` = variable-length hop; closer `:->` = typed ANY
+        # direction (`<-:E:->`), the form NormalizePass already prints.
+        max_hops: (Expr | None) = None;
+        star_kid: list[UniNode] = [];
+        star_loc = None;
         if self.check_name() or self.is_keyword_token() {
             f_type = self.parse_atom();
             fcompr_kid.append(f_type);
         }
-        if self.check(TokenKind.COLON) and not self.check(TokenKind.ARROW_L_P2) {
+        if self.check(TokenKind.COLON)
+            and not self.check_any(TokenKind.ARROW_L_P2, TokenKind.ARROW_R_P2) {
             self.expect(TokenKind.COLON);
-            fcompr_kid.append(self.make_uni_token(self.previous()));
-            if not self.check(TokenKind.ARROW_L_P2) {
-                cmp = self.parse_compare();
-                compares.append(cmp);
-                fcompr_kid.append(cmp);
-                while self.match_tok(TokenKind.COMMA) {
-                    fcompr_kid.append(self.make_uni_token(self.previous()));
+            colon_uni = self.make_uni_token(self.previous());
+            if self.check(TokenKind.STAR_MUL) {
+                self.expect(TokenKind.STAR_MUL);
+                star_loc = self.previous().loc;
+                star_kid.append(colon_uni);
+                star_kid.append(self.make_uni_token(self.previous()));
+                max_hops = self.parse_atomic_chain();
+                star_kid.append(max_hops);
+            } else {
+                fcompr_kid.append(colon_uni);
+                if not self.check_any(TokenKind.ARROW_L_P2, TokenKind.ARROW_R_P2) {
                     cmp = self.parse_compare();
                     compares.append(cmp);
                     fcompr_kid.append(cmp);
+                    while self.match_tok(TokenKind.COMMA) {
+                        fcompr_kid.append(self.make_uni_token(self.previous()));
+                        cmp = self.parse_compare();
+                        compares.append(cmp);
+                        fcompr_kid.append(cmp);
+                    }
                 }
             }
         }
         fcond = FilterCompr(f_type=f_type, compares=compares, kid=fcompr_kid);
-        end_uni = self.consume_uni(TokenKind.ARROW_L_P2);
-        return EdgeOpRef(
-            filter_cond=fcond, edge_dir=EdgeDir.IN, kid=[start_uni, fcond, end_uni]
+        in_dir = EdgeDir.IN;
+        if self.check(TokenKind.ARROW_R_P2) {
+            in_dir = EdgeDir.ANY;
+            end_uni = self.consume_uni(TokenKind.ARROW_R_P2);
+        } else {
+            end_uni = self.consume_uni(TokenKind.ARROW_L_P2);
+        }
+        in_kid: list[UniNode] = [start_uni, fcond];
+        in_kid.extend(star_kid);
+        in_kid.append(end_uni);
+        in_op = EdgeOpRef(
+            filter_cond=fcond, edge_dir=in_dir, max_hops=max_hops, kid=in_kid
         );
+        in_op.range_loc = star_loc;
+        return in_op;
     }
     return None;
+}
+
+impl Parser._check_ranged_chain(ert: EdgeRefTrailer) -> None {
+    # T7: the ONLY chain shape the variable-length lowering supports is
+    # `[origin <-:E:*n:-> [?:T (, field == expr)?]]`. Anything else is a loud
+    # compile error here rather than a silent mis-lowering in codegen.
+    ranged: list = [];
+    hops: list = [];
+    for c in ert.chain {
+        if isinstance(c, EdgeOpRef) {
+            hops.append(c);
+            if getattr(c, 'max_hops', None) is not None {
+                ranged.append(c);
+            }
+        }
+    }
+    if not ranged {
+        return;
+    }
+    eop = ranged[0];
+    if eop.edge_dir != EdgeDir.ANY {
+        self.emit_diag(
+            "variable-length hop: directed ranges are not supported (the adjacency projection is undirected)",
+            "E0083",
+            loc=getattr(eop, 'range_loc', None),
+            help="write `<-:E:*n:->` (typed any-direction closer)"
+        );
+        return;
+    }
+    if ert.edges_only {
+        self.emit_diag(
+            "variable-length hop: `[edge ...]` is not supported on a ranged hop",
+            "E0083",
+            loc=getattr(eop, 'range_loc', None),
+            help="a ranged hop yields (node, depth) pairs, not edges"
+        );
+        return;
+    }
+    if (
+        len(hops) != 1
+        or len(ert.chain) < 2
+        or len(ert.chain) > 3
+        or isinstance(ert.chain[0], EdgeOpRef)
+        or ert.chain[1] is not eop
+    ) {
+        self.emit_diag(
+            "variable-length hop: a ranged hop must be the only hop",
+            "E0083",
+            loc=getattr(eop, 'range_loc', None),
+            help="write `[origin <-:E:*n:-> [?:T]]` - one origin, one ranged hop, one node filter"
+        );
+        return;
+    }
+    nfilt = ert.chain[2] if len(ert.chain) == 3 else None;
+    if not isinstance(nfilt, FilterCompr) or getattr(nfilt, 'f_type', None) is None {
+        self.emit_diag(
+            "variable-length hop: a typed node filter is required on a ranged hop",
+            "E0083",
+            loc=getattr(eop, 'range_loc', None),
+            help="write `[origin <-:E:*n:-> [?:T]]` - the closure is typed"
+        );
+        return;
+    }
+    cmps = list(getattr(nfilt, 'compares', []) or []);
+    bad = len(cmps) > 1;
+    if not bad {
+        for c in cmps {
+            ops = list(getattr(c, 'ops', []) or []);
+            rights = list(getattr(c, 'rights', []) or []);
+            if (
+                not isinstance(c, CompareExpr)
+                or len(ops) != 1
+                or len(rights) != 1
+                or str(getattr(ops[0], 'value', '')) != '=='
+                or not isinstance(getattr(c, 'left', None), Name)
+            ) {
+                bad = True;
+            }
+        }
+    }
+    if bad {
+        self.emit_diag(
+            "variable-length hop: ranged hop admits one equality predicate of the form `field == expr`",
+            "E0083",
+            loc=getattr(eop, 'range_loc', None)
+        );
+    }
 }
 
 impl Parser.parse_dict_or_set -> Expr {

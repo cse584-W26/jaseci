@@ -133,6 +133,7 @@ Emitted by the parser and lexer during source code parsing.
 
 | Code | Message |
 |------|---------|
+| `E0083` | variable-length hop: {reason} |
 | `E0082` | Cannot assign to state field '{name}' during render (component body statements run on every render and state writes are immediately visible; move the assignment into a `can` ability, an event handler, or a method) |
 
 ### Parser Warnings

@@ -1283,7 +1283,8 @@ obj EdgeOpRef(WalkerStmtOnlyNode, AtomExpr) {
     def accept_enter(v: UniPass) -> None;
 
     has filter_cond: (FilterCompr | None),
-        edge_dir: EdgeDir;
+        edge_dir: EdgeDir,
+        max_hops: (Expr | None) = None;
 
     def postinit -> None;
 }

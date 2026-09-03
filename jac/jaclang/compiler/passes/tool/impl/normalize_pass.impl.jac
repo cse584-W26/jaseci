@@ -1270,12 +1270,21 @@ impl NormalizePass.enter_edge_ref_trailer(nd: uni.EdgeRefTrailer) -> None {
 
 impl NormalizePass.enter_edge_op_ref(nd: uni.EdgeOpRef) -> None {
     new_kid: list[uni.UniNode] = [];
+    # T7: a variable-length hop carries `:*<expr>` between the type and the
+    # closer; it must survive normalization or `jac fmt` would delete it.
+    range_kid: list[uni.UniNode] = [];
+    if nd.max_hops is not None {
+        range_kid.append(nd.gen_token(Tok.COLON));
+        range_kid.append(nd.gen_token(Tok.STAR_MUL));
+        range_kid.append(nd.max_hops);
+    }
     if nd.edge_dir == EdgeDir.IN {
         if not nd.filter_cond {
             new_kid.append(nd.gen_token(Tok.ARROW_L));
         } else {
             new_kid.append(nd.gen_token(Tok.ARROW_L_P1));
             new_kid.append(nd.filter_cond);
+            new_kid.extend(range_kid);
             new_kid.append(nd.gen_token(Tok.ARROW_L_P2));
         }
     } elif nd.edge_dir == EdgeDir.OUT {
@@ -1284,6 +1293,7 @@ impl NormalizePass.enter_edge_op_ref(nd: uni.EdgeOpRef) -> None {
         } else {
             new_kid.append(nd.gen_token(Tok.ARROW_R_P1));
             new_kid.append(nd.filter_cond);
+            new_kid.extend(range_kid);
             new_kid.append(nd.gen_token(Tok.ARROW_R_P2));
         }
     } else {
@@ -1292,6 +1302,7 @@ impl NormalizePass.enter_edge_op_ref(nd: uni.EdgeOpRef) -> None {
         } else {
             new_kid.append(nd.gen_token(Tok.ARROW_L_P1));
             new_kid.append(nd.filter_cond);
+            new_kid.extend(range_kid);
             new_kid.append(nd.gen_token(Tok.ARROW_R_P2));
         }
     }
