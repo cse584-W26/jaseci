@@ -187,6 +187,148 @@ def _single_element_use(w: uni.Archetype, hsym: object, tgt: object) -> bool {
 }
 
 
+def _is_ranged(e: object) -> bool {
+    # T7: an EdgeRefTrailer carrying a variable-length hop
+    if not isinstance(e, uni.EdgeRefTrailer) {
+        return False;
+    }
+    for c in list(getattr(e, 'chain', []) or []) {
+        if isinstance(c, uni.EdgeOpRef) and getattr(c, 'max_hops', None) is not None {
+            return True;
+        }
+    }
+    return False;
+}
+
+
+def _ranged_filter_type(e: object) -> (str | None) {
+    # the node archetype the ranged chain itself names ([?:T])
+    ch = list(getattr(e, 'chain', []) or []);
+    if len(ch) == 3 and isinstance(ch[2], uni.FilterCompr) {
+        ft = getattr(ch[2], 'f_type', None);
+        if isinstance(ft, uni.Name) {
+            return str(ft.value);
+        }
+    }
+    return None;
+}
+
+
+def _loop_pair(loop: object) -> tuple {
+    # (elem_sym, depth_sym) for `for x in ..` (depth None) or `for (x, d) in ..`
+    tgt = getattr(loop, 'target', None);
+    if isinstance(tgt, uni.Name) {
+        return (getattr(tgt, 'sym', None), None, tgt);
+    }
+    if isinstance(tgt, uni.TupleVal) {
+        vals = list(getattr(tgt, 'values', []) or []);
+        if len(vals) == 2 and isinstance(vals[0], uni.Name)
+            and isinstance(vals[1], uni.Name) {
+            return (
+                getattr(vals[0], 'sym', None), getattr(vals[1], 'sym', None), vals[0]
+            );
+        }
+    }
+    return (None, None, None);
+}
+
+
+def _shape_a_limit(
+    w: uni.Archetype, loop: object, hvar_sym: object, dsym: object
+) -> (int | None) {
+    # Item #24 shape A: the ONE loop over the closure result appends
+    # {..., "distance": <depth>} to a local list, that list is sorted with
+    # distance as the DOMINANT key, and the report slices it to a literal K.
+    # `dsym` is the loop's own depth name (T7 `for (x, d) in ..`); when it is
+    # None the depth is read as `hvar[1]` (T1's jclosure tuple rows).
+    fsym = None;
+    for call in UniPass.get_all_sub_nodes(nd=loop, typ=uni.FuncCall) {
+        ct = getattr(call, 'target', None);
+        if not (isinstance(ct, uni.AtomTrailer)
+                and isinstance(getattr(ct, 'right', None), uni.Name)
+                and str(ct.right.value) == 'append'
+                and isinstance(ct.target, uni.Name)) {
+            continue;
+        }
+        args = list(getattr(call, 'params', []) or []);
+        if len(args) != 1 or not isinstance(args[0], uni.DictVal) {
+            continue;
+        }
+        for kv in list(getattr(args[0], 'kv_pairs', []) or []) {
+            k = getattr(kv, 'key', None);
+            if str(getattr(k, 'lit_value', '')) != 'distance' {
+                continue;
+            }
+            v = getattr(kv, 'value', None);
+            ok = False;
+            if dsym is not None {
+                ok = isinstance(v, uni.Name) and getattr(v, 'sym', None) is dsym;
+            } else {
+                ok = (isinstance(v, uni.AtomTrailer)
+                      and isinstance(v.target, uni.Name)
+                      and getattr(v.target, 'sym', None) is hvar_sym
+                      and _subscript_lit(v) == 1);
+            }
+            if ok {
+                fsym = getattr(ct.target, 'sym', None);
+            }
+        }
+    }
+    if fsym is None {
+        return None;
+    }
+    sort_ok = False;
+    for call in UniPass.get_all_sub_nodes(nd=w, typ=uni.FuncCall) {
+        ct = getattr(call, 'target', None);
+        if (isinstance(ct, uni.AtomTrailer)
+                and isinstance(getattr(ct, 'right', None), uni.Name)
+                and str(ct.right.value) == 'sort'
+                and isinstance(ct.target, uni.Name)
+                and getattr(ct.target, 'sym', None) is fsym) {
+            for prm in list(getattr(call, 'params', []) or []) {
+                if isinstance(prm, uni.KWPair)
+                    and str(getattr(prm.key, 'value', '')) == 'key'
+                    and isinstance(prm.value, uni.LambdaExpr) {
+                    body = prm.value.tail_return_expr();
+                    if isinstance(body, uni.TupleVal) {
+                        vals = list(getattr(body, 'values', []) or []);
+                        if vals and isinstance(vals[0], uni.AtomTrailer)
+                            and _subscript_lit_str(vals[0]) == 'distance' {
+                            sort_ok = True;
+                        }
+                    }
+                } elif isinstance(prm, uni.KWPair)
+                    and str(getattr(prm.key, 'value', '')) == 'reverse' {
+                    sort_ok = False;   # distance DESC: containment breaks
+                    break;
+                }
+            }
+        }
+    }
+    if not sort_ok {
+        return None;
+    }
+    klim = None;
+    for at in UniPass.get_all_sub_nodes(nd=w, typ=uni.AtomTrailer) {
+        if isinstance(at.target, uni.Name)
+            and getattr(at.target, 'sym', None) is fsym
+            and isinstance(getattr(at, 'right', None), uni.IndexSlice)
+            and getattr(at.right, 'is_range', False)
+            and _ancestor(at, (uni.ReportStmt, )) is not None {
+            slices = list(getattr(at.right, 'slices', []) or []);
+            if len(slices) == 1 and getattr(slices[0], 'start', None) is None
+                and getattr(slices[0], 'step', None) is None {
+                kv2 = getattr(getattr(slices[0], 'stop', None), 'lit_value', None);
+                if isinstance(kv2, int) and kv2 > 0 {
+                    klim = kv2;
+                }
+            }
+        }
+    }
+    return klim;
+}
+
+
 def _resolved_bodies(owner: object) -> list {
     # audit roots for an archetype/ability: impl-file bodies are linked, not
     # nested, so the decl subtree alone is NOT sufficient
@@ -324,7 +466,9 @@ def _call_name(fc: object) -> str {
 }
 
 
-def _projection_of(scopes: list, bind: object, tgt: object) -> (tuple | None) {
+def _projection_of(
+    scopes: list, bind: object, tgt: object, dflt_type: (str | None) = None
+) -> (tuple | None) {
     # -> (type_name, (field, ...)) when EVERY use of the bound name in the
     # walker is admissible, else None
     vname = str(tgt.value);
@@ -352,8 +496,16 @@ def _projection_of(scopes: list, bind: object, tgt: object) -> (tuple | None) {
             if isinstance(p, uni.Assignment) and nm in list(p.target or []) {
                 continue;
             }
-            if isinstance(p, uni.InForStmt) and p.target is nm {
+            if isinstance(p, (uni.InForStmt, uni.InnerCompr))
+                and getattr(p, 'target', None) is nm {
                 continue;
+            }
+            if isinstance(p, uni.TupleVal)
+                and isinstance(
+                    getattr(p, 'parent', None), (uni.InForStmt, uni.InnerCompr)
+                )
+                and getattr(getattr(p, 'parent', None), 'target', None) is p {
+                continue;   # the `(x, d)` unpack target of a loop/comprehension
             }
             if _sibling_branch(nm, bind) {
                 continue;
@@ -403,6 +555,9 @@ def _projection_of(scopes: list, bind: object, tgt: object) -> (tuple | None) {
             }
             return None;
         }
+    }
+    if not types and dflt_type is not None {
+        types.add(dflt_type);
     }
     if len(types) != 1 {
         return None;
@@ -455,19 +610,20 @@ class EffectPass(UniPass) {
     }
 
     def _stamp_closure_sufficiency(self: EffectPass, w: uni.Archetype) -> None {
-        # Item #24 (minimal form): the trailing sufficiency threshold on a
-        # jclosure call restates the walker's own sort+slice for the engine.
-        # When the walker PROVES that restatement - result rows flow into a
-        # list of dicts carrying "distance" from the row's depth (h[1]), the
-        # list is sorted with distance as the DOMINANT key, and the report
-        # slices it to a literal K - the compiler stamps the call and
+        # Item #24 / T7: the trailing sufficiency threshold on the walker's
+        # closure restates the walker's own sort+slice for the engine. When the
+        # walker PROVES that restatement the compiler stamps the SITE and
         # PyastGenPass appends limit=K itself; the app stops spelling it.
-        # Two consumption shapes are proved: (A) sort+slice as above, and
-        # (B) the result read as a SINGLE element - `h[0]` behind a bare
-        # emptiness test - which is K=1 (see _single_element_use).
+        # Two sites are recognised: a `jclosure(...)` FuncCall (T1) and a
+        # variable-length hop `[origin <-:E:*n:-> [?:T ..]]` (T7). Three
+        # consumption shapes:
+        #  (A)  hits = <site>;  for h in hits / for (x, d) in hits  -> rows
+        #       carrying "distance", sorted distance-first, sliced [:K] -> K
+        #  (A') for (x, d) in <site>            (no intermediate name) -> K
+        #  (B)  hits[0][1] behind a bare emptiness test              -> 1
         # Sound per PHASE_D lever 2: after level d completes, >=K matches at
         # depth <= d determine the top-K under a distance-first order; the
-        # stamp is withheld for ANY other consumption shape and the builtin
+        # stamp is withheld for ANY other consumption shape and the runtime
         # then runs the plain full-depth closure (correct, just unbounded).
         import os;
         import sys;
@@ -479,143 +635,91 @@ class EffectPass(UniPass) {
                 calls.append(fc);
             }
         }
-        if len(calls) != 1 {
+        ranged: list = [];
+        seen: set = set();
+        for scope in self._scopes_of(w) {
+            if scope is None {
+                continue;
+            }
+            for e in _walk(scope, uni.EdgeRefTrailer, []) {
+                if _is_ranged(e) and id(e) not in seen {
+                    seen.add(id(e));
+                    ranged.append(e);
+                }
+            }
+        }
+        if len(calls) + len(ranged) != 1 {
             return;
         }
-        fc = calls[0];
-        params = list(getattr(fc, 'params', []) or []);
-        if len(params) != 6 {
-            return;   # limit already spelled (7), or not the plain shape
+        is_call = bool(calls);
+        site = calls[0] if is_call else ranged[0];
+        if is_call {
+            params = list(getattr(site, 'params', []) or []);
+            if len(params) != 6 {
+                return;   # limit already spelled (7), or not the plain shape
+            }
+            for prm in params {
+                if isinstance(prm, uni.KWPair) {
+                    return;
+                }
+            }
         }
-        for prm in params {
-            if isinstance(prm, uni.KWPair) {
+        # binding: the site is the sole value of a one-Name assignment
+        hsym = None;
+        htgt = None;
+        asg = _ancestor(site, (uni.Assignment, ));
+        if asg is not None and getattr(asg, 'value', None) is site {
+            tgts = list(getattr(asg, 'target', []) or []);
+            if len(tgts) == 1 and isinstance(tgts[0], uni.Name) {
+                hsym = getattr(tgts[0], 'sym', None);
+                htgt = tgts[0];
+            }
+        }
+        loop = None;
+        if hsym is not None {
+            # shape B: the result is consumed as a SINGLE element (`h[0]`,
+            # guarded by a bare emptiness test) -> one nearest match is enough
+            if _single_element_use(w, hsym, htgt) {
+                site.closure_limit = 1;
+                if os.environ.get('JAC_EFFECT_DEBUG') {
+                    sys.stderr.write(
+                        'EFFECTPASS ' + str(w.name)
+                        + ' closure sufficiency limit=1 (single-element)' + chr(10)
+                    );
+                }
                 return;
             }
-        }
-        asg = _ancestor(fc, (uni.Assignment, ));
-        if asg is None or getattr(asg, 'value', None) is not fc {
-            return;
-        }
-        tgts = list(getattr(asg, 'target', []) or []);
-        if len(tgts) != 1 or not isinstance(tgts[0], uni.Name) {
-            return;
-        }
-        hsym = getattr(tgts[0], 'sym', None);
-        if hsym is None {
-            return;
-        }
-        # shape B: the result is consumed as a SINGLE element (`h[0]`, guarded
-        # by a bare emptiness test) -> one nearest match is enough
-        if _single_element_use(w, hsym, tgts[0]) {
-            fc.closure_limit = 1;
-            if os.environ.get('JAC_EFFECT_DEBUG') {
-                sys.stderr.write(
-                    'EFFECTPASS ' + str(w.name)
-                    + ' closure sufficiency limit=1 (single-element)' + chr(10)
-                );
-            }
-            return;
-        }
-        # shape A: the ONE loop over the closure result
-        loops: list = [];
-        for fr in UniPass.get_all_sub_nodes(nd=w, typ=uni.InForStmt) {
-            coll = getattr(fr, 'collection', None);
-            if isinstance(coll, uni.Name) and getattr(coll, 'sym', None) is hsym {
-                loops.append(fr);
-            }
-        }
-        if len(loops) != 1 or not isinstance(loops[0].target, uni.Name) {
-            return;
-        }
-        hvar_sym = getattr(loops[0].target, 'sym', None);
-        if hvar_sym is None {
-            return;
-        }
-        # rows land as {..., "distance": h[1]} appended to ONE local list
-        fsym = None;
-        for call in UniPass.get_all_sub_nodes(nd=loops[0], typ=uni.FuncCall) {
-            ct = getattr(call, 'target', None);
-            if not (isinstance(ct, uni.AtomTrailer)
-                    and isinstance(getattr(ct, 'right', None), uni.Name)
-                    and str(ct.right.value) == 'append'
-                    and isinstance(ct.target, uni.Name)) {
-                continue;
-            }
-            args = list(getattr(call, 'params', []) or []);
-            if len(args) != 1 or not isinstance(args[0], uni.DictVal) {
-                continue;
-            }
-            for kv in list(getattr(args[0], 'kv_pairs', []) or []) {
-                k = getattr(kv, 'key', None);
-                if str(getattr(k, 'lit_value', '')) != 'distance' {
-                    continue;
-                }
-                v = getattr(kv, 'value', None);
-                if isinstance(v, uni.AtomTrailer)
-                    and isinstance(v.target, uni.Name)
-                    and getattr(v.target, 'sym', None) is hvar_sym
-                    and _subscript_lit(v) == 1 {
-                    fsym = getattr(ct.target, 'sym', None);
+            loops: list = [];
+            for fr in UniPass.get_all_sub_nodes(nd=w, typ=uni.InForStmt) {
+                coll = getattr(fr, 'collection', None);
+                if isinstance(coll, uni.Name) and getattr(coll, 'sym', None) is hsym {
+                    loops.append(fr);
                 }
             }
-        }
-        if fsym is None {
-            return;
-        }
-        # distance is the DOMINANT sort key of that list
-        sort_ok = False;
-        klim = None;
-        for call in UniPass.get_all_sub_nodes(nd=w, typ=uni.FuncCall) {
-            ct = getattr(call, 'target', None);
-            if (isinstance(ct, uni.AtomTrailer)
-                    and isinstance(getattr(ct, 'right', None), uni.Name)
-                    and str(ct.right.value) == 'sort'
-                    and isinstance(ct.target, uni.Name)
-                    and getattr(ct.target, 'sym', None) is fsym) {
-                for prm in list(getattr(call, 'params', []) or []) {
-                    if isinstance(prm, uni.KWPair)
-                        and str(getattr(prm.key, 'value', '')) == 'key'
-                        and isinstance(prm.value, uni.LambdaExpr) {
-                        body = prm.value.tail_return_expr();
-                        if isinstance(body, uni.TupleVal) {
-                            vals = list(getattr(body, 'values', []) or []);
-                            if vals and isinstance(vals[0], uni.AtomTrailer)
-                                and _subscript_lit_str(vals[0]) == 'distance' {
-                                sort_ok = True;
-                            }
-                        }
-                    } elif isinstance(prm, uni.KWPair)
-                        and str(getattr(prm.key, 'value', '')) == 'reverse' {
-                        sort_ok = False;   # distance DESC: containment breaks
-                        break;
-                    }
-                }
+            if len(loops) != 1 {
+                return;
+            }
+            loop = loops[0];
+        } elif not is_call {
+            # shape A': the ranged chain IS the loop's collection
+            pnt = getattr(site, 'parent', None);
+            if isinstance(pnt, uni.InForStmt)
+                and getattr(pnt, 'collection', None) is site {
+                loop = pnt;
             }
         }
-        if not sort_ok {
+        if loop is None {
             return;
         }
-        # the report keeps the K nearest: F[:K] with literal K
-        for at in UniPass.get_all_sub_nodes(nd=w, typ=uni.AtomTrailer) {
-            if isinstance(at.target, uni.Name)
-                and getattr(at.target, 'sym', None) is fsym
-                and isinstance(getattr(at, 'right', None), uni.IndexSlice)
-                and getattr(at.right, 'is_range', False)
-                and _ancestor(at, (uni.ReportStmt, )) is not None {
-                slices = list(getattr(at.right, 'slices', []) or []);
-                if len(slices) == 1 and getattr(slices[0], 'start', None) is None
-                    and getattr(slices[0], 'step', None) is None {
-                    kv2 = getattr(getattr(slices[0], 'stop', None), 'lit_value', None);
-                    if isinstance(kv2, int) and kv2 > 0 {
-                        klim = kv2;
-                    }
-                }
-            }
+        pair = _loop_pair(loop);
+        if pair[0] is None and pair[1] is None {
+            return;
         }
+        klim = _shape_a_limit(w, loop, pair[0], pair[1]);
         if klim is None {
             return;
         }
-        fc.closure_limit = int(klim);
+        site.closure_limit = int(klim);
         if os.environ.get('JAC_EFFECT_DEBUG') {
             sys.stderr.write(
                 'EFFECTPASS ' + str(w.name) + ' closure sufficiency limit='
@@ -684,6 +788,80 @@ class EffectPass(UniPass) {
             }
             if proj is not None {
                 fc.hydrate_proj = proj;
+            }
+        }
+        # T7: the same proof over a ranged chain's loop element. Binding forms:
+        # `for (x, d) in <ranged chain>` (also as a comprehension clause) and
+        # `for (x, d) in hits` where `hits = <ranged chain>`. The stamp goes on
+        # the EdgeRefTrailer; PyastGenPass turns it into the same
+        # `_proj=(T, (fields...))` keyword the jobj sites get.
+        rseen: set = set();
+        for scope in scopes {
+            if scope is None {
+                continue;
+            }
+            for ert in _walk(scope, uni.EdgeRefTrailer, []) {
+                if not _is_ranged(ert) or id(ert) in rseen {
+                    continue;
+                }
+                rseen.add(id(ert));
+                loop = None;
+                pnt = getattr(ert, 'parent', None);
+                if isinstance(pnt, (uni.InForStmt, uni.InnerCompr))
+                    and getattr(pnt, 'collection', None) is ert {
+                    loop = pnt;
+                } else {
+                    asg = _ancestor(ert, (uni.Assignment, ));
+                    hs = None;
+                    if asg is not None and getattr(asg, 'value', None) is ert {
+                        tgts = list(getattr(asg, 'target', []) or []);
+                        if len(tgts) == 1 and isinstance(tgts[0], uni.Name) {
+                            hs = getattr(tgts[0], 'sym', None);
+                        }
+                    }
+                    if hs is not None {
+                        lseen: set = set();
+                        over: list = [];
+                        for sc2 in scopes {
+                            if sc2 is None {
+                                continue;
+                            }
+                            binds: list = _walk(sc2, uni.InForStmt, []);
+                            binds.extend(_walk(sc2, uni.InnerCompr, []));
+                            for fr in binds {
+                                coll = getattr(fr, 'collection', None);
+                                if id(fr) not in lseen and isinstance(coll, uni.Name)
+                                    and getattr(coll, 'sym', None) is hs {
+                                    lseen.add(id(fr));
+                                    over.append(fr);
+                                }
+                            }
+                        }
+                        if len(over) == 1 {
+                            loop = over[0];
+                        }
+                    }
+                }
+                if loop is None {
+                    continue;
+                }
+                pair = _loop_pair(loop);
+                if pair[1] is None or pair[2] is None {
+                    continue;   # a ranged chain yields PAIRS: need `(x, d)`
+                }
+                rproj = _projection_of(
+                    scopes, loop, pair[2], _ranged_filter_type(ert)
+                );
+                if os.environ.get('JAC_EFFECT_DEBUG') {
+                    sys.stderr.write(
+                        'EFFECTPASS ' + str(w.name) + ' hydrate projection ranged@'
+                        + str(getattr(ert.loc, 'first_line', '?')) + ' '
+                        + (str(rproj) if rproj is not None else 'declined') + chr(10)
+                    );
+                }
+                if rproj is not None {
+                    ert.hydrate_proj = rproj;
+                }
             }
         }
     }
