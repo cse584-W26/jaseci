@@ -486,7 +486,8 @@ impl JacPersistence.get_object(
         # single id takes the batched projected path.
         ctx = JacRuntimeInterface.get_context();
         uid = UUID(id);
-        if (pa := ctx.proj_cache.get(uid)) is not None {
+        (pcls, pfields) = _proj;
+        if (pa := ctx.proj_cache.get((pcls, tuple(pfields)), {}).get(uid)) is not None {
             return pa;
         }
         if uid not in ctx.mem.__mem__ {
@@ -524,7 +525,9 @@ impl JacPersistence.get_objects_many(
                 and not (mem._dirty or mem._deleted or mem._txn_changed) {
                 (cls, fields) = _proj;
                 uuids = [UUID(i) for i in ids if i != 'root'];
-                pc = ctx.proj_cache;
+                # keyed per (cls, fields): a slim instance built for one
+                # site's field set must never answer a site that reads more.
+                pc = ctx.proj_cache.setdefault((cls, tuple(fields)), {});
                 resident = mem.__mem__;
                 need: list = [];
                 for u in uuids {

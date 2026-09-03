@@ -273,7 +273,7 @@ def _sibling_branch(use: object, bind: object) -> bool {
             if not isinstance(p, uni.IfStmt) {
                 return False;
             }
-            if _ancestor(p, (uni.InForStmt, uni.WhileStmt)) is not None {
+            if _ancestor(p, (uni.InForStmt, uni.IterForStmt, uni.WhileStmt, uni.ForeverStmt)) is not None {
                 return False;
             }
             a = _branch_of(p, cur);
