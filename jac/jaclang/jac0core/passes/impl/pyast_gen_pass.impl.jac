@@ -2812,14 +2812,23 @@ impl PyastGenPass._adj_prefetch_hops(nd: uni.InForStmt) -> list[tuple] {
     # the proof: its BFS breaks the moment the target id shows up, so it
     # touches a few nodes of a level the hint would fetch in full - measured
     # d=3 438ms -> 9531ms, d=4 5.4s -> 22.3s with the hint in. Every walker
-    # whose loop can stop early is in that class, so decline on ANY `break`
-    # (or `skip`, which returns out of the ability) anywhere under the body -
-    # deliberately coarse: a break in a nested loop that does NOT leave this
-    # one is declined too, which costs a missed hint, never a wrong answer.
+    # whose loop can stop early is in that class, so decline on ANY early exit
+    # anywhere under the body - deliberately coarse: one in a nested loop or a
+    # nested lambda that does NOT leave this loop is declined too, which costs
+    # a missed hint, never a wrong answer. Jac spells early exit four ways and
+    # only two of them are CtrlStmt: `break` and `skip` (CtrlStmt), plus
+    # `return` (uni.ReturnStmt) and the OSP `disengage` (uni.DisengageStmt),
+    # which are their own node types - `continue` alone keeps the hint.
     for cs in UniPass.get_all_sub_nodes(nd=nd, typ=uni.CtrlStmt) {
         if cs.ctrl.name in (Tok.KW_BREAK, Tok.KW_SKIP) {
             return [];
         }
+    }
+    if (
+        UniPass.get_all_sub_nodes(nd=nd, typ=uni.ReturnStmt)
+        or UniPass.get_all_sub_nodes(nd=nd, typ=uni.DisengageStmt)
+    ) {
+        return [];
     }
     shapes = self._adj_ref_shapes(nd, loop_var);
     mod = nd.find_parent_of_type(uni.Module);
