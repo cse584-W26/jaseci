@@ -597,6 +597,190 @@ def _stream_from_mirror(
 }
 
 
+# --- T6: projected hydration for compiler-stamped jobj / jobj_many ---------
+
+class _Unloaded {
+    # Stand-in for a field the compiler proved the walker never reads.
+    # Dataclass `has` defaults are CLASS attributes, so without a per-instance
+    # placeholder an unprojected read would silently answer the default (a
+    # wrong VALUE); with it, every observation fails loud. repr stays inert
+    # so logging/debugging an instance never trips it.
+    def __init__(self: _Unloaded, name: str) {
+        object.__setattr__(self, '_f', name);
+    }
+    def _bad(self: _Unloaded) -> None {
+        raise RuntimeError(
+            "projected field " + str(self._f) + " read outside the compiler's proof"
+        );
+    }
+    def __bool__(self: _Unloaded) -> bool { self._bad(); return False; }
+    def __eq__(self: _Unloaded, other: object) -> bool { self._bad(); return False; }
+    def __lt__(self: _Unloaded, other: object) -> bool { self._bad(); return False; }
+    def __hash__(self: _Unloaded) -> int { self._bad(); return 0; }
+    def __int__(self: _Unloaded) -> int { self._bad(); return 0; }
+    def __len__(self: _Unloaded) -> int { self._bad(); return 0; }
+    def __iter__(self: _Unloaded) -> object { self._bad(); return iter(()); }
+    def __str__(self: _Unloaded) -> str { self._bad(); return ''; }
+    def __format__(self: _Unloaded, spec: str) -> str { self._bad(); return ''; }
+    def __repr__(self: _Unloaded) -> str { return '<unloaded ' + str(self._f) + '>'; }
+}
+
+
+glob _unloaded_tmpl_cache: dict = {};
+
+
+def _unloaded_template(cls: type, fields: tuple) -> dict {
+    key = (cls, fields);
+    if (hit := _unloaded_tmpl_cache.get(key)) is not None {
+        return hit;
+    }
+    import from jaclang.runtimelib.typecache { field_names }
+    tmpl: dict = {};
+    for f in field_names(cls) {
+        if str(f) not in fields {
+            tmpl[str(f)] = _Unloaded(str(f));
+        }
+    }
+    _unloaded_tmpl_cache[key] = tmpl;
+    return tmpl;
+}
+
+
+impl hydrate_projected(
+    mem: Session, cls: type, ids: list[UUID], fields: tuple
+) -> tuple {
+    # -> (built: {UUID: Archetype}, absent: [UUID]). Real `cls` instances
+    # carrying ONLY `fields` (from the mirror's jsonb columns, decoded and
+    # coerced exactly as the full path does) on a slim persistent NodeAnchor;
+    # `absent` is every id the mirror could not answer with the same ACL
+    # verdict as the full path (other archetype, missing, per-anchor grants,
+    # shared-root rows, denied, NULL column) - the caller loads those the
+    # legacy way, so the positional result is identical by construction.
+    # ponytail: the ACL block below duplicates _stream_from_mirror's rather
+    # than refactoring a parity-proven function mid-ladder; fold both onto
+    # one helper as a follow-up.
+    import sys;
+    import json;
+    import from jaclang.jac0core.runtime { JacRuntimeInterface }
+    import from jaclang.runtimelib.serializer { Serializer }
+    import from jaclang.runtimelib.typecache { get_field_types }
+    import from jaclang.runtimelib.store { intern_uuid }
+    nothing = ({}, list(ids));
+    store = mem.store;
+    if store is None or not hasattr(store, 'load_mirror_rows')
+        or not hasattr(store, 'ensure_mirror') {
+        return nothing;
+    }
+    if not _stream_class_ok(str(cls.__module__), str(cls.__name__)) {
+        return nothing;
+    }
+    try {
+        jctx = JacRuntimeInterface.get_context();
+    } except Exception {
+        return nothing;
+    }
+    ur = jctx?.user_root;
+    gated = _acl_gated();
+    if gated and ur is None {
+        return nothing;
+    }
+    if not store.ensure_mirror(cls) {
+        return nothing;
+    }
+    mem.read_barrier();
+    mrows = store.load_mirror_rows(cls, ids, tuple(fields));
+    if mrows is None {
+        return nothing;
+    }
+    shared_id = _shared_root_id();
+    root_ids = list({r[1] for r in mrows if r[1] is not None});
+    roots = mem.batch_get(root_ids) if (gated and root_ids) else {};
+    ur_key = str(ur.id) if ur is not None else '';
+    root_contrib: dict = {};
+    for (rid, ra) in roots.items() {
+        rc = ra.access.roots.check(ur_key);
+        root_contrib[rid] = (
+            rc.value if rc is not None else None,
+            ra.access.all.value
+        );
+    }
+    ftypes = get_field_types(cls);
+    tmpl = _unloaded_template(cls, tuple(str(f) for f in fields));
+    jload = json.loads;
+    tname = str(cls.__name__);
+    built: dict = {};
+    nbytes = 0;
+    for r in mrows {
+        aid = intern_uuid(r[0]);
+        root_id = intern_uuid(r[1]) if r[1] else None;
+        acl_all = int(r[2]) if r[2] is not None else -1;
+        acl_spec = (r[3] is True) or r[3] == 't';
+        if gated {
+            if acl_spec or (shared_id is not None and root_id == shared_id) {
+                continue;   # per-anchor grants / shared root: full path
+            }
+            if ur is not None and (root_id == ur.id or aid == ur.id) {
+                ;   # owner (or the caller's own root)
+            } else {
+                (rc, rall) = root_contrib.get(root_id, (None, -1));
+                level = rc if rc is not None else max(acl_all, int(rall));
+                if level < 0 {
+                    continue;   # denied: legacy path answers None (+diagnostic)
+                }
+            }
+        }
+        vals: dict = {};
+        ok_row = True;
+        for (i, f) in enumerate(fields) {
+            raw = r[5 + i];
+            if raw is None {
+                ok_row = False;   # field absent from props: let the full path decide
+                break;
+            }
+            nbytes += len(raw);
+            v = Serializer._deserialize_value(jload(raw));
+            tt = ftypes.get(str(f));
+            if tt is not None {
+                (cv, cok) = Serializer.coerce(v, tt);
+                if cok {
+                    v = cv;
+                }
+            }
+            vals[str(f)] = v;
+        }
+        if not ok_row {
+            continue;
+        }
+        anchor = NodeAnchor.__new__(NodeAnchor);
+        ad = anchor.__dict__;
+        ad['id'] = aid;
+        ad['root'] = root_id;
+        ad['persistent'] = True;
+        ad['hash'] = 1;
+        ad['edges'] = [];
+        ad['version'] = 0;
+        ad['_sn_arch_type'] = tname;
+        arch = cls.__new__(cls);
+        d = arch.__dict__;
+        d.update(tmpl);
+        d.update(vals);
+        setattr(arch, '__jac__', anchor);
+        ad['archetype'] = arch;
+        built[aid] = arch;
+    }
+    absent = [i for i in ids if i not in built];
+    if PROJECT_DEBUG {
+        sys.stderr.write(
+            'PROJECT-RT cls=' + tname + ' fields=' + str(tuple(fields))
+            + ' ids=' + str(len(ids)) + ' rows=' + str(len(mrows))
+            + ' built=' + str(len(built)) + ' absent=' + str(len(absent))
+            + ' bytes=' + str(nbytes) + chr(10)
+        );
+    }
+    return (built, absent);
+}
+
+
 impl _try_stream(
     mem: Session, q: GraphQuery, ids: list[UUID], local: dict[UUID, Anchor]
 ) -> (list[Anchor] | None) {

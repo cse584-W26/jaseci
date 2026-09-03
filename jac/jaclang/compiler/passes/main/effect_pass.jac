@@ -211,6 +211,206 @@ def _resolved_bodies(owner: object) -> list {
 }
 
 
+# --- T6: field-usage projection for jobj / jobj_many hydration --------------
+# Calls whose result the walker observes ONLY through attribute reads,
+# jid(), isinstance() and truth tests can be hydrated from the archetype's
+# mirror columns instead of the full anchor blob. The proof is over NAMES,
+# not symbols: Jac's if/for blocks are symbol scopes but compile to one flat
+# Python frame, so a same-named use anywhere in the walker may observe the
+# binding. Uses in a SIBLING branch of an if/elif/else that no loop encloses
+# can never see it (exactly one branch runs per frame) and are excluded;
+# every other use must be one of the admissible shapes or the site is
+# declined - refusal over wrongness, per site.
+
+# calls whose ONLY observation of an argument is its identity
+glob _IDENTITY_CALLS: tuple = ('jid', );
+
+
+def _walk(nd: object, typ: type, out: list) -> list {
+    # brute-force subtree collection over .kid: the per-node _sub_node_tab
+    # is not guaranteed complete for every module shape, and a missed Name
+    # would be a missed USE - unsound for this audit
+    if isinstance(nd, typ) {
+        out.append(nd);
+    }
+    for k in list(getattr(nd, 'kid', []) or []) {
+        _walk(k, typ, out);
+    }
+    return out;
+}
+
+
+def _branch_of(ifs: object, child: object) -> str {
+    if child is getattr(ifs, 'else_body', None) {
+        return 'else';
+    }
+    for st in list(getattr(ifs, 'body', []) or []) {
+        if st is child {
+            return 'body';
+        }
+    }
+    return 'cond';
+}
+
+
+def _sibling_branch(use: object, bind: object) -> bool {
+    # True iff `use` and `bind` sit in different arms (body vs else_body) of
+    # the same if-statement and no loop encloses that statement - the only
+    # case where a flat-frame variable bound in one arm is provably never
+    # observed in the other.
+    chain: dict = {};
+    cur = bind;
+    p = getattr(cur, 'parent', None);
+    while p is not None {
+        chain[id(p)] = cur;
+        cur = p;
+        p = getattr(cur, 'parent', None);
+    }
+    cur = use;
+    p = getattr(cur, 'parent', None);
+    while p is not None {
+        if id(p) in chain {
+            if not isinstance(p, uni.IfStmt) {
+                return False;
+            }
+            if _ancestor(p, (uni.InForStmt, uni.WhileStmt)) is not None {
+                return False;
+            }
+            a = _branch_of(p, cur);
+            b = _branch_of(p, chain[id(p)]);
+            return a != b and a != 'cond' and b != 'cond';
+        }
+        cur = p;
+        p = getattr(cur, 'parent', None);
+    }
+    return False;
+}
+
+
+def _on_store_path(n: object) -> bool {
+    # is `n` (or anything containing it) an assignment target?
+    cur = n;
+    p = getattr(cur, 'parent', None);
+    while p is not None {
+        if isinstance(p, uni.Assignment) {
+            for t in list(getattr(p, 'target', []) or []) {
+                if t is cur {
+                    return True;
+                }
+            }
+            return False;
+        }
+        if isinstance(p, (uni.CodeBlockStmt, uni.Ability, uni.Archetype)) {
+            return False;
+        }
+        cur = p;
+        p = getattr(cur, 'parent', None);
+    }
+    return False;
+}
+
+
+def _is_none_lit(e: object) -> bool {
+    return isinstance(e, uni.Null) or str(getattr(e, 'value', '')) == 'None';
+}
+
+
+def _call_name(fc: object) -> str {
+    t = getattr(fc, 'target', None);
+    if isinstance(t, uni.Name) {
+        return str(getattr(t, 'sym_name', '') or t.value);
+    }
+    return '';
+}
+
+
+def _projection_of(scopes: list, bind: object, tgt: object) -> (tuple | None) {
+    # -> (type_name, (field, ...)) when EVERY use of the bound name in the
+    # walker is admissible, else None
+    vname = str(tgt.value);
+    fields: set = set();
+    types: set = set();
+    for scope in scopes {
+        if not isinstance(scope, uni.UniNode) {
+            return None;
+        }
+        names = _walk(scope, uni.Name, []);
+        for nm in names {
+            if nm is tgt or str(nm.value) != vname {
+                continue;
+            }
+            p = getattr(nm, 'parent', None);
+            # attribute NAMES and keyword keys are not variable references
+            if isinstance(p, uni.AtomTrailer) and p.right is nm {
+                continue;
+            }
+            if isinstance(p, uni.KWPair) and getattr(p, 'key', None) is nm {
+                continue;
+            }
+            # a plain rebind / loop target observes nothing (its own reads
+            # are audited like every other read of the name)
+            if isinstance(p, uni.Assignment) and nm in list(p.target or []) {
+                continue;
+            }
+            if isinstance(p, uni.InForStmt) and p.target is nm {
+                continue;
+            }
+            if _sibling_branch(nm, bind) {
+                continue;
+            }
+            if _ancestor(nm, (uni.DeleteStmt, )) is not None {
+                return None;
+            }
+            # 1. attribute read: x.f  (not a method call, not a store)
+            if isinstance(p, uni.AtomTrailer) and p.target is nm
+                and getattr(p, 'is_attr', False) and isinstance(p.right, uni.Name) {
+                gp = getattr(p, 'parent', None);
+                if isinstance(gp, uni.FuncCall) and gp.target is p {
+                    return None;
+                }
+                if _on_store_path(p) {
+                    return None;
+                }
+                fields.add(str(p.right.value));
+                continue;
+            }
+            if isinstance(p, uni.FuncCall) and nm in list(p.params or []) {
+                cname = _call_name(p);
+                prms = list(p.params or []);
+                # 2. identity only: jid(x)
+                if cname in _IDENTITY_CALLS and len(prms) == 1 {
+                    continue;
+                }
+                # 3. isinstance(x, T) with a bare type name
+                if cname == 'isinstance' and len(prms) == 2 and prms[0] is nm
+                    and isinstance(prms[1], uni.Name) {
+                    types.add(str(prms[1].value));
+                    continue;
+                }
+                return None;
+            }
+            # 4. truth test / `is None`
+            if _truth_only_use(nm) {
+                continue;
+            }
+            if isinstance(p, uni.CompareExpr) {
+                ops = [str(getattr(o, 'value', '')) for o in list(p.ops or [])];
+                rights = list(p.rights or []);
+                if len(rights) == 1 and ops and ops[0] in ('is', 'is not')
+                    and (_is_none_lit(rights[0]) if p.left is nm else _is_none_lit(p.left)) {
+                    continue;
+                }
+            }
+            return None;
+        }
+    }
+    if len(types) != 1 {
+        return None;
+    }
+    return (list(types)[0], tuple(sorted(fields)));
+}
+
+
 class EffectPass(UniPass) {
 
     def before_pass(self: EffectPass) -> None {
@@ -239,6 +439,17 @@ class EffectPass(UniPass) {
                 self._stamp_closure_sufficiency(nd);
             } except Exception {
                 ;   # advisory stamp only: any doubt leaves the call as-is
+            }
+            try {
+                self._stamp_hydrate_projection(nd);
+            } except Exception as e {
+                # same stance: the T6 projection stamp is advisory
+                if os.environ.get('JAC_EFFECT_DEBUG') {
+                    sys.stderr.write(
+                        'EFFECTPASS ' + str(nd.name)
+                        + ' hydrate projection internal: ' + str(e) + chr(10)
+                    );
+                }
             }
         }
     }
@@ -410,6 +621,70 @@ class EffectPass(UniPass) {
                 'EFFECTPASS ' + str(w.name) + ' closure sufficiency limit='
                 + str(klim) + chr(10)
             );
+        }
+    }
+
+    def _stamp_hydrate_projection(self: EffectPass, w: uni.Archetype) -> None {
+        # T6: per-site projection stamp for jobj()/jobj_many() in a walker
+        # that just proved read-only. PyastGenPass turns the stamp into a
+        # `_proj=(T, (fields...))` keyword; the runtime then hydrates from
+        # T's mirror columns (no anchor blob decode) when it can, and falls
+        # back to the full load otherwise. Two binding shapes: `x = jobj(id)`
+        # and `for x in jobj_many(ids)`.
+        import os;
+        import sys;
+        scopes = self._scopes_of(w);
+        calls: list = [];
+        seen: set = set();
+        for scope in scopes {
+            if scope is not None {
+                for c in _walk(scope, uni.FuncCall, []) {
+                    if id(c) not in seen {
+                        seen.add(id(c));
+                        calls.append(c);
+                    }
+                }
+            }
+        }
+        for fc in calls {
+            fname = _call_name(fc);
+            if fname not in ('jobj', 'jobj_many') {
+                continue;
+            }
+            params = list(getattr(fc, 'params', []) or []);
+            if len(params) != 1 or isinstance(params[0], uni.KWPair) {
+                continue;
+            }
+            bind = None;
+            tgt = None;
+            p = getattr(fc, 'parent', None);
+            if fname == 'jobj' and isinstance(p, uni.Assignment)
+                and getattr(p, 'value', None) is fc {
+                tgts = list(getattr(p, 'target', []) or []);
+                if len(tgts) == 1 and isinstance(tgts[0], uni.Name) {
+                    bind = p;
+                    tgt = tgts[0];
+                }
+            } elif fname == 'jobj_many' and isinstance(p, uni.InForStmt)
+                and getattr(p, 'collection', None) is fc
+                and isinstance(p.target, uni.Name) {
+                bind = p;
+                tgt = p.target;
+            }
+            if bind is None {
+                continue;
+            }
+            proj = _projection_of(scopes, bind, tgt);
+            if os.environ.get('JAC_EFFECT_DEBUG') {
+                sys.stderr.write(
+                    'EFFECTPASS ' + str(w.name) + ' hydrate projection '
+                    + fname + '@' + str(getattr(fc.loc, 'first_line', '?'))
+                    + ' ' + (str(proj) if proj is not None else 'declined') + chr(10)
+                );
+            }
+            if proj is not None {
+                fc.hydrate_proj = proj;
+            }
         }
     }
 

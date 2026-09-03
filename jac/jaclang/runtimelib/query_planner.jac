@@ -12,7 +12,8 @@ glob logger = logging.getLogger(__name__),
          'resolve_query',
          'resolve_query_edges',
          'resolve_query_prefix',
-         'prefetch_adjacency'
+         'prefetch_adjacency',
+         'hydrate_projected'
      ],
      # T3: JAC_LOOP_PREFETCH=1 arms the compiler-emitted `jadj_prefetch` hint
      # (one adjacency statement per loop LEVEL instead of one per node) and
@@ -26,6 +27,14 @@ glob logger = logging.getLogger(__name__),
 # the memo and why not, plus one per memo miss. This is T3's runnable check -
 # a hint that silently does nothing looks exactly like a hint that works.
 glob PREFETCH_DEBUG: bool = bool(os.environ.get('JAC_PREFETCH_DEBUG', '').strip());
+
+# T6: JAC_PROJECT_HYDRATE=0 disarms the compiler-stamped `_proj` keyword on
+# jobj/jobj_many (mirror-column hydration in read-only walkers); default ON.
+# JAC_PROJECT_DEBUG=1 prints one PROJECT-RT line per projected batch.
+glob PROJECT_HYDRATE: bool = os.environ.get(
+    'JAC_PROJECT_HYDRATE', '1'
+).strip().lower() not in ('0', 'false', 'no', 'off');
+glob PROJECT_DEBUG: bool = bool(os.environ.get('JAC_PROJECT_DEBUG', '').strip());
 
 
 def _pf_dbg(msg: str) -> None;
@@ -90,6 +99,11 @@ def prefetch_adjacency(
     edge_type: any = None,
     node_type: any = None
 ) -> None;
+
+
+def hydrate_projected(
+    mem: Session, cls: type, ids: list[UUID], fields: tuple
+) -> tuple;
 
 
 def resolve_query(mem: Session, q: GraphQuery) -> list[Anchor];

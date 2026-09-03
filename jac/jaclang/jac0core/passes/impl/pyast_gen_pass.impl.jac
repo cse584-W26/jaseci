@@ -2664,6 +2664,25 @@ impl PyastGenPass._jobj_prefetch_hits(nd: uni.InForStmt) -> list[uni.Expr] {
     return hits;
 }
 
+impl PyastGenPass._proj_tuple(hp: tuple) -> ast3.AST {
+    # `(T, ('f1', 'f2'))` - a FRESH Name for the type (the identifier the
+    # walker itself wrote in isinstance(x, T), resolved in module scope)
+    return self.sync(
+        ast3.Tuple(
+            elts=[
+                self.sync(ast3.Name(id=str(hp[0]), ctx=ast3.Load())),
+                self.sync(
+                    ast3.Tuple(
+                        elts=[self.sync(ast3.Constant(value=str(f))) for f in hp[1]],
+                        ctx=ast3.Load()
+                    )
+                )
+            ],
+            ctx=ast3.Load()
+        )
+    );
+}
+
 impl PyastGenPass._prefetch_hint_stmt(nd: uni.InForStmt) -> (ast3.AST | None) {
     # #21 Rule C: warm Session.__mem__ (L1) for every jobj(id) the loop will
     # call, via ONE jobj_many() round trip issued before the loop starts.
@@ -2707,7 +2726,14 @@ impl PyastGenPass._prefetch_hint_stmt(nd: uni.InForStmt) -> (ast3.AST | None) {
         generators = [outer_gen, inner_gen];
     }
     listcomp = ast3.ListComp(elt=cast(ast3.expr, elt), generators=generators);
-    call = ast3.Call(func=self.builtin_name('jobj_many'), args=[listcomp], keywords=[]);
+    # T6: the hint must carry the SAME projection as the loop's jobj() sites
+    # or their per-item calls miss the projected cache and go single-row
+    hps = [getattr(h.parent, 'hydrate_proj', None) for h in hits];
+    kws: list = [];
+    if hps[0] is not None and all(x == hps[0] for x in hps) {
+        kws.append(ast3.keyword(arg='_proj', value=self._proj_tuple(hps[0])));
+    }
+    call = ast3.Call(func=self.builtin_name('jobj_many'), args=[listcomp], keywords=kws);
     return self.sync(ast3.Expr(value=cast(ast3.expr, call)), jac_node=nd, deep=True);
 }
 
@@ -4352,6 +4378,12 @@ impl PyastGenPass.exit_func_call(nd: uni.FuncCall) -> None {
             # a sound sufficiency threshold for the jclosure call - append
             # the limit the app no longer spells
             call_args.append(self.sync(ast3.Constant(value=int(climit))));
+        }
+        if (hp := getattr(nd, 'hydrate_proj', None)) is not None {
+            # T6: EffectPass proved the walker reads only hp[1] off this
+            # site's objects - hand the runtime `_proj=(T, (fields...))`
+            keywords = list(keywords);
+            keywords.append(self.sync(ast3.keyword(arg='_proj', value=self._proj_tuple(hp))));
         }
         nd.gen.py_ast = [
             self.sync(

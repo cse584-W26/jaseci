@@ -473,10 +473,27 @@ impl JacContext.reset_graph(root_node: (Root | None) = None) -> int {
     return deleted_count;
 }
 
-impl JacPersistence.get_object(id: str) -> (Archetype | None) {
+impl JacPersistence.get_object(
+    id: str, _proj: (tuple | None) = None
+) -> (Archetype | None) {
     if (id == 'root') {
         return JacRuntimeInterface.get_context().user_root.archetype;
-    } elif (`obj := JacRuntimeInterface.get_context().mem.get(UUID(id))) {
+    }
+    if _proj is not None {
+        # T6: a compiler-stamped site. A projected instance already built
+        # for this request (the loop's jobj_many hint) answers directly;
+        # anything resident in L1 keeps the full-object path; otherwise the
+        # single id takes the batched projected path.
+        ctx = JacRuntimeInterface.get_context();
+        uid = UUID(id);
+        if (pa := ctx.proj_cache.get(uid)) is not None {
+            return pa;
+        }
+        if uid not in ctx.mem.__mem__ {
+            return JacPersistence.get_objects_many([id], _proj)[0];
+        }
+    }
+    if (`obj := JacRuntimeInterface.get_context().mem.get(UUID(id))) {
         if not JacRuntimeInterface.check_read_access(`obj) {
             return None;
         }
@@ -485,11 +502,66 @@ impl JacPersistence.get_object(id: str) -> (Archetype | None) {
     return None;
 }
 
-impl JacPersistence.get_objects_many(ids: list[str]) -> list[(Archetype | None)] {
+impl JacPersistence.get_objects_many(
+    ids: list[str], _proj: (tuple | None) = None
+) -> list[(Archetype | None)] {
     # ponytail: batch counterpart of get_object -- one mem.batch_get round
     # trip instead of N single-id lookups (Session.find/get_object idiom gap).
     ctx = JacRuntimeInterface.get_context();
     mem = ctx.mem;
+    if _proj is not None {
+        # T6: EffectPass proved this site's results are observed only through
+        # the stamped fields (+ jid/isinstance/truth). Inside a read-only
+        # request hydrate them from the archetype's mirror columns - no
+        # anchor blob decode - and fall back per id for anything the mirror
+        # cannot answer. Never raises into the walker: any failure here
+        # takes the legacy path below.
+        try {
+            import from jaclang.runtimelib.query_planner {
+                PROJECT_HYDRATE, hydrate_projected
+            }
+            if PROJECT_HYDRATE and ctx.request_read_only
+                and not (mem._dirty or mem._deleted or mem._txn_changed) {
+                (cls, fields) = _proj;
+                uuids = [UUID(i) for i in ids if i != 'root'];
+                pc = ctx.proj_cache;
+                resident = mem.__mem__;
+                need: list = [];
+                for u in uuids {
+                    if u not in pc and u not in resident {
+                        need.append(u);
+                    }
+                }
+                if need {
+                    (built, _absent) = hydrate_projected(mem, cls, need, tuple(fields));
+                    pc.update(built);
+                }
+                rest = [u for u in uuids if u not in pc];
+                found = mem.batch_get(rest) if rest else {};
+                out: list[(Archetype | None)] = [];
+                for id in ids {
+                    if (id == 'root') {
+                        out.append(ctx.user_root.archetype);
+                        continue;
+                    }
+                    u = UUID(id);
+                    if (pa := pc.get(u)) is not None {
+                        out.append(pa);
+                        continue;
+                    }
+                    `obj = found.get(u);
+                    if `obj is not None and JacRuntimeInterface.check_read_access(`obj) {
+                        out.append(`obj.archetype);
+                    } else {
+                        out.append(None);
+                    }
+                }
+                return out;
+            }
+        } except Exception as e {
+            logger.warning(f"projected hydration failed (falling back): {e}");
+        }
+    }
     uuid_ids = [UUID(i) for i in ids if i != 'root'];
     found = mem.batch_get(uuid_ids) if uuid_ids else {};
     out: list[(Archetype | None)] = [];
