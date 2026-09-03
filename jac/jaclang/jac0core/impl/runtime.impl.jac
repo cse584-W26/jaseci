@@ -474,8 +474,22 @@ impl JacContext.reset_graph(root_node: (Root | None) = None) -> int {
 }
 
 impl JacPersistence.get_object(
-    id: str, _proj: (tuple | None) = None
+    id: str, cls: (type | None) = None, _proj: (tuple | None) = None
 ) -> (Archetype | None) {
+    if cls is not None {
+        # T7: typed lookup. The walker names the archetype it wants, so the
+        # 5-line narrow + report + return guard collapses to one line; a miss
+        # (or a different archetype) raises and the serve layer answers 404.
+        import from jaclang.runtimelib.exceptions { JacNotFound }
+        got = JacPersistence.get_object(id, None, _proj);
+        # via a bool: `if not isinstance(got, cls)` narrows `got` to `type`
+        # (the checker reads the 2nd arg's DECLARED type) and E1002s the return
+        ok = isinstance(got, cls);
+        if not ok {
+            raise JacNotFound(f"{cls.__name__} not found");
+        }
+        return got;
+    }
     if (id == 'root') {
         return JacRuntimeInterface.get_context().user_root.archetype;
     }

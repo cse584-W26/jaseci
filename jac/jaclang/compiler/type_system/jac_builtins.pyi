@@ -168,7 +168,16 @@ class f64(float): ...  # noqa: N801
 # Codegen emits `from jaclang.runtimelib.builtin import <name>`.
 
 def jid(obj: object) -> str: ...
+
+# T7: typed lookup. `jobj(id)` is unchanged; `jobj(id, T)` returns a T (the
+# runtime raises JacNotFound -> HTTP 404 on a miss), so the walker no longer
+# writes `isinstance(x, T)` to narrow it.
+_JObjT = TypeVar("_JObjT")
+
+@overload
 def jobj(id: str) -> object: ...
+@overload
+def jobj(id: str, cls: type[_JObjT]) -> _JObjT: ...
 
 # Generic over the class so `new(Date, ...).getTime()` keeps the constructed
 # type instead of collapsing to `object`. Constructor args stay `object` --

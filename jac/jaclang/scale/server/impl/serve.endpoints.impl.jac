@@ -151,7 +151,10 @@ impl JacAPIServerEndpoints.create_walker_callback(
                 code='EXECUTION_ERROR',
                 message=result.get('error', 'Walker execution failed'),
                 details=result.get('traceback') if 'traceback' in result else None,
-                meta=Meta(extra={'http_status': 500})
+                # the OCC ladder answers an error dict carrying its own status
+                # (409 write_conflict, T7's 404 not_found); every other walker
+                # failure keeps the 500 this always returned
+                meta=Meta(extra={'http_status': result.get('http_status', 500)})
             );
         }
         return TransportResponse.success(

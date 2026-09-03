@@ -756,7 +756,17 @@ class EffectPass(UniPass) {
                 continue;
             }
             params = list(getattr(fc, 'params', []) or []);
-            if len(params) != 1 or isinstance(params[0], uni.KWPair) {
+            if not params or isinstance(params[0], uni.KWPair) {
+                continue;
+            }
+            # T7: `jobj(id, T)` names the archetype itself, so the walker no
+            # longer writes `isinstance(x, T)` and the type comes from the
+            # call's own 2nd argument instead.
+            dflt: (str | None) = None;
+            if fname == 'jobj' and len(params) == 2
+                and isinstance(params[1], uni.Name) {
+                dflt = str(params[1].value);
+            } elif len(params) != 1 {
                 continue;
             }
             bind = None;
@@ -778,7 +788,7 @@ class EffectPass(UniPass) {
             if bind is None {
                 continue;
             }
-            proj = _projection_of(scopes, bind, tgt);
+            proj = _projection_of(scopes, bind, tgt, dflt);
             if os.environ.get('JAC_EFFECT_DEBUG') {
                 sys.stderr.write(
                     'EFFECTPASS ' + str(w.name) + ' hydrate projection '

@@ -49,3 +49,15 @@ obj WriteConflict(Exception) {
         );
     }
 }
+
+
+obj JacNotFound(Exception) {
+    # T7: a typed lookup `jobj(id, T)` that found nothing (or a different
+    # archetype). The walker no longer writes narrow + report + return; the
+    # serve layer maps this to HTTP 404 with `{"error": "<T> not found"}`.
+    has msg: str = '';
+
+    def postinit {
+        super.init(self.msg);
+    }
+}

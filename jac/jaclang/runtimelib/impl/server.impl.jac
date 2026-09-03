@@ -2,7 +2,7 @@ import from jaclang.cli.console { console }
 import from jaclang.cli.banners { JAC_DISCORD_URL }
 import from jaclang.runtimelib.serializer { Serializer }
 import from jaclang.runtimelib.client_bundle { MissingBunError, _ensure_js_generated }
-import from jaclang.runtimelib.exceptions { WriteConflict }
+import from jaclang.runtimelib.exceptions { JacNotFound, WriteConflict }
 import from jaclang.runtimelib.auth_models {
     IdentityType,
     LoginRequest,
@@ -502,6 +502,15 @@ async def _run_function_with_occ(
                     await asyncio.sleep(occ_backoff_ms * attempt / 1000.0);
                 }
                 await ctx.aset_user_root(root_id);
+            } except JacNotFound as nf {
+                # T7: typed `jobj(id, T)` miss. Same shape as the baselines'
+                # `if x is None: raise HTTPException(404)`.
+                ctx.mem.abort();
+                return {
+                    'error': str(nf),
+                    'error_code': 'not_found',
+                    'http_status': 404
+                };
             } except Exception as e {
                 ctx.mem.abort();
                 if include_traceback {

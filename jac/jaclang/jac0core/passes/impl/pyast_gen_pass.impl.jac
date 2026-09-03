@@ -2653,7 +2653,9 @@ impl PyastGenPass._jobj_prefetch_hits(nd: uni.InForStmt) -> list[uni.Expr] {
             continue;
         }
         params = call.params or [];
-        if len(params) != 1 or isinstance(params[0], uni.KWPair) {
+        # T7: `jobj(id, T)` carries a 2nd positional (the archetype); the
+        # prefetched id is still params[0].
+        if len(params) not in (1, 2) or isinstance(params[0], uni.KWPair) {
             continue;
         }
         arg = cast(uni.Expr, params[0]);
