@@ -1,4 +1,5 @@
 import logging;
+import os;
 import from typing { Any }
 import from uuid { UUID }
 import from jaclang.jac0core.archetype { Anchor, EdgeAnchor, NodeAnchor }
@@ -7,7 +8,27 @@ import from jaclang.runtimelib.session { Session }
 import from jaclang.runtimelib.sqlcompile { compile_query }
 
 glob logger = logging.getLogger(__name__),
-     __all__ = ['resolve_query', 'resolve_query_edges', 'resolve_query_prefix'];
+     __all__ = [
+         'resolve_query',
+         'resolve_query_edges',
+         'resolve_query_prefix',
+         'prefetch_adjacency'
+     ],
+     # T3: JAC_LOOP_PREFETCH=1 arms the compiler-emitted `jadj_prefetch` hint
+     # (one adjacency statement per loop LEVEL instead of one per node) and
+     # the per-request memo it fills. Default off = stock behaviour, and the
+     # hint call itself becomes a no-op, so nothing changes for any walker.
+     LOOP_PREFETCH: bool = os.environ.get(
+         'JAC_LOOP_PREFETCH', ''
+     ).strip().lower() in ('1', 'true', 'yes', 'on');
+
+# JAC_PREFETCH_DEBUG=1: one stderr line per hint telling you whether it filled
+# the memo and why not, plus one per memo miss. This is T3's runnable check -
+# a hint that silently does nothing looks exactly like a hint that works.
+glob PREFETCH_DEBUG: bool = bool(os.environ.get('JAC_PREFETCH_DEBUG', '').strip());
+
+
+def _pf_dbg(msg: str) -> None;
 
 
 def _origin_anchors(q: GraphQuery) -> list[Anchor];
@@ -49,6 +70,26 @@ def _try_stream_fused(
 def _try_stream(
     mem: Session, q: GraphQuery, ids: list[UUID], local: dict[UUID, Anchor]
 ) -> (list[Anchor] | None);
+
+
+def _adj_memo(mem: Session) -> (dict | None);
+
+
+def _memo_key(q: GraphQuery) -> (tuple | None);
+
+
+def _memo_pairs(
+    mem: Session, q: GraphQuery
+) -> (tuple[list[tuple[(UUID | None), (UUID | None)]], dict[UUID, Anchor]] | None);
+
+
+def prefetch_adjacency(
+    mem: Session,
+    origins: list,
+    dir: int,
+    edge_type: any = None,
+    node_type: any = None
+) -> None;
 
 
 def resolve_query(mem: Session, q: GraphQuery) -> list[Anchor];

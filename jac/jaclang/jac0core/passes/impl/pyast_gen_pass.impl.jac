@@ -2507,6 +2507,7 @@ impl PyastGenPass.exit_in_for_stmt(nd: uni.InForStmt) -> None {
     if hint is not None {
         py_nodes.append(hint);
     }
+    py_nodes.extend(self._adj_prefetch_hint_stmts(nd));
     py_nodes.append(
         self.sync(
             for_node(
@@ -2708,6 +2709,204 @@ impl PyastGenPass._prefetch_hint_stmt(nd: uni.InForStmt) -> (ast3.AST | None) {
     listcomp = ast3.ListComp(elt=cast(ast3.expr, elt), generators=generators);
     call = ast3.Call(func=self.builtin_name('jobj_many'), args=[listcomp], keywords=[]);
     return self.sync(ast3.Expr(value=cast(ast3.expr, call)), jac_node=nd, deep=True);
+}
+
+impl PyastGenPass._adj_ref_shapes(nd: uni.UniNode, root_var: str) -> list[tuple] {
+    # Every single-hop, predicate-free edge reference under `nd` whose origin
+    # is the bare name `root_var`, as (dir, edge_name|None, node_name|None).
+    # Multi-hop chains, edge/node predicates, a trailing `only` (what
+    # `x in [chain]` lowers to) and non-Name type expressions are all skipped:
+    # the runtime memo answers ONLY the bare shape, so a wider hint would be
+    # a wasted statement, never a wrong answer.
+    import from jaclang.jac0core.passes { UniPass }
+    out: list[tuple] = [];
+    for ert in UniPass.get_all_sub_nodes(nd=nd, typ=uni.EdgeRefTrailer) {
+        if not ert.chain or isinstance(ert.chain[0], uni.EdgeOpRef) {
+            continue;
+        }
+        if self._pure_ref_root(ert.chain[0]) != root_var {
+            continue;
+        }
+        rest = list(ert.chain[1:]);
+        ops = [
+            c
+            for c in rest
+            if isinstance(c, uni.EdgeOpRef)
+        ];
+        if len(ops) != 1 {
+            continue;
+        }
+        op = ops[0];
+        ename: (str | None) = None;
+        nname: (str | None) = None;
+        bad = False;
+        if op.filter_cond is not None {
+            ft = op.filter_cond.f_type;
+            if op.filter_cond.compares or (ft is not None and not isinstance(ft, uni.Name)) {
+                bad = True;
+            } elif ft is not None {
+                ename = str(ft.value);
+            }
+        }
+        tail = [
+            c
+            for c in rest
+            if not isinstance(c, uni.EdgeOpRef)
+        ];
+        if len(tail) > 1 {
+            bad = True;
+        } elif tail {
+            t0 = tail[0];
+            if not isinstance(t0, uni.FilterCompr) or t0.compares {
+                bad = True;
+            } elif t0.f_type is not None {
+                if not isinstance(t0.f_type, uni.Name) {
+                    bad = True;
+                } else {
+                    nname = str(t0.f_type.value);
+                }
+            }
+        }
+        if bad {
+            continue;
+        }
+        key = (int(op.edge_dir.value), ename, nname);
+        if key not in out {
+            out.append(key);
+        }
+    }
+    return out;
+}
+
+impl PyastGenPass._adj_prefetch_hops(nd: uni.InForStmt) -> list[tuple] {
+    # T3: which single-hop adjacency shapes will `for <var> in <coll>` take
+    # off its loop variable? Directly, or through ONE call level into a
+    # module-level `def` in the SAME module whose first parameter roots the
+    # reference -- which is the form the SNB naive walkers actually use
+    # (`for f in _neighbors(n)`), so the direct-only matcher would fire on
+    # nothing. A helper from another module is declined because the bare
+    # `Knows` / `Person` names the hint emits must resolve at the LOOP site.
+    import from jaclang.jac0core.passes { UniPass }
+    # Same three preconditions as _jobj_prefetch_hits: a bare Name target, a
+    # collection that is a pure ref (the hint RE-EVALUATES it -- see
+    # _pure_ref_root), and no rebind of the loop var inside the body.
+    if not isinstance(nd.target, uni.Name) {
+        return [];
+    }
+    if self._pure_ref_root(nd.collection) is None {
+        return [];
+    }
+    loop_var = str(nd.target.value);
+    for stmt in (nd.body or []) {
+        if (
+            isinstance(stmt, uni.Assignment)
+            and any(
+                isinstance(t, uni.Name) and str(t.value) == loop_var
+                for t in stmt.target
+            )
+        ) {
+            return [];
+        }
+    }
+    # An early exit makes the hint a PESSIMISATION, not a win. SNB ic13 is
+    # the proof: its BFS breaks the moment the target id shows up, so it
+    # touches a few nodes of a level the hint would fetch in full - measured
+    # d=3 438ms -> 9531ms, d=4 5.4s -> 22.3s with the hint in. Every walker
+    # whose loop can stop early is in that class, so decline on ANY `break`
+    # (or `skip`, which returns out of the ability) anywhere under the body -
+    # deliberately coarse: a break in a nested loop that does NOT leave this
+    # one is declined too, which costs a missed hint, never a wrong answer.
+    for cs in UniPass.get_all_sub_nodes(nd=nd, typ=uni.CtrlStmt) {
+        if cs.ctrl.name in (Tok.KW_BREAK, Tok.KW_SKIP) {
+            return [];
+        }
+    }
+    shapes = self._adj_ref_shapes(nd, loop_var);
+    mod = nd.find_parent_of_type(uni.Module);
+    if mod is None {
+        return shapes;
+    }
+    for fc in UniPass.get_all_sub_nodes(nd=nd, typ=uni.FuncCall) {
+        if not isinstance(fc.target, uni.Name) {
+            continue;
+        }
+        params = list(fc.params or []);
+        if (
+            len(params) != 1
+            or not isinstance(params[0], uni.Name)
+            or str(params[0].value) != loop_var
+        ) {
+            continue;
+        }
+        fname = str(fc.target.value);
+        for abl in UniPass.get_all_sub_nodes(nd=mod, typ=uni.Ability) {
+            if abl.method_owner is not None or abl.py_resolve_name() != fname {
+                continue;
+            }
+            sig = abl.signature;
+            if not isinstance(sig, uni.FuncSignature) {
+                continue;
+            }
+            prms = sig.get_parameters();
+            if not prms {
+                continue;
+            }
+            for k in self._adj_ref_shapes(abl, str(prms[0].name.value)) {
+                if k not in shapes {
+                    shapes.append(k);
+                }
+            }
+        }
+    }
+    return shapes;
+}
+
+impl PyastGenPass._adj_prefetch_hint_stmts(nd: uni.InForStmt) -> list {
+    # One `jadj_prefetch(<collection>, dir, Edge, Node)` per distinct shape,
+    # emitted BEFORE the loop. Pure hint: with JAC_LOOP_PREFETCH unset the
+    # runtime call returns immediately, and even armed it only warms a memo
+    # the per-node reference consults -- it can never change an answer.
+    hops = self._adj_prefetch_hops(nd);
+    if not hops {
+        return [];
+    }
+    import os;
+    if os.environ.get('JAC_PREFETCH_DEBUG') {
+        import sys;
+        print(
+            'ADJPREFETCH ' + str(nd.loc.mod_path) + ':' + str(nd.loc.first_line)
+            + ' ' + ' '.join(
+                '(' + str(d) + ',' + str(e) + ',' + str(t) + ')'
+                for (d, e, t) in hops
+            ),
+            file=sys.stderr
+        );
+    }
+    out: list = [];
+    for (d, ename, nname) in hops {
+        call = ast3.Call(
+            func=self.builtin_name('jadj_prefetch'),
+            args=[
+                cast(ast3.expr, self._clone_py(self.py_ast_val(nd.collection))),
+                ast3.Constant(value=d),
+                (
+                    ast3.Name(id=ename, ctx=ast3.Load())
+                        if ename
+                        else ast3.Constant(value=None)
+                ),
+                (
+                    ast3.Name(id=nname, ctx=ast3.Load())
+                        if nname
+                        else ast3.Constant(value=None)
+                )
+            ],
+            keywords=[]
+        );
+        out.append(
+            self.sync(ast3.Expr(value=cast(ast3.expr, call)), jac_node=nd, deep=True)
+        );
+    }
+    return out;
 }
 
 impl PyastGenPass.exit_while_stmt(nd: uni.WhileStmt) -> None {

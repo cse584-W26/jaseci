@@ -236,6 +236,9 @@ obj PyastGenPass(BaseAstGenPass[ast3.AST]) {
     def _is_pure_projection(expr: uni.UniNode, loop_var: str) -> bool;
     def _jobj_prefetch_hits(nd: uni.InForStmt) -> list[uni.Expr];
     def _prefetch_hint_stmt(nd: uni.InForStmt) -> (ast3.AST | None);
+    def _adj_ref_shapes(nd: uni.UniNode, root_var: str) -> list[tuple];
+    def _adj_prefetch_hops(nd: uni.InForStmt) -> list[tuple];
+    def _adj_prefetch_hint_stmts(nd: uni.InForStmt) -> list;
     def exit_while_stmt(nd: uni.WhileStmt) -> None;
     def exit_forever_stmt(nd: uni.ForeverStmt) -> None;
     def exit_with_stmt(nd: uni.WithStmt) -> None;

@@ -25,6 +25,7 @@ obj ExecutionContext {
         diagnostics: list[PermissionDenied] = [],
         pending_effects: list[Callable] = [],
         read_versions: dict[UUID, int] = {},
+        adj_memo: dict = {},
         _commit_ms: float = 0.0,
         _ser_ms: float = 0.0,
         request_read_only: bool = False,

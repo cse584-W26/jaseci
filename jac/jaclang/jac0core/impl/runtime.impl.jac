@@ -508,6 +508,37 @@ impl JacPersistence.get_objects_many(ids: list[str]) -> list[(Archetype | None)]
     return out;
 }
 
+impl JacPersistence.prefetch_adjacency(
+    origins: list, dir: int, edge_type: any = None, node_type: any = None
+) -> None {
+    # T3 hint, emitted by PyastGenPass in front of `for n in <frontier>` loops
+    # whose body takes a single-hop edge reference off the loop var: warm the
+    # per-request adjacency memo for the WHOLE frontier in one statement, so
+    # the body's per-node references are memo hits instead of one round trip
+    # per node visited (SNB ic1_depth at SF1: thousands -> 3 per BFS level).
+    #
+    # A hint can only make the next reference cheaper, never change what it
+    # answers, so it must never raise: everything below is swallowed and the
+    # loop runs exactly as it does today.
+    import from jaclang.runtimelib.query_planner {
+        prefetch_adjacency as _fill_adj_memo
+    }
+    try {
+        ctx = JacRuntimeInterface.get_context();
+        _fill_adj_memo(ctx.mem, origins, dir, edge_type, node_type);
+    } except Exception as e {
+        import os;
+        if os.environ.get('JAC_PREFETCH_DEBUG', '').strip() {
+            import sys;
+            import traceback;
+            print('ADJPREFETCH-RT hint raised: ' + repr(e), file=sys.stderr);
+            traceback.print_exc();
+        }
+        logger.debug(f"adjacency prefetch skipped: {e}");
+    }
+}
+
+
 impl JacPersistence.get_closure(
     start: str, edge_type: str, node_type: (str | type), max_depth: int,
     prop_name: str = '', prop_value: str = '', limit: int = 0

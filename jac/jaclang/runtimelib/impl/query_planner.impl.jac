@@ -940,14 +940,213 @@ impl _try_stream_fused(
 }
 
 
+impl _pf_dbg(msg: str) -> None {
+    import sys;
+    print('ADJPREFETCH-RT ' + msg, file=sys.stderr, flush=True);
+}
+
+
+impl _adj_memo(mem: Session) -> (dict | None) {
+    # T3's per-request adjacency memo lives on the ExecutionContext (a fresh
+    # object per request, server.impl.jac) - NOT on the Session, which a
+    # request SHARES with its parent context, and which would leak rows
+    # across requests.
+    #
+    # Refused outright while this session has any write in flight: the same
+    # `_dirty / _deleted / _txn_changed` triple session.impl.jac:730-734 uses
+    # for "no writes in this txn". A write can change adjacency and the memo
+    # would still answer from before it - refusal over staleness, in both
+    # directions (fill and read), which is why both go through here.
+    if not LOOP_PREFETCH {
+        return None;
+    }
+    import from jaclang.jac0core.runtime { JacRuntimeInterface }
+    if mem._dirty or mem._deleted or mem._txn_changed {
+        if PREFETCH_DEBUG {
+            _pf_dbg('memo off: writes in flight');
+        }
+        return None;
+    }
+    try {
+        jctx = JacRuntimeInterface.get_context();
+    } except Exception {
+        if PREFETCH_DEBUG {
+            _pf_dbg('memo off: no request context');
+        }
+        return None;
+    }
+    memo = getattr(jctx, 'adj_memo', None);
+    if memo is None and PREFETCH_DEBUG {
+        _pf_dbg('memo off: context has no adj_memo');
+    }
+    return memo;
+}
+
+
+impl _memo_key(q: GraphQuery) -> (tuple | None) {
+    # Only a bare single hop is memoizable. Node predicates, edge predicates
+    # and `only` (what `x in [chain]` lowers to) each narrow the row set, so
+    # a memo entry filled for the bare shape would not answer them.
+    if len(q.hops) != 1 {
+        return None;
+    }
+    h = q.hops[0];
+    if h.epreds or h.preds or h.only is not None {
+        return None;
+    }
+    return (int(h.dir), h.`edge, h.nd);
+}
+
+
+impl _memo_pairs(
+    mem: Session, q: GraphQuery
+) -> (tuple[list[tuple[(UUID | None), (UUID | None)]], dict[UUID, Anchor]] | None) {
+    # ALL-or-nothing: one origin missing from the memo and the whole query
+    # falls through to the generic path unchanged. A partial answer would be
+    # a wrong answer.
+    memo = _adj_memo(mem);
+    if not memo or mem.store is None {
+        return None;
+    }
+    key = _memo_key(q);
+    if key is None {
+        if PREFETCH_DEBUG {
+            _pf_dbg('read miss: hop shape not memoizable ' + repr(q));
+        }
+        return None;
+    }
+    origins = _origin_anchors(q);
+    if not origins {
+        return None;
+    }
+    pairs: list[tuple[(UUID | None), (UUID | None)]] = [];
+    local: dict[UUID, Anchor] = {};
+    for oanch in origins {
+        if not oanch.persistent {
+            # a memory-only origin is served by _walk_memory, never by SQL
+            return None;
+        }
+        hit = memo.get((oanch.id, key));
+        if hit is None {
+            if PREFETCH_DEBUG {
+                _pf_dbg('read miss: origin not memoized, key=' + str(key));
+            }
+            return None;
+        }
+        local[oanch.id] = oanch;
+        pairs.extend(hit);
+    }
+    return (pairs, local);
+}
+
+
+impl prefetch_adjacency(
+    mem: Session,
+    origins: list,
+    dir: int,
+    edge_type: any = None,
+    node_type: any = None
+) -> None {
+    # Fill the memo for a WHOLE frontier in one statement. This is the exact
+    # statement `_sql_pairs` would issue for each origin separately, plus
+    # `f0.id` in the SELECT (with_origin) so the rows can be partitioned back
+    # per origin. `ORDER BY f0.ord, e1.seq, e1.id` is unchanged, so within one
+    # origin the rows are in the same relative order as its single-origin
+    # query - byte-identical downstream.
+    memo = _adj_memo(mem);
+    store = mem.store;
+    if memo is None or store is None or not origins {
+        if PREFETCH_DEBUG {
+            _pf_dbg(
+                'fill skip: memo=' + str(memo is not None) + ' store='
+                + str(store is not None) + ' origins=' + str(len(origins or []))
+            );
+        }
+        return;
+    }
+    q = GraphQuery(
+        list(origins), hops=[QHop(dir=int(dir), `edge=edge_type, nd=node_type)]
+    );
+    key = _memo_key(q);
+    if key is None {
+        if PREFETCH_DEBUG {
+            _pf_dbg('fill skip: hop shape not memoizable');
+        }
+        return;
+    }
+    ids: list[UUID] = [];
+    for a in _origin_anchors(q) {
+        # _origin_anchors already deduped by id: a repeated origin in the
+        # list would otherwise get its rows twice (f0.ord 1 AND 2).
+        if a.persistent and (a.id, key) not in memo {
+            ids.append(a.id);
+        }
+    }
+    if not ids {
+        if PREFETCH_DEBUG {
+            _pf_dbg('fill skip: nothing new (all origins already memoized)');
+        }
+        return;
+    }
+    mem.read_barrier();
+    cq = compile_query(
+        q, 1, promotions=getattr(store, 'promotions', {}), with_origin=True
+    );
+    if cq.residual {
+        # a partially-pushed hop re-checks predicates on materialized results;
+        # the memo stores raw pairs, so never memoize one
+        if PREFETCH_DEBUG {
+            _pf_dbg('fill skip: residual predicates');
+        }
+        return;
+    }
+    cq.params['origin'] = [str(i) for i in ids];
+    # Staged in a local dict and published in one update: a half-filled memo
+    # would answer `[]` for origins whose rows had not arrived yet.
+    acc: dict = {};
+    for i in ids {
+        # an origin with NO neighbours is a HIT with [], not a miss
+        acc[(i, key)] = [];
+    }
+    nids: list[UUID] = [];
+    for r in store.rows(cq.sql, cq.params) {
+        nid = UUID(str(r[0])) if r[0] is not None else None;
+        eid = UUID(str(r[1])) if r[1] is not None else None;
+        acc[(UUID(str(r[2])), key)].append((nid, eid));
+        if nid is not None {
+            nids.append(nid);
+        }
+    }
+    memo.update(acc);
+    if PREFETCH_DEBUG {
+        _pf_dbg(
+            'fill ok: key=' + str(key) + ' origins=' + str(len(ids))
+            + ' rows=' + str(len(nids))
+        );
+    }
+    if nids {
+        # ONE load_full over the level's neighbours, so the loop body's field
+        # reads are L1 hits instead of a fetch per node
+        mem.batch_get(list(dict.fromkeys(nids)));
+    }
+}
+
+
 impl resolve_query(mem: Session, q: GraphQuery) -> list[Anchor] {
     if not q.origin {
         return [];
     }
-    if (fused := _try_stream_fused(mem, q)) is not None {
-        return fused;
+    # T3: the memo is consulted BEFORE the fused stream fast path, which
+    # would otherwise issue its own statement. On a miss nothing above
+    # changes - same fused check, same _resolve_pairs.
+    if (mp := _memo_pairs(mem, q)) is not None {
+        (pairs, local) = mp;
+    } else {
+        if (fused := _try_stream_fused(mem, q)) is not None {
+            return fused;
+        }
+        (pairs, local) = _resolve_pairs(mem, q, len(q.hops));
     }
-    (pairs, local) = _resolve_pairs(mem, q, len(q.hops));
     ids = _unique_nodes(pairs);
     if (streamed := _try_stream(mem, q, ids, local)) is not None {
         return streamed;
@@ -972,7 +1171,9 @@ impl resolve_query_edges(mem: Session, q: GraphQuery) -> list[Anchor] {
     if not q.origin or not q.hops {
         return [];
     }
-    (pairs, local) = _resolve_pairs(mem, q, len(q.hops));
+    # memo pairs carry the edge id too, so `[x ->:E:-> :e]` is served as well
+    mp = _memo_pairs(mem, q);
+    (pairs, local) = mp if mp is not None else _resolve_pairs(mem, q, len(q.hops));
     edge_ids: list[UUID] = [];
     node_of: dict[UUID, UUID] = {};
     seen: set[UUID] = set();

@@ -206,6 +206,9 @@ class JacPersistence {
     static def get_adjacency_pairs(
         origins: list[str], edge_type: str, node_type: (str | type)
     ) -> list[tuple[str, str]];
+    static def prefetch_adjacency(
+        origins: list, dir: int, edge_type: any = None, node_type: any = None
+    ) -> None;
     static def get_topk_inbound(
         dsts: list[str], edge_type: str, specs: list[tuple],
         order_field: str, max_value: int, limit: int, src_field: str = '',

@@ -19,5 +19,6 @@ def compile_query(
     q: GraphQuery,
     upto: int,
     mirror: (dict | None) = None,
-    promotions: dict[str, list[str]] = {}
+    promotions: dict[str, list[str]] = {},
+    with_origin: bool = False
 ) -> CompiledQuery;

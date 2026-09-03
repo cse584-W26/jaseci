@@ -84,6 +84,8 @@ impl __getattr__(name: str) -> object {
         return _get_jtopk();
     } elif (name == 'jadj_pairs') {
         return _get_jadj_pairs();
+    } elif (name == 'jadj_prefetch') {
+        return _get_jadj_prefetch();
     } elif (name == 'jroot') {
         return jroot;
     } elif (name == 'jroot_many') {
@@ -205,6 +207,14 @@ impl _get_jtopk -> Callable[..., any] {
 
 impl _get_jadj_pairs -> Callable[..., any] {
     return _get_jac().get_adjacency_pairs;
+}
+
+
+impl _get_jadj_prefetch -> Callable[..., any] {
+    # NOT `__jac_prefetch_adj`: a leading double underscore with no trailing
+    # `__` is name-mangled by Python inside a class body, and walker abilities
+    # compile to class methods -> NameError at the emitted hint's call site.
+    return _get_jac().prefetch_adjacency;
 }
 
 

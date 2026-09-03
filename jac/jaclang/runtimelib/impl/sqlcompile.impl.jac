@@ -385,8 +385,13 @@ impl compile_query(
     q: GraphQuery,
     upto: int,
     mirror: (dict | None) = None,
-    promotions: dict[str, list[str]] = {}
+    promotions: dict[str, list[str]] = {},
+    with_origin: bool = False
 ) -> CompiledQuery {
+    # with_origin (T3): append the ORIGIN id (f0.id) to the SELECT so a
+    # multi-origin traversal's rows can be partitioned back per origin.
+    # Opt-in precisely so the existing single-shape statement text (and its
+    # prepared-statement reuse) is byte-for-byte unchanged when it is off.
     # mirror (R3): {'table': str, 'fcols': [column, ...]} - the FINAL hop's
     # node join targets the slim per-archetype mirror table instead of fat
     # `anchors`, and the SELECT returns the mirror's fragment/ACL columns so
@@ -673,6 +678,9 @@ impl compile_query(
         sel = ', '.join(sel_parts);
     } else {
         sel = f"n{n}.id, e{n}.id";
+        if with_origin {
+            sel = sel + ', f0.id';
+        }
     }
     trav_order = 'f0.ord, ' + ', '.join(order);
     if global_used {
