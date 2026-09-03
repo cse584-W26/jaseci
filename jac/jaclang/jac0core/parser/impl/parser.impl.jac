@@ -2601,9 +2601,18 @@ impl Parser.parse_edge_op_ref -> EdgeOpRef | None {
                 }
             }
         }
-        fcond = FilterCompr(f_type=f_type, compares=compares, kid=fcompr_kid);
+        # T7: `->:*n:->` (range, no edge type) has nothing to put in the
+        # FilterCompr; an empty-kid node crashes every later pass, so leave
+        # filter_cond None and let _check_ranged_chain refuse it (E0083).
+        fcond: (FilterCompr | None) = None;
+        if fcompr_kid {
+            fcond = FilterCompr(f_type=f_type, compares=compares, kid=fcompr_kid);
+        }
         end_uni = self.consume_uni(TokenKind.ARROW_R_P2);
-        out_kid: list[UniNode] = [start_uni, fcond];
+        out_kid: list[UniNode] = [start_uni];
+        if fcond is not None {
+            out_kid.append(fcond);
+        }
         out_kid.extend(star_kid);
         out_kid.append(end_uni);
         return EdgeOpRef(
@@ -2653,7 +2662,10 @@ impl Parser.parse_edge_op_ref -> EdgeOpRef | None {
                 }
             }
         }
-        fcond = FilterCompr(f_type=f_type, compares=compares, kid=fcompr_kid);
+        fcond: (FilterCompr | None) = None;
+        if fcompr_kid {
+            fcond = FilterCompr(f_type=f_type, compares=compares, kid=fcompr_kid);
+        }
         in_dir = EdgeDir.IN;
         if self.check(TokenKind.ARROW_R_P2) {
             in_dir = EdgeDir.ANY;
@@ -2661,7 +2673,10 @@ impl Parser.parse_edge_op_ref -> EdgeOpRef | None {
         } else {
             end_uni = self.consume_uni(TokenKind.ARROW_L_P2);
         }
-        in_kid: list[UniNode] = [start_uni, fcond];
+        in_kid: list[UniNode] = [start_uni];
+        if fcond is not None {
+            in_kid.append(fcond);
+        }
         in_kid.extend(star_kid);
         in_kid.append(end_uni);
         return EdgeOpRef(

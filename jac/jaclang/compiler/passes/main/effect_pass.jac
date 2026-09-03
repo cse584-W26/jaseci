@@ -271,10 +271,31 @@ def _shape_a_limit(
             }
             if ok {
                 fsym = getattr(ct.target, 'sym', None);
+                # review fix (T7): the sufficiency limit promises the K
+                # NEAREST rows of the ENGINE's predicate. A row the walker
+                # drops in Python (guarded append) or a loop it leaves early
+                # would make it keep fewer than K although more exist, so
+                # the append must sit unguarded in the loop body and the
+                # loop must run out.
+                q = getattr(call, 'parent', None);
+                while q is not None and q is not loop {
+                    if isinstance(q, (uni.IfStmt, uni.TryStmt, uni.WhileStmt,
+                                      uni.InForStmt, uni.IterForStmt,
+                                      uni.ForeverStmt)) {
+                        return None;
+                    }
+                    q = getattr(q, 'parent', None);
+                }
             }
         }
     }
     if fsym is None {
+        return None;
+    }
+    for ex in UniPass.get_all_sub_nodes(nd=loop, typ=uni.CtrlStmt) {
+        return None;   # break / continue inside the closure loop
+    }
+    for ex in UniPass.get_all_sub_nodes(nd=loop, typ=uni.ReturnStmt) {
         return None;
     }
     sort_ok = False;
@@ -556,8 +577,14 @@ def _projection_of(
             return None;
         }
     }
-    if not types and dflt_type is not None {
-        types.add(dflt_type);
+    if dflt_type is not None {
+        # review fix (T7): the ranged chain / typed jobj PROVES the archetype;
+        # an isinstance on the same name that says otherwise is a walker bug
+        # or an always-false branch, never a reason to project another mirror
+        if types and types != {dflt_type} {
+            return None;
+        }
+        types = {dflt_type};
     }
     if len(types) != 1 {
         return None;
