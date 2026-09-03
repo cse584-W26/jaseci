@@ -665,6 +665,45 @@ impl hydrate_projected(
     import from jaclang.runtimelib.serializer { Serializer }
     import from jaclang.runtimelib.typecache { get_field_types }
     import from jaclang.runtimelib.store { intern_uuid }
+    if not fields {
+        # T7: ZERO projected fields. The compiler proved the walker observes
+        # these results only through `jid(x)` (plus isinstance / truth) -- the
+        # id the caller already handed us -- so there is nothing to SELECT and
+        # nothing to decide: no ensure_mirror, no read_barrier, no
+        # load_mirror_rows, no ACL verdict. This is exactly the pre-T7
+        # `jclosure` builtin's contract: it returned these same ids to the
+        # walker with no ACL filtering at all, and any later `jobj` /
+        # `jobj_many` on one of them enforces ACL as it always did. Every
+        # requested id is answered, so `absent` is empty.
+        tmpl0 = _unloaded_template(cls, ());
+        tname0 = str(cls.__name__);
+        built0: dict = {};
+        for uid in ids {
+            anchor0 = NodeAnchor.__new__(NodeAnchor);
+            ad0 = anchor0.__dict__;
+            ad0['id'] = uid;
+            ad0['root'] = None;
+            ad0['persistent'] = True;
+            ad0['hash'] = 1;
+            ad0['edges'] = [];
+            ad0['version'] = 0;
+            ad0['_sn_arch_type'] = tname0;
+            arch0 = cls.__new__(cls);
+            d0 = arch0.__dict__;
+            d0.update(tmpl0);
+            setattr(arch0, '__jac__', anchor0);
+            ad0['archetype'] = arch0;
+            built0[uid] = arch0;
+        }
+        if PROJECT_DEBUG {
+            sys.stderr.write(
+                'PROJECT-RT cls=' + tname0 + ' fields=() ids=' + str(len(ids))
+                + ' rows=0 built=' + str(len(built0)) + ' absent=0 bytes=0'
+                + chr(10)
+            );
+        }
+        return (built0, []);
+    }
     nothing = ({}, list(ids));
     store = mem.store;
     if store is None or not hasattr(store, 'load_mirror_rows')
