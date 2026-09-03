@@ -165,7 +165,9 @@ obj PgStore(Store) {
     def ensure_root_column(
         cls: type, edge_type: str, root_type: str
     ) -> (str | None);
-    def ensure_mirror_order_index(cls: type, order_col: str) -> bool;
+    def ensure_mirror_order_index(
+        cls: type, order_col: str, equality: bool = False
+    ) -> bool;
     def ensure_topk_index(
         cls: type, src_field: str, ord_field: str, tie_field: str
     ) -> bool;

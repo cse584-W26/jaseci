@@ -128,6 +128,64 @@ def _subscript_lit_str(at: object) -> (str | None) {
 }
 
 
+def _truth_only_use(n: object) -> bool {
+    # the reference is consumed ONLY as a boolean: `if h`, `if not h`,
+    # `... if h else ...`. Such a use cannot pick an element out of h.
+    # `not` chains and the CfgExpr wrapper the parser puts around a ternary's
+    # condition are both transparent here: neither can select an element.
+    cur = n;
+    p = getattr(cur, 'parent', None);
+    while p is not None {
+        if isinstance(p, uni.CfgExpr) and getattr(p, 'expr', None) is cur {
+            cur = p;
+            p = getattr(cur, 'parent', None);
+            continue;
+        }
+        if isinstance(p, uni.UnaryExpr) and getattr(p, 'operand', None) is cur
+            and str(getattr(getattr(p, 'op', None), 'value', '')) == 'not' {
+            cur = p;
+            p = getattr(cur, 'parent', None);
+            continue;
+        }
+        break;
+    }
+    return isinstance(p, (uni.IfStmt, uni.IfElseExpr))
+        and getattr(p, 'condition', None) is cur;
+}
+
+
+def _single_element_use(w: uni.Archetype, hsym: object, tgt: object) -> bool {
+    # Item #24, second inference shape: the walker reads the closure result
+    # as ONE element. Every reference to the result symbol is either `h[0]`
+    # or a bare emptiness test, so at most the first row is ever consumed and
+    # limit=1 is sound by the same containment argument as the sort+slice
+    # rule - the builtin's sufficiency contract is "the `limit` NEAREST
+    # matches", so under the stamp `h[0]` is the nearest match rather than an
+    # arbitrary one (a refinement of the unordered full closure, which is the
+    # only reading of "first" a distance-carrying builtin can support).
+    # ANY other use - a loop, a slice, len(), passing it to a call, an index
+    # that is not 0 - withholds the stamp: refusal over wrongness.
+    saw_elem = False;
+    for nm in UniPass.get_all_sub_nodes(nd=w, typ=uni.Name) {
+        if getattr(nm, 'sym', None) is not hsym or nm is tgt {
+            continue;
+        }
+        p = getattr(nm, 'parent', None);
+        if isinstance(p, uni.AtomTrailer) and getattr(p, 'target', None) is nm {
+            if _subscript_lit(p) != 0 {
+                return False;
+            }
+            saw_elem = True;
+            continue;
+        }
+        if not _truth_only_use(nm) {
+            return False;
+        }
+    }
+    return saw_elem;
+}
+
+
 def _resolved_bodies(owner: object) -> list {
     # audit roots for an archetype/ability: impl-file bodies are linked, not
     # nested, so the decl subtree alone is NOT sufficient
@@ -192,6 +250,9 @@ class EffectPass(UniPass) {
         # list is sorted with distance as the DOMINANT key, and the report
         # slices it to a literal K - the compiler stamps the call and
         # PyastGenPass appends limit=K itself; the app stops spelling it.
+        # Two consumption shapes are proved: (A) sort+slice as above, and
+        # (B) the result read as a SINGLE element - `h[0]` behind a bare
+        # emptiness test - which is K=1 (see _single_element_use).
         # Sound per PHASE_D lever 2: after level d completes, >=K matches at
         # depth <= d determine the top-K under a distance-first order; the
         # stamp is withheld for ANY other consumption shape and the builtin
@@ -231,7 +292,19 @@ class EffectPass(UniPass) {
         if hsym is None {
             return;
         }
-        # the ONE loop over the closure result
+        # shape B: the result is consumed as a SINGLE element (`h[0]`, guarded
+        # by a bare emptiness test) -> one nearest match is enough
+        if _single_element_use(w, hsym, tgts[0]) {
+            fc.closure_limit = 1;
+            if os.environ.get('JAC_EFFECT_DEBUG') {
+                sys.stderr.write(
+                    'EFFECTPASS ' + str(w.name)
+                    + ' closure sufficiency limit=1 (single-element)' + chr(10)
+                );
+            }
+            return;
+        }
+        # shape A: the ONE loop over the closure result
         loops: list = [];
         for fr in UniPass.get_all_sub_nodes(nd=w, typ=uni.InForStmt) {
             coll = getattr(fr, 'collection', None);

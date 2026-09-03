@@ -540,7 +540,14 @@ impl JacPersistence.get_closure(
     # size of the ANSWER. Passing a predicate requires node_type to be the
     # ARCHETYPE, not its name -- the mirror table/column names are resolved
     # through store.ensure_mirror/mirror_info from the class, never spelled
-    # here. Value comparison is string equality (jsonb text scalar).
+    # here. Value comparison is on the mirror column's SCALAR TEXT
+    # (`col #>> '{}'`), not on the jsonb value: a bulk loader that wrote
+    # person_id as a jsonb NUMBER and a walker that wrote it as a jsonb
+    # STRING must both match the same `prop_value`. Comparing jsonb-to-jsonb
+    # silently matched neither (SNB ic13 at SF1 returned -1 for every pair
+    # and the app fell back to an unfiltered full closure). No index is lost:
+    # mirrors carry no index on the value columns, and both call sites drive
+    # off m.id (the PK) anyway.
     #
     # `limit` (optional, additive - 0 keeps every existing caller on the single
     # full CTE) declares how many of the NEAREST matches the caller will
@@ -586,9 +593,14 @@ impl JacPersistence.get_closure(
         }
         mtable = info['table'];
         mcol = col;
+        # the equality below is on the column's scalar text, which no mirror
+        # index covers by default (mirrors carry only the PK) - grow one at
+        # first use, same as the top-k/adjacency access paths. 9912-row SNB
+        # Person mirror: 0.96ms seq scan -> index lookup.
+        store.ensure_mirror_order_index(node_type, mcol, True);
         join_sql = (
             ' JOIN ' + mtable + ' m ON m.id = b.id'
-            + ' AND m.' + mcol + ' = to_jsonb(CAST(:pval AS text))'
+            + " AND (m." + mcol + " #>> '{}') = CAST(:pval AS text)"
         );
         params['pval'] = str(prop_value);
     }
@@ -636,28 +648,48 @@ impl JacPersistence.get_closure(
     }
     mem.read_barrier();
     if adj and limit > 0 and mtable and max_depth > 2 {
-        # ITERATIVE DEEPENING, two levels, for the SUFFICIENCY case: a caller
-        # that filters AND keeps only the `limit` NEAREST matches does not need
-        # the whole depth-3 closure once depth<=2 already yields `limit` of
-        # them. Levels 1 and 2 are two flat frontier expansions of the
+        # ITERATIVE DEEPENING for the SUFFICIENCY case: a caller that filters
+        # AND keeps only the `limit` NEAREST matches does not need the whole
+        # depth-`max_depth` closure once a SHALLOWER ring already yields
+        # `limit` of them. Each level is one flat frontier expansion of the
         # adjacency table (bound uuid[], dedup in python - a growing
         # `NOT (x = ANY(:seen))` anti-join costs far more than the walk it
-        # saves, 7.7s worst case in PHASE_A).
+        # saves, 7.7s worst case in PHASE_A) against a match set resolved
+        # once, before the walk.
         #
-        # SOUNDNESS: the decision is taken only after level 2 is COMPLETE,
-        # never mid-level. `depths` therefore holds EVERY node within distance
-        # 2 with its true min distance (BFS first-visit == min depth == the
-        # full closure's MIN(depth)), so `hits` below is exactly the full
-        # closure's depth<=2 match set. The caller's sort key is distance
-        # FIRST, so when there are `limit` or more of those, no depth-3 node
-        # can enter the top `limit` - nothing deeper displaces something
-        # nearer. With fewer, this falls through and the full CTE runs from
-        # scratch: the layered work is discarded, not merged, so the answer is
-        # bit-for-bit the one this function would have returned anyway.
+        # SOUNDNESS: the decision is taken only after a level is COMPLETE,
+        # never mid-level. BFS first-visit == min depth == the full closure's
+        # MIN(depth), so the per-level match set is exactly the full closure's
+        # match set at that distance. The caller's order is distance FIRST, so
+        # once `limit` matches have been seen at distance <= d, nothing deeper
+        # can displace one of them. Running the loop out (frontier exhausted,
+        # or max_depth reached) VISITS the same node set the CTE would, so
+        # `matched` is then the complete filtered closure and is returned as
+        # such - no fall-through, no repeated work.
+        #
+        # This is what makes ic13 (shortest path: limit=1, unique person_id)
+        # cost the true distance instead of a flat 6-hop closure: it stops at
+        # the level that first contains the target.
+        # The predicate is resolved ONCE, before the walk, and the per-level
+        # test is a python set membership. Probing the mirror per level with
+        # `m.id = ANY(:level)` shipped and hashed a several-thousand-uuid
+        # array for a scan the planner does anyway: 8.3ms vs 0.96ms for the
+        # bare predicate, measured at SF1 with a 5000-id level. With the
+        # value index grown above the one statement is a lookup.
+        cands: set = {
+            str(r[0]) for r in store.rows(
+                'SELECT m.id FROM ' + mtable + ' m'
+                    + " WHERE (m." + mcol + " #>> '{}') = CAST(:pval AS text)",
+                {'pval': str(prop_value)}
+            )
+        };
+        if not cands {
+            return [];   # nothing in the graph matches: the CTE's answer too
+        }
         seen: set = {params['start']};
-        depths: dict = {};
         frontier: list = [params['start']];
-        for d in (1, 2) {
+        matched: list = [];
+        for d in range(1, int(max_depth) + 1) {
             if not frontier {
                 break;
             }
@@ -670,28 +702,18 @@ impl JacPersistence.get_closure(
                 nid = str(r[0]);
                 if nid not in seen {
                     seen.add(nid);
-                    depths[nid] = d;
                     nxt.append(nid);
+                    if nid in cands {
+                        matched.append((nid.replace('-', ''), d));
+                    }
                 }
             }
             frontier = nxt;
-        }
-        if depths {
-            # one statement, not count-then-fetch: the matched ids ARE the
-            # count, and the losing branch discards at most `limit`-1 rows.
-            hits = store.rows(
-                'SELECT m.id FROM ' + mtable + ' m'
-                    + ' WHERE m.id = ANY(CAST(:ids AS uuid[]))'
-                    + ' AND m.' + mcol + ' = to_jsonb(CAST(:pval AS text))',
-                {'ids': list(depths), 'pval': str(prop_value)}
-            );
-            if len(hits) >= limit {
-                return [
-                    (str(h[0]).replace('-', ''), depths[str(h[0])])
-                    for h in hits
-                ];
+            if len(matched) >= limit {
+                return matched;
             }
         }
+        return matched;
     }
     sql = """
 WITH RECURSIVE bfs(id, depth) AS (

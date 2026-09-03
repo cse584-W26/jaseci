@@ -1312,30 +1312,40 @@ impl PgStore.mirror_info(cls: type) -> (dict | None) {
 # (src_endpoint, <order_col>). Deliberately a second index rather than a
 # widening of that one - the endpoint index is still the right access path for
 # single-source queries, and neither can serve the other's drive order.
-impl PgStore.ensure_mirror_order_index(cls: type, order_col: str) -> bool {
+# `equality=True` asks for the same btree over the column's SCALAR TEXT
+# (`col #>> '{}'`) instead of the raw jsonb DESC: get_closure's property
+# filter is an equality on that expression (it has to be - the same field is
+# a jsonb number from the bulk loader and a jsonb string from a walker), and
+# without a matching expression index it seq-scans the whole mirror. Same
+# memo/refusal machinery, its own key space and index name so the two can
+# coexist on one column.
+impl PgStore.ensure_mirror_order_index(
+    cls: type, order_col: str, equality: bool = False
+) -> bool {
     st = _mirror_state.get(cls);
     if not st or not st['ok'] {
         return False;
     }
+    key = ('=' + order_col) if equality else order_col;
     done = st.setdefault('gords', set());
-    if order_col in done {
+    if key in done {
         return True;
     }
     table = st['table'];
     rf = st.setdefault('gord_refuse', {});
-    if _memo_refused(rf.get(order_col)) {
+    if _memo_refused(rf.get(key)) {
         return False;
     }
     if not _bare_ident(order_col) {
-        rf[order_col] = _memo_refuse(
-            rf.get(order_col) or {},
+        rf[key] = _memo_refuse(
+            rf.get(key) or {},
             f"mirror order index {table}.{order_col}",
             'order column is not a bare identifier',
             False
         );
         return False;
     }
-    _memo_attempt(rf.setdefault(order_col, {}));
+    _memo_attempt(rf.setdefault(key, {}));
     ddl_conn: Any = None;
     try {
         self._ensure_ready();
@@ -1343,22 +1353,29 @@ impl PgStore.ensure_mirror_order_index(cls: type, order_col: str) -> bool {
         # same self-deadlock guard as ensure_mirror_endpoint: the calling
         # request may already hold ACCESS SHARE on this mirror
         ddl_conn.run("SET lock_timeout = '250ms'");
+        suffix: str = '_gval_';
+        idef: str = "((" + order_col + " #>> '{}'))";
+        if not equality {
+            suffix = '_gord_';
+            idef = '(' + order_col + ' DESC)';
+        }
+        iname = str(table) + suffix + order_col;
         ddl_conn.run(
-            'CREATE INDEX IF NOT EXISTS ' + table + '_gord_' + order_col
-                + ' ON ' + table + ' (' + order_col + ' DESC)'
+            'CREATE INDEX IF NOT EXISTS ' + iname + ' ON ' + str(table)
+                + ' ' + idef
         );
         ddl_conn.run('ANALYZE ' + table);
-        done.add(order_col);
-        rf.pop(order_col, None);
-        _memo_track([table + '_gord_' + order_col]);
+        done.add(key);
+        rf.pop(key, None);
+        _memo_track([iname]);
         return True;
     } except Exception as e {
         # No completeness probe needed, unlike the endpoint column: an index
         # is either visible to the caller's snapshot and complete, or not
         # visible and the planner simply picks another path. Nothing can be
         # silently dropped from a page by a half-built index.
-        rf[order_col] = _memo_refuse(
-            rf.setdefault(order_col, {}),
+        rf[key] = _memo_refuse(
+            rf.setdefault(key, {}),
             f"mirror order index {table}.{order_col}",
             str(e),
             True
