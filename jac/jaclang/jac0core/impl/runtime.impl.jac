@@ -729,6 +729,98 @@ SELECT b.id, MIN(b.depth) FROM bfs b""" + join_sql + """
     return [(str(r[0]).replace('-', ''), int(r[1])) for r in rows];
 }
 
+impl JacPersistence.get_adjacency_pairs(
+    origins: list[str], edge_type: str, node_type: (str | type)
+) -> list[tuple[str, str]] {
+    # (origin, neighbour) id pairs for every edge of `edge_type` touching any
+    # origin: ONE statement over the SAME projection get_closure walks, just
+    # exposed flat instead of aggregated. The shape get_closure cannot serve is
+    # "which origin did this neighbour come from" -- a caller that needs the
+    # PAIRING has to call the closure once per origin (SNB pymk at SF1: 3.9k
+    # depth-1 closures per request), or take the walker edge-reference form,
+    # which materializes every edge object AND both endpoints for two ids.
+    # Ids only, no hydration, no dedup across origins -- the caller's own
+    # dict/set does that, exactly as it does today.
+    #
+    # UNDIRECTED BY CONSTRUCTION. `adj_<edge>` holds both rows of every edge
+    # (store R7 trigger), so a pair comes back oriented ORIGIN-first whichever
+    # way the underlying edge row points, and the anchors fallback UNIONs the
+    # two arms to the same contract. This is the "x knows y" reading, which is
+    # what the postgres arm's own symmetric `knows` table gives it; a caller
+    # that means one direction only cannot use this builtin.
+    #
+    # ponytail: same three ceilings as get_closure, verbatim -- ACL superset
+    # (hydrate the ids through jobj_many to enforce), EXACT type match rather
+    # than isinstance, and DB state only (read_barrier below flushes pending
+    # writes so that is true rather than merely likely).
+    ctx = JacRuntimeInterface.get_context();
+    mem = ctx.mem;
+    store = getattr(mem, 'store', None);
+    if store is None {
+        raise RuntimeError('get_adjacency_pairs: session has no store');
+    }
+    if not origins {
+        return [];
+    }
+    tname = (
+        node_type if isinstance(node_type, str)
+        else str(getattr(node_type, '__name__', ''))
+    );
+    params: dict = {'o': [str(UUID(o)) for o in origins]};
+    adj = store.ensure_adjacency_table(edge_type, tname);
+    if adj {
+        sql = (
+            'SELECT nb.src, nb.dst FROM ' + adj + ' nb'
+            + ' WHERE nb.src = ANY(CAST(:o AS uuid[]))'
+        );
+    } else {
+        # R6 fallback, same two-arm probe of `anchors` the CTE falls back to,
+        # with the two type equalities spelled as LITERALS when the partial
+        # indexes exist (postgres only uses a partial index when it can PROVE
+        # the predicate, which a bound :et stops doing under a generic plan).
+        # UNION, not UNION ALL: parallel edges between the same pair would
+        # otherwise yield the pair twice, where `adj_<edge>`'s PK yields once.
+        et_cond = ':et';
+        nt_cond = ':nt';
+        if store.ensure_adjacency_index(edge_type, tname) {
+            et_cond = "'" + edge_type + "'";
+            nt_cond = "'" + tname + "'";
+        } else {
+            params['et'] = edge_type;
+            params['nt'] = tname;
+        }
+        sql = (
+            'SELECT e.src, e.dst FROM anchors e'
+            + ' WHERE e.src = ANY(CAST(:o AS uuid[]))'
+            + " AND e.kind = 'EdgeAnchor' AND e.arch_type = " + et_cond
+            + ' AND e.dst_type = ' + nt_cond
+            + ' UNION '
+            + 'SELECT e.dst, e.src FROM anchors e'
+            + ' WHERE e.dst = ANY(CAST(:o AS uuid[]))'
+            + " AND e.kind = 'EdgeAnchor' AND e.arch_type = " + et_cond
+            + ' AND e.src_type = ' + nt_cond
+        );
+    }
+    mem.read_barrier();
+    # .hex on BOTH columns, same convention as object_ref()/jid()/get_closure
+    # - the caller keys its distance dict on closure ids, so a dashed form
+    # here would miss every lookup and silently report nothing, which is a
+    # parity FAILURE, not a crash.
+    #
+    # ponytail: converting in the SELECT list instead
+    # (`encode(uuid_send(x),'hex')`) is 4.5x faster on this statement in
+    # isolation - 160043 pairs at SF1: 266ms -> 59ms - but bought NOTHING in
+    # the server (pymk d=3 p50 321ms -> 343ms, i.e. noise), because py-spy
+    # puts the whole builtin at 1.6% of request CPU and candidate hydration
+    # at ~89%. Left as the plain columns, which keeps the statement
+    # byte-for-byte the postgres arm's own pairs query. Revisit only if
+    # hydration stops being the floor.
+    return [
+        (str(r[0]).replace('-', ''), str(r[1]).replace('-', ''))
+        for r in store.rows(sql, params)
+    ];
+}
+
 impl JacPersistence.get_topk_inbound(
     dsts: list[str], edge_type: str, specs: list[tuple],
     order_field: str, max_value: int, limit: int, src_field: str = '',

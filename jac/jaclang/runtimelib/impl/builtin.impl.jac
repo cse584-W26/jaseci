@@ -82,6 +82,8 @@ impl __getattr__(name: str) -> object {
         return _get_jclosure();
     } elif (name == 'jtopk') {
         return _get_jtopk();
+    } elif (name == 'jadj_pairs') {
+        return _get_jadj_pairs();
     } elif (name == 'jroot') {
         return jroot;
     } elif (name == 'jroot_many') {
@@ -198,6 +200,11 @@ impl _get_jclosure -> Callable[..., any] {
 
 impl _get_jtopk -> Callable[..., any] {
     return _get_jac().get_topk_inbound;
+}
+
+
+impl _get_jadj_pairs -> Callable[..., any] {
+    return _get_jac().get_adjacency_pairs;
 }
 
 
