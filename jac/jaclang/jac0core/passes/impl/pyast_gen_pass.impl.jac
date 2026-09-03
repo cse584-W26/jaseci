@@ -4570,7 +4570,82 @@ impl PyastGenPass._query_filter_kws(
     return kws;
 }
 
+impl PyastGenPass._ranged_hop_call(nd: uni.EdgeRefTrailer) -> bool {
+    # `[origin <-:E:*n:-> [?:T (, f == v)?]]`
+    # -> jclosure_ref(origin, E, T, n, 'f', v, limit)  (+ _proj= when stamped)
+    # Parser._check_ranged_chain has already refused every other shape; the
+    # guard here is belt-and-braces so a malformed tree falls back rather than
+    # mis-lowering.
+    ranged = None;
+    for c in nd.chain {
+        if isinstance(c, uni.EdgeOpRef) and getattr(c, 'max_hops', None) is not None {
+            ranged = c;
+        }
+    }
+    if ranged is None {
+        return False;
+    }
+    if (len(nd.chain) < 2 or len(nd.chain) > 3 or nd.chain[1] is not ranged
+            or isinstance(nd.chain[0], uni.EdgeOpRef) or nd.edges_only) {
+        return False;
+    }
+    ecompr = getattr(ranged, 'filter_cond', None);
+    nfilt = nd.chain[2] if len(nd.chain) == 3 else None;
+    if (ecompr is None or getattr(ecompr, 'f_type', None) is None
+            or not isinstance(nfilt, uni.FilterCompr)
+            or getattr(nfilt, 'f_type', None) is None) {
+        return False;
+    }
+    pname = '';
+    pval = cast(ast3.expr, self.sync(ast3.Constant(value=None)));
+    cmps = list(getattr(nfilt, 'compares', []) or []);
+    if len(cmps) > 1 {
+        return False;
+    }
+    if cmps {
+        cmp_ast = self.py_ast_val(cmps[0]);
+        if (not isinstance(cmp_ast, ast3.Compare) or len(cmp_ast.ops) != 1
+                or not isinstance(cmp_ast.left, ast3.Name)
+                or self._cmp_op_str(cmp_ast.ops[0]) != '==') {
+            return False;
+        }
+        pname = cast(ast3.Name, cmp_ast.left).id;
+        pval = cast(ast3.expr, cmp_ast.comparators[0]);
+    }
+    climit = getattr(nd, 'closure_limit', None);
+    args: list = [
+        cast(ast3.expr, self.py_ast_val(nd.chain[0])),
+        cast(ast3.expr, self.py_ast_val(getattr(ecompr, 'f_type', None))),
+        cast(ast3.expr, self.py_ast_val(getattr(nfilt, 'f_type', None))),
+        cast(ast3.expr, self.py_ast_val(getattr(ranged, 'max_hops', None))),
+        cast(ast3.expr, self.sync(ast3.Constant(value=pname))),
+        pval,
+        cast(ast3.expr, self.sync(ast3.Constant(value=int(climit or 0))))
+    ];
+    kws: list = [];
+    if (hp := getattr(nd, 'hydrate_proj', None)) is not None {
+        kws.append(
+            self.sync(ast3.keyword(arg='_proj', value=self._proj_tuple(hp)))
+        );
+    }
+    nd.gen.py_ast = [
+        self.sync(
+            ast3.Call(
+                func=self.builtin_name('jclosure_ref'), args=args, keywords=kws
+            )
+        )
+    ];
+    return True;
+}
+
 impl PyastGenPass.exit_edge_ref_trailer(nd: uni.EdgeRefTrailer) -> None {
+    # T7: a variable-length hop is NOT a GraphQuery - `refs(GraphQuery(..))`
+    # returns nodes and the stream planner / prefetch matcher pattern-match on
+    # that shape. A ranged chain lowers to its own runtime entry point instead,
+    # so every existing path for unranged chains is untouched.
+    if self._ranged_hop_call(nd) {
+        return;
+    }
     origin = None;
     cur = nd.chain[0];
     chomp = [*nd.chain[1:]];

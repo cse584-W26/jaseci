@@ -28,6 +28,8 @@ def _get_jobj_many -> Callable[..., any];
 
 def _get_jclosure -> Callable[..., any];
 
+def _get_jclosure_ref -> Callable[..., any];
+
 def _get_jtopk -> Callable[..., any];
 
 def _get_jadj_pairs -> Callable[..., any];
@@ -108,6 +110,7 @@ glob __all__ = [
          'jobj',
          'jobj_many',
          'jclosure',
+         'jclosure_ref',
          'jtopk',
          'jadj_pairs',
          'jadj_prefetch',

@@ -2573,7 +2573,6 @@ impl Parser.parse_edge_op_ref -> EdgeOpRef | None {
         # formatters, which concatenate kids, round-trip it byte-stable.
         max_hops: (Expr | None) = None;
         star_kid: list[UniNode] = [];
-        star_loc = None;
         if self.check_name() or self.is_keyword_token() {
             f_type = self.parse_atom();
             fcompr_kid.append(f_type);
@@ -2583,7 +2582,6 @@ impl Parser.parse_edge_op_ref -> EdgeOpRef | None {
             colon_uni = self.make_uni_token(self.previous());
             if self.check(TokenKind.STAR_MUL) {
                 self.expect(TokenKind.STAR_MUL);
-                star_loc = self.previous().loc;
                 star_kid.append(colon_uni);
                 star_kid.append(self.make_uni_token(self.previous()));
                 max_hops = self.parse_atomic_chain();
@@ -2608,14 +2606,12 @@ impl Parser.parse_edge_op_ref -> EdgeOpRef | None {
         out_kid: list[UniNode] = [start_uni, fcond];
         out_kid.extend(star_kid);
         out_kid.append(end_uni);
-        out_op = EdgeOpRef(
+        return EdgeOpRef(
             filter_cond=fcond,
             edge_dir=EdgeDir.OUT,
             max_hops=max_hops,
             kid=out_kid
         );
-        out_op.range_loc = star_loc;
-        return out_op;
     }
 
     if self.check(TokenKind.ARROW_L_P1) {
@@ -2628,7 +2624,6 @@ impl Parser.parse_edge_op_ref -> EdgeOpRef | None {
         # direction (`<-:E:->`), the form NormalizePass already prints.
         max_hops: (Expr | None) = None;
         star_kid: list[UniNode] = [];
-        star_loc = None;
         if self.check_name() or self.is_keyword_token() {
             f_type = self.parse_atom();
             fcompr_kid.append(f_type);
@@ -2639,7 +2634,6 @@ impl Parser.parse_edge_op_ref -> EdgeOpRef | None {
             colon_uni = self.make_uni_token(self.previous());
             if self.check(TokenKind.STAR_MUL) {
                 self.expect(TokenKind.STAR_MUL);
-                star_loc = self.previous().loc;
                 star_kid.append(colon_uni);
                 star_kid.append(self.make_uni_token(self.previous()));
                 max_hops = self.parse_atomic_chain();
@@ -2670,11 +2664,9 @@ impl Parser.parse_edge_op_ref -> EdgeOpRef | None {
         in_kid: list[UniNode] = [start_uni, fcond];
         in_kid.extend(star_kid);
         in_kid.append(end_uni);
-        in_op = EdgeOpRef(
+        return EdgeOpRef(
             filter_cond=fcond, edge_dir=in_dir, max_hops=max_hops, kid=in_kid
         );
-        in_op.range_loc = star_loc;
-        return in_op;
     }
     return None;
 }
@@ -2683,12 +2675,12 @@ impl Parser._check_ranged_chain(ert: EdgeRefTrailer) -> None {
     # T7: the ONLY chain shape the variable-length lowering supports is
     # `[origin <-:E:*n:-> [?:T (, field == expr)?]]`. Anything else is a loud
     # compile error here rather than a silent mis-lowering in codegen.
-    ranged: list = [];
-    hops: list = [];
+    ranged: list[EdgeOpRef] = [];
+    hops: list[EdgeOpRef] = [];
     for c in ert.chain {
         if isinstance(c, EdgeOpRef) {
             hops.append(c);
-            if getattr(c, 'max_hops', None) is not None {
+            if c.max_hops is not None {
                 ranged.append(c);
             }
         }
@@ -2701,7 +2693,6 @@ impl Parser._check_ranged_chain(ert: EdgeRefTrailer) -> None {
         self.emit_diag(
             "variable-length hop: directed ranges are not supported (the adjacency projection is undirected)",
             "E0083",
-            loc=getattr(eop, 'range_loc', None),
             help="write `<-:E:*n:->` (typed any-direction closer)"
         );
         return;
@@ -2710,58 +2701,58 @@ impl Parser._check_ranged_chain(ert: EdgeRefTrailer) -> None {
         self.emit_diag(
             "variable-length hop: `[edge ...]` is not supported on a ranged hop",
             "E0083",
-            loc=getattr(eop, 'range_loc', None),
             help="a ranged hop yields (node, depth) pairs, not edges"
         );
         return;
     }
     if (
         len(hops) != 1
-        or len(ert.chain) < 2
-        or len(ert.chain) > 3
+        or len(ert.chain) != 3
         or isinstance(ert.chain[0], EdgeOpRef)
         or ert.chain[1] is not eop
     ) {
         self.emit_diag(
             "variable-length hop: a ranged hop must be the only hop",
             "E0083",
-            loc=getattr(eop, 'range_loc', None),
             help="write `[origin <-:E:*n:-> [?:T]]` - one origin, one ranged hop, one node filter"
         );
         return;
     }
-    nfilt = ert.chain[2] if len(ert.chain) == 3 else None;
-    if not isinstance(nfilt, FilterCompr) or getattr(nfilt, 'f_type', None) is None {
+    ecompr = eop.filter_cond;
+    if ecompr is None or ecompr.f_type is None {
+        self.emit_diag(
+            "variable-length hop: a typed edge is required on a ranged hop",
+            "E0083",
+            help="write `[origin <-:E:*n:-> [?:T]]` - the closure walks ONE edge type"
+        );
+        return;
+    }
+    nfilt = ert.chain[2];
+    if not isinstance(nfilt, FilterCompr) or nfilt.f_type is None {
         self.emit_diag(
             "variable-length hop: a typed node filter is required on a ranged hop",
             "E0083",
-            loc=getattr(eop, 'range_loc', None),
             help="write `[origin <-:E:*n:-> [?:T]]` - the closure is typed"
         );
         return;
     }
-    cmps = list(getattr(nfilt, 'compares', []) or []);
-    bad = len(cmps) > 1;
-    if not bad {
-        for c in cmps {
-            ops = list(getattr(c, 'ops', []) or []);
-            rights = list(getattr(c, 'rights', []) or []);
-            if (
-                not isinstance(c, CompareExpr)
-                or len(ops) != 1
-                or len(rights) != 1
-                or str(getattr(ops[0], 'value', '')) != '=='
-                or not isinstance(getattr(c, 'left', None), Name)
-            ) {
-                bad = True;
-            }
+    bad = len(nfilt.compares) > 1;
+    for cmp2 in nfilt.compares {
+        if not isinstance(cmp2, CompareExpr) {
+            bad = True;
+        } elif (
+            len(cmp2.ops) != 1
+            or len(cmp2.rights) != 1
+            or str(cmp2.ops[0].value) != "=="
+            or not isinstance(cmp2.left, Name)
+        ) {
+            bad = True;
         }
     }
     if bad {
         self.emit_diag(
             "variable-length hop: ranged hop admits one equality predicate of the form `field == expr`",
-            "E0083",
-            loc=getattr(eop, 'range_loc', None)
+            "E0083"
         );
     }
 }

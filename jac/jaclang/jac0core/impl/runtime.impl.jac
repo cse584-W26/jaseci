@@ -835,6 +835,37 @@ SELECT b.id, MIN(b.depth) FROM bfs b""" + join_sql + """
     return [(str(r[0]).replace('-', ''), int(r[1])) for r in rows];
 }
 
+impl JacPersistence.closure_refs(
+    origin: any, edge_type: type, node_type: type, max_hops: int,
+    prop_name: str = '', prop_value: any = None, limit: int = 0,
+    _proj: (tuple | None) = None
+) -> list[tuple] {
+    # T7: the lowering of a variable-length hop `[origin <-:E:*n:-> [?:T ..]]`.
+    # get_closure gives (jid, min-depth) for the 1..n undirected closure in ONE
+    # recursive CTE; hydration is the ordinary batched object load (so ACL and
+    # the T6 projection both apply unchanged) and the depths ride along.
+    # Unreadable / missing ids drop out of the pair list, exactly as
+    # jobj_many() drops them today.
+    #
+    # `prop_value` is stringified because get_closure compares the mirror
+    # column's SCALAR TEXT: a jsonb number and a jsonb string must both match
+    # the same value (T1's ic13 fix).
+    hits = JacPersistence.get_closure(
+        JacPersistence.object_ref(origin),
+        str(getattr(edge_type, '__name__', edge_type)),
+        node_type,
+        int(max_hops),
+        prop_name,
+        ('' if prop_value is None else str(prop_value)),
+        int(limit)
+    );
+    if not hits {
+        return [];
+    }
+    objs = JacPersistence.get_objects_many([h[0] for h in hits], _proj);
+    return [(o, h[1]) for (o, h) in zip(objs, hits) if o is not None];
+}
+
 impl JacPersistence.get_adjacency_pairs(
     origins: list[str], edge_type: str, node_type: (str | type)
 ) -> list[tuple[str, str]] {

@@ -205,6 +205,11 @@ class JacPersistence {
         start: str, edge_type: str, node_type: (str | type), max_depth: int,
         prop_name: str = '', prop_value: str = '', limit: int = 0
     ) -> list[tuple[str, int]];
+    static def closure_refs(
+        origin: any, edge_type: type, node_type: type, max_hops: int,
+        prop_name: str = '', prop_value: any = None, limit: int = 0,
+        _proj: (tuple | None) = None
+    ) -> list[tuple];
     static def get_adjacency_pairs(
         origins: list[str], edge_type: str, node_type: (str | type)
     ) -> list[tuple[str, str]];

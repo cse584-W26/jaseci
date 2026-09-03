@@ -80,6 +80,8 @@ impl __getattr__(name: str) -> object {
         return _get_jobj_many();
     } elif (name == 'jclosure') {
         return _get_jclosure();
+    } elif (name == 'jclosure_ref') {
+        return _get_jclosure_ref();
     } elif (name == 'jtopk') {
         return _get_jtopk();
     } elif (name == 'jadj_pairs') {
@@ -197,6 +199,14 @@ impl _get_jobj_many -> Callable[..., any] {
 
 impl _get_jclosure -> Callable[..., any] {
     return _get_jac().get_closure;
+}
+
+
+impl _get_jclosure_ref -> Callable[..., any] {
+    # T7: the lowering target of a variable-length hop. Never named by an app -
+    # PyastGenPass emits the call; the builtin exists so the emitted module can
+    # import it the same way it imports every other runtime entry point.
+    return _get_jac().closure_refs;
 }
 
 
