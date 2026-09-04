@@ -593,6 +593,64 @@ def _projection_of(
 }
 
 
+def _ids_only_of(scopes: list, bind: object, tgt: object) -> bool {
+    # T7b: True iff EVERY reference to the bound name is the SOLE argument of
+    # a `jid(...)` call - i.e. the walker observes nothing but the element's
+    # identity, so the id IS the value it wants. Same non-reference skips as
+    # _projection_of (attribute name, KWPair key, assignment / loop target
+    # incl. the `(x, d)` unpack, sibling if-branch); every other shape - an
+    # attribute read, isinstance, a truth test, `is None`, another call,
+    # report, return, subscript, delete - returns False. Unresolved scope:
+    # False. Refusal over wrongness, per site, exactly like _projection_of.
+    vname = str(getattr(tgt, 'value', ''));
+    for scope in scopes {
+        if not isinstance(scope, uni.UniNode) {
+            return False;
+        }
+        for nm in _walk(scope, uni.Name, []) {
+            if nm is tgt or str(nm.value) != vname {
+                continue;
+            }
+            p = getattr(nm, 'parent', None);
+            if isinstance(p, uni.AtomTrailer) and p.right is nm {
+                continue;
+            }
+            if isinstance(p, uni.KWPair) and getattr(p, 'key', None) is nm {
+                continue;
+            }
+            if isinstance(p, uni.Assignment) and nm in list(p.target or []) {
+                continue;
+            }
+            if isinstance(p, (uni.InForStmt, uni.InnerCompr))
+                and getattr(p, 'target', None) is nm {
+                continue;
+            }
+            if isinstance(p, uni.TupleVal)
+                and isinstance(
+                    getattr(p, 'parent', None), (uni.InForStmt, uni.InnerCompr)
+                )
+                and getattr(getattr(p, 'parent', None), 'target', None) is p {
+                continue;
+            }
+            if _sibling_branch(nm, bind) {
+                continue;
+            }
+            if _ancestor(nm, (uni.DeleteStmt, )) is not None {
+                return False;
+            }
+            if isinstance(p, uni.FuncCall) and _call_name(p) in _IDENTITY_CALLS {
+                prms = list(p.params or []);
+                if len(prms) == 1 and prms[0] is nm {
+                    continue;
+                }
+            }
+            return False;
+        }
+    }
+    return True;
+}
+
+
 class EffectPass(UniPass) {
 
     def before_pass(self: EffectPass) -> None {
@@ -843,13 +901,13 @@ class EffectPass(UniPass) {
                 }
                 rseen.add(id(ert));
                 loop = None;
+                hs = None;   # T7b: set when the chain is bound to a NAME
                 pnt = getattr(ert, 'parent', None);
                 if isinstance(pnt, (uni.InForStmt, uni.InnerCompr))
                     and getattr(pnt, 'collection', None) is ert {
                     loop = pnt;
                 } else {
                     asg = _ancestor(ert, (uni.Assignment, ));
-                    hs = None;
                     if asg is not None and getattr(asg, 'value', None) is ert {
                         tgts = list(getattr(asg, 'target', []) or []);
                         if len(tgts) == 1 and isinstance(tgts[0], uni.Name) {
@@ -898,6 +956,50 @@ class EffectPass(UniPass) {
                 }
                 if rproj is not None {
                     ert.hydrate_proj = rproj;
+                }
+                # T7b: ids-only materialization, the level BELOW T6's field
+                # projection. Zero projected fields says nothing is read off
+                # the element; _ids_only_of says every use is `jid(x)` - the
+                # walker consumes IDS, so the engine can hand back (hex,
+                # depth) pairs and build no anchor and no archetype stand-in
+                # at all. Bound through a NAME the elements can still escape
+                # the loop (`report hits`), so the name must be referenced
+                # exactly ONCE - as that single loop's collection.
+                if rproj is not None and not rproj[1] {
+                    esc = 0;
+                    eseen: set = set();
+                    if hs is not None {
+                        for sc3 in scopes {
+                            if sc3 is None {
+                                continue;
+                            }
+                            for nm3 in _walk(sc3, uni.Name, []) {
+                                if getattr(nm3, 'sym', None) is not hs
+                                    or id(nm3) in eseen {
+                                    continue;
+                                }
+                                eseen.add(id(nm3));
+                                p3 = getattr(nm3, 'parent', None);
+                                if isinstance(p3, uni.Assignment)
+                                    and nm3 in list(p3.target or []) {
+                                    continue;
+                                }
+                                esc += 1;
+                            }
+                        }
+                    }
+                    if (hs is None or esc == 1)
+                        and _ids_only_of(scopes, loop, pair[2]) {
+                        ert.ids_only = True;
+                        if os.environ.get('JAC_EFFECT_DEBUG') {
+                            sys.stderr.write(
+                                'EFFECTPASS ' + str(w.name)
+                                + ' hydrate projection ranged@'
+                                + str(getattr(ert.loc, 'first_line', '?'))
+                                + ' ids_only' + chr(10)
+                            );
+                        }
+                    }
                 }
             }
         }

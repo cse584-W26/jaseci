@@ -210,7 +210,7 @@ class JacPersistence {
     static def closure_refs(
         origin: any, edge_type: type, node_type: type, max_hops: int,
         prop_name: str = '', prop_value: any = None, limit: int = 0,
-        _proj: (tuple | None) = None
+        _proj: (tuple | None) = None, _ids: bool = False
     ) -> list[tuple];
     static def get_adjacency_pairs(
         origins: list[str], edge_type: str, node_type: (str | type)
@@ -227,7 +227,7 @@ class JacPersistence {
         items: list, edge_type: str, root_type: (str | type)
     ) -> list[str];
     static async def aget_object(id: str) -> (Archetype | None);
-    static def object_ref(`obj: Archetype) -> str;
+    static def object_ref(`obj: (Archetype | str)) -> str;
     static def save(`obj: (Archetype | Anchor)) -> None;
     static def destroy(objs: Archetype | Anchor | list[(Archetype | Anchor)]) -> None;
     static def get_user_manager(base_path: str) -> UserManager;

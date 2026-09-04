@@ -13,7 +13,8 @@ glob logger = logging.getLogger(__name__),
          'resolve_query_edges',
          'resolve_query_prefix',
          'prefetch_adjacency',
-         'hydrate_projected'
+         'hydrate_projected',
+         'acl_filter_ids'
      ],
      # T3: JAC_LOOP_PREFETCH=1 arms the compiler-emitted `jadj_prefetch` hint
      # (one adjacency statement per loop LEVEL instead of one per node) and
@@ -104,6 +105,9 @@ def prefetch_adjacency(
 def hydrate_projected(
     mem: Session, cls: type, ids: list[UUID], fields: tuple
 ) -> tuple;
+
+
+def acl_filter_ids(mem: Session, cls: (type | str), ids: list[str]) -> (set | None);
 
 
 def resolve_query(mem: Session, q: GraphQuery) -> list[Anchor];

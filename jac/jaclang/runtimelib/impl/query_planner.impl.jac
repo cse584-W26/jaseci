@@ -109,13 +109,16 @@ glob _acl_sql_engaged = [False],
      );
 
 
-def _acl_sql_ctx(mem: Session) -> (dict | None) {
+def _acl_sql_ctx(mem: Session, force: bool = False) -> (dict | None) {
     # -> {'sql': <CASE text, %M% = mirror alias>, 'params': {...}} or None,
     # None meaning "leave the ACL decision in python exactly as before". Every
     # failure mode returns None, so the flag can only ever add a filter that
     # agrees with the python one or fall back to it wholesale.
+    # `force` skips the JAC_SQL_ACL env test and NOTHING else: acl_filter_ids
+    # has no python path to fall back to (there are no objects to check), so
+    # for it the predicate is the decision, not an optimisation of one.
     import os;
-    if os.environ.get('JAC_SQL_ACL', '0').strip().lower()
+    if not force and os.environ.get('JAC_SQL_ACL', '0').strip().lower()
         not in ('1', 'on', 'true') {
         return None;
     }
@@ -167,7 +170,7 @@ def _acl_sql_ctx(mem: Session) -> (dict | None) {
     # Every other exit from this function is a SILENT fallback to the python
     # check, which is exactly what makes "is the flag actually doing anything?"
     # unanswerable from the outside. Say so once per process on the way in.
-    if not _acl_sql_engaged[0] {
+    if not _acl_sql_engaged[0] and not force {
         _acl_sql_engaged[0] = True;
         logger.info(
             "JAC_SQL_ACL engaged: mirror reads now carry the access predicate "
@@ -191,6 +194,62 @@ def _acl_sql_ctx(mem: Session) -> (dict | None) {
             'acl_closed': closed_ids
         }
     };
+}
+
+
+impl acl_filter_ids(mem: Session, cls: (type | str), ids: list[str]) -> (set | None) {
+    # T7b: the read verdict for an ID-LEVEL result - a closure that hands the
+    # walker (hex, depth) pairs, or a zero-field projected hydration. Both
+    # answer with ids alone, so there is no anchor for check_read_access to
+    # look at; ask the archetype's mirror for the readable subset instead,
+    # with the SAME predicate the mirror stream path applies (_ACL_SQL_CASE).
+    # -> set of readable hex ids, or None meaning "nothing to decide".
+    #
+    # ponytail: _ACL_SQL_CASE deliberately OVER-admits the two row classes it
+    # cannot judge from mirror scalars (per-anchor grants `acl_spec`, and
+    # shared-root rows) because the mirror path re-checks those in python. An
+    # ids-only result has nothing to re-check, so those rows are admitted for
+    # good. Strictly tighter than T7 (which applied no verdict at all); route
+    # the two classes through a batch_get here if a deployment ever needs the
+    # exact verdict on ids alone.
+    if not _acl_gated() {
+        return None;   # system root / library run: no filtering at all
+    }
+    # bound through getattr, not `store.x`: Store is a duck-typed backend
+    # here (the pg store adds the mirror API), exactly as the rest of this
+    # module treats it
+    store = mem.store;
+    rowsf = getattr(store, 'rows', None);
+    ensure = getattr(store, 'ensure_mirror', None);
+    minfo = getattr(store, 'mirror_info', None);
+    ctx = _acl_sql_ctx(mem, True) if rowsf is not None else None;
+    table = '';
+    if ctx is not None and isinstance(cls, type) and ensure is not None
+        and minfo is not None and ensure(cls) {
+        table = str(minfo(cls)['table']);
+    }
+    if not table {
+        # ponytail: legacy fallback - no store, no mirror, or no SQL context.
+        # The full object load enforces check_read_access exactly as
+        # jobj_many() does; it costs the hydration this path exists to avoid,
+        # but it is the only other place the verdict lives.
+        import from jaclang.jac0core.runtime { JacRuntimeInterface }
+        objs = JacRuntimeInterface.get_objects_many(list(ids));
+        out: set = set();
+        for (i, o) in zip(list(ids), objs) {
+            if o is not None {
+                out.add(i);
+            }
+        }
+        return out;
+    }
+    sql = 'SELECT m.id FROM ' + table + ' m'
+        + ' WHERE m.id = ANY(CAST(:ids AS uuid[])) AND ('
+        + _ACL_SQL_CASE.replace('%M%', 'm') + ')';
+    params = dict(ctx['params']);
+    params['ids'] = [str(UUID(i)) for i in ids];
+    # .hex, no dashes - the ids the caller holds come from object_ref()
+    return {str(r[0]).replace('-', '') for r in rowsf(sql, params)};
 }
 
 
@@ -668,17 +727,25 @@ impl hydrate_projected(
     if not fields {
         # T7: ZERO projected fields. The compiler proved the walker observes
         # these results only through `jid(x)` (plus isinstance / truth) -- the
-        # id the caller already handed us -- so there is nothing to SELECT and
-        # nothing to decide: no ensure_mirror, no read_barrier, no
-        # load_mirror_rows, no ACL verdict. This is exactly the pre-T7
-        # `jclosure` builtin's contract: it returned these same ids to the
-        # walker with no ACL filtering at all, and any later `jobj` /
-        # `jobj_many` on one of them enforces ACL as it always did. Every
-        # requested id is answered, so `absent` is empty.
+        # id the caller already handed us -- so there is nothing to SELECT: no
+        # load_mirror_rows, no decode, no bytes.
+        # T7b (review RISK from T7): there is still a verdict to give. A
+        # stand-in the requester may not read is a leak the projected path
+        # never had, so ask the mirror who is readable (ids only, two
+        # statements when gated: the ACL root prefetch and the filter itself)
+        # and hand everyone else back as `absent` -- the caller then
+        # answers those the legacy way, with the full python verdict, exactly
+        # as it does for a row the mirror cannot judge.
         tmpl0 = _unloaded_template(cls, ());
         tname0 = str(cls.__name__);
+        allowed0 = acl_filter_ids(mem, cls, [u.hex for u in ids]);
+        absent0: list = [];
         built0: dict = {};
         for uid in ids {
+            if allowed0 is not None and uid.hex not in allowed0 {
+                absent0.append(uid);
+                continue;
+            }
             anchor0 = NodeAnchor.__new__(NodeAnchor);
             ad0 = anchor0.__dict__;
             ad0['id'] = uid;
@@ -698,11 +765,12 @@ impl hydrate_projected(
         if PROJECT_DEBUG {
             sys.stderr.write(
                 'PROJECT-RT cls=' + tname0 + ' fields=() ids=' + str(len(ids))
-                + ' rows=0 built=' + str(len(built0)) + ' absent=0 bytes=0'
-                + chr(10)
+                + ' rows=0 built=' + str(len(built0)) + ' absent='
+                + str(len(absent0)) + ' bytes=0 acl='
+                + ('off' if allowed0 is None else str(len(allowed0))) + chr(10)
             );
         }
-        return (built0, []);
+        return (built0, absent0);
     }
     nothing = ({}, list(ids));
     store = mem.store;

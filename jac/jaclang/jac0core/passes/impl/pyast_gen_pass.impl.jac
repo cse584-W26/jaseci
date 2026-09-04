@@ -4630,6 +4630,16 @@ impl PyastGenPass._ranged_hop_call(nd: uni.EdgeRefTrailer) -> bool {
             self.sync(ast3.keyword(arg='_proj', value=self._proj_tuple(hp)))
         );
     }
+    # T7b: EffectPass proved every use of the loop element is `jid(x)`, so the
+    # walker wants IDS, not objects. No rewrite of the `jid(x)` calls is needed
+    # for that: object_ref() answers a hex string with itself.
+    if getattr(nd, 'ids_only', False) {
+        kws.append(
+            self.sync(
+                ast3.keyword(arg='_ids', value=self.sync(ast3.Constant(value=True)))
+            )
+        );
+    }
     nd.gen.py_ast = [
         self.sync(
             ast3.Call(

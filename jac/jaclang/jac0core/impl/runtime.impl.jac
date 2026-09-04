@@ -852,7 +852,7 @@ SELECT b.id, MIN(b.depth) FROM bfs b""" + join_sql + """
 impl JacPersistence.closure_refs(
     origin: any, edge_type: type, node_type: type, max_hops: int,
     prop_name: str = '', prop_value: any = None, limit: int = 0,
-    _proj: (tuple | None) = None
+    _proj: (tuple | None) = None, _ids: bool = False
 ) -> list[tuple] {
     # T7: the lowering of a variable-length hop `[origin <-:E:*n:-> [?:T ..]]`.
     # get_closure gives (jid, min-depth) for the 1..n undirected closure in ONE
@@ -875,6 +875,32 @@ impl JacPersistence.closure_refs(
     );
     if not hits {
         return [];
+    }
+    if _ids {
+        # T7b: the compiler-chosen materialization level BELOW T6's field
+        # projection. EffectPass proved every use of the loop element is
+        # `jid(x)`, so the walker consumes IDS - hand it the (hex, depth)
+        # pairs get_closure already produced. No anchors, no archetype
+        # stand-ins, no UUID parse and no per-site cache keyed on one. The
+        # walker text is unchanged: object_ref() answers a hex string with
+        # itself, so `jid(x)` still types and still returns the same id.
+        import from jaclang.runtimelib.query_planner { acl_filter_ids }
+        # ponytail: TWO extra statements per GATED closure call (the ACL
+        # root prefetch _acl_sql_ctx runs, plus the mirror filter itself) -
+        # the price of giving an id-level result the same read verdict the
+        # mirror path gives a hydrated one. None means there is nothing to
+        # decide (system root / library run), which is every other read
+        # path's rule too. Memoise _acl_sql_ctx per snapshot if the prefetch
+        # ever shows up in a profile; its own comment says how.
+        allowed = acl_filter_ids(
+            JacRuntimeInterface.get_context().mem,
+            node_type,
+            [h[0] for h in hits]
+        );
+        if allowed is None {
+            return [(h[0], h[1]) for h in hits];
+        }
+        return [(h[0], h[1]) for h in hits if h[0] in allowed];
     }
     objs = JacPersistence.get_objects_many([h[0] for h in hits], _proj);
     return [(o, h[1]) for (o, h) in zip(objs, hits) if o is not None];
@@ -1269,7 +1295,13 @@ impl JacPersistence.aget_object(id: str) -> (Archetype | None) {
     return None;
 }
 
-impl JacPersistence.object_ref(`obj: Archetype) -> str {
+impl JacPersistence.object_ref(`obj: (Archetype | str)) -> str {
+    # T7b: an id is its own reference. A ranged hop stamped `ids_only` hands
+    # the walker hex strings instead of objects, and `jid(x)` over them has to
+    # keep meaning what it meant - that is what leaves the walker text alone.
+    if isinstance(`obj, str) {
+        return `obj;
+    }
     anchor = `obj.__jac__;
     if isinstance(anchor, ObjectAnchor) {
         try {
