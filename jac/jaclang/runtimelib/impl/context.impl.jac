@@ -9,7 +9,11 @@ import from jaclang.runtimelib.exceptions { MissingAnchorError }
 import from jaclang.runtimelib.session { Session }
 
 def _lazy_txn_enabled -> bool {
-    return os.environ.get('JAC_LAZY_TXN', '').strip().lower()
+    # Default ON since 0904 (session0904/flags/LAZY_TXN.md): the eager super-root/user-root
+    # fetch cost every request a separate SERIALIZABLE prologue transaction (BEGIN, SET LOCAL,
+    # two anchor SELECTs, COMMIT) before its real transaction - census: is1 12 -> 8, is2 28 -> 24,
+    # TPC-C 13.8 -> 13.0 statements per request; parity + oracles unchanged. `=0` is the kill switch.
+    return os.environ.get('JAC_LAZY_TXN', '1').strip().lower()
         in ('1', 'true', 'yes', 'on');
 }
 
