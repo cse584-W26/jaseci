@@ -234,6 +234,9 @@ obj PyastGenPass(BaseAstGenPass[ast3.AST]) {
     def _clone_py(node: object) -> object;
     def _pure_ref_root(expr: uni.UniNode) -> (str | None);
     def _is_pure_projection(expr: uni.UniNode, loop_var: str) -> bool;
+    def _prefetch_loop_parts(
+        nd: uni.InForStmt
+    ) -> tuple[((uni.Name | None), (uni.Expr | None))];
     def _jobj_prefetch_hits(nd: uni.InForStmt) -> list[uni.Expr];
     def _proj_tuple(hp: tuple) -> ast3.AST;
     def _ranged_hop_call(nd: uni.EdgeRefTrailer) -> bool;

@@ -2606,21 +2606,69 @@ impl PyastGenPass._is_pure_projection(expr: uni.UniNode, loop_var: str) -> bool 
     return self._pure_ref_root(expr) == loop_var;
 }
 
+impl PyastGenPass._prefetch_loop_parts(
+    nd: uni.InForStmt
+) -> tuple[((uni.Name | None), (uni.Expr | None))] {
+    # The (element Name, collection Expr) the prefetch comprehension should
+    # re-iterate, or (None, None) when this loop's shape is not one we can
+    # provably re-evaluate. Two accepted shapes:
+    #
+    #   for x in <pure-ref>                                  -> (x, <pure-ref>)
+    #   for (i, x) in enumerate(<pure-ref>)                  -> (x, <pure-ref>)
+    #   for (i, x) in enumerate(<pure-ref>, <int|pure-ref>)  -> (x, <pure-ref>)
+    #
+    # enumerate is UNWRAPPED, not re-evaluated: the hint iterates the inner
+    # collection directly and binds only the tuple's SECOND element, since a
+    # jobj() id is a projection of the element, never of the index. That also
+    # means the start argument is never re-evaluated -- but a start that is
+    # not an int literal or a pure ref could be an arbitrary call, so decline
+    # rather than reason about it. Nothing else (zip, an arbitrary call, a
+    # 3-element target, a kwarg) is accepted.
+    tgt = nd.target;
+    coll = nd.collection;
+    if isinstance(tgt, uni.TupleVal) {
+        vals = list(tgt.values or []);
+        if (
+            len(vals) != 2
+            or not isinstance(coll, uni.FuncCall)
+            or not isinstance(coll.target, uni.Name)
+            or str(coll.target.value) != 'enumerate'
+        ) {
+            return (None, None);
+        }
+        prms = list(coll.params or []);
+        if len(prms) not in (1, 2) or any(isinstance(p, uni.KWPair) for p in prms) {
+            return (None, None);
+        }
+        if (
+            len(prms) == 2
+            and not isinstance(prms[1], uni.Int)
+            and self._pure_ref_root(prms[1]) is None
+        ) {
+            return (None, None);
+        }
+        tgt = cast(uni.Expr, vals[1]);
+        coll = cast(uni.Expr, prms[0]);
+    }
+    # Double-eval guard (see _pure_ref_root's docstring): decline the whole
+    # hint unless the collection itself is a pure ref, since the prefetch
+    # re-evaluates it a second time.
+    if not isinstance(tgt, uni.Name) or self._pure_ref_root(coll) is None {
+        return (None, None);
+    }
+    return (tgt, coll);
+}
+
 impl PyastGenPass._jobj_prefetch_hits(nd: uni.InForStmt) -> list[uni.Expr] {
     # ponytail: scans only the loop's TOP-LEVEL statements (no descent into
     # nested if/for/while). Misses a hint one level deeper -- never WRONG,
     # jobj() still works unhinted, it's just not pre-warmed. Widen to a
     # full-body walk if a real workload needs it.
-    if not isinstance(nd.target, uni.Name) {
+    (tgt, _coll) = self._prefetch_loop_parts(nd);
+    if tgt is None {
         return [];
     }
-    # Double-eval guard (see _pure_ref_root's docstring): decline the whole
-    # hint unless the collection itself is a pure ref, since the prefetch
-    # re-evaluates it a second time.
-    if self._pure_ref_root(nd.collection) is None {
-        return [];
-    }
-    loop_var = str(nd.target.value);
+    loop_var = str(tgt.value);
     # A rebind of the loop var inside the body (`l = ...`) would make the
     # hint's per-iteration id (computed against the loop's OWN l) diverge
     # from what a later jobj() call in the same iteration actually reads
@@ -2698,9 +2746,13 @@ impl PyastGenPass._prefetch_hint_stmt(nd: uni.InForStmt) -> (ast3.AST | None) {
     if not hits {
         return None;
     }
+    # Not nd.target / nd.collection: an `enumerate(...)` loop prefetches over
+    # the INNER collection bound to the tuple's element name (see
+    # _prefetch_loop_parts). hits being non-empty means these are not None.
+    (tgt, coll) = self._prefetch_loop_parts(nd);
     outer_gen = ast3.comprehension(
-        target=cast(ast3.expr, self._clone_py(self.py_ast_val(nd.target))),
-        iter=cast(ast3.expr, self._clone_py(self.py_ast_val(nd.collection))),
+        target=cast(ast3.expr, self._clone_py(self.py_ast_val(cast(uni.Name, tgt)))),
+        iter=cast(ast3.expr, self._clone_py(self.py_ast_val(cast(uni.Expr, coll)))),
         ifs=[],
         is_async=0
     );
