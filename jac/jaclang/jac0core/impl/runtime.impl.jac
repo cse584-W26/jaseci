@@ -884,23 +884,33 @@ impl JacPersistence.closure_refs(
         # stand-ins, no UUID parse and no per-site cache keyed on one. The
         # walker text is unchanged: object_ref() answers a hex string with
         # itself, so `jid(x)` still types and still returns the same id.
-        import from jaclang.runtimelib.query_planner { acl_filter_ids }
-        # ponytail: TWO extra statements per GATED closure call (the ACL
-        # root prefetch _acl_sql_ctx runs, plus the mirror filter itself) -
-        # the price of giving an id-level result the same read verdict the
-        # mirror path gives a hydrated one. None means there is nothing to
-        # decide (system root / library run), which is every other read
-        # path's rule too. Memoise _acl_sql_ctx per snapshot if the prefetch
-        # ever shows up in a profile; its own comment says how.
-        allowed = acl_filter_ids(
-            JacRuntimeInterface.get_context().mem,
-            node_type,
-            [h[0] for h in hits]
-        );
-        if allowed is None {
-            return [(h[0], h[1]) for h in hits];
+        # `acl_filter_ids` answers existence AND readability, so the contract
+        # above (missing / unreadable ids drop out) holds here too; None means
+        # it could not decide, and then the hydrated arm below - which is the
+        # verdict, the old way - is what runs. Same for any failure: like
+        # every other JAC_SQL_ACL path this degrades, it never 500s a read.
+        try {
+            import from jaclang.runtimelib.query_planner { acl_filter_ids }
+            # ponytail: TWO extra statements per GATED closure call (the ACL
+            # root prefetch _acl_sql_ctx runs, plus the mirror filter itself),
+            # one when ungated - the price of giving an id-level result the
+            # same read verdict the mirror path gives a hydrated one.
+            # Memoise _acl_sql_ctx per snapshot if the prefetch ever shows up
+            # in a profile; its own comment says how.
+            allowed = acl_filter_ids(
+                JacRuntimeInterface.get_context().mem,
+                node_type,
+                [h[0] for h in hits]
+            );
+            if allowed is not None {
+                return [(h[0], h[1]) for h in hits if h[0] in allowed];
+            }
+        } except Exception as e {
+            logger.warning(
+                f"ids-only closure verdict failed (falling back to "
+                f"hydration): {e}"
+            );
         }
-        return [(h[0], h[1]) for h in hits if h[0] in allowed];
     }
     objs = JacPersistence.get_objects_many([h[0] for h in hits], _proj);
     return [(o, h[1]) for (o, h) in zip(objs, hits) if o is not None];
@@ -1296,11 +1306,27 @@ impl JacPersistence.aget_object(id: str) -> (Archetype | None) {
 }
 
 impl JacPersistence.object_ref(`obj: (Archetype | str)) -> str {
-    # T7b: an id is its own reference. A ranged hop stamped `ids_only` hands
+    # T7b: a JID is its own reference. A ranged hop stamped `ids_only` hands
     # the walker hex strings instead of objects, and `jid(x)` over them has to
     # keep meaning what it meant - that is what leaves the walker text alone.
+    # Only a 32-char hex string qualifies (what .hex produces); any other str
+    # falls through to the archetype access below and fails loud, as it did
+    # before T7b. Runs once per `jid()` call - 6.3k/request in pymk at d3 -
+    # so it is a length test first and a C-level int parse second, nothing
+    # more.
     if isinstance(`obj, str) {
-        return `obj;
+        if len(`obj) == 32 {
+            try {
+                int(`obj, 16);
+                return `obj;
+            } except ValueError {
+            }
+        }
+        # not a jid: raise the very AttributeError the archetype access below
+        # would have raised (spelled through getattr only so the checker can
+        # narrow `obj to Archetype for the hot path, which stays a plain
+        # attribute load)
+        return getattr(`obj, '__jac__');
     }
     anchor = `obj.__jac__;
     if isinstance(anchor, ObjectAnchor) {

@@ -201,55 +201,70 @@ impl acl_filter_ids(mem: Session, cls: (type | str), ids: list[str]) -> (set | N
     # T7b: the read verdict for an ID-LEVEL result - a closure that hands the
     # walker (hex, depth) pairs, or a zero-field projected hydration. Both
     # answer with ids alone, so there is no anchor for check_read_access to
-    # look at; ask the archetype's mirror for the readable subset instead,
-    # with the SAME predicate the mirror stream path applies (_ACL_SQL_CASE).
-    # -> set of readable hex ids, or None meaning "nothing to decide".
+    # look at; ask the archetype's mirror instead.
     #
-    # ponytail: _ACL_SQL_CASE deliberately OVER-admits the two row classes it
-    # cannot judge from mirror scalars (per-anchor grants `acl_spec`, and
-    # shared-root rows) because the mirror path re-checks those in python. An
-    # ids-only result has nothing to re-check, so those rows are admitted for
-    # good. Strictly tighter than T7 (which applied no verdict at all); route
-    # the two classes through a batch_get here if a deployment ever needs the
-    # exact verdict on ids alone.
-    if not _acl_gated() {
-        return None;   # system root / library run: no filtering at all
-    }
-    # bound through getattr, not `store.x`: Store is a duck-typed backend
-    # here (the pg store adds the mirror API), exactly as the rest of this
-    # module treats it
+    # -> the subset of `ids` that EXISTS in cls's mirror AND is readable, or
+    # None meaning "cannot decide here" (no store, no mirror API, no mirror,
+    # or gated with no ACL context). None is NOT "admit everything": the
+    # caller must fall back to its own hydrated/legacy path, which carries the
+    # python verdict. Ungated (system root / library run) still runs the
+    # statement, with the predicate replaced by TRUE, because the EXISTENCE
+    # half of the answer is owed either way - jobj_many() drops missing ids
+    # and so must this.
     store = mem.store;
+    # bound through getattr, not `store.x`: Store is a duck-typed backend here
+    # (the pg store adds the mirror API), exactly as the rest of this module
+    # treats it
     rowsf = getattr(store, 'rows', None);
     ensure = getattr(store, 'ensure_mirror', None);
     minfo = getattr(store, 'mirror_info', None);
-    ctx = _acl_sql_ctx(mem, True) if rowsf is not None else None;
-    table = '';
-    if ctx is not None and isinstance(cls, type) and ensure is not None
-        and minfo is not None and ensure(cls) {
-        table = str(minfo(cls)['table']);
+    if rowsf is None or ensure is None or minfo is None
+        or not isinstance(cls, type) or not ensure(cls) {
+        return None;
     }
-    if not table {
-        # ponytail: legacy fallback - no store, no mirror, or no SQL context.
-        # The full object load enforces check_read_access exactly as
-        # jobj_many() does; it costs the hydration this path exists to avoid,
-        # but it is the only other place the verdict lives.
+    gated = _acl_gated();
+    ctx = _acl_sql_ctx(mem, True) if gated else None;
+    if gated and ctx is None {
+        return None;   # gated but the predicate is unavailable: cannot decide
+    }
+    pred = 'TRUE';
+    spec = 'false';
+    params: dict = {};
+    if ctx is not None {
+        pred = str(ctx['sql']).replace('%M%', 'm');
+        # the two row classes _ACL_SQL_CASE admits unconditionally because it
+        # cannot judge them from mirror scalars: per-anchor grants and rows
+        # owned by the shared root. _stream_from_mirror re-checks exactly
+        # these in python (its `specials` path) and so must we - the CASE's
+        # over-admission is only sound WITH that re-check.
+        spec = '(m.acl_spec OR m.root_id = CAST(:acl_shared AS uuid))';
+        params = dict(ctx['params']);
+    }
+    params['ids'] = [str(UUID(i)) for i in ids];
+    mem.read_barrier();
+    sql = 'SELECT m.id, ' + spec + ' AS special FROM ' + str(minfo(cls)['table'])
+        + ' m WHERE m.id = ANY(CAST(:ids AS uuid[])) AND (' + pred + ')';
+    ok: set = set();
+    specials: list = [];
+    for r in rowsf(sql, params) {
+        # .hex, no dashes - the ids the caller holds come from object_ref()
+        h = str(r[0]).replace('-', '');
+        if (r[1] is True) or r[1] == 't' {
+            specials.append(h);
+        } else {
+            ok.add(h);
+        }
+    }
+    if specials {
+        # zero extra statements when there are none, which is every benchmark
         import from jaclang.jac0core.runtime { JacRuntimeInterface }
-        objs = JacRuntimeInterface.get_objects_many(list(ids));
-        out: set = set();
-        for (i, o) in zip(list(ids), objs) {
+        for (i, o) in zip(specials, JacRuntimeInterface.get_objects_many(specials)) {
             if o is not None {
-                out.add(i);
+                ok.add(i);
             }
         }
-        return out;
     }
-    sql = 'SELECT m.id FROM ' + table + ' m'
-        + ' WHERE m.id = ANY(CAST(:ids AS uuid[])) AND ('
-        + _ACL_SQL_CASE.replace('%M%', 'm') + ')';
-    params = dict(ctx['params']);
-    params['ids'] = [str(UUID(i)) for i in ids];
-    # .hex, no dashes - the ids the caller holds come from object_ref()
-    return {str(r[0]).replace('-', '') for r in rowsf(sql, params)};
+    return ok;
 }
 
 
@@ -731,18 +746,22 @@ impl hydrate_projected(
         # load_mirror_rows, no decode, no bytes.
         # T7b (review RISK from T7): there is still a verdict to give. A
         # stand-in the requester may not read is a leak the projected path
-        # never had, so ask the mirror who is readable (ids only, two
-        # statements when gated: the ACL root prefetch and the filter itself)
-        # and hand everyone else back as `absent` -- the caller then
+        # never had, so ask the mirror who exists and is readable (ids only,
+        # two statements when gated: the ACL root prefetch and the filter
+        # itself) and hand everyone else back as `absent` -- the caller then
         # answers those the legacy way, with the full python verdict, exactly
-        # as it does for a row the mirror cannot judge.
+        # as it does for a row the mirror cannot judge. A None verdict means
+        # the mirror could not decide at all, so EVERY id goes back.
+        allowed0 = acl_filter_ids(mem, cls, [u.hex for u in ids]);
+        if allowed0 is None {
+            return ({}, list(ids));
+        }
         tmpl0 = _unloaded_template(cls, ());
         tname0 = str(cls.__name__);
-        allowed0 = acl_filter_ids(mem, cls, [u.hex for u in ids]);
         absent0: list = [];
         built0: dict = {};
         for uid in ids {
-            if allowed0 is not None and uid.hex not in allowed0 {
+            if uid.hex not in allowed0 {
                 absent0.append(uid);
                 continue;
             }
@@ -766,8 +785,8 @@ impl hydrate_projected(
             sys.stderr.write(
                 'PROJECT-RT cls=' + tname0 + ' fields=() ids=' + str(len(ids))
                 + ' rows=0 built=' + str(len(built0)) + ' absent='
-                + str(len(absent0)) + ' bytes=0 acl='
-                + ('off' if allowed0 is None else str(len(allowed0))) + chr(10)
+                + str(len(absent0)) + ' bytes=0 acl=' + str(len(allowed0))
+                + chr(10)
             );
         }
         return (built0, absent0);
