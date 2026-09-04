@@ -16,12 +16,13 @@ glob logger = logging.getLogger(__name__),
          'hydrate_projected',
          'acl_filter_ids'
      ],
-     # T3: JAC_LOOP_PREFETCH=1 arms the compiler-emitted `jadj_prefetch` hint
-     # (one adjacency statement per loop LEVEL instead of one per node) and
-     # the per-request memo it fills. Default off = stock behaviour, and the
-     # hint call itself becomes a no-op, so nothing changes for any walker.
+     # T3: arms the compiler-emitted `jadj_prefetch` hint (one adjacency
+     # statement per loop LEVEL instead of one per node) and the per-request
+     # memo it fills. Default ON since 0904 (JAC_LOOP_PREFETCH=0 disables,
+     # and the hint call itself becomes a no-op again). The memo is consulted
+     # only in proven read-only requests - see _adj_memo.
      LOOP_PREFETCH: bool = os.environ.get(
-         'JAC_LOOP_PREFETCH', ''
+         'JAC_LOOP_PREFETCH', '1'
      ).strip().lower() in ('1', 'true', 'yes', 'on');
 
 # JAC_PREFETCH_DEBUG=1: one stderr line per hint telling you whether it filled

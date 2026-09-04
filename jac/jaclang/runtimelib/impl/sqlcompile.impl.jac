@@ -92,11 +92,11 @@ def _sql_type_of(v: any) -> str {
 # JAC_PROMOTED_PREDICATES=1: when a queried field is generated-column
 # promoted (see PgStore._apply_promotions), emit the predicate against that
 # real typed+indexed column instead of the jsonb path so postgres can use
-# the promotion index. Default off - see _pred_cond for the scope this is
-# limited to and why.
+# the promotion index. Default ON since 0904 (JAC_PROMOTED_PREDICATES=0
+# disables) - see _pred_cond for the scope this is limited to and why.
 def _promoted_predicates_enabled -> bool {
     import os;
-    return os.environ.get('JAC_PROMOTED_PREDICATES', '').strip().lower()
+    return os.environ.get('JAC_PROMOTED_PREDICATES', '1').strip().lower()
         in ('1', 'true', 'yes', 'on');
 }
 
@@ -105,10 +105,11 @@ glob PROMOTED_PREDICATES: bool = _promoted_predicates_enabled();
 
 
 # JAC_STREAM_LATERAL=1: emit the final mirror hop as a per-source LATERAL
-# top-K instead of a flat join (see compile_query). Default off.
+# top-K instead of a flat join (see compile_query). Default ON since 0904
+# (JAC_STREAM_LATERAL=0 disables).
 def _stream_lateral_enabled -> bool {
     import os;
-    return os.environ.get('JAC_STREAM_LATERAL', '').strip().lower()
+    return os.environ.get('JAC_STREAM_LATERAL', '1').strip().lower()
         in ('1', 'true', 'yes', 'on');
 }
 
@@ -138,9 +139,12 @@ glob STREAM_LATERAL: bool = _stream_lateral_enabled();
 # slice of the corpus) and the flag is the guard; the principled fix is a
 # planner cost estimate off the mirror's row count vs the traversal's
 # cardinality, which needs statistics the planner does not carry yet.
+# 0904: default ON (JAC_FUSED_FEED=0 disables) - every canonical littleX
+# number was measured with it on and the low-selectivity case above is a
+# documented ceiling, not a benchmark configuration.
 def _fused_feed_enabled -> bool {
     import os;
-    return os.environ.get('JAC_FUSED_FEED', '').strip().lower()
+    return os.environ.get('JAC_FUSED_FEED', '1').strip().lower()
         in ('1', 'true', 'yes', 'on');
 }
 
@@ -172,10 +176,11 @@ glob FUSED_FEED: bool = _fused_feed_enabled();
 # ponytail: gated on an EQUALITY promoted predicate only. Range/!= promoted
 # predicates are not selective enough to be worth inverting the drive order,
 # and an unfiltered hop would be strictly worse driven node-first (it would
-# scan the whole archetype). Default off.
+# scan the whole archetype). Default ON since 0904 (JAC_PROMOTED_DRIVE=0
+# disables); the equality gate above stays the guard.
 def _promoted_drive_enabled -> bool {
     import os;
-    return os.environ.get('JAC_PROMOTED_DRIVE', '').strip().lower()
+    return os.environ.get('JAC_PROMOTED_DRIVE', '1').strip().lower()
         in ('1', 'true', 'yes', 'on');
 }
 

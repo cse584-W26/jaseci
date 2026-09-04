@@ -75,13 +75,13 @@ def get_db_path(base_path: str, target_path: (str | None) = None) -> (str | None
 
 
 def _parse_ro_walkers -> frozenset {
-    # JAC_RO_WALKERS="load_feed,load_feed_chain": walkers declared read-only.
-    # A request spawning one of them runs its store transaction in
-    # SNAPSHOT_READ_ONLY isolation and skips the commit funnel; any write
-    # attempt raises ReadOnlyWalkerError (fail loud, never silently drop).
-    # Parsed once at boot. Empty/unset = feature off (stock).
-    import os;
-    raw = os.environ.get('JAC_RO_WALKERS', '');
+    # A read-only request runs its store transaction in SNAPSHOT_READ_ONLY
+    # isolation and skips the commit funnel; any write attempt raises
+    # ReadOnlyWalkerError (fail loud, never silently drop).
+    # JAC_RO_WALKERS retired 0904: EffectPass stamps __jac_readonly__
+    # (is2 parity 98/98, session0831), so this override list is now always
+    # empty and request_read_only() below reads the stamp alone.
+    raw = '';
     return frozenset(t.strip() for t in raw.split(',') if t.strip());
 }
 

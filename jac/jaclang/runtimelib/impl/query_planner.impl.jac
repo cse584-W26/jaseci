@@ -118,7 +118,7 @@ def _acl_sql_ctx(mem: Session, force: bool = False) -> (dict | None) {
     # has no python path to fall back to (there are no objects to check), so
     # for it the predicate is the decision, not an optimisation of one.
     import os;
-    if not force and os.environ.get('JAC_SQL_ACL', '0').strip().lower()
+    if not force and os.environ.get('JAC_SQL_ACL', '1').strip().lower()
         not in ('1', 'on', 'true') {
         return None;
     }
@@ -1161,7 +1161,7 @@ impl _try_stream_fused(
                     # top-K through the (endpoint, sort) index directly, and
                     # the global form would only add a filter to it.
                     if (
-                        os.environ.get('JAC_FUSED_FEED', '').strip().lower()
+                        os.environ.get('JAC_FUSED_FEED', '1').strip().lower()
                             in ('1', 'true', 'yes', 'on')
                         and len(q.hops) >= 2
                         and hasattr(store, 'ensure_mirror_order_index')
@@ -1282,6 +1282,17 @@ impl _adj_memo(mem: Session) -> (dict | None) {
     } except Exception {
         if PREFETCH_DEBUG {
             _pf_dbg('memo off: no request context');
+        }
+        return None;
+    }
+    # 0904 default-on: the adjacency memo is intra-request state; a write
+    # walker could attach an edge between the hint and the use, so only
+    # proven read-only requests use it. (The _dirty/_deleted/_txn_changed
+    # refusal above catches a write already in flight; this catches one
+    # that has not landed yet.)
+    if not jctx.request_read_only {
+        if PREFETCH_DEBUG {
+            _pf_dbg('memo off: request not proven read-only');
         }
         return None;
     }

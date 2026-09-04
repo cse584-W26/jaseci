@@ -1945,30 +1945,27 @@ impl JacGraph.build_edge(
         # already-persistent endpoint unmarked. Mark both ends explicitly so
         # change tracking does not depend on re-hashing every anchor.
         #
-        # EDGE-ONLY DIRTY (default-on for PgStore; JAC_EDGE_ONLY_DIRTY=0
-        # force-disables, =1 force-enables): vestigial on a backend that
-        # stores edges as their own anchor rows. On pg `anchors.src/dst` is the
-        # adjacency truth, Session._serialize emits no `edges` key into props
-        # and _persist_hash pops it, so re-writing an endpoint node row after
-        # an attach stores nothing new. When the endpoint belongs to ANOTHER
-        # root it is worse than useless: check_write_access denies the write,
-        # reports the denial to the caller, and (without JAC_STICKY_DENY)
-        # replays it at Session.close under system-root privileges in a second
+        # EDGE-ONLY DIRTY (default-on for PgStore, no knob since 0904):
+        # vestigial on a backend that stores edges as their own anchor rows. On
+        # pg `anchors.src/dst` is the adjacency truth, Session._serialize emits
+        # no `edges` key into props and _persist_hash pops it, so re-writing an
+        # endpoint node row after an attach stores nothing new. When the
+        # endpoint belongs to ANOTHER root it is worse than useless:
+        # check_write_access denies the write, reports the denial to the
+        # caller, and (before sticky denial became the constant default, 0904)
+        # replayed it at Session.close under system-root privileges in a second
         # transaction with its own fsync. The edge anchor itself is marked by
         # JacPersistence.save -> Session.put below, so nothing that must
         # persist stops persisting.
         # CEILING: pg-shaped. A backend that persists adjacency INSIDE the node
-        # blob (the mongo/GTI lineage) must leave this flag off, or an attach
-        # would never reach the store - _edge_only_dirty_pg() (runtime.jac)
-        # enforces this by defaulting on only when the live store is PgStore;
-        # JAC_EDGE_ONLY_DIRTY=1 still force-overrides that gate. Detach is
-        # deliberately NOT gated: its
-        # endpoint marks are equally redundant on pg, but an aborted detach
+        # blob (the mongo/GTI lineage) must leave this off, or an attach would
+        # never reach the store - _edge_only_dirty_pg() (runtime.jac) enforces
+        # this by engaging only when the live store is PgStore, and there is no
+        # env override that can defeat it. Detach is deliberately NOT gated:
+        # its endpoint marks are equally redundant on pg, but an aborted detach
         # would leave a resident endpoint missing an edge that still exists,
         # which _evict_uncommitted cannot repair.
-        _edge_only_dirty = _EDGE_ONLY_DIRTY_ENV == '1' or (
-            _EDGE_ONLY_DIRTY_ENV != '0' and _edge_only_dirty_pg()
-        );
+        _edge_only_dirty = _edge_only_dirty_pg();
         _ctx = None if _edge_only_dirty else JacRuntimeInterface.peek_context();
         if _ctx is not None {
             _md = _ctx.mem?.mark_dirty;
