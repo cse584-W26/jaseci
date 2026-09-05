@@ -1094,7 +1094,12 @@ impl JacPersistence.get_hop_counts(
     md: set = set();
     for (k, members) in pairs_by_key.items() {
         ku = str(UUID(k));
-        for m in members {
+        # set(): the caller's membership collection may be a list built with
+        # `.append()`, and a repeated member would join the E2/E3 rows twice
+        # and inflate that key's count. The pre-lowering walker tests
+        # `jid(c[0]) in <S>[k]` - a MEMBERSHIP test, which a duplicate cannot
+        # change - so deduping here is what matches it.
+        for m in set(members) {
             mu = str(UUID(m));
             ks.append(ku);
             ms.append(mu);
@@ -1192,15 +1197,19 @@ impl JacPersistence.get_hop_counts_topk(
     # get_hop_counts does - see its note; `count(DISTINCT e2.dst)` is the
     # upgrade if a schema with multi-creator T2 nodes ever reaches this.
     #
-    # ponytail: the tie-break casts the mirror column to bigint
-    # (`(col #>> '{}')::bigint`), the same ceiling get_topk_inbound records
-    # ("order/tie fields must be numeric"). mirror_info exposes only
-    # {'table', 'cols'} - no per-column type - so there is no type info to
-    # cast BY; the walker's own key is a python int comparison on the same
-    # field, and bigint is the reading that matches it. A text field would
-    # raise here; the compiler-side stamp cannot prove numericity today, so
-    # a non-numeric tie-break field is the one shape that gets a 500 rather
-    # than a slower answer.
+    # ponytail: the tie-break is TYPE-SAFE rather than cast. mirror_info
+    # exposes only {'table', 'cols'} - no per-column type - so there is no
+    # type info to cast BY, and `(col #>> '{}')::bigint` raised (a 500) on
+    # any mirrored field that is not a number, where the pre-lowering python
+    # `rows.sort()` always answered. Two ORDER BY keys instead: a numeric one
+    # guarded by `jsonb_typeof(...) = 'number'` (NULL for every row of a text
+    # column, so the second key decides) and the text form of the same value
+    # under `COLLATE "C"` - byte order, which is what python's `<` on str
+    # is (code points). A numeric column's first key decides outright, so the
+    # two agree with the walker's own int comparison. Ties the SQL cannot
+    # break (a mixed-type column) only reorder INSIDE the returned superset:
+    # the walker re-sorts the K rows itself, so the ordering is its own; what
+    # this ORDER BY must get right is the SET of K, which both keys do.
     ctx = JacRuntimeInterface.get_context();
     mem = ctx.mem;
     store = getattr(mem, 'store', None);
@@ -1225,7 +1234,12 @@ impl JacPersistence.get_hop_counts_topk(
     mset: set = set();
     for (k, members) in pairs_by_key.items() {
         ku = str(UUID(k));
-        for m in members {
+        # set(): the caller's membership collection may be a list built with
+        # `.append()`, and a repeated member would join the E2/E3 rows twice
+        # and inflate that key's count. The pre-lowering walker tests
+        # `jid(c[0]) in <S>[k]` - a MEMBERSHIP test, which a duplicate cannot
+        # change - so deduping here is what matches it.
+        for m in set(members) {
             mu = str(UUID(m));
             ks.append(ku);
             ms.append(mu);
@@ -1298,7 +1312,10 @@ impl JacPersistence.get_hop_counts_topk(
     if col {
         sql = (
             sql + ' JOIN ' + tab + ' m ON m.id = keys.k'
-            + " ORDER BY hc DESC, (m." + col + " #>> '{}')::bigint ASC"
+            + ' ORDER BY hc DESC,'
+            + " CASE WHEN jsonb_typeof(m." + col + ") = 'number'"
+            + ' THEN (m.' + col + ')::numeric END ASC NULLS LAST,'
+            + " (m." + col + " #>> '{}') COLLATE \"C\" ASC"
             + ' LIMIT :lim'
         );
     }

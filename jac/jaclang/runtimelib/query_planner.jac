@@ -94,7 +94,7 @@ def _memo_key(q: GraphQuery) -> (tuple | None);
 
 
 def _memo_pairs(
-    mem: Session, q: GraphQuery
+    mem: Session, q: GraphQuery, allow_fast: bool = True
 ) -> (tuple[list[tuple[(UUID | None), (UUID | None)]], dict[UUID, Anchor]] | None);
 
 

@@ -1375,11 +1375,14 @@ impl _memo_key(q: GraphQuery) -> (tuple | None) {
 
 
 impl _memo_pairs(
-    mem: Session, q: GraphQuery
+    mem: Session, q: GraphQuery, allow_fast: bool = True
 ) -> (tuple[list[tuple[(UUID | None), (UUID | None)]], dict[UUID, Anchor]] | None) {
     # ALL-or-nothing: one origin missing from the memo and the whole query
     # falls through to the generic path unchanged. A partial answer would be
     # a wrong answer.
+    #
+    # `allow_fast=False` also refuses a key whose level was filled by D3's
+    # `_fast_adj_sql` - see the `(None, key)` marker in _fill_adj_level.
     memo = _adj_memo(mem);
     if not memo or mem.store is None {
         return None;
@@ -1388,6 +1391,12 @@ impl _memo_pairs(
     if key is None {
         if PREFETCH_DEBUG {
             _pf_dbg('read miss: hop shape not memoizable ' + repr(q));
+        }
+        return None;
+    }
+    if not allow_fast and memo.get((None, key)) {
+        if PREFETCH_DEBUG {
+            _pf_dbg('read skip: fast-filled key, caller needs the node join');
         }
         return None;
     }
@@ -1539,11 +1548,14 @@ impl _fast_adj_sql(store: any, key: tuple, epreds: (list | None)) -> (tuple | No
     # ponytail: the dropped node join also asserted the endpoint row still
     # EXISTS. An edge left dangling by a deleted node is kept here and dropped
     # downstream by _materialize_ids (resolve_query) exactly as an
-    # unpopulated anchor is, but ungated resolve_query_edges would report an
-    # edge the generic path suppresses. Re-adding the join costs 19.9ms
-    # against 3.7 - measured, same rows - so it is a declared ceiling, not an
-    # oversight; put `JOIN anchors n ON n.id = e.<far> AND n.arch_type =
-    # '<T>'` back if a workload ever leaves dangling edge rows behind.
+    # unpopulated anchor is. resolve_query_edges reports the EDGE, which
+    # _materialize_ids does not drop, so it refuses a fast-filled memo entry
+    # outright (`_memo_pairs(..., allow_fast=False)`, the `(None, key)`
+    # marker _fill_adj_level writes) and re-issues the generic statement.
+    # Re-adding the join here costs 19.9ms against 3.7 - measured, same rows
+    # - so it stays a declared ceiling for the ids/object paths; put
+    # `JOIN anchors n ON n.id = e.<far> AND n.arch_type = '<T>'` back if a
+    # workload ever leaves dangling edge rows behind.
     #
     # ponytail: an UNTYPED hop (`[-->]`, edge or node None) is declined rather
     # than given its own spelling - there is no literal to pin and the generic
@@ -1674,6 +1686,16 @@ impl _fill_adj_level(
         # an origin with NO neighbours is a HIT with [], not a miss
         acc[(i, key)] = [];
     }
+    if fast is not None {
+        # D3's spelling drops the endpoint-node JOIN (its declared ceiling
+        # above), so these pairs can name a node whose anchor is gone. Mark
+        # the KEY - `_fast_adj_sql` is a pure function of it, so a key is
+        # either always fast or never - and let a caller that reports the
+        # EDGE rather than the node (resolve_query_edges) refuse the memo.
+        # `(None, key)` cannot collide: a real entry's first element is the
+        # origin's UUID.
+        acc[(None, key)] = True;
+    }
     nids: list[UUID] = [];
     for r in store.rows(sql, params) {
         nid = UUID(str(r[0])) if r[0] is not None else None;
@@ -1792,8 +1814,12 @@ impl resolve_query_edges(mem: Session, q: GraphQuery) -> list[Anchor] {
     if not q.origin or not q.hops {
         return [];
     }
-    # memo pairs carry the edge id too, so `[x ->:E:-> :e]` is served as well
-    mp = _memo_pairs(mem, q);
+    # memo pairs carry the edge id too, so `[x ->:E:-> :e]` is served as well.
+    # allow_fast=False: unlike resolve_query, this path reports the EDGE, and
+    # _materialize_ids only drops the dangling NODE - so a D3 fast-filled
+    # level (no endpoint-node join) would surface an edge the generic path
+    # suppresses. Those keys fall through to _resolve_pairs.
+    mp = _memo_pairs(mem, q, False);
     (pairs, local) = mp if mp is not None else _resolve_pairs(mem, q, len(q.hops));
     edge_ids: list[UUID] = [];
     node_of: dict[UUID, UUID] = {};

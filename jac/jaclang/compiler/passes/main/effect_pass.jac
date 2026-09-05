@@ -725,7 +725,7 @@ def _ids_only_of(
 
 
 def _dict_alias_fields(
-    scopes: list, dname: str, vname: str, dflt_type: (str | None), dead: set
+    scopes: list, dname: str, vtgt: object, dflt_type: (str | None), dead: set
 ) -> (set | None) {
     # C2: `<D>` is a LOCAL dict the loop element escapes into
     # (`<D>[<k>] = x`). -> the extra fields read off the element through
@@ -737,6 +737,16 @@ def _dict_alias_fields(
     # A read `<D>[<k>]`, `len(<D>)`, a call argument, a return or a report
     # all decline: each hands the element to something this audit cannot
     # see. Refusal over wrongness, exactly like _projection_of.
+    #
+    # The STORE is matched on the bound name's SYMBOL
+    # (`_single_element_use`/`_ids_only_of` spelling), not on the name
+    # string: two unrelated loops in one walker may reuse the element name
+    # AND the same staging dict, and a string match would take the other
+    # loop's store for ours and merge its (differently typed) field reads
+    # into this projection. Name first, symbol as the discriminator, so an
+    # unresolved symbol falls back to today's answer.
+    vname = str(getattr(vtgt, 'value', ''));
+    vsym = getattr(vtgt, 'sym', None);
     fields: set = set();
     inits: set = set();   # by node id: _scopes_of can hand the same body twice
     for scope in scopes {
@@ -777,7 +787,11 @@ def _dict_alias_fields(
                     }
                     asg = _ancestor(p, (uni.Assignment, ));
                     val = getattr(asg, 'value', None) if asg is not None else None;
-                    if not isinstance(val, uni.Name) or str(val.value) != vname {
+                    if not isinstance(val, uni.Name) or str(val.value) != vname
+                        or (
+                            vsym is not None
+                            and getattr(val, 'sym', None) is not vsym
+                        ) {
                         return None;   # some OTHER value in the same dict
                     }
                     continue;
@@ -805,7 +819,13 @@ def _dict_alias_fields(
                         return None;
                     }
                     if str(v2.value) == vname {
-                        continue;   # same name: the outer sweep already has it
+                        # NAME, not symbol, and deliberately: the read-back
+                        # loop is its own scope, so its `<vname>` is always a
+                        # DIFFERENT symbol from the element's - and the outer
+                        # sweep (_projection_of) matches by name, so it has
+                        # already audited every use under this loop. Symbol
+                        # here would decline the served ic5 shape.
+                        continue;
                     }
                     sub = _projection_of(scopes, lp, v2, dflt_type, None, dead);
                     if sub is None {
@@ -1938,7 +1958,7 @@ class EffectPass(UniPass) {
                     alias = str(list(aliases)[0]) if aliases else None;
                     pproj = _projection_of(scopes, pnt, tgt2, etype, alias, dead);
                     if pproj is not None and alias is not None {
-                        af = _dict_alias_fields(scopes, alias, vn2, etype, dead);
+                        af = _dict_alias_fields(scopes, alias, tgt2, etype, dead);
                         if af is None {
                             pproj = None;
                             why = 'dict alias ' + str(alias) + ' is not private';
