@@ -243,6 +243,9 @@ obj PyastGenPass(BaseAstGenPass[ast3.AST]) {
     def _ranged_hop_call(nd: uni.EdgeRefTrailer) -> bool;
     def _prefetch_hint_stmt(nd: uni.InForStmt) -> (ast3.AST | None);
     def _hopcount_stmts(nd: uni.InForStmt, plan: tuple) -> tuple;
+    def _hopcount_topk_stmts(
+        nd: uni.InForStmt, plan: tuple, tplan: tuple
+    ) -> tuple;
     def _adj_ref_shapes(
         nd: uni.UniNode, root_var: str, banned: (set | None) = None
     ) -> list[tuple];

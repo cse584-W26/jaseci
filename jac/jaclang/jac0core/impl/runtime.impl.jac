@@ -1160,6 +1160,152 @@ impl JacPersistence.get_hop_counts(
     };
 }
 
+impl JacPersistence.get_hop_counts_topk(
+    pairs_by_key: dict, keys_by_key: dict, edge2: (str | type),
+    node2: (str | type), edge3: (str | type), node3: (str | type),
+    key_type: type, key_field: str, limit: int
+) -> list {
+    # Rung D (COMPILER_PLAN.md D). get_hop_counts, plus the ORDERING and the
+    # LIMIT the walker used to do in python: -> the top `limit` keys of
+    # `keys_by_key` by (count DESC, `key_field` ASC) as (key jid, count).
+    # SNB ic5 keeps 20 of ~2500 forums, so the python loop that follows runs
+    # 20 times instead of 2500.
+    #
+    # DEGRADABLE BY CONSTRUCTION. The emitted walker keeps its own
+    # `rows.sort(key=lambda d { (-d[cnt], d[field]) })` and `rows[:K]`, so
+    # ANY superset of the true top-K in ANY order still produces the exact
+    # same report. Every early return below therefore hands back MORE rows
+    # unordered rather than raising or guessing - the answer stays right and
+    # only the python loop gets longer.
+    #
+    # The plan differs from get_hop_counts': drive from the DISTINCT members'
+    # E3 rows first (`fp`), then join those posts back to their E2 edges,
+    # instead of expanding every (key, member) pair against every E2 edge.
+    # Same result set, far fewer intermediate rows when a key has many
+    # members.
+    #
+    # ponytail: `count(*)` counts (E2, E3) edge PAIRS, exactly as
+    # get_hop_counts does - see its note; `count(DISTINCT e2.dst)` is the
+    # upgrade if a schema with multi-creator T2 nodes ever reaches this.
+    #
+    # ponytail: the tie-break casts the mirror column to bigint
+    # (`(col #>> '{}')::bigint`), the same ceiling get_topk_inbound records
+    # ("order/tie fields must be numeric"). mirror_info exposes only
+    # {'table', 'cols'} - no per-column type - so there is no type info to
+    # cast BY; the walker's own key is a python int comparison on the same
+    # field, and bigint is the reading that matches it. A text field would
+    # raise here; the compiler-side stamp cannot prove numericity today, so
+    # a non-numeric tie-break field is the one shape that gets a 500 rather
+    # than a slower answer.
+    ctx = JacRuntimeInterface.get_context();
+    mem = ctx.mem;
+    store = getattr(mem, 'store', None);
+    if store is None {
+        raise RuntimeError('get_hop_counts_topk: session has no store');
+    }
+    names = [
+        (t if isinstance(t, str) else str(getattr(t, '__name__', '')))
+        for t in (edge2, node2, edge3, node3)
+    ];
+    if not all((n.isidentifier() for n in names)) {
+        raise RuntimeError(
+            'get_hop_counts_topk: archetype names must be identifiers'
+        );
+    }
+    allks = [str(UUID(k)) for k in keys_by_key];
+    if not allks {
+        return [];
+    }
+    ks: list = [];
+    ms: list = [];
+    mset: set = set();
+    for (k, members) in pairs_by_key.items() {
+        ku = str(UUID(k));
+        for m in members {
+            mu = str(UUID(m));
+            ks.append(ku);
+            ms.append(mu);
+            mset.add(mu);
+        }
+    }
+    if not ks {
+        # no pairs at all -> every key counts 0; the walker's own sort and
+        # slice pick the K smallest keys, same as the SQL would have
+        return [(str(k), 0) for k in keys_by_key];
+    }
+    params: dict = {
+        'ks': ks, 'ms': ms, 'md': list(mset), 'allks': allks,
+        'lim': int(limit)
+    };
+    # literals so postgres can prove R6's partial indexes apply - identical
+    # reasoning to get_hop_counts, which documents it at length
+    conds: list = [];
+    for i in (0, 2) {
+        if store.ensure_adjacency_index(names[i], names[i + 1]) {
+            conds.append(("'" + names[i] + "'", "'" + names[i + 1] + "'"));
+        } else {
+            params['et' + str(i)] = names[i];
+            params['nt' + str(i)] = names[i + 1];
+            conds.append((':et' + str(i), ':nt' + str(i)));
+        }
+    }
+    # `AS MATERIALIZED` on both CTEs, and `e3.src_type` in `fp`: rung D1
+    # MEASURED both on the live SF1 store against this same drive order.
+    # Unfenced, the planner joins `pr` to `fp` FIRST on the member column -
+    # it estimates 101 rows where there are 2.9M - and the statement takes
+    # 24.4 s instead of 20 ms. The `src_type` predicate is redundant with the
+    # E2 join (a post reached through E2 already has that type) but prunes
+    # Comment HasCreator rows before the probes (23052 -> 4301) and turns the
+    # scan into `idx_anchors_dst_typed`'s exact (dst, arch_type, src_type)
+    # prefix; sound because the store backfills both endpoint types from the
+    # endpoint's own arch_type, so the two spellings cannot disagree.
+    sql = (
+        'WITH pr(k, m) AS ('
+        + ' SELECT * FROM unnest(CAST(:ks AS uuid[]), CAST(:ms AS uuid[]))'
+        + '), keys(k) AS (SELECT * FROM unnest(CAST(:allks AS uuid[]))),'
+        + ' fp AS MATERIALIZED ('
+        + ' SELECT e3.src AS post, e3.dst AS m FROM anchors e3'
+        + " WHERE e3.kind = 'EdgeAnchor' AND e3.arch_type = " + conds[1][0]
+        + ' AND e3.dst_type = ' + conds[1][1]
+        + ' AND e3.src_type = ' + conds[0][1]
+        + ' AND e3.dst = ANY(CAST(:md AS uuid[]))'
+        + '), fc AS MATERIALIZED ('
+        + ' SELECT e2.src AS k, fp.m AS m FROM fp JOIN anchors e2'
+        + " ON e2.kind = 'EdgeAnchor' AND e2.arch_type = " + conds[0][0]
+        + ' AND e2.dst_type = ' + conds[0][1]
+        + ' AND e2.dst = fp.post'
+        + '), cnt AS ('
+        + ' SELECT pr.k AS k, count(*) AS c FROM pr'
+        + ' JOIN fc ON fc.k = pr.k AND fc.m = pr.m'
+        + ' GROUP BY pr.k)'
+        + ' SELECT keys.k, COALESCE(cnt.c, 0) AS hc FROM keys'
+        + ' LEFT JOIN cnt ON cnt.k = keys.k'
+    );
+    # The ordering rides on the KEY type's mirror. ensure_mirror's contract
+    # (store.impl.jac) is "False = fall back to the non-mirror path", not an
+    # error, so a mirror still building for this request's snapshot drops
+    # the ORDER BY / LIMIT and returns every key - correct, just longer.
+    info = store.mirror_info(key_type) if store.ensure_mirror(key_type) else None;
+    # str() on both, and one local each: spelled inline `info['table']` types
+    # as unknown off a `dict | None` the checker will not narrow through
+    # `col`, which costs this file an E1055 pair (T7b deviation 1's reason).
+    tab = str(info['table']) if info else '';
+    col = str(info['cols'].get(key_field) or '') if info else '';
+    if col {
+        sql = (
+            sql + ' JOIN ' + tab + ' m ON m.id = keys.k'
+            + " ORDER BY hc DESC, (m." + col + " #>> '{}')::bigint ASC"
+            + ' LIMIT :lim'
+        );
+    }
+    mem.read_barrier();
+    # .hex keys, same convention as object_ref()/jid(): the emitted codegen
+    # indexes the walker's own dict with what comes back.
+    return [
+        (str(r[0]).replace('-', ''), int(r[1])) for r in store.rows(sql, params)
+    ];
+}
+
 impl JacPersistence.get_topk_inbound(
     dsts: list[str], edge_type: str, specs: list[tuple],
     order_field: str, max_value: int, limit: int, src_field: str = '',

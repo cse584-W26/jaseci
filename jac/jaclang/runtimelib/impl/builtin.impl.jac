@@ -88,6 +88,8 @@ impl __getattr__(name: str) -> object {
         return _get_jadj_pairs();
     } elif (name == 'jhopcount') {
         return _get_jhopcount();
+    } elif (name == 'jhopcount_topk') {
+        return _get_jhopcount_topk();
     } elif (name == 'jadj_prefetch') {
         return _get_jadj_prefetch();
     } elif (name == 'jroot') {
@@ -230,6 +232,14 @@ impl _get_jhopcount -> Callable[..., any] {
     # (44 of them on this file). Spelling it as an attribute would add a 45th
     # and 46th; getattr reads the same and holds the count (T7b deviation 2).
     return getattr(_get_jac(), 'get_hop_counts');
+}
+
+
+impl _get_jhopcount_topk -> Callable[..., any] {
+    # Rung D: rung B's counting nest with the walker's own ORDER BY / LIMIT
+    # folded in. Never named by an app - PyastGenPass emits the call.
+    # getattr for the same reason as _get_jhopcount above.
+    return getattr(_get_jac(), 'get_hop_counts_topk');
 }
 
 
