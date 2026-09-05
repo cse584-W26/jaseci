@@ -1197,19 +1197,34 @@ impl JacPersistence.get_hop_counts_topk(
             conds.append((':et' + str(i), ':nt' + str(i)));
         }
     }
+    # `AS MATERIALIZED` on both CTEs, and `e3.src_type` in `fp`: rung D1
+    # MEASURED both on the live SF1 store against this same drive order.
+    # Unfenced, the planner joins `pr` to `fp` FIRST on the member column -
+    # it estimates 101 rows where there are 2.9M - and the statement takes
+    # 24.4 s instead of 20 ms. The `src_type` predicate is redundant with the
+    # E2 join (a post reached through E2 already has that type) but prunes
+    # Comment HasCreator rows before the probes (23052 -> 4301) and turns the
+    # scan into `idx_anchors_dst_typed`'s exact (dst, arch_type, src_type)
+    # prefix; sound because the store backfills both endpoint types from the
+    # endpoint's own arch_type, so the two spellings cannot disagree.
     sql = (
         'WITH pr(k, m) AS ('
         + ' SELECT * FROM unnest(CAST(:ks AS uuid[]), CAST(:ms AS uuid[]))'
         + '), keys(k) AS (SELECT * FROM unnest(CAST(:allks AS uuid[]))),'
-        + ' fp AS (SELECT e3.src AS post, e3.dst AS m FROM anchors e3'
+        + ' fp AS MATERIALIZED ('
+        + ' SELECT e3.src AS post, e3.dst AS m FROM anchors e3'
         + " WHERE e3.kind = 'EdgeAnchor' AND e3.arch_type = " + conds[1][0]
         + ' AND e3.dst_type = ' + conds[1][1]
-        + ' AND e3.dst = ANY(CAST(:md AS uuid[]))),'
-        + ' cnt AS (SELECT pr.k AS k, count(*) AS c FROM pr'
-        + ' JOIN fp ON fp.m = pr.m'
-        + " JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND e2.arch_type = "
-        + conds[0][0] + ' AND e2.dst_type = ' + conds[0][1]
-        + ' AND e2.dst = fp.post AND e2.src = pr.k'
+        + ' AND e3.src_type = ' + conds[0][1]
+        + ' AND e3.dst = ANY(CAST(:md AS uuid[]))'
+        + '), fc AS MATERIALIZED ('
+        + ' SELECT e2.src AS k, fp.m AS m FROM fp JOIN anchors e2'
+        + " ON e2.kind = 'EdgeAnchor' AND e2.arch_type = " + conds[0][0]
+        + ' AND e2.dst_type = ' + conds[0][1]
+        + ' AND e2.dst = fp.post'
+        + '), cnt AS ('
+        + ' SELECT pr.k AS k, count(*) AS c FROM pr'
+        + ' JOIN fc ON fc.k = pr.k AND fc.m = pr.m'
         + ' GROUP BY pr.k)'
         + ' SELECT keys.k, COALESCE(cnt.c, 0) AS hc FROM keys'
         + ' LEFT JOIN cnt ON cnt.k = keys.k'
