@@ -650,7 +650,13 @@ def _projection_of(
 }
 
 
-def _ids_only_of(scopes: list, bind: object, tgt: object) -> bool {
+def _ids_only_of(
+    scopes: list,
+    bind: object,
+    tgt: object,
+    alias: (str | None) = None,
+    dead: (set | None) = None
+) -> bool {
     # T7b: True iff EVERY reference to the bound name is the SOLE argument of
     # a `jid(...)` call - i.e. the walker observes nothing but the element's
     # identity, so the id IS the value it wants. Same non-reference skips as
@@ -659,6 +665,10 @@ def _ids_only_of(scopes: list, bind: object, tgt: object) -> bool {
     # attribute read, isinstance, a truth test, `is None`, another call,
     # report, return, subscript, delete - returns False. Unresolved scope:
     # False. Refusal over wrongness, per site, exactly like _projection_of.
+    # `alias` / `dead` (D4) are _projection_of's two excuses, spelled the same
+    # way: the ONE audited `<alias>[<k>] = x` store, and subtrees another
+    # lowering deletes or rebinds the name in. Both default None -> every
+    # existing caller is byte-identical.
     vname = str(getattr(tgt, 'value', ''));
     for scope in scopes {
         if not isinstance(scope, uni.UniNode) {
@@ -691,6 +701,12 @@ def _ids_only_of(scopes: list, bind: object, tgt: object) -> bool {
             }
             if _sibling_branch(nm, bind) {
                 continue;
+            }
+            if dead is not None and _in_dead(nm, dead) {
+                continue;
+            }
+            if alias is not None and _dict_store_base(nm) == alias {
+                continue;   # D4: the audited dict-alias escape
             }
             if _ancestor(nm, (uni.DeleteStmt, )) is not None {
                 return False;
@@ -811,6 +827,43 @@ def _dict_alias_fields(
         }
     }
     return fields if len(inits) == 1 else None;
+}
+
+
+def _topk_items_loop(scopes: list, dname: str) -> (object | None) {
+    # D4: the ONE `for (k2, v2) in <D>.items()` reader of the staging dict,
+    # and only when rung D stamped THAT loop as the top-K tail. Anything else
+    # -> None: a second `.items()` reader (a comprehension counts) would see
+    # the dict's values, and without the rung-D stamp the tail still hydrates
+    # them itself. Combined with _dict_alias_fields (which declines every
+    # other way to read `<D>`) this is the spec's "the dict's values are read
+    # ONLY inside the top-K tail".
+    found: list = [];
+    seen: set = set();
+    for scope in scopes {
+        if not isinstance(scope, uni.UniNode) {
+            return None;
+        }
+        readers: list = _walk(scope, uni.InForStmt, []);
+        readers.extend(_walk(scope, uni.InnerCompr, []));
+        for lp in readers {
+            if id(lp) in seen {
+                continue;
+            }
+            seen.add(id(lp));
+            if _items_dict_name(getattr(lp, 'collection', None)) == dname {
+                found.append(lp);
+            }
+        }
+    }
+    if len(found) != 1 {
+        return None;
+    }
+    tp = getattr(found[0], 'hopcount_topk', None);
+    if tp is None or str(tp[0]) != dname {
+        return None;
+    }
+    return found[0];
 }
 
 
@@ -1877,6 +1930,7 @@ class EffectPass(UniPass) {
                     }
                 }
                 pproj = None;
+                alias = None;
                 why = 'a use of the element is not admissible';
                 if len(aliases) > 1 {
                     why = 'element escapes into more than one dict';
@@ -1906,7 +1960,54 @@ class EffectPass(UniPass) {
                         ) + chr(10)
                     );
                 }
-                if pproj is not None {
+                # D4: one rung BELOW the projection - when the ONLY reader of
+                # the staged dict's values is the rung-D top-K tail, and the
+                # element itself is observed only as `jid(x)` (T7b's rule),
+                # this nest needs no objects at all: it stages IDS, and the K
+                # winners are hydrated by the tail's own typed `jobj` from the
+                # same mirror columns `pproj` names. Declines keep C2's
+                # projection - a walker whose tail still reads Phi objects
+                # would otherwise get hex strings where it wanted archetypes.
+                d4 = None;
+                why4 = 'the staging dict has no single rung-D top-K reader';
+                if pproj is not None and alias is not None {
+                    l2 = _topk_items_loop(scopes, str(alias));
+                    if l2 is not None {
+                        tp = getattr(l2, 'hopcount_topk', None);
+                        dead4: set = set(dead);
+                        if str(tp[1]) == vn2 {
+                            # the tail REBINDS this name at its own loop
+                            # header, so nothing under it can observe THIS
+                            # binding (python binds the target before the
+                            # body runs) - the same "not an observation"
+                            # argument the hopcount `dead` set makes
+                            dead4.add(id(l2));
+                        }
+                        if _ids_only_of(scopes, pnt, tgt2, str(alias), dead4) {
+                            d4 = pproj;
+                        } else {
+                            why4 = 'the element is observed outside the top-K tail';
+                        }
+                    }
+                }
+                if os.environ.get('JAC_EFFECT_DEBUG')
+                    and pproj is not None and alias is not None {
+                    sys.stderr.write(
+                        'EFFECTPASS ' + str(w.name) + ' ids_only edgeref@'
+                        + str(getattr(ert.loc, 'first_line', '?')) + ' '
+                        + ('accepted' if d4 is not None else 'declined:' + why4)
+                        + chr(10)
+                    );
+                }
+                if d4 is not None {
+                    ert.ids_only = True;
+                    # the tail's `<v> = <D>[<k>]` becomes `jobj(<D>[<k>], T)`;
+                    # this is the T6 stamp that jobj site would have carried.
+                    # setattr, not `l2.topk_ids_proj =`: `l2` types as
+                    # `object | None` here and a direct store adds an E1099
+                    # (T7b deviation 1) - same store, error count held.
+                    setattr(l2, 'topk_ids_proj', d4);
+                } elif pproj is not None {
                     ert.hydrate_proj = pproj;
                 }
             }

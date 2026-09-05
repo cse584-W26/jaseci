@@ -2520,6 +2520,11 @@ impl PyastGenPass.exit_in_for_stmt(nd: uni.InForStmt) -> None {
         # loop iterates the top K `(key, count)` pairs instead of every key.
         parts = self._hopcount_topk_stmts(nd, plan, tplan);
         py_nodes.append(cast(ast3.AST, parts[0]));
+        if parts[4] is not None {
+            # D4: the jobj_many() prefetch for the K winners, between the
+            # aggregation hoist (which produces __jac_top) and the loop
+            py_nodes.append(cast(ast3.AST, parts[4]));
+        }
         seed = [cast(ast3.stmt, parts[1])];
         tgt_ast = parts[2];
         iter_ast = parts[3];
@@ -2722,6 +2727,47 @@ impl PyastGenPass._hopcount_topk_stmts(
         ),
         jac_node=nd
     );
+    # D4: EffectPass proved the staged dict holds IDS (the first nest never
+    # built the objects) and that this tail is their only reader, so the seed
+    # becomes a TYPED jobj lookup and one jobj_many() hoist batches the K of
+    # them into a single round trip - the same #21-Rule-C prefetch an
+    # app-written `jobj` in the loop body would have got, built here because
+    # the seed is synthetic and _jobj_prefetch_hits only scans the app's own
+    # statements. The stamp IS the T6 projection for both.
+    ids_proj = getattr(nd, 'topk_ids_proj', None);
+    val = self.sync(
+        ast3.Subscript(
+            value=self.sync(
+                ast3.Name(id=str(tplan[0]), ctx=ast3.Load()), jac_node=nd
+            ),
+            slice=self.sync(
+                ast3.Name(id=str(plan[5]), ctx=ast3.Load()), jac_node=nd
+            ),
+            ctx=ast3.Load()
+        ),
+        jac_node=nd
+    );
+    pf = None;
+    if ids_proj is not None {
+        val = self.sync(
+            ast3.Call(
+                func=self.builtin_name('jobj'),
+                args=[
+                    cast(ast3.expr, val),
+                    cast(
+                        ast3.expr,
+                        self.sync(
+                            ast3.Name(id=str(ids_proj[0]), ctx=ast3.Load()),
+                            jac_node=nd
+                        )
+                    )
+                ],
+                keywords=[]
+            ),
+            jac_node=nd
+        );
+        pf = self._topk_ids_prefetch(nd, plan, tplan, ids_proj);
+    }
     seed = self.sync(
         ast3.Assign(
             targets=[
@@ -2733,23 +2779,7 @@ impl PyastGenPass._hopcount_topk_stmts(
                     )
                 )
             ],
-            value=cast(
-                ast3.expr,
-                self.sync(
-                    ast3.Subscript(
-                        value=self.sync(
-                            ast3.Name(id=str(tplan[0]), ctx=ast3.Load()),
-                            jac_node=nd
-                        ),
-                        slice=self.sync(
-                            ast3.Name(id=str(plan[5]), ctx=ast3.Load()),
-                            jac_node=nd
-                        ),
-                        ctx=ast3.Load()
-                    ),
-                    jac_node=nd
-                )
-            )
+            value=cast(ast3.expr, val)
         ),
         jac_node=nd
     );
@@ -2776,7 +2806,54 @@ impl PyastGenPass._hopcount_topk_stmts(
     itr = self.sync(
         ast3.Name(id='__jac_top', ctx=ast3.Load()), jac_node=nd
     );
-    return (hoist, seed, target, itr);
+    return (hoist, seed, target, itr, pf);
+}
+
+impl PyastGenPass._topk_ids_prefetch(
+    nd: uni.InForStmt, plan: tuple, tplan: tuple, proj: tuple
+) -> ast3.AST {
+    # D4: `jobj_many([<D>[<k>] for (<k>, <cnt>) in __jac_top], _proj=(T, f))`
+    # in front of the loop - ONE round trip for the K winners, projected off
+    # T's mirror columns, so the seed's own jobj() calls are __mem__ hits
+    # (#21 Rule C, T6 projection). The comprehension binds <k>/<cnt> in its
+    # OWN scope, so it cannot disturb the loop's frame.
+    elt = self.sync(
+        ast3.Subscript(
+            value=self.sync(
+                ast3.Name(id=str(tplan[0]), ctx=ast3.Load()), jac_node=nd
+            ),
+            slice=self.sync(
+                ast3.Name(id=str(plan[5]), ctx=ast3.Load()), jac_node=nd
+            ),
+            ctx=ast3.Load()
+        ),
+        jac_node=nd
+    );
+    gen = ast3.comprehension(
+        target=ast3.Tuple(
+            elts=[
+                ast3.Name(id=str(plan[5]), ctx=ast3.Store()),
+                ast3.Name(id=str(plan[6]), ctx=ast3.Store())
+            ],
+            ctx=ast3.Store()
+        ),
+        iter=ast3.Name(id='__jac_top', ctx=ast3.Load()),
+        ifs=[],
+        is_async=0
+    );
+    call = ast3.Call(
+        func=self.builtin_name('jobj_many'),
+        args=[
+            cast(
+                ast3.expr,
+                ast3.ListComp(elt=cast(ast3.expr, elt), generators=[gen])
+            )
+        ],
+        keywords=[ast3.keyword(arg='_proj', value=self._proj_tuple(proj))]
+    );
+    return self.sync(
+        ast3.Expr(value=cast(ast3.expr, call)), jac_node=nd, deep=True
+    );
 }
 
 impl PyastGenPass._clone_py(node: object) -> object {
@@ -5472,6 +5549,18 @@ impl PyastGenPass.exit_edge_ref_trailer(nd: uni.EdgeRefTrailer) -> None {
         if (hp := getattr(nd, 'hydrate_proj', None)) is not None {
             refs_kws.append(
                 self.sync(ast3.keyword(arg='proj', value=self._proj_tuple(hp)))
+            );
+        }
+        # D4: one rung below - EffectPass proved the walker stages these
+        # elements as IDS and reads their fields only through a top-K tail
+        # that re-hydrates the K winners itself, so the resolver hands back
+        # hex ids and builds no archetype at all. `jid(x)` still means `x`:
+        # object_ref() answers a hex string with itself (T7b).
+        if getattr(nd, 'ids_only', False) {
+            refs_kws.append(
+                self.sync(
+                    ast3.keyword(arg='ids', value=self.sync(ast3.Constant(value=True)))
+                )
             );
         }
         pynode = self.sync(

@@ -1178,6 +1178,10 @@ impl JacPersistence.get_hop_counts_topk(
     # unordered rather than raising or guessing - the answer stays right and
     # only the python loop gets longer.
     #
+    # `keys_by_key` is read for its KEYS ONLY (`allks` below and the no-pairs
+    # early return), so rung D4's dict - whose values are hex ids, not objects
+    # - is served unchanged: nothing here ever touches a value.
+    #
     # The plan differs from get_hop_counts': drive from the DISTINCT members'
     # E3 rows first (`fp`), then join those posts back to their E2 edges,
     # instead of expanding every (key, member) pair against every E2 edge.
@@ -2034,16 +2038,27 @@ impl JacBuiltin.log_report(expr: any, custom: bool = False) -> None {
 impl JacGraph.refs(
     path: GraphQuery | NodeArchetype | list[NodeArchetype],
     slc: (slice | None) = None,
-    proj: (tuple | None) = None
+    proj: (tuple | None) = None,
+    ids: bool = False
 ) -> list[NodeArchetype] | list[EdgeArchetype] | list[(NodeArchetype | EdgeArchetype)] {
     if not isinstance(path, GraphQuery) {
         path = GraphQuery(path, hops=[QHop(dir=EdgeDir.OUT.value)]);
     }
-    import from jaclang.runtimelib.query_planner { resolve_query, resolve_query_edges }
+    import from jaclang.runtimelib.query_planner {
+        resolve_query, resolve_query_edges, resolve_query_ids
+    }
     ctx = JacRuntimeInterface.get_context();
     ctx.note_traversal_reads([nd.__jac__ for nd in path.origin]);
     if slc is not None and path.slc is None {
         path.slc = slc;
+    }
+    if ids and not path.edges_only {
+        # D4: EffectPass proved this site's elements are staged as IDS (see
+        # exit_edge_ref_trailer) - hand back the hex ids the resolver already
+        # has and build no archetype. Same membership as the object list:
+        # resolve_query_ids applies the same existence and ACL rules, and
+        # `jid(x)` on a hex string is that string (object_ref, T7b).
+        return resolve_query_ids(ctx.mem, path);
     }
     planned = (
         resolve_query_edges(ctx.mem, path)

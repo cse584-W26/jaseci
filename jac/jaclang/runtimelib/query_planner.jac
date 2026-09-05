@@ -11,6 +11,7 @@ glob logger = logging.getLogger(__name__),
      __all__ = [
          'resolve_query',
          'resolve_query_edges',
+         'resolve_query_ids',
          'resolve_query_prefix',
          'prefetch_adjacency',
          'hydrate_projected',
@@ -134,3 +135,4 @@ def resolve_query(
 
 
 def resolve_query_edges(mem: Session, q: GraphQuery) -> list[Anchor];
+def resolve_query_ids(mem: Session, q: GraphQuery) -> list;

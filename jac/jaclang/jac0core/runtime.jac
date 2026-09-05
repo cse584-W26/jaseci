@@ -281,7 +281,8 @@ class JacGraph {
     static def refs(
         path: GraphQuery | NodeArchetype | list[NodeArchetype],
         slc: (slice | None) = None,
-        proj: (tuple | None) = None
+        proj: (tuple | None) = None,
+        ids: bool = False
     ) -> list[NodeArchetype]
         | list[EdgeArchetype]
         | list[(NodeArchetype | EdgeArchetype)];

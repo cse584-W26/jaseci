@@ -1743,6 +1743,51 @@ impl resolve_query(
 }
 
 
+impl resolve_query_ids(mem: Session, q: GraphQuery) -> list {
+    # D4: the ids-only materialization level for an UNRANGED chain, the
+    # sibling of closure_refs' `_ids` arm (T7b). The compiler proved the
+    # walker stages these elements as ids and reads no field off them here,
+    # so nothing above the id is owed - and nothing above the id is built.
+    #
+    # The verdict is _materialize_ids' own, unchanged: an id the walk cannot
+    # populate drops out (a dangling edge row, a deleted node), and the ACL
+    # filter is the same `_acl_read_ok` the object path runs. That is
+    # deliberately NOT acl_filter_ids: this path is served from the loop
+    # prefetch's memo, whose `_fill_adj_level` already batch_get the level's
+    # anchors, so the existence + read verdict costs a dict lookup here and
+    # a mirror statement there. What D4 actually saves is the hydration one
+    # rung up - _materialize_projected's per-call mirror SELECT and its Phi
+    # projected stand-ins - not this check.
+    #
+    # The fused stream fast path is skipped for the same reason it would be
+    # wasted: it exists to build objects.
+    if not q.origin {
+        return [];
+    }
+    if (mp := _memo_pairs(mem, q)) is not None {
+        (pairs, local) = mp;
+    } else {
+        (pairs, local) = _resolve_pairs(mem, q, len(q.hops));
+    }
+    out = _materialize_ids(mem, _unique_nodes(pairs), local);
+    if _acl_gated() {
+        _prefetch_acl_roots(mem, out);
+        out = [
+            a
+            for a in out
+            if _acl_read_ok(a)
+        ];
+    }
+    # .hex, no dashes: the spelling object_ref()/jid() answer with, so the
+    # walker's own `jid(x)` over these strings is the identity (T7b)
+    hexes = [
+        a.id.hex
+        for a in out
+    ];
+    return hexes[q.slc] if q.slc is not None else hexes;
+}
+
+
 impl resolve_query_edges(mem: Session, q: GraphQuery) -> list[Anchor] {
     if not q.origin or not q.hops {
         return [];

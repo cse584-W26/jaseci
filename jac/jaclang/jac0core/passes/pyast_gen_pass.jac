@@ -246,6 +246,9 @@ obj PyastGenPass(BaseAstGenPass[ast3.AST]) {
     def _hopcount_topk_stmts(
         nd: uni.InForStmt, plan: tuple, tplan: tuple
     ) -> tuple;
+    def _topk_ids_prefetch(
+        nd: uni.InForStmt, plan: tuple, tplan: tuple, proj: tuple
+    ) -> ast3.AST;
     def _adj_ref_shapes(
         nd: uni.UniNode, root_var: str, banned: (set | None) = None
     ) -> list[tuple];
