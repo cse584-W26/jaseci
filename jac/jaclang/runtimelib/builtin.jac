@@ -35,6 +35,7 @@ def _get_jtopk -> Callable[..., any];
 def _get_jadj_pairs -> Callable[..., any];
 
 def _get_jhopcount -> Callable[..., any];
+def _get_jhopcount_topk -> Callable[..., any];
 
 def _get_jadj_prefetch -> Callable[..., any];
 
@@ -116,6 +117,7 @@ glob __all__ = [
          'jtopk',
          'jadj_pairs',
          'jhopcount',
+    'jhopcount_topk',
          'jadj_prefetch',
          'jroot',
          'jroot_many',

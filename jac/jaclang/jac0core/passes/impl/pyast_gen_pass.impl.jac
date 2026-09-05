@@ -2509,10 +2509,22 @@ impl PyastGenPass.exit_in_for_stmt(nd: uni.InForStmt) -> None {
     # it: their only job is to batch the round trips of a loop body that no
     # longer runs the hops.
     plan = getattr(nd, 'hopcount_plan', None);
+    tplan = getattr(nd, 'hopcount_topk', None);
     kept: list = list(nd.body);
     seed: list = [];
     hoisted = False;
-    if plan is not None {
+    tgt_ast = None;
+    iter_ast = None;
+    if plan is not None and tplan is not None {
+        # Rung D: the aggregation carries the ordering and the LIMIT, so the
+        # loop iterates the top K `(key, count)` pairs instead of every key.
+        parts = self._hopcount_topk_stmts(nd, plan, tplan);
+        py_nodes.append(cast(ast3.AST, parts[0]));
+        seed = [cast(ast3.stmt, parts[1])];
+        tgt_ast = parts[2];
+        iter_ast = parts[3];
+        kept = [st for st in kept if st is not nd.body[0] and st is not plan[7]];
+    } elif plan is not None {
         parts = self._hopcount_stmts(nd, plan);
         py_nodes.append(cast(ast3.AST, parts[0]));
         seed = [cast(ast3.stmt, parts[1])];
@@ -2535,14 +2547,22 @@ impl PyastGenPass.exit_in_for_stmt(nd: uni.InForStmt) -> None {
     py_nodes.append(
         self.sync(
             for_node(
-                target=cast(ast3.expr, self.py_ast_val(nd.target)),
+                target=cast(
+                    ast3.expr,
+                    tgt_ast if tgt_ast is not None else self.py_ast_val(nd.target)
+                ),
                 iter=cast(
                     ast3.expr,
-                    self.sync(
-                        ast3.Name(id='__jac_fr', ctx=ast3.Load()), jac_node=nd
-                    )
-                        if hoisted
-                        else self.py_ast_val(nd.collection)
+                    iter_ast
+                        if iter_ast is not None
+                        else (
+                            self.sync(
+                                ast3.Name(id='__jac_fr', ctx=ast3.Load()),
+                                jac_node=nd
+                            )
+                                if hoisted
+                                else self.py_ast_val(nd.collection)
+                        )
                 ),
                 body=seed + [
                     cast(ast3.stmt, stmt) for stmt in self.resolve_stmt_block(kept)
@@ -2629,6 +2649,134 @@ impl PyastGenPass._hopcount_stmts(nd: uni.InForStmt, plan: tuple) -> tuple {
         jac_node=nd
     );
     return (hoist, seed);
+}
+
+impl PyastGenPass._hopcount_topk_stmts(
+    nd: uni.InForStmt, plan: tuple, tplan: tuple
+) -> tuple {
+    # (hoist, seed, target, iter) for a counting nest whose TAIL is a top-K:
+    #   hoist:   __jac_top = jhopcount_topk(<S>, <D>, E2, T2, E3, T3,
+    #                                       <KT>, '<field>', <K>)
+    #   target:  (<k>, <cnt>)          iter: __jac_top
+    #   seed:    <v> = <D>[<k>]        (first in the body)
+    # so the python loop runs K times instead of once per key, and the
+    # walker's own `rows.append({...})` is kept verbatim.
+    #
+    # The trailing `rows.sort(key=...)` and `rows[:K]` are DELIBERATELY left
+    # in place. They cost O(K) once the loop yields K rows, and keeping them
+    # is what makes the whole rung degradable: any SUPERSET of the top K in
+    # ANY order still sorts and slices to the same answer, so the runtime is
+    # free to return every key unordered when the key type's mirror cannot
+    # answer the ORDER BY (see get_hop_counts_topk). Rewriting them away
+    # would move that guarantee into three separate statements' codegen for
+    # no measurable gain at K = 20.
+    #
+    # `<D>` is the walker's own dict, passed so the KEY UNIVERSE is exactly
+    # the set the untouched loop would have iterated - `<S>` may key fewer
+    # (rung B's `.get(k, 0)` covers that gap the other way round), and the
+    # seed indexes `<D>` unguarded.
+    args: list = [];
+    order = (str(plan[0]), str(tplan[0]), str(plan[1]), str(plan[2]),
+             str(plan[3]), str(plan[4]), str(tplan[2]));
+    for a in order {
+        args.append(
+            cast(
+                ast3.expr,
+                self.sync(ast3.Name(id=a, ctx=ast3.Load()), jac_node=nd)
+            )
+        );
+    }
+    args.append(
+        cast(
+            ast3.expr,
+            self.sync(ast3.Constant(value=str(tplan[3])), jac_node=nd)
+        )
+    );
+    args.append(
+        cast(
+            ast3.expr,
+            self.sync(ast3.Constant(value=int(tplan[4])), jac_node=nd)
+        )
+    );
+    hoist = self.sync(
+        ast3.Assign(
+            targets=[
+                cast(
+                    ast3.expr,
+                    self.sync(
+                        ast3.Name(id='__jac_top', ctx=ast3.Store()), jac_node=nd
+                    )
+                )
+            ],
+            value=cast(
+                ast3.expr,
+                self.sync(
+                    ast3.Call(
+                        func=self.builtin_name('jhopcount_topk'),
+                        args=args,
+                        keywords=[]
+                    ),
+                    jac_node=nd
+                )
+            )
+        ),
+        jac_node=nd
+    );
+    seed = self.sync(
+        ast3.Assign(
+            targets=[
+                cast(
+                    ast3.expr,
+                    self.sync(
+                        ast3.Name(id=str(tplan[1]), ctx=ast3.Store()),
+                        jac_node=nd
+                    )
+                )
+            ],
+            value=cast(
+                ast3.expr,
+                self.sync(
+                    ast3.Subscript(
+                        value=self.sync(
+                            ast3.Name(id=str(tplan[0]), ctx=ast3.Load()),
+                            jac_node=nd
+                        ),
+                        slice=self.sync(
+                            ast3.Name(id=str(plan[5]), ctx=ast3.Load()),
+                            jac_node=nd
+                        ),
+                        ctx=ast3.Load()
+                    ),
+                    jac_node=nd
+                )
+            )
+        ),
+        jac_node=nd
+    );
+    target = self.sync(
+        ast3.Tuple(
+            elts=[
+                cast(
+                    ast3.expr,
+                    self.sync(
+                        ast3.Name(id=str(plan[5]), ctx=ast3.Store()), jac_node=nd
+                    )
+                ),
+                cast(
+                    ast3.expr,
+                    self.sync(
+                        ast3.Name(id=str(plan[6]), ctx=ast3.Store()), jac_node=nd
+                    )
+                )
+            ],
+            ctx=ast3.Store()
+        ),
+        jac_node=nd
+    );
+    itr = self.sync(
+        ast3.Name(id='__jac_top', ctx=ast3.Load()), jac_node=nd
+    );
+    return (hoist, seed, target, itr);
 }
 
 impl PyastGenPass._clone_py(node: object) -> object {

@@ -1133,6 +1133,327 @@ def _hopcount_plan(scopes: list, l2: object) -> tuple {
     );
 }
 
+# --- Rung D: the sort+slice that FOLLOWS the counting nest -------------------
+# The ic5 tail is `rows.append({...})` per key, then `rows.sort(key=lambda d {
+# (-d[<count>], d[<field>]) })`, then `rows[:K]` in a report: a top-K written
+# as "materialise every key, order in python, keep K". Proving THAT shape lets
+# the aggregation carry the ordering and the LIMIT, so the python loop runs K
+# times instead of once per key (COMPILER_PLAN.md rung D).
+#
+# The lowering deliberately LEAVES the sort and the slice where they are (see
+# _hopcount_topk_stmts): they are O(K) once the loop yields K rows, and keeping
+# them makes the whole rung degradable - any SUPERSET of the top K in ANY order
+# still sorts and slices to the same answer, which is what lets the runtime
+# skip its ORDER BY when the key type's mirror is not available.
+
+
+def _append_call(st: object) -> (tuple | None) {
+    # `<rows>.append(<DictVal>);` as a statement -> (rows_name, the DictVal)
+    e = getattr(st, 'expr', None) if isinstance(st, uni.ExprStmt) else st;
+    if not isinstance(e, uni.FuncCall) {
+        return None;
+    }
+    t = getattr(e, 'target', None);
+    if not isinstance(t, uni.AtomTrailer) or not getattr(t, 'is_attr', False) {
+        return None;
+    }
+    r = getattr(t, 'right', None);
+    b = getattr(t, 'target', None);
+    if not isinstance(r, uni.Name) or str(r.value) != 'append'
+        or not isinstance(b, uni.Name) {
+        return None;
+    }
+    prms = list(getattr(e, 'params', []) or []);
+    if len(prms) != 1 or not isinstance(prms[0], uni.DictVal) {
+        return None;
+    }
+    return (str(b.value), prms[0]);
+}
+
+
+def _row_dict_keys(dv: object, vname: str, cname: str, kname: str) -> (tuple | None) {
+    # Every value of the appended dict must be a field read of the loop
+    # element (`<v>.<f>`), the counter, or the key, and every key a string
+    # literal -> (the count's dict key, {dict key: field name}). Anything
+    # else - a call, an arithmetic expression, a nested literal - declines:
+    # the emitted loop keeps this dict verbatim, so every name in it has to
+    # still be bound in the rewritten frame.
+    ckey = '';
+    fmap: dict = {};
+    for kv in list(getattr(dv, 'kv_pairs', []) or []) {
+        ks = getattr(getattr(kv, 'key', None), 'lit_value', None);
+        val = getattr(kv, 'value', None);
+        if not isinstance(ks, str) {
+            return None;
+        }
+        if isinstance(val, uni.Name) {
+            nv = str(val.value);
+            if nv == cname and not ckey {
+                ckey = ks;
+                continue;
+            }
+            if nv == kname {
+                continue;
+            }
+            return None;
+        }
+        if isinstance(val, uni.AtomTrailer) and getattr(val, 'is_attr', False) {
+            b = getattr(val, 'target', None);
+            r = getattr(val, 'right', None);
+            if isinstance(b, uni.Name) and str(b.value) == vname
+                and isinstance(r, uni.Name) {
+                fmap[ks] = str(r.value);
+                continue;
+            }
+        }
+        return None;
+    }
+    return (ckey, fmap) if ckey else None;
+}
+
+
+def _sort_keys(call: object) -> (tuple | None) {
+    # `sort(key=lambda (d: dict) { (-d['<ck>'], d['<fk>']); })` -> (ck, fk).
+    # DESCENDING count then ASCENDING field and nothing else: an ascending
+    # count, a `reverse=`, a third component or a key that touches anything
+    # but the element all decline, because the SQL orders one way only.
+    prms = list(getattr(call, 'params', []) or []);
+    if len(prms) != 1 {
+        return None;
+    }
+    prm = prms[0];
+    if not isinstance(prm, uni.KWPair)
+        or str(getattr(getattr(prm, 'key', None), 'value', '')) != 'key'
+        or not isinstance(getattr(prm, 'value', None), uni.LambdaExpr) {
+        return None;
+    }
+    # getattr, not `prm.value.tail_return_expr()`: `KWPair.value` types as
+    # `Expr`, which has no such member -> an extra E1030 on this file
+    # (T7b deviation 1). getattr reads the same and holds the error count.
+    tre = getattr(getattr(prm, 'value', None), 'tail_return_expr', None);
+    if tre is None {
+        return None;
+    }
+    body = _unwrap_cfg(tre());
+    if not isinstance(body, uni.TupleVal) {
+        return None;
+    }
+    vals = [_unwrap_cfg(v) for v in list(getattr(body, 'values', []) or [])];
+    if len(vals) != 2 {
+        return None;
+    }
+    neg = vals[0];
+    if not isinstance(neg, uni.UnaryExpr)
+        or str(getattr(getattr(neg, 'op', None), 'value', '')) != '-' {
+        return None;   # ascending count: not this ordering
+    }
+    ck = _subscript_lit_str(getattr(neg, 'operand', None));
+    fk = _subscript_lit_str(vals[1]);
+    if ck is None or fk is None {
+        return None;
+    }
+    b0 = getattr(getattr(neg, 'operand', None), 'target', None);
+    b1 = getattr(vals[1], 'target', None);
+    if not isinstance(b0, uni.Name) or not isinstance(b1, uni.Name)
+        or str(b0.value) != str(b1.value) {
+        return None;
+    }
+    nms = _walk(body, uni.Name, []);
+    if len(nms) != 2 or any((str(n.value) != str(b0.value)) for n in nms) {
+        return None;   # the key reads something other than the row
+    }
+    return (ck, fk);
+}
+
+
+def _rows_tail(scopes: list, rname: str, app: object) -> tuple {
+    # `<rows>` must be a PRIVATE staging list: exactly one `= []` init, the
+    # one append `app`, one `.sort(key=...)` and one `<rows>[:K]` with a
+    # literal K inside a report. A read of `rows` after the sort, a second
+    # append, a call taking it, a return - all decline, because the lowering
+    # fills it with K rows instead of one per key. -> (result | None, reason).
+    init = 0;
+    srt = None;
+    klim = None;
+    seen: set = set();
+    for scope in scopes {
+        if not isinstance(scope, uni.UniNode) {
+            return (None, 'unresolved scope');
+        }
+        for nm in _walk(scope, uni.Name, []) {
+            if str(nm.value) != rname or id(nm) in seen {
+                continue;
+            }
+            seen.add(id(nm));
+            p = getattr(nm, 'parent', None);
+            if isinstance(p, uni.AtomTrailer) and p.right is nm {
+                continue;   # an attribute NAME that happens to match
+            }
+            if isinstance(p, uni.KWPair) and getattr(p, 'key', None) is nm {
+                continue;
+            }
+            if isinstance(p, uni.Assignment) and nm in list(p.target or []) {
+                lv = getattr(p, 'value', None);
+                if isinstance(lv, uni.ListVal)
+                    and not list(getattr(lv, 'values', []) or []) {
+                    init += 1;
+                    continue;
+                }
+                return (None, 'the row list is bound to something other than `[]`');
+            }
+            if not isinstance(p, uni.AtomTrailer) or p.target is not nm {
+                return (None, 'the row list is read outside its append/sort/slice');
+            }
+            right = getattr(p, 'right', None);
+            rv = str(getattr(right, 'value', '')) if isinstance(right, uni.Name)
+                else '';
+            if rv == 'append' {
+                if getattr(p, 'parent', None) is app {
+                    continue;
+                }
+                return (None, 'a second `<rows>.append(...)`');
+            }
+            if rv == 'sort' {
+                fc = getattr(p, 'parent', None);
+                if not isinstance(fc, uni.FuncCall) or fc.target is not p
+                    or srt is not None {
+                    return (None, 'more than one `<rows>.sort(...)`');
+                }
+                srt = _sort_keys(fc);
+                if srt is None {
+                    return (
+                        None,
+                        'the sort key is not `(-<row>[<count>], <row>[<field>])`'
+                    );
+                }
+                continue;
+            }
+            if isinstance(right, uni.IndexSlice)
+                and getattr(right, 'is_range', False) {
+                if klim is not None or _ancestor(p, (uni.ReportStmt, )) is None {
+                    return (None, 'the `[:K]` slice is not a single one inside a report');
+                }
+                slices = list(getattr(right, 'slices', []) or []);
+                if len(slices) != 1
+                    or getattr(slices[0], 'start', None) is not None
+                    or getattr(slices[0], 'step', None) is not None {
+                    return (None, 'the slice is not a bare `[:K]`');
+                }
+                kv = getattr(getattr(slices[0], 'stop', None), 'lit_value', None);
+                if not isinstance(kv, int) or isinstance(kv, bool) or kv <= 0 {
+                    return (None, 'K is not a positive int literal');
+                }
+                klim = kv;
+                continue;
+            }
+            return (None, 'the row list is read outside its append/sort/slice');
+        }
+    }
+    if init != 1 {
+        return (None, 'the row list is not initialised exactly once as `[]`');
+    }
+    if srt is None or klim is None {
+        return (None, 'the row list has no `.sort(key=...)` or no `[:K]` report');
+    }
+    return ((str(srt[0]), str(srt[1]), klim), '');
+}
+
+
+def _dict_elem_type(scopes: list, dname: str) -> (str | None) {
+    # The archetype of `<D>`'s values, read off the ONE `<D>[<k>] = <e>` store
+    # whose `<e>` is the element of an enclosing `for <e> in [... ->[?:T]]`.
+    # That `T` is the type whose MIRROR the aggregation orders on, so an
+    # ambiguous or unprovable one declines rather than guessing a table.
+    found: set = set();
+    seen: set = set();
+    for scope in scopes {
+        if not isinstance(scope, uni.UniNode) {
+            return None;
+        }
+        for at in _walk(scope, uni.AtomTrailer, []) {
+            if id(at) in seen {
+                continue;
+            }
+            seen.add(id(at));
+            b = getattr(at, 'target', None);
+            if not isinstance(b, uni.Name) or str(b.value) != dname
+                or not isinstance(getattr(at, 'right', None), uni.IndexSlice)
+                or not _on_store_path(at) {
+                continue;
+            }
+            asg = _ancestor(at, (uni.Assignment, ));
+            val = getattr(asg, 'value', None) if asg is not None else None;
+            if not isinstance(val, uni.Name) {
+                return None;
+            }
+            lp = _ancestor(at, (uni.InForStmt, ));
+            while lp is not None {
+                lt = getattr(lp, 'target', None);
+                if isinstance(lt, uni.Name) and str(lt.value) == str(val.value) {
+                    break;
+                }
+                lp = _ancestor(lp, (uni.InForStmt, ));
+            }
+            if lp is None {
+                return None;
+            }
+            t = _ranged_filter_type(getattr(lp, 'collection', None));
+            if t is None {
+                return None;
+            }
+            found.add(t);
+        }
+    }
+    return str(list(found)[0]) if len(found) == 1 else None;
+}
+
+
+def _topk_plan(scopes: list, l2: object, plan: tuple) -> tuple {
+    # -> (tplan | None, reason). Only ever called on a loop `_hopcount_plan`
+    # already ACCEPTED, so the `(k, v)` target, the `<D>.items()` collection
+    # and the whole counting nest are proven; this adds the tail. Reason is
+    # never '' - a stamped hopcount loop that is not a top-K is worth one
+    # debug line, unlike the thousands of ordinary `for`s rung B stays quiet
+    # about.
+    tv = list(getattr(getattr(l2, 'target', None), 'values', []) or []);
+    kname = str(plan[5]);
+    cname = str(plan[6]);
+    vname = str(getattr(tv[1], 'value', ''));
+    dname = str(_items_dict_name(getattr(l2, 'collection', None)));
+    body = list(getattr(l2, 'body', []) or []);
+    if len(body) != 3 {
+        return (None, 'the loop body is not exactly `<cnt> = 0`, the nest and one append');
+    }
+    got = _append_call(body[2]);
+    if got is None {
+        return (None, 'the loop body does not end in `<rows>.append({...})`');
+    }
+    keys = _row_dict_keys(got[1], vname, cname, kname);
+    if keys is None {
+        return (None, 'the appended dict is not element field reads plus the count');
+    }
+    app = getattr(body[2], 'expr', None) if isinstance(body[2], uni.ExprStmt)
+        else body[2];
+    gotr = _rows_tail(scopes, str(got[0]), app);
+    tail = gotr[0];
+    if tail is None {
+        return (None, str(gotr[1]));
+    }
+    if str(tail[0]) != str(keys[0]) {
+        return (None, 'the sort orders by a key that is not the count');
+    }
+    fld = keys[1].get(str(tail[1]));
+    if not fld {
+        return (None, 'the sort tie-break is not a field read of the loop element');
+    }
+    kt = _dict_elem_type(scopes, dname);
+    if kt is None {
+        return (None, 'the iterated dict has no single provable element archetype');
+    }
+    return ((dname, vname, kt, str(fld), int(tail[2])), '');
+}
+
+
 class EffectPass(UniPass) {
 
     def before_pass(self: EffectPass) -> None {
@@ -1630,6 +1951,25 @@ class EffectPass(UniPass) {
                 }
                 if plan is not None {
                     l2.hopcount_plan = plan;
+                    # Rung D: the same loop's TAIL (append / sort / [:K]).
+                    # A second, independent stamp rather than a longer plan
+                    # tuple, so a loop that is a counting nest but not a
+                    # top-K keeps rung B's codegen byte-identical.
+                    got2 = _topk_plan(scopes, l2, plan);
+                    tplan = got2[0];
+                    why2 = str(got2[1]);
+                    if os.environ.get('JAC_EFFECT_DEBUG') {
+                        sys.stderr.write(
+                            'EFFECTPASS ' + str(w.name) + ' topk@'
+                            + str(getattr(l2.loc, 'first_line', '?')) + ' '
+                            + ('accepted' if tplan is not None
+                                else 'declined:' + why2)
+                            + chr(10)
+                        );
+                    }
+                    if tplan is not None {
+                        l2.hopcount_topk = tplan;
+                    }
                 }
             }
         }

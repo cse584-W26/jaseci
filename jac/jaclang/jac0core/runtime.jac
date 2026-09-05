@@ -218,6 +218,11 @@ class JacPersistence {
         pairs_by_key: dict, edge2: (str | type), node2: (str | type),
         edge3: (str | type), node3: (str | type)
     ) -> dict;
+    static def get_hop_counts_topk(
+        pairs_by_key: dict, keys_by_key: dict, edge2: (str | type),
+        node2: (str | type), edge3: (str | type), node3: (str | type),
+        key_type: type, key_field: str, limit: int
+    ) -> list;
     static def prefetch_adjacency(
         origins: list, dir: int, edge_type: any = None, node_type: any = None,
         chain: (tuple | None) = None, epreds: (tuple | None) = None
