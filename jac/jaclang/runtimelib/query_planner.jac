@@ -117,7 +117,9 @@ def hydrate_projected(
 def acl_filter_ids(mem: Session, cls: (type | str), ids: list[str]) -> (set | None);
 
 
-def resolve_query(mem: Session, q: GraphQuery) -> list[Anchor];
+def resolve_query(
+    mem: Session, q: GraphQuery, proj: (tuple | None) = None
+) -> list[Anchor];
 
 
 def resolve_query_edges(mem: Session, q: GraphQuery) -> list[Anchor];
