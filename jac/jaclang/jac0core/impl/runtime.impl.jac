@@ -1020,9 +1020,39 @@ impl JacPersistence.get_hop_counts(
     # {friends who joined after the date}, counting the forum's posts written
     # by one of them. The walker's own form visits every post of every forum
     # and resolves one edge reference PER POST (45k statements on the worst
-    # SF1 row); this is ONE statement, driven from the pairs, and never
-    # touches a neighbour that cannot match - the same plan shape the
-    # postgres arm's single query has.
+    # SF1 row); this is ONE statement, driven from the DISTINCT members'
+    # inbound E3 rows, and never touches a neighbour that cannot match - the
+    # same drive order the postgres arm's single query has.
+    #
+    # Rung D1: the drive order is the whole cost. Driving from the KEYS (the
+    # obvious reading of the pairs) makes the statement scan every E2 row of
+    # every key and probe E3 per neighbour - on SNB ic5 row 19 that is 2.5k
+    # forums' 40k ContainerOf rows and 40k HasCreator probes, 130ms of a
+    # 280ms request. The members are only F<=16 people, so `fp` (their posts,
+    # ~1.6k rows) is 25x smaller than the key side; growing the forum from
+    # the post (`fc`, one probe per post) and only THEN looking the (key,
+    # member) pair up in `pr` does the same joins in a fraction of the work.
+    # Measured on the live SF1 store, 2458 keys / 19 members / 3000 pairs,
+    # EXPLAIN (ANALYZE, BUFFERS): 127.6ms and 226k buffers key-driven ->
+    # 33.4ms and 17.7k buffers member-driven, byte-identical result set
+    # (EXCEPT ALL both ways = 0 rows). D1_IMPL.md carries both plans.
+    #
+    # ponytail: BOTH `MATERIALIZED`s are load-bearing, not style. Written as
+    # one flat join the planner joins `pr` to `fp` FIRST - a many-to-many on
+    # the member column it estimates at 101 rows and which is really 2.9M -
+    # and then nested-loops E2 by src: 4.3s with the src_type prune below,
+    # 24.4s without it, i.e. up to 191x SLOWER than the statement this
+    # replaced. The fences pin "posts of the members, then their forums,
+    # then the pair lookup" so a bad row estimate cannot reorder it.
+    #
+    # ponytail: `e3.src_type = <T2>` is redundant with the E2 join (a post
+    # reached through E2 already has that type) but prunes `fp` before the
+    # probes - on SNB it drops HasCreator rows whose src is a Comment, 23052
+    # rows -> 4301, and turns the scan into idx_anchors_dst_typed's exact
+    # (dst, arch_type, src_type) prefix. Sound for the same reason the rest
+    # of this statement is: the store backfills src_type/dst_type from the
+    # endpoint's own arch_type, so the two spellings of "that node is a T2"
+    # cannot disagree.
     #
     # ponytail: no adjacency PROJECTION arm (get_closure/get_adjacency_pairs
     # have one). `adj_<E>` is grown only for HOMOGENEOUS edges (src_type ==
@@ -1061,23 +1091,39 @@ impl JacPersistence.get_hop_counts(
     }
     ks: list = [];
     ms: list = [];
+    md: set = set();
     for (k, members) in pairs_by_key.items() {
         ku = str(UUID(k));
         for m in members {
+            mu = str(UUID(m));
             ks.append(ku);
-            ms.append(str(UUID(m)));
+            ms.append(mu);
+            md.add(mu);
         }
     }
     if not ks {
         return {};
     }
-    params: dict = {'ks': ks, 'ms': ms};
+    # `md` = the DISTINCT members, which is what the statement drives from
+    params: dict = {'ks': ks, 'ms': ms, 'md': list(md)};
     # The endpoint type lives on the EDGE row (`src_type`/`dst_type`, backfilled
     # by the store), which is what R6's partial indexes are partial ON:
     # `anchors (src) INCLUDE (dst) WHERE arch_type = '<E>' AND dst_type = '<T>'`.
     # Spelling both as LITERALS is what lets postgres prove the predicate and
     # use them - a bound :et stops it doing so under a generic plan, exactly as
     # get_closure's and get_adjacency_pairs' anchors arms record.
+    #
+    # ponytail: since D1 the plan's access paths are the SCHEMA indexes
+    # (idx_anchors_dst_typed for `fp`, idx_anchors_dst for `fc`), because
+    # both CTEs drive from `dst` and R6's `_dst` index is partial on
+    # `src_type = '<T>'` - the mirror direction, empty for a heterogeneous
+    # edge like HasCreator (src is a Post, never a Person). The calls stay:
+    # they still pick the literal spelling, and the `_src` pair is what the
+    # `fc` probe would fall back to. If this ever needs its own path, add a
+    # third `(dst) INCLUDE (src) WHERE arch_type = '<E>' AND dst_type = '<T>'`
+    # index to ensure_adjacency_index - not done, because 33ms on the
+    # schema indexes does not justify permanent write maintenance on 3M
+    # HasCreator rows.
     conds: list = [];
     for i in (0, 2) {
         if store.ensure_adjacency_index(names[i], names[i + 1]) {
@@ -1091,13 +1137,19 @@ impl JacPersistence.get_hop_counts(
     sql = (
         'WITH pr(k, m) AS ('
         + ' SELECT * FROM unnest(CAST(:ks AS uuid[]), CAST(:ms AS uuid[]))'
-        + ') SELECT pr.k, count(*) FROM pr'
-        + ' JOIN anchors e2 ON e2.src = pr.k'
-        + " AND e2.kind = 'EdgeAnchor' AND e2.arch_type = " + conds[0][0]
-        + ' AND e2.dst_type = ' + conds[0][1]
-        + ' JOIN anchors e3 ON e3.src = e2.dst AND e3.dst = pr.m'
-        + " AND e3.kind = 'EdgeAnchor' AND e3.arch_type = " + conds[1][0]
+        + '), fp AS MATERIALIZED ('
+        + ' SELECT e3.src AS post, e3.dst AS m FROM anchors e3'
+        + " WHERE e3.kind = 'EdgeAnchor' AND e3.arch_type = " + conds[1][0]
         + ' AND e3.dst_type = ' + conds[1][1]
+        + ' AND e3.src_type = ' + conds[0][1]
+        + ' AND e3.dst = ANY(CAST(:md AS uuid[]))'
+        + '), fc AS MATERIALIZED ('
+        + ' SELECT e2.src AS k, fp.m AS m FROM fp JOIN anchors e2'
+        + " ON e2.kind = 'EdgeAnchor' AND e2.arch_type = " + conds[0][0]
+        + ' AND e2.dst_type = ' + conds[0][1]
+        + ' AND e2.dst = fp.post'
+        + ') SELECT pr.k, count(*) FROM pr'
+        + ' JOIN fc ON fc.k = pr.k AND fc.m = pr.m'
         + ' GROUP BY pr.k'
     );
     mem.read_barrier();
