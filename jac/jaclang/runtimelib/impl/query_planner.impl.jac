@@ -1506,6 +1506,125 @@ impl _adj_qpreds(spec: any) -> list {
 }
 
 
+impl _fast_adj_sql(store: any, key: tuple, epreds: (list | None)) -> (tuple | None) {
+    # D3: the SAME level statement, spelled for the shape the generic form
+    # cannot plan well - a DIRECTED hop between two archetypes that have no
+    # subtypes. compile_query pays for four things this shape does not need:
+    # a direction disjunction no index can serve, three
+    # `IN (SELECT ... graph_types)` subtype subqueries, a CASE join key, and a
+    # PK probe into fat `anchors` per ROW only to re-test a type the EDGE row
+    # already carries. Measured on the live SF1 SNB store, the ic5 first nest
+    # (16 Person origins, HasMember with joinDate > d, 2929 Forum rows), warm,
+    # 6 executes then EXPLAIN (ANALYZE, BUFFERS) on a generic plan:
+    # 21.2ms / 20338 buffers -> 3.7ms / 3725. Same rows in the same ORDER -
+    # EXCEPT ALL both ways over row_number()-tagged rows is 0 in both
+    # directions. D3_IMPL.md carries both plans.
+    #
+    # Equivalent to the generic statement row-for-row, not merely on SNB:
+    #  - the UNDIRECTED arm is kept (_dir_cond's second disjunct). It is a
+    #    second index probe per ORIGIN, not per row - 48 buffers here - and
+    #    dropping it would silently lose every `<++>` edge a directed hop is
+    #    allowed to traverse. `e.<far> <> f.id` keeps a self-loop from
+    #    arriving twice, which is the one row both arms could match.
+    #  - the endpoint-type test stays NULL-TOLERANT the way
+    #    _endpoint_type_cond is: an edge written while its endpoint was an
+    #    unpopulated stub carries NULL src_type/dst_type, and the EXISTS is
+    #    that row's authority. It is `never executed` once the store's
+    #    boot backfill has run, so it costs nothing on a converted graph.
+    #  - a non-NULL src_type/dst_type IS the endpoint's own arch_type (the
+    #    store derives it there and on backfill), so the equality is the same
+    #    test the dropped `JOIN anchors n1` applied - the assumption
+    #    get_hop_counts already declares load-bearing.
+    #
+    # ponytail: the dropped node join also asserted the endpoint row still
+    # EXISTS. An edge left dangling by a deleted node is kept here and dropped
+    # downstream by _materialize_ids (resolve_query) exactly as an
+    # unpopulated anchor is, but ungated resolve_query_edges would report an
+    # edge the generic path suppresses. Re-adding the join costs 19.9ms
+    # against 3.7 - measured, same rows - so it is a declared ceiling, not an
+    # oversight; put `JOIN anchors n ON n.id = e.<far> AND n.arch_type =
+    # '<T>'` back if a workload ever leaves dangling edge rows behind.
+    #
+    # ponytail: an UNTYPED hop (`[-->]`, edge or node None) is declined rather
+    # than given its own spelling - there is no literal to pin and the generic
+    # form is already free of the subtype subqueries there. A missed
+    # optimisation, never a wrong answer, same for `<-->` (dir 3).
+    import from jaclang.runtimelib.sqlcompile { _pred_cond }
+    dir = int(key[0]);
+    if dir not in (1, 2) {
+        return None;
+    }
+    (et, nt) = (key[1], key[2]);
+    if et is None or nt is None or isinstance(nt, tuple) {
+        return None;
+    }
+    ename: str = str(et if isinstance(et, str) else getattr(et, '__name__', ''));
+    tname: str = str(nt if isinstance(nt, str) else getattr(nt, '__name__', ''));
+    # interpolated as LITERALS below, the spelling get_adjacency_pairs and
+    # get_closure use so postgres can PROVE a partial index's predicate
+    # (a bound :et stops it doing so under a generic plan) - so nothing but a
+    # bare identifier may reach the string builder
+    if not ename.isidentifier() or not tname.isidentifier() {
+        return None;
+    }
+    try {
+        for n in (ename, tname) {
+            if [
+                t
+                for t in store.subtype_names(n)
+                if t != n
+            ] {
+                # `[?:T]` is an isinstance test; an equality cannot answer a
+                # polymorphic hierarchy. (store.subtype_names is memoized per
+                # store and self-invalidates when a new archetype registers -
+                # see PgStore.subtype_names - so this is not a round trip.)
+                return None;
+            }
+        }
+    } except Exception {
+        return None;
+    }
+    params: dict = {};
+    pred_sql: str = '';
+    for (j, p) in enumerate(epreds or []) {
+        # the SAME term compile_query would emit for this predicate, built by
+        # the same function, so the fast statement cannot drift from the
+        # generic one on jsonb shape, casts or NULL handling
+        cond = _pred_cond('e', p, params, f"p{j}");
+        if cond is None {
+            return None;   # not pushable: the generic path's residual owns it
+        }
+        pred_sql += ' AND ' + str(cond);
+    }
+    near: str = 'dst' if dir == 1 else 'src';
+    far: str = 'src' if dir == 1 else 'dst';
+    arms: list[str] = [];
+    for k in (0, 1) {
+        # k=0 is the DIRECTED arm; k=1 is _dir_cond's undirected disjunct,
+        # the same edge walked the other way round
+        nc: str = far if k else near;
+        fc: str = near if k else far;
+        arms.append(
+            f"SELECT e.{fc} AS nid, e.id AS eid, f.id AS oid,"
+            + ' f.ord AS ord, e.seq AS seq'
+            + ' FROM unnest(CAST(:origin AS uuid[])) WITH ORDINALITY AS f(id, ord)'
+            + f" JOIN anchors e ON e.kind = 'EdgeAnchor' AND e.arch_type = '{ename}'"
+            + f" AND e.{nc} = f.id"
+            + (f" AND e.undirected AND e.{fc} <> f.id" if k else '')
+            + f" AND (e.{fc}_type = '{tname}' OR (e.{fc}_type IS NULL AND EXISTS ("
+            + f"SELECT 1 FROM anchors n WHERE n.id = e.{fc}"
+            + f" AND n.kind = 'NodeAnchor' AND n.arch_type = '{tname}')))"
+            + pred_sql
+        );
+    }
+    return (
+        'SELECT u.nid, u.eid, u.oid FROM (' + ' UNION ALL '.join(arms)
+            + ') u ORDER BY u.ord, u.seq, u.eid',
+        params
+    );
+}
+
+
 impl _fill_adj_level(
     mem: Session, memo: dict, ids: list[UUID], key: tuple, level: int,
     epreds: (list | None) = None
@@ -1520,27 +1639,34 @@ impl _fill_adj_level(
     if store is None or not ids {
         return [];
     }
-    q = GraphQuery(
-        [],
-        hops=[
-            QHop(
-                dir=int(key[0]), `edge=key[1], nd=key[2], epreds=list(epreds or [])
-            )
-        ]
-    );
     mem.read_barrier();
-    cq = compile_query(
-        q, 1, promotions=getattr(store, 'promotions', {}), with_origin=True
-    );
-    if cq.residual {
-        # a partially-pushed hop re-checks predicates on materialized results;
-        # the memo stores raw pairs, so never memoize one
-        if PREFETCH_DEBUG {
-            _pf_dbg('fill skip: residual predicates');
+    fast = _fast_adj_sql(store, key, epreds);
+    if fast is not None {
+        (sql, params) = fast;
+    } else {
+        q = GraphQuery(
+            [],
+            hops=[
+                QHop(
+                    dir=int(key[0]), `edge=key[1], nd=key[2],
+                    epreds=list(epreds or [])
+                )
+            ]
+        );
+        cq = compile_query(
+            q, 1, promotions=getattr(store, 'promotions', {}), with_origin=True
+        );
+        if cq.residual {
+            # a partially-pushed hop re-checks predicates on materialized
+            # results; the memo stores raw pairs, so never memoize one
+            if PREFETCH_DEBUG {
+                _pf_dbg('fill skip: residual predicates');
+            }
+            return [];
         }
-        return [];
+        (sql, params) = (cq.sql, cq.params);
     }
-    cq.params['origin'] = [str(i) for i in ids];
+    params['origin'] = [str(i) for i in ids];
     # Staged in a local dict and published in one update: a half-filled memo
     # would answer `[]` for origins whose rows had not arrived yet.
     acc: dict = {};
@@ -1549,7 +1675,7 @@ impl _fill_adj_level(
         acc[(i, key)] = [];
     }
     nids: list[UUID] = [];
-    for r in store.rows(cq.sql, cq.params) {
+    for r in store.rows(sql, params) {
         nid = UUID(str(r[0])) if r[0] is not None else None;
         eid = UUID(str(r[1])) if r[1] is not None else None;
         acc[(UUID(str(r[2])), key)].append((nid, eid));
@@ -1561,7 +1687,8 @@ impl _fill_adj_level(
     if PREFETCH_DEBUG {
         _pf_dbg(
             'fill ok: level=' + str(level) + ' key=' + str(key) + ' origins='
-            + str(len(ids)) + ' rows=' + str(len(nids))
+            + str(len(ids)) + ' rows=' + str(len(nids)) + ' fast='
+            + str(fast is not None)
         );
     }
     out = list(dict.fromkeys(nids));

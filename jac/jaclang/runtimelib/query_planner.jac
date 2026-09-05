@@ -111,6 +111,9 @@ def prefetch_adjacency(
 def _adj_qpreds(spec: any) -> list;
 
 
+def _fast_adj_sql(store: any, key: tuple, epreds: (list | None)) -> (tuple | None);
+
+
 def _fill_adj_level(
     mem: Session, memo: dict, ids: list[UUID], key: tuple, level: int,
     epreds: (list | None) = None
