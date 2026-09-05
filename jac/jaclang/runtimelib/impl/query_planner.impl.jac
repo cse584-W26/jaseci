@@ -1432,7 +1432,8 @@ impl prefetch_adjacency(
     edge_type: any = None,
     node_type: any = None,
     chain: (tuple | None) = None,
-    epreds: (tuple | None) = None
+    epreds: (tuple | None) = None,
+    ids_only: bool = False
 ) -> None {
     # Fill the memo for a WHOLE frontier in one statement per LEVEL. Level 1
     # takes the loop's own collection; each further level in `chain` takes the
@@ -1483,7 +1484,10 @@ impl prefetch_adjacency(
         }
         return;
     }
-    nxt = _fill_adj_level(mem, memo, ids, key, 1, eps);
+    # D5: `ids_only` is PER LEVEL - it is the compiler's claim about the loop
+    # that consumes THAT level's targets. This argument is level 1's; a chain
+    # level carries its own as a 5th tuple element.
+    nxt = _fill_adj_level(mem, memo, ids, key, 1, eps, ids_only);
     lvl = 1;
     for hop in (chain or ()) {
         lvl += 1;
@@ -1497,7 +1501,8 @@ impl prefetch_adjacency(
         hp = _adj_qpreds(hop[3] if len(hop) > 3 else None);
         k2 = _hop_key(int(hop[0]), hop[1], hop[2], hp);
         nxt = _fill_adj_level(
-            mem, memo, [i for i in nxt if (i, k2) not in memo], k2, lvl, hp
+            mem, memo, [i for i in nxt if (i, k2) not in memo], k2, lvl, hp,
+            bool(hop[4]) if len(hop) > 4 else False
         );
     }
 }
@@ -1639,7 +1644,7 @@ impl _fast_adj_sql(store: any, key: tuple, epreds: (list | None)) -> (tuple | No
 
 impl _fill_adj_level(
     mem: Session, memo: dict, ids: list[UUID], key: tuple, level: int,
-    epreds: (list | None) = None
+    epreds: (list | None) = None, ids_only: bool = False
 ) -> list[UUID] {
     # ONE level of the fill: the exact statement `_sql_pairs` would issue for
     # each origin separately, plus `f0.id` in the SELECT (with_origin) so the
@@ -1714,11 +1719,22 @@ impl _fill_adj_level(
         );
     }
     out = list(dict.fromkeys(nids));
-    if out {
+    if out and not ids_only {
         # ONE load_full over the level's neighbours, so the loop body's field
         # reads are L1 hits instead of a fetch per node
         mem.batch_get(out);
     }
+    # D5: `ids_only` is the compiler's claim that this level's consumer is
+    # D4's `refs(..., ids=True)` - it reads nothing above the hex id, so the
+    # blobs would be decoded and thrown away (SNB ic5: ~2.5k Forum anchors a
+    # request). Skipping is a PERF choice only. The memo still holds the same
+    # (origin -> target, edge) pairs, and every object consumer of the same
+    # key re-hydrates on its own: `_materialize_ids` batch_gets whatever is
+    # not in `local` (and `local` only ever holds ORIGINS), `_try_stream`
+    # loads its `need` list, `_materialize_projected` re-asks the session.
+    # So a level stamped ids-only that some other loop reads as objects costs
+    # one fetch, never a wrong answer. The next chain level needs ids only
+    # too (`params['origin']`), so skipping here cannot starve it.
     return out;
 }
 

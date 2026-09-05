@@ -271,7 +271,8 @@ obj PyastGenPass(BaseAstGenPass[ast3.AST]) {
         coll_hop: (tuple | None), banned: (set | None) = None
     ) -> list[list[tuple]];
     def _adj_epreds_ast(hop: tuple) -> (ast3.AST | None);
-    def _adj_chain_hop_elts(hop: tuple) -> list;
+    def _adj_chain_hop_elts(nd: uni.InForStmt, hop: tuple) -> list;
+    def _adj_hop_ids_only(nd: uni.InForStmt, hop: tuple) -> bool;
     def _adj_hoist_stmt(nd: uni.InForStmt) -> ast3.AST;
     def _adj_hop_args(hop: tuple) -> list;
     def _adj_prefetch_hint_stmts(nd: uni.InForStmt) -> list;

@@ -3628,7 +3628,9 @@ impl PyastGenPass._adj_prefetch_hint_stmts(nd: uni.InForStmt) -> list {
             args.append(
                 ast3.Tuple(
                     elts=[
-                        ast3.Tuple(elts=self._adj_chain_hop_elts(h), ctx=ast3.Load())
+                        ast3.Tuple(
+                            elts=self._adj_chain_hop_elts(nd, h), ctx=ast3.Load()
+                        )
                         for h in chain[1:]
                     ],
                     ctx=ast3.Load()
@@ -3641,6 +3643,19 @@ impl PyastGenPass._adj_prefetch_hint_stmts(nd: uni.InForStmt) -> list {
         ep0 = self._adj_epreds_ast(chain[0]);
         if ep0 is not None {
             kws.append(ast3.keyword(arg='epreds', value=cast(ast3.expr, ep0)));
+        }
+        # D5: level 1's targets are staged as ids and never read as objects
+        # (D4's ids_only stamp on EVERY reference this level fills), so the
+        # fill skips hydrating them. Per LEVEL: a chain level carries its own
+        # flag (_adj_chain_hop_elts), and a level with no stamp emits exactly
+        # the call it emitted before, keyword and all.
+        if self._adj_hop_ids_only(nd, chain[0]) {
+            kws.append(
+                ast3.keyword(
+                    arg='ids_only',
+                    value=cast(ast3.expr, ast3.Constant(value=True))
+                )
+            );
         }
         call = ast3.Call(
             func=self.builtin_name('jadj_prefetch'), args=args, keywords=kws
@@ -3677,16 +3692,57 @@ impl PyastGenPass._adj_epreds_ast(hop: tuple) -> (ast3.AST | None) {
     );
 }
 
-impl PyastGenPass._adj_chain_hop_elts(hop: tuple) -> list {
+impl PyastGenPass._adj_chain_hop_elts(nd: uni.InForStmt, hop: tuple) -> list {
     # A chain level's `(dir, Edge, Node)`, gaining a 4th `((f, op, v), ...)`
     # element only when it carries a predicate - the runtime reads indices
     # 0..2 the same way either shape, so bare levels are byte-identical.
+    # D5 adds a 5th `True` when THIS level's consumer is ids-only, and then
+    # index 3 must be filled (with `()` if the level is predicate-free) so
+    # the flag lands where the runtime reads it.
     elts = self._adj_hop_args(hop);
     ep = self._adj_epreds_ast(hop);
+    ido = self._adj_hop_ids_only(nd, hop);
+    if ep is None and ido {
+        ep = ast3.Tuple(elts=[], ctx=ast3.Load());
+    }
     if ep is not None {
         elts.append(ep);
     }
+    if ido {
+        elts.append(ast3.Constant(value=True));
+    }
     return elts;
+}
+
+impl PyastGenPass._adj_hop_ids_only(nd: uni.InForStmt, hop: tuple) -> bool {
+    # D5: is EVERY edge reference the level `hop` describes stamped
+    # `ids_only` - i.e. did rung D4 prove the loop over it stages hex ids and
+    # reads no field off the element? Then `_fill_adj_level` may skip the
+    # `batch_get` of that level's targets.
+    #
+    # Conservative in both directions. A shape that reaches this loop only
+    # through a HELPER's body (`for f in _neighbours(f)`) contributes no
+    # reference to this scan, so it answers False and the fill hydrates. And
+    # True is a PERF claim, not a correctness one: an object consumer of the
+    # same memo key re-hydrates lazily (see `_fill_adj_level`), so being
+    # wrong here costs a fetch, never an answer.
+    import from jaclang.jac0core.passes { UniPass }
+    banned = self._loop_rebound(nd);
+    hits = 0;
+    for ert in UniPass.get_all_sub_nodes(nd=nd, typ=uni.EdgeRefTrailer) {
+        # matched on the HOP SHAPE, not on the origin: a chain level's
+        # references root at the inner loop's element, and two levels of one
+        # chain that DID share a shape would then need every reference of
+        # both stamped, which is the conservative answer anyway.
+        if self._adj_hop_key(ert, banned) != hop {
+            continue;
+        }
+        if not getattr(ert, 'ids_only', False) {
+            return False;
+        }
+        hits += 1;
+    }
+    return hits > 0;
 }
 
 impl PyastGenPass._adj_hoist_stmt(nd: uni.InForStmt) -> ast3.AST {
