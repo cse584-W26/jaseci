@@ -86,6 +86,9 @@ def _try_stream(
 def _adj_memo(mem: Session) -> (dict | None);
 
 
+def _hop_key(dir: int, edge_type: any, node_type: any, epreds: any) -> tuple;
+
+
 def _memo_key(q: GraphQuery) -> (tuple | None);
 
 
@@ -100,12 +103,17 @@ def prefetch_adjacency(
     dir: int,
     edge_type: any = None,
     node_type: any = None,
-    chain: (tuple | None) = None
+    chain: (tuple | None) = None,
+    epreds: (tuple | None) = None
 ) -> None;
 
 
+def _adj_qpreds(spec: any) -> list;
+
+
 def _fill_adj_level(
-    mem: Session, memo: dict, ids: list[UUID], key: tuple, level: int
+    mem: Session, memo: dict, ids: list[UUID], key: tuple, level: int,
+    epreds: (list | None) = None
 ) -> list[UUID];
 
 

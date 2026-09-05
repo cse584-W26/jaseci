@@ -599,7 +599,7 @@ impl JacPersistence.get_objects_many(
 
 impl JacPersistence.prefetch_adjacency(
     origins: list, dir: int, edge_type: any = None, node_type: any = None,
-    chain: (tuple | None) = None
+    chain: (tuple | None) = None, epreds: (tuple | None) = None
 ) -> None {
     # T3 hint, emitted by PyastGenPass in front of `for n in <frontier>` loops
     # whose body takes a single-hop edge reference off the loop var: warm the
@@ -615,7 +615,7 @@ impl JacPersistence.prefetch_adjacency(
     }
     try {
         ctx = JacRuntimeInterface.get_context();
-        _fill_adj_memo(ctx.mem, origins, dir, edge_type, node_type, chain);
+        _fill_adj_memo(ctx.mem, origins, dir, edge_type, node_type, chain, epreds);
     } except Exception as e {
         import os;
         if os.environ.get('JAC_PREFETCH_DEBUG', '').strip() {

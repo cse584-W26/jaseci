@@ -243,19 +243,30 @@ obj PyastGenPass(BaseAstGenPass[ast3.AST]) {
     def _ranged_hop_call(nd: uni.EdgeRefTrailer) -> bool;
     def _prefetch_hint_stmt(nd: uni.InForStmt) -> (ast3.AST | None);
     def _hopcount_stmts(nd: uni.InForStmt, plan: tuple) -> tuple;
-    def _adj_ref_shapes(nd: uni.UniNode, root_var: str) -> list[tuple];
-    def _adj_hop_key(ert: uni.EdgeRefTrailer) -> (tuple | None);
+    def _adj_ref_shapes(
+        nd: uni.UniNode, root_var: str, banned: (set | None) = None
+    ) -> list[tuple];
+    def _epred_key(x: uni.UniNode, banned: (set | None)) -> (tuple | None);
+    def _loop_rebound(nd: uni.InForStmt) -> set;
+    def _adj_hop_key(
+        ert: uni.EdgeRefTrailer, banned: (set | None) = None
+    ) -> (tuple | None);
     def _adj_prefetch_parts(
         nd: uni.InForStmt
     ) -> tuple[((uni.Name | None), (uni.Expr | None), (tuple | None))];
+    def _adj_hoist_needed(nd: uni.InForStmt) -> bool;
     def _adj_chain_next(
-        nd: uni.InForStmt, root_var: str, hop: tuple
+        nd: uni.InForStmt, root_var: str, hop: tuple, banned: (set | None) = None
     ) -> list[tuple];
     def _adj_prefetch_hops(nd: uni.InForStmt) -> list[list[tuple]];
+    def _pf_decline(nd: uni.InForStmt, why: str) -> None;
     def _adj_chains(
         nd: uni.InForStmt, loop_var: str, shapes: list[tuple],
-        coll_hop: (tuple | None)
+        coll_hop: (tuple | None), banned: (set | None) = None
     ) -> list[list[tuple]];
+    def _adj_epreds_ast(hop: tuple) -> (ast3.AST | None);
+    def _adj_chain_hop_elts(hop: tuple) -> list;
+    def _adj_hoist_stmt(nd: uni.InForStmt) -> ast3.AST;
     def _adj_hop_args(hop: tuple) -> list;
     def _adj_prefetch_hint_stmts(nd: uni.InForStmt) -> list;
     def exit_while_stmt(nd: uni.WhileStmt) -> None;

@@ -1304,18 +1304,31 @@ impl _adj_memo(mem: Session) -> (dict | None) {
 }
 
 
+impl _hop_key(dir: int, edge_type: any, node_type: any, epreds: any) -> tuple {
+    # C1: the memo key CARRIES the edge predicate, so a filtered fill can
+    # never answer an unfiltered (or differently filtered) reference to the
+    # same (origin, dir, edge, node). `repr` of the value because the memo is
+    # a plain dict: an unhashable or ill-behaved value degrades to a key that
+    # does not match, i.e. a miss and the ordinary path - never a wrong hit.
+    return (
+        int(dir), edge_type, node_type,
+        tuple((p.field, p.op, repr(p.value)) for p in (epreds or []))
+    );
+}
+
+
 impl _memo_key(q: GraphQuery) -> (tuple | None) {
-    # Only a bare single hop is memoizable. Node predicates, edge predicates
-    # and `only` (what `x in [chain]` lowers to) each narrow the row set, so
-    # a memo entry filled for the bare shape would not answer them.
+    # Only a single hop is memoizable. Node predicates and `only` (what
+    # `x in [chain]` lowers to) narrow the row set AFTER the join, so a memo
+    # entry could not answer them; edge predicates ride the key instead.
     if len(q.hops) != 1 {
         return None;
     }
     h = q.hops[0];
-    if h.epreds or h.preds or h.only is not None {
+    if h.preds or h.only is not None {
         return None;
     }
-    return (int(h.dir), h.`edge, h.nd);
+    return _hop_key(int(h.dir), h.`edge, h.nd, h.epreds);
 }
 
 
@@ -1367,7 +1380,8 @@ impl prefetch_adjacency(
     dir: int,
     edge_type: any = None,
     node_type: any = None,
-    chain: (tuple | None) = None
+    chain: (tuple | None) = None,
+    epreds: (tuple | None) = None
 ) -> None {
     # Fill the memo for a WHOLE frontier in one statement per LEVEL. Level 1
     # takes the loop's own collection; each further level in `chain` takes the
@@ -1392,8 +1406,10 @@ impl prefetch_adjacency(
         }
         return;
     }
+    eps = _adj_qpreds(epreds);
     q = GraphQuery(
-        list(origins), hops=[QHop(dir=int(dir), `edge=edge_type, nd=node_type)]
+        list(origins),
+        hops=[QHop(dir=int(dir), `edge=edge_type, nd=node_type, epreds=eps)]
     );
     key = _memo_key(q);
     if key is None {
@@ -1416,7 +1432,7 @@ impl prefetch_adjacency(
         }
         return;
     }
-    nxt = _fill_adj_level(mem, memo, ids, key, 1);
+    nxt = _fill_adj_level(mem, memo, ids, key, 1, eps);
     lvl = 1;
     for hop in (chain or ()) {
         lvl += 1;
@@ -1426,16 +1442,31 @@ impl prefetch_adjacency(
         # per-origin statement for those - a missed hint, never a wrong
         # answer. Read them back out of the memo if a workload ever mixes
         # two hints over overlapping origin sets.
-        k2 = (int(hop[0]), hop[1], hop[2]);
+        # a chain level gains a 4th element only when it carries a predicate
+        hp = _adj_qpreds(hop[3] if len(hop) > 3 else None);
+        k2 = _hop_key(int(hop[0]), hop[1], hop[2], hp);
         nxt = _fill_adj_level(
-            mem, memo, [i for i in nxt if (i, k2) not in memo], k2, lvl
+            mem, memo, [i for i in nxt if (i, k2) not in memo], k2, lvl, hp
         );
     }
 }
 
 
+impl _adj_qpreds(spec: any) -> list {
+    # C1: the hint hands over (field, op, value) triples - the same three
+    # arguments the loop's own lowering passes to QPred - so the fill issues
+    # character-for-character the statement the walker would have issued per
+    # origin, and the memo holds exactly the pairs it would have returned.
+    return [
+        QPred(field=str(s[0]), op=str(s[1]), value=s[2])
+        for s in (spec or ())
+    ];
+}
+
+
 impl _fill_adj_level(
-    mem: Session, memo: dict, ids: list[UUID], key: tuple, level: int
+    mem: Session, memo: dict, ids: list[UUID], key: tuple, level: int,
+    epreds: (list | None) = None
 ) -> list[UUID] {
     # ONE level of the fill: the exact statement `_sql_pairs` would issue for
     # each origin separately, plus `f0.id` in the SELECT (with_origin) so the
@@ -1448,7 +1479,12 @@ impl _fill_adj_level(
         return [];
     }
     q = GraphQuery(
-        [], hops=[QHop(dir=int(key[0]), `edge=key[1], nd=key[2])]
+        [],
+        hops=[
+            QHop(
+                dir=int(key[0]), `edge=key[1], nd=key[2], epreds=list(epreds or [])
+            )
+        ]
     );
     mem.read_barrier();
     cq = compile_query(
