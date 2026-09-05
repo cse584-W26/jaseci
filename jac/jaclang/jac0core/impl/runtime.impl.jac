@@ -1009,6 +1009,105 @@ impl JacPersistence.get_adjacency_pairs(
     ];
 }
 
+impl JacPersistence.get_hop_counts(
+    pairs_by_key: dict, edge2: (str | type), node2: (str | type),
+    edge3: (str | type), node3: (str | type)
+) -> dict {
+    # Rung B (COMPILER_PLAN.md B.2). `pairs_by_key` is the compiler's own
+    # pairing - key jid -> set of member jids, exactly the dict the walker
+    # built in its FIRST nest. For each key, count its E2/T2 neighbours that
+    # carry an E3/T3 edge into one of that key's members. SNB ic5: forum ->
+    # {friends who joined after the date}, counting the forum's posts written
+    # by one of them. The walker's own form visits every post of every forum
+    # and resolves one edge reference PER POST (45k statements on the worst
+    # SF1 row); this is ONE statement, driven from the pairs, and never
+    # touches a neighbour that cannot match - the same plan shape the
+    # postgres arm's single query has.
+    #
+    # ponytail: no adjacency PROJECTION arm (get_closure/get_adjacency_pairs
+    # have one). `adj_<E>` is grown only for HOMOGENEOUS edges (src_type ==
+    # dst_type) and both hops here are heterogeneous by construction
+    # (Forum->Post, Post->Person), so the projection would never exist. R6's
+    # partial indexes over `anchors` are the access path; add the projection
+    # arm here if B.1 ever lands typed heterogeneous adjacency tables.
+    #
+    # ponytail: `count(*)` counts (E2 edge, E3 edge) PAIRS, and the walker
+    # counts E2 elements whose FIRST E3 neighbour is a member. The two agree
+    # exactly while each T2 node has at most one E3 edge - true of SNB
+    # (a message has one HasCreator) and of every shape this stamp accepts
+    # today. If a schema with multi-creator posts ever reaches this, switch
+    # to `count(DISTINCT e2.dst)`: same statement, counts posts not pairs.
+    #
+    # ponytail: get_closure's three ceilings, verbatim - superset by ACL (the
+    # count is over rows the requester may not be able to READ; identical to
+    # what `jclosure`/`get_closure` already expose, and the REPORTED rows are
+    # the key objects, hydrated through the ordinary ACL-checked path by the
+    # walker's untouched first nest), EXACT type match rather than isinstance,
+    # and DB state only - the read_barrier below flushes pending writes so
+    # that is true rather than merely likely.
+    ctx = JacRuntimeInterface.get_context();
+    mem = ctx.mem;
+    store = getattr(mem, 'store', None);
+    if store is None {
+        raise RuntimeError('get_hop_counts: session has no store');
+    }
+    names = [
+        (t if isinstance(t, str) else str(getattr(t, '__name__', '')))
+        for t in (edge2, node2, edge3, node3)
+    ];
+    # interpolated into the SQL below as literals (see the partial-index note)
+    if not all((n.isidentifier() for n in names)) {
+        raise RuntimeError('get_hop_counts: archetype names must be identifiers');
+    }
+    ks: list = [];
+    ms: list = [];
+    for (k, members) in pairs_by_key.items() {
+        ku = str(UUID(k));
+        for m in members {
+            ks.append(ku);
+            ms.append(str(UUID(m)));
+        }
+    }
+    if not ks {
+        return {};
+    }
+    params: dict = {'ks': ks, 'ms': ms};
+    # The endpoint type lives on the EDGE row (`src_type`/`dst_type`, backfilled
+    # by the store), which is what R6's partial indexes are partial ON:
+    # `anchors (src) INCLUDE (dst) WHERE arch_type = '<E>' AND dst_type = '<T>'`.
+    # Spelling both as LITERALS is what lets postgres prove the predicate and
+    # use them - a bound :et stops it doing so under a generic plan, exactly as
+    # get_closure's and get_adjacency_pairs' anchors arms record.
+    conds: list = [];
+    for i in (0, 2) {
+        if store.ensure_adjacency_index(names[i], names[i + 1]) {
+            conds.append(("'" + names[i] + "'", "'" + names[i + 1] + "'"));
+        } else {
+            params['et' + str(i)] = names[i];
+            params['nt' + str(i)] = names[i + 1];
+            conds.append((':et' + str(i), ':nt' + str(i)));
+        }
+    }
+    sql = (
+        'WITH pr(k, m) AS ('
+        + ' SELECT * FROM unnest(CAST(:ks AS uuid[]), CAST(:ms AS uuid[]))'
+        + ') SELECT pr.k, count(*) FROM pr'
+        + ' JOIN anchors e2 ON e2.src = pr.k'
+        + " AND e2.kind = 'EdgeAnchor' AND e2.arch_type = " + conds[0][0]
+        + ' AND e2.dst_type = ' + conds[0][1]
+        + ' JOIN anchors e3 ON e3.src = e2.dst AND e3.dst = pr.m'
+        + " AND e3.kind = 'EdgeAnchor' AND e3.arch_type = " + conds[1][0]
+        + ' AND e3.dst_type = ' + conds[1][1]
+        + ' GROUP BY pr.k'
+    );
+    mem.read_barrier();
+    # .hex keys, same convention as object_ref()/jid(): the emitted codegen
+    # looks the count up by the walker's own dict key, which is a jid.
+    return {
+        str(r[0]).replace('-', ''): int(r[1]) for r in store.rows(sql, params)
+    };
+}
+
 impl JacPersistence.get_topk_inbound(
     dsts: list[str], edge_type: str, specs: list[tuple],
     order_field: str, max_value: int, limit: int, src_field: str = '',

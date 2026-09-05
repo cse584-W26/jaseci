@@ -34,6 +34,8 @@ def _get_jtopk -> Callable[..., any];
 
 def _get_jadj_pairs -> Callable[..., any];
 
+def _get_jhopcount -> Callable[..., any];
+
 def _get_jadj_prefetch -> Callable[..., any];
 
 def jroot(item: any, edge_type: str, root_type: any) -> str;
@@ -113,6 +115,7 @@ glob __all__ = [
          'jclosure_ref',
          'jtopk',
          'jadj_pairs',
+         'jhopcount',
          'jadj_prefetch',
          'jroot',
          'jroot_many',

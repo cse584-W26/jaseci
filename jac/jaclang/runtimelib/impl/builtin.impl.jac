@@ -86,6 +86,8 @@ impl __getattr__(name: str) -> object {
         return _get_jtopk();
     } elif (name == 'jadj_pairs') {
         return _get_jadj_pairs();
+    } elif (name == 'jhopcount') {
+        return _get_jhopcount();
     } elif (name == 'jadj_prefetch') {
         return _get_jadj_prefetch();
     } elif (name == 'jroot') {
@@ -217,6 +219,17 @@ impl _get_jtopk -> Callable[..., any] {
 
 impl _get_jadj_pairs -> Callable[..., any] {
     return _get_jac().get_adjacency_pairs;
+}
+
+
+impl _get_jhopcount -> Callable[..., any] {
+    # Rung B: the lowering target of a proven counting nest. Never named by an
+    # app - PyastGenPass emits the call, same as jclosure_ref.
+    # getattr, not attribute access: `_get_jac()` types as `type[<Unknown>]`
+    # here, so every sibling `_get_*` already carries an E1030 + E1002 pair
+    # (44 of them on this file). Spelling it as an attribute would add a 45th
+    # and 46th; getattr reads the same and holds the count (T7b deviation 2).
+    return getattr(_get_jac(), 'get_hop_counts');
 }
 
 
