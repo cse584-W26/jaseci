@@ -99,8 +99,14 @@ def prefetch_adjacency(
     origins: list,
     dir: int,
     edge_type: any = None,
-    node_type: any = None
+    node_type: any = None,
+    chain: (tuple | None) = None
 ) -> None;
+
+
+def _fill_adj_level(
+    mem: Session, memo: dict, ids: list[UUID], key: tuple, level: int
+) -> list[UUID];
 
 
 def hydrate_projected(

@@ -233,6 +233,7 @@ obj PyastGenPass(BaseAstGenPass[ast3.AST]) {
     def exit_in_for_stmt(nd: uni.InForStmt) -> None;
     def _clone_py(node: object) -> object;
     def _pure_ref_root(expr: uni.UniNode) -> (str | None);
+    def _assign_root(expr: uni.UniNode) -> (str | None);
     def _is_pure_projection(expr: uni.UniNode, loop_var: str) -> bool;
     def _prefetch_loop_parts(
         nd: uni.InForStmt
@@ -242,7 +243,19 @@ obj PyastGenPass(BaseAstGenPass[ast3.AST]) {
     def _ranged_hop_call(nd: uni.EdgeRefTrailer) -> bool;
     def _prefetch_hint_stmt(nd: uni.InForStmt) -> (ast3.AST | None);
     def _adj_ref_shapes(nd: uni.UniNode, root_var: str) -> list[tuple];
-    def _adj_prefetch_hops(nd: uni.InForStmt) -> list[tuple];
+    def _adj_hop_key(ert: uni.EdgeRefTrailer) -> (tuple | None);
+    def _adj_prefetch_parts(
+        nd: uni.InForStmt
+    ) -> tuple[((uni.Name | None), (uni.Expr | None), (tuple | None))];
+    def _adj_chain_next(
+        nd: uni.InForStmt, root_var: str, hop: tuple
+    ) -> list[tuple];
+    def _adj_prefetch_hops(nd: uni.InForStmt) -> list[list[tuple]];
+    def _adj_chains(
+        nd: uni.InForStmt, loop_var: str, shapes: list[tuple],
+        coll_hop: (tuple | None)
+    ) -> list[list[tuple]];
+    def _adj_hop_args(hop: tuple) -> list;
     def _adj_prefetch_hint_stmts(nd: uni.InForStmt) -> list;
     def exit_while_stmt(nd: uni.WhileStmt) -> None;
     def exit_forever_stmt(nd: uni.ForeverStmt) -> None;

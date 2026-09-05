@@ -1366,16 +1366,23 @@ impl prefetch_adjacency(
     origins: list,
     dir: int,
     edge_type: any = None,
-    node_type: any = None
+    node_type: any = None,
+    chain: (tuple | None) = None
 ) -> None {
-    # Fill the memo for a WHOLE frontier in one statement. This is the exact
-    # statement `_sql_pairs` would issue for each origin separately, plus
-    # `f0.id` in the SELECT (with_origin) so the rows can be partitioned back
-    # per origin. `ORDER BY f0.ord, e1.seq, e1.id` is unchanged, so within one
-    # origin the rows are in the same relative order as its single-origin
-    # query - byte-identical downstream.
+    # Fill the memo for a WHOLE frontier in one statement per LEVEL. Level 1
+    # takes the loop's own collection; each further level in `chain` takes the
+    # previous level's targets, so a nested edge-reference loop
+    # (`for post in [fo->:ContainerOf:->] { [post->:HasCreator:->] }`) costs
+    # two statements for the whole request instead of one per post.
     memo = _adj_memo(mem);
     store = mem.store;
+    if isinstance(origins, dict) {
+        # the `for (k, v) in d.items()` hint hands over the DICT itself: its
+        # VALUES are the loop's elements, and taking them here rather than in
+        # the emitted `list(d.values())` keeps a hint from ever raising where
+        # the loop it precedes would not
+        origins = list(origins.values());
+    }
     if memo is None or store is None or not origins {
         if PREFETCH_DEBUG {
             _pf_dbg(
@@ -1409,6 +1416,40 @@ impl prefetch_adjacency(
         }
         return;
     }
+    nxt = _fill_adj_level(mem, memo, ids, key, 1);
+    lvl = 1;
+    for hop in (chain or ()) {
+        lvl += 1;
+        # ponytail: an origin that was ALREADY memoized at the level above
+        # contributes no targets here (its pairs are in the memo, not in
+        # `nxt`), so a partially warm level 1 leaves the walker's own
+        # per-origin statement for those - a missed hint, never a wrong
+        # answer. Read them back out of the memo if a workload ever mixes
+        # two hints over overlapping origin sets.
+        k2 = (int(hop[0]), hop[1], hop[2]);
+        nxt = _fill_adj_level(
+            mem, memo, [i for i in nxt if (i, k2) not in memo], k2, lvl
+        );
+    }
+}
+
+
+impl _fill_adj_level(
+    mem: Session, memo: dict, ids: list[UUID], key: tuple, level: int
+) -> list[UUID] {
+    # ONE level of the fill: the exact statement `_sql_pairs` would issue for
+    # each origin separately, plus `f0.id` in the SELECT (with_origin) so the
+    # rows can be partitioned back per origin. `ORDER BY f0.ord, e1.seq,
+    # e1.id` is unchanged, so within one origin the rows are in the same
+    # relative order as its single-origin query - byte-identical downstream.
+    # Returns the level's deduped target ids, i.e. the next level's origins.
+    store = mem.store;
+    if store is None or not ids {
+        return [];
+    }
+    q = GraphQuery(
+        [], hops=[QHop(dir=int(key[0]), `edge=key[1], nd=key[2])]
+    );
     mem.read_barrier();
     cq = compile_query(
         q, 1, promotions=getattr(store, 'promotions', {}), with_origin=True
@@ -1419,7 +1460,7 @@ impl prefetch_adjacency(
         if PREFETCH_DEBUG {
             _pf_dbg('fill skip: residual predicates');
         }
-        return;
+        return [];
     }
     cq.params['origin'] = [str(i) for i in ids];
     # Staged in a local dict and published in one update: a half-filled memo
@@ -1441,15 +1482,17 @@ impl prefetch_adjacency(
     memo.update(acc);
     if PREFETCH_DEBUG {
         _pf_dbg(
-            'fill ok: key=' + str(key) + ' origins=' + str(len(ids))
-            + ' rows=' + str(len(nids))
+            'fill ok: level=' + str(level) + ' key=' + str(key) + ' origins='
+            + str(len(ids)) + ' rows=' + str(len(nids))
         );
     }
-    if nids {
+    out = list(dict.fromkeys(nids));
+    if out {
         # ONE load_full over the level's neighbours, so the loop body's field
         # reads are L1 hits instead of a fetch per node
-        mem.batch_get(list(dict.fromkeys(nids)));
+        mem.batch_get(out);
     }
+    return out;
 }
 
 

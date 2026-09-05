@@ -2801,64 +2801,186 @@ impl PyastGenPass._adj_ref_shapes(nd: uni.UniNode, root_var: str) -> list[tuple]
     import from jaclang.jac0core.passes { UniPass }
     out: list[tuple] = [];
     for ert in UniPass.get_all_sub_nodes(nd=nd, typ=uni.EdgeRefTrailer) {
-        if not ert.chain or isinstance(ert.chain[0], uni.EdgeOpRef) {
+        if not ert.chain or self._pure_ref_root(ert.chain[0]) != root_var {
             continue;
         }
-        if self._pure_ref_root(ert.chain[0]) != root_var {
-            continue;
-        }
-        rest = list(ert.chain[1:]);
-        ops = [
-            c
-            for c in rest
-            if isinstance(c, uni.EdgeOpRef)
-        ];
-        if len(ops) != 1 {
-            continue;
-        }
-        op = ops[0];
-        ename: (str | None) = None;
-        nname: (str | None) = None;
-        bad = False;
-        if op.filter_cond is not None {
-            ft = op.filter_cond.f_type;
-            if op.filter_cond.compares or (ft is not None and not isinstance(ft, uni.Name)) {
-                bad = True;
-            } elif ft is not None {
-                ename = str(ft.value);
-            }
-        }
-        tail = [
-            c
-            for c in rest
-            if not isinstance(c, uni.EdgeOpRef)
-        ];
-        if len(tail) > 1 {
-            bad = True;
-        } elif tail {
-            t0 = tail[0];
-            if not isinstance(t0, uni.FilterCompr) or t0.compares {
-                bad = True;
-            } elif t0.f_type is not None {
-                if not isinstance(t0.f_type, uni.Name) {
-                    bad = True;
-                } else {
-                    nname = str(t0.f_type.value);
-                }
-            }
-        }
-        if bad {
-            continue;
-        }
-        key = (int(op.edge_dir.value), ename, nname);
-        if key not in out {
+        key = self._adj_hop_key(ert);
+        if key is not None and key not in out {
             out.append(key);
         }
     }
     return out;
 }
 
-impl PyastGenPass._adj_prefetch_hops(nd: uni.InForStmt) -> list[tuple] {
+impl PyastGenPass._adj_hop_key(ert: uni.EdgeRefTrailer) -> (tuple | None) {
+    # The (dir, edge_name|None, node_name|None) shape of ONE bare edge
+    # reference, or None when the runtime memo cannot answer it (see
+    # _adj_ref_shapes). The ORIGIN is not inspected here: callers decide what
+    # a legal origin is (the loop var, for a body reference; a pure ref, for
+    # the collection of an edge-reference loop).
+    if not ert.chain or isinstance(ert.chain[0], uni.EdgeOpRef) {
+        return None;
+    }
+    rest = list(ert.chain[1:]);
+    ops = [
+        c
+        for c in rest
+        if isinstance(c, uni.EdgeOpRef)
+    ];
+    if len(ops) != 1 {
+        return None;
+    }
+    op = ops[0];
+    ename: (str | None) = None;
+    nname: (str | None) = None;
+    bad = False;
+    if op.filter_cond is not None {
+        ft = op.filter_cond.f_type;
+        if op.filter_cond.compares or (ft is not None and not isinstance(ft, uni.Name)) {
+            bad = True;
+        } elif ft is not None {
+            ename = str(ft.value);
+        }
+    }
+    tail = [
+        c
+        for c in rest
+        if not isinstance(c, uni.EdgeOpRef)
+    ];
+    if len(tail) > 1 {
+        bad = True;
+    } elif tail {
+        t0 = tail[0];
+        if not isinstance(t0, uni.FilterCompr) or t0.compares {
+            bad = True;
+        } elif t0.f_type is not None {
+            if not isinstance(t0.f_type, uni.Name) {
+                bad = True;
+            } else {
+                nname = str(t0.f_type.value);
+            }
+        }
+    }
+    if bad {
+        return None;
+    }
+    return (int(op.edge_dir.value), ename, nname);
+}
+
+impl PyastGenPass._assign_root(expr: uni.UniNode) -> (str | None) {
+    # The bare Name an assignment TARGET writes through, whatever trailers it
+    # wears (`d[k]`, `x.f`, `x.f[i]`). Deliberately looser than
+    # _pure_ref_root, which refuses a non-literal subscript because it
+    # RE-EVALUATES the expression: here the question is only "does this
+    # statement write through that name", and `forums[foj] = fo` does.
+    cur = expr;
+    while isinstance(cur, uni.AtomTrailer) {
+        cur = cur.target;
+    }
+    return str(cur.value) if isinstance(cur, uni.Name) else None;
+}
+
+impl PyastGenPass._adj_prefetch_parts(
+    nd: uni.InForStmt
+) -> tuple[((uni.Name | None), (uni.Expr | None), (tuple | None))] {
+    # (element Name, ORIGIN expression, collection hop) for the adjacency
+    # hint, or (None, None, None) when this loop's shape is not one we can
+    # hoist a hint in front of. The origin expression is what the hint's
+    # `jadj_prefetch(...)` re-evaluates, so it must be side-effect-free and
+    # re-iterable (_pure_ref_root); the collection hop is non-None only for
+    # the edge-reference form, where it is the FIRST level of the chain.
+    #
+    #   for x in <pure-ref>                     -> (x, <pure-ref>,  None)
+    #   for (i, x) in enumerate(<pure-ref>)     -> (x, <pure-ref>,  None)
+    #   for (k, v) in <pure-ref>.items()        -> (v, <pure-ref>,  None)
+    #   for x in [<pure-ref> ->:E:-> [?:T]]     -> (x, <pure-ref>,  (d,E,T))
+    #
+    # The `.items()` form passes the DICT, not its values: the runtime takes
+    # `.values()` (see prefetch_adjacency) rather than the hint evaluating a
+    # `list(d.values())` that could raise where the loop itself would not.
+    # The edge-reference form passes the hop's ORIGIN, never the reference
+    # itself -- re-evaluating that would cost a second graph query per
+    # iteration even with the flag off, which is the double-eval hazard
+    # _pure_ref_root exists to refuse.
+    (tgt, coll) = self._prefetch_loop_parts(nd);
+    if tgt is not None {
+        return (tgt, coll, None);
+    }
+    if isinstance(nd.target, uni.TupleVal) {
+        vals = list(nd.target.values or []);
+        call = nd.collection;
+        if (
+            len(vals) == 2
+            and isinstance(vals[1], uni.Name)
+            and isinstance(call, uni.FuncCall)
+            and not (call.params or [])
+            and isinstance(call.target, uni.AtomTrailer)
+            and call.target.is_attr
+            and isinstance(call.target.right, uni.Name)
+            and str(call.target.right.value) == 'items'
+            and self._pure_ref_root(call.target.target) is not None
+        ) {
+            return (cast(uni.Name, vals[1]), cast(uni.Expr, call.target.target), None);
+        }
+        return (None, None, None);
+    }
+    if isinstance(nd.target, uni.Name) and isinstance(nd.collection, uni.EdgeRefTrailer) {
+        ert = cast(uni.EdgeRefTrailer, nd.collection);
+        hop = self._adj_hop_key(ert);
+        if (
+            hop is not None
+            and ert.chain
+            and self._pure_ref_root(ert.chain[0]) is not None
+        ) {
+            return (nd.target, cast(uni.Expr, ert.chain[0]), hop);
+        }
+    }
+    return (None, None, None);
+}
+
+impl PyastGenPass._adj_chain_next(
+    nd: uni.InForStmt, root_var: str, hop: tuple
+) -> list[tuple] {
+    # Second level of a chain: `for <v> in [<root_var> -hop-> ...] { ... }`
+    # somewhere under `nd` - the elements the hint's FIRST level fetches are
+    # exactly this inner loop's elements, so the shapes the inner body takes
+    # off `<v>` can be batched over all of them at once.
+    #
+    # ponytail: two levels only. Early exits are already refused for the whole
+    # nest by _adj_prefetch_hops' body-wide scan; a write to the inner element
+    # (`post.x = ...`, which also rules out a rebind `post = ...`) declines the
+    # level, same rule the enclosing loop applies to its own element.
+    import from jaclang.jac0core.passes { UniPass }
+    out: list[tuple] = [];
+    for inner in UniPass.get_all_sub_nodes(nd=nd, typ=uni.InForStmt) {
+        coll = inner.collection;
+        if not isinstance(inner.target, uni.Name) or not isinstance(coll, uni.EdgeRefTrailer) {
+            continue;
+        }
+        if not coll.chain or self._pure_ref_root(coll.chain[0]) != root_var {
+            continue;
+        }
+        if self._adj_hop_key(coll) != hop {
+            continue;
+        }
+        ivar = str(inner.target.value);
+        if any(
+            isinstance(st, uni.Assignment)
+            and any(self._assign_root(t) == ivar for t in st.target)
+            for st in (inner.body or [])
+        ) {
+            continue;
+        }
+        for k in self._adj_ref_shapes(inner, str(inner.target.value)) {
+            if k not in out {
+                out.append(k);
+            }
+        }
+    }
+    return out;
+}
+
+impl PyastGenPass._adj_prefetch_hops(nd: uni.InForStmt) -> list[list[tuple]] {
     # T3: which single-hop adjacency shapes will `for <var> in <coll>` take
     # off its loop variable? Directly, or through ONE call level into a
     # module-level `def` in the SAME module whose first parameter roots the
@@ -2867,23 +2989,22 @@ impl PyastGenPass._adj_prefetch_hops(nd: uni.InForStmt) -> list[tuple] {
     # nothing. A helper from another module is declined because the bare
     # `Knows` / `Person` names the hint emits must resolve at the LOOP site.
     import from jaclang.jac0core.passes { UniPass }
-    # Same three preconditions as _jobj_prefetch_hits: a bare Name target, a
-    # collection that is a pure ref (the hint RE-EVALUATES it -- see
-    # _pure_ref_root), and no rebind of the loop var inside the body.
-    if not isinstance(nd.target, uni.Name) {
+    # Same preconditions as _jobj_prefetch_hits, via _adj_prefetch_parts: an
+    # element the body's references root at, an ORIGIN expression that is a
+    # pure ref (the hint RE-EVALUATES it -- see _pure_ref_root), and no
+    # rebind, inside the body, of either the loop var or the origin's root
+    # (`forums = ...` / `forums[k] = ...` under a `forums.items()` loop would
+    # make the hoisted hint fetch a set the loop no longer yields).
+    (tgt, origin, coll_hop) = self._adj_prefetch_parts(nd);
+    if tgt is None or origin is None {
         return [];
     }
-    if self._pure_ref_root(nd.collection) is None {
-        return [];
-    }
-    loop_var = str(nd.target.value);
+    loop_var = str(tgt.value);
+    bound = [loop_var, self._pure_ref_root(origin)];
     for stmt in (nd.body or []) {
         if (
             isinstance(stmt, uni.Assignment)
-            and any(
-                isinstance(t, uni.Name) and str(t.value) == loop_var
-                for t in stmt.target
-            )
+            and any(self._assign_root(t) in bound for t in stmt.target)
         ) {
             return [];
         }
@@ -2913,7 +3034,7 @@ impl PyastGenPass._adj_prefetch_hops(nd: uni.InForStmt) -> list[tuple] {
     shapes = self._adj_ref_shapes(nd, loop_var);
     mod = nd.find_parent_of_type(uni.Module);
     if mod is None {
-        return shapes;
+        return self._adj_chains(nd, loop_var, shapes, coll_hop);
     }
     for fc in UniPass.get_all_sub_nodes(nd=nd, typ=uni.FuncCall) {
         if not isinstance(fc.target, uni.Name) {
@@ -2947,55 +3068,112 @@ impl PyastGenPass._adj_prefetch_hops(nd: uni.InForStmt) -> list[tuple] {
             }
         }
     }
-    return shapes;
+    return self._adj_chains(nd, loop_var, shapes, coll_hop);
+}
+
+impl PyastGenPass._adj_chains(
+    nd: uni.InForStmt, loop_var: str, shapes: list[tuple], coll_hop: (tuple | None)
+) -> list[list[tuple]] {
+    # One CHAIN per shape the body takes off the loop element: the levels the
+    # runtime fills back-to-back, each from the previous level's targets.
+    #
+    #   for post in [fo->:ContainerOf:->[?:Post]] { [post->:HasCreator:->] }
+    #       origin `fo`      -> [ContainerOf, HasCreator]   (coll_hop first)
+    #   for (foj, fo) in forums.items() { <that loop> }
+    #       origin `forums`  -> [ContainerOf, HasCreator]   (nested loop)
+    #
+    # An edge-reference loop with no body shapes gets NO hint: its one level
+    # would answer exactly the one reference the loop already issues, i.e. a
+    # statement swapped for a statement.
+    out: list[list[tuple]] = [];
+    for s in shapes {
+        if coll_hop is not None {
+            out.append([coll_hop, s]);
+            continue;
+        }
+        nxt = self._adj_chain_next(nd, loop_var, s);
+        if nxt {
+            for s2 in nxt {
+                out.append([s, s2]);
+            }
+        } else {
+            out.append([s]);
+        }
+    }
+    return out;
 }
 
 impl PyastGenPass._adj_prefetch_hint_stmts(nd: uni.InForStmt) -> list {
-    # One `jadj_prefetch(<collection>, dir, Edge, Node)` per distinct shape,
-    # emitted BEFORE the loop. Pure hint: with JAC_LOOP_PREFETCH unset the
-    # runtime call returns immediately, and even armed it only warms a memo
-    # the per-node reference consults -- it can never change an answer.
+    # One `jadj_prefetch(<origin>, dir, Edge, Node[, chain])` per distinct
+    # chain, emitted BEFORE the loop. Pure hint: with JAC_LOOP_PREFETCH unset
+    # the runtime call returns immediately, and even armed it only warms a
+    # memo the per-node reference consults -- it can never change an answer.
     hops = self._adj_prefetch_hops(nd);
     if not hops {
         return [];
     }
+    (_tgt, origin, _ch) = self._adj_prefetch_parts(nd);
     import os;
     if os.environ.get('JAC_PREFETCH_DEBUG') {
         import sys;
         print(
             'ADJPREFETCH ' + str(nd.loc.mod_path) + ':' + str(nd.loc.first_line)
             + ' ' + ' '.join(
-                '(' + str(d) + ',' + str(e) + ',' + str(t) + ')'
-                for (d, e, t) in hops
+                '->'.join(
+                    '(' + str(d) + ',' + str(e) + ',' + str(t) + ')'
+                    for (d, e, t) in chain
+                )
+                for chain in hops
             ),
             file=sys.stderr
         );
     }
     out: list = [];
-    for (d, ename, nname) in hops {
-        call = ast3.Call(
-            func=self.builtin_name('jadj_prefetch'),
-            args=[
-                cast(ast3.expr, self._clone_py(self.py_ast_val(nd.collection))),
-                ast3.Constant(value=d),
-                (
-                    ast3.Name(id=ename, ctx=ast3.Load())
-                        if ename
-                        else ast3.Constant(value=None)
-                ),
-                (
-                    ast3.Name(id=nname, ctx=ast3.Load())
-                        if nname
-                        else ast3.Constant(value=None)
+    for chain in hops {
+        args: list = [
+            cast(ast3.expr, self._clone_py(self.py_ast_val(cast(uni.Expr, origin))))
+        ];
+        args.extend(self._adj_hop_args(chain[0]));
+        if len(chain) > 1 {
+            # further levels: ((dir, Edge, Node), ...) - the runtime fills each
+            # from the previous level's targets, one statement per level
+            args.append(
+                ast3.Tuple(
+                    elts=[
+                        ast3.Tuple(elts=self._adj_hop_args(h), ctx=ast3.Load())
+                        for h in chain[1:]
+                    ],
+                    ctx=ast3.Load()
                 )
-            ],
-            keywords=[]
+            );
+        }
+        call = ast3.Call(
+            func=self.builtin_name('jadj_prefetch'), args=args, keywords=[]
         );
         out.append(
             self.sync(ast3.Expr(value=cast(ast3.expr, call)), jac_node=nd, deep=True)
         );
     }
     return out;
+}
+
+impl PyastGenPass._adj_hop_args(hop: tuple) -> list {
+    # `dir, Edge, Node` - FRESH Names for the types (the identifiers the
+    # walker itself wrote, resolved in module scope at the hint site).
+    (d, ename, nname) = hop;
+    return [
+        ast3.Constant(value=d),
+        (
+            ast3.Name(id=ename, ctx=ast3.Load())
+                if ename
+                else ast3.Constant(value=None)
+        ),
+        (
+            ast3.Name(id=nname, ctx=ast3.Load())
+                if nname
+                else ast3.Constant(value=None)
+        )
+    ];
 }
 
 impl PyastGenPass.exit_while_stmt(nd: uni.WhileStmt) -> None {
