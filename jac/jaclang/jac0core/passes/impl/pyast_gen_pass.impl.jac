@@ -2503,18 +2503,33 @@ impl PyastGenPass.exit_iter_for_stmt(nd: uni.IterForStmt) -> None {
 impl PyastGenPass.exit_in_for_stmt(nd: uni.InForStmt) -> None {
     for_node = ast3.AsyncFor if nd.is_async else ast3.For;
     py_nodes: list[ast3.AST] = [];
-    hint = self._prefetch_hint_stmt(nd);
-    if hint is not None {
-        py_nodes.append(hint);
+    # Rung B: EffectPass proved this loop is the ic5 counting nest, so the
+    # whole inner nest collapses into ONE hoisted statement and the counter
+    # becomes a lookup in its result. The two prefetch hints are skipped with
+    # it: their only job is to batch the round trips of a loop body that no
+    # longer runs the hops.
+    plan = getattr(nd, 'hopcount_plan', None);
+    kept: list = list(nd.body);
+    seed: list = [];
+    if plan is not None {
+        parts = self._hopcount_stmts(nd, plan);
+        py_nodes.append(cast(ast3.AST, parts[0]));
+        seed = [cast(ast3.stmt, parts[1])];
+        kept = [st for st in kept if st is not nd.body[0] and st is not plan[7]];
+    } else {
+        hint = self._prefetch_hint_stmt(nd);
+        if hint is not None {
+            py_nodes.append(hint);
+        }
+        py_nodes.extend(self._adj_prefetch_hint_stmts(nd));
     }
-    py_nodes.extend(self._adj_prefetch_hint_stmts(nd));
     py_nodes.append(
         self.sync(
             for_node(
                 target=cast(ast3.expr, self.py_ast_val(nd.target)),
                 iter=cast(ast3.expr, self.py_ast_val(nd.collection)),
-                body=[
-                    cast(ast3.stmt, stmt) for stmt in self.resolve_stmt_block(nd.body)
+                body=seed + [
+                    cast(ast3.stmt, stmt) for stmt in self.resolve_stmt_block(kept)
                 ],
                 orelse=[cast(ast3.stmt, stmt) for stmt in nd.else_body.gen.py_ast]
                     if nd.else_body
@@ -2523,6 +2538,81 @@ impl PyastGenPass.exit_in_for_stmt(nd: uni.InForStmt) -> None {
         )
     );
     nd.gen.py_ast = py_nodes;
+}
+
+impl PyastGenPass._hopcount_stmts(nd: uni.InForStmt, plan: tuple) -> tuple {
+    # (hoist, seed) for a stamped counting nest:
+    #   hoist:  __jac_cnt = jhopcount(<S>, E2, T2, E3, T3)   (before the loop)
+    #   seed:   <cnt> = __jac_cnt.get(<k>, 0)                (first in the body)
+    # Every name in the plan is a bare identifier the walker already binds in
+    # this frame (<S>, <k>, <cnt>) or a module-level archetype (E2/T2/E3/T3),
+    # so they emit as plain Names - the same way `jclosure_ref` emits its
+    # edge/node type arguments. Keys missing from the result are forums with
+    # no qualifying post, which is what `.get(k, 0)` says; the walker's
+    # trailing statements still append them with count 0.
+    call = ast3.Call(
+        func=self.builtin_name('jhopcount'),
+        args=[
+            cast(
+                ast3.expr,
+                self.sync(ast3.Name(id=str(plan[i]), ctx=ast3.Load()), jac_node=nd)
+            )
+            for i in range(0, 5)
+        ],
+        keywords=[]
+    );
+    hoist = self.sync(
+        ast3.Assign(
+            targets=[
+                cast(
+                    ast3.expr,
+                    self.sync(
+                        ast3.Name(id='__jac_cnt', ctx=ast3.Store()), jac_node=nd
+                    )
+                )
+            ],
+            value=cast(ast3.expr, self.sync(call, jac_node=nd))
+        ),
+        jac_node=nd
+    );
+    lookup = ast3.Call(
+        func=cast(
+            ast3.expr,
+            self.sync(
+                ast3.Attribute(
+                    value=self.sync(
+                        ast3.Name(id='__jac_cnt', ctx=ast3.Load()), jac_node=nd
+                    ),
+                    attr='get',
+                    ctx=ast3.Load()
+                ),
+                jac_node=nd
+            )
+        ),
+        args=[
+            cast(
+                ast3.expr,
+                self.sync(ast3.Name(id=str(plan[5]), ctx=ast3.Load()), jac_node=nd)
+            ),
+            cast(ast3.expr, self.sync(ast3.Constant(value=0), jac_node=nd))
+        ],
+        keywords=[]
+    );
+    seed = self.sync(
+        ast3.Assign(
+            targets=[
+                cast(
+                    ast3.expr,
+                    self.sync(
+                        ast3.Name(id=str(plan[6]), ctx=ast3.Store()), jac_node=nd
+                    )
+                )
+            ],
+            value=cast(ast3.expr, self.sync(lookup, jac_node=nd))
+        ),
+        jac_node=nd
+    );
+    return (hoist, seed);
 }
 
 impl PyastGenPass._clone_py(node: object) -> object {

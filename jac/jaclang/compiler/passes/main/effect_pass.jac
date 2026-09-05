@@ -651,6 +651,325 @@ def _ids_only_of(scopes: list, bind: object, tgt: object) -> bool {
 }
 
 
+# --- Rung B: the ic5 counting nest -----------------------------------------
+# `for (k, v) in <D>.items() { cnt = 0;
+#     for x in [v ->:E2:-> [?:T2]] { c = [x ->:E3:-> [?:T3]];
+#         if c and jid(c[0]) in <S>[k] { cnt += 1; } }
+#   <trailing statements> }`
+# is a relational aggregation written as a nest of edge-reference loops: per
+# key, count the E2-neighbours of `v` that have an E3 edge into that key's
+# member set. Proving THAT shape lets PyastGenPass replace the whole inner
+# nest with one `jhopcount(...)` statement (COMPILER_PLAN.md rung B.2). The
+# proof is structural and total: every helper below returns None/False for
+# anything it does not recognise EXACTLY, because a lowering that is a
+# superset of the walker's own loop would silently change the answer.
+
+
+def _walk_list(nodes: list, typ: type) -> list {
+    out: list = [];
+    for n in nodes {
+        _walk(n, typ, out);
+    }
+    return out;
+}
+
+
+def _unwrap_cfg(e: object) -> object {
+    cur = e;
+    while isinstance(cur, uni.CfgExpr) {
+        cur = getattr(cur, 'expr', None);
+    }
+    return cur;
+}
+
+
+def _int_lit(e: object, want: int) -> bool {
+    v = getattr(e, 'lit_value', None);
+    return isinstance(v, int) and not isinstance(v, bool) and v == want;
+}
+
+
+def _plain_hop(e: object, origin: str) -> (tuple | None) {
+    # `[<origin> ->:E:-> [?:T]]` and nothing else -> (E, T).
+    # Declines: inbound / ANY direction, a ranged hop, a second hop, an edge
+    # or node predicate, `edges_only`, a non-Name origin or type. Each of
+    # those changes what the emitted SQL would have to say, and the SQL says
+    # only this one thing.
+    if not isinstance(e, uni.EdgeRefTrailer) or getattr(e, 'edges_only', False) {
+        return None;
+    }
+    ch = list(getattr(e, 'chain', []) or []);
+    if len(ch) != 3 {
+        return None;
+    }
+    org = ch[0];
+    op = ch[1];
+    nfilt = ch[2];
+    if not isinstance(org, uni.Name) or str(org.value) != origin {
+        return None;
+    }
+    if not isinstance(op, uni.EdgeOpRef)
+        or getattr(op, 'max_hops', None) is not None
+        or str(getattr(getattr(op, 'edge_dir', None), 'name', '')) != 'OUT' {
+        return None;
+    }
+    ecompr = getattr(op, 'filter_cond', None);
+    if not isinstance(ecompr, uni.FilterCompr)
+        or list(getattr(ecompr, 'compares', []) or []) {
+        return None;
+    }
+    if not isinstance(nfilt, uni.FilterCompr)
+        or list(getattr(nfilt, 'compares', []) or []) {
+        return None;
+    }
+    et = getattr(ecompr, 'f_type', None);
+    nt = getattr(nfilt, 'f_type', None);
+    if not isinstance(et, uni.Name) or not isinstance(nt, uni.Name) {
+        return None;
+    }
+    return (str(et.value), str(nt.value));
+}
+
+
+def _items_dict_name(coll: object) -> (str | None) {
+    # `<D>.items()` with `<D>` a bare Name -> 'D'
+    if not isinstance(coll, uni.FuncCall) or list(getattr(coll, 'params', []) or []) {
+        return None;
+    }
+    t = getattr(coll, 'target', None);
+    if not isinstance(t, uni.AtomTrailer) or not getattr(t, 'is_attr', False) {
+        return None;
+    }
+    r = getattr(t, 'right', None);
+    d = getattr(t, 'target', None);
+    if not isinstance(r, uni.Name) or str(r.value) != 'items'
+        or not isinstance(d, uni.Name) {
+        return None;
+    }
+    return str(d.value);
+}
+
+
+def _name_subscript(at: object, key: str) -> (object | None) {
+    # `<S>[<key>]` with both parts bare Names -> the `<S>` Name node
+    if not isinstance(at, uni.AtomTrailer) {
+        return None;
+    }
+    base = getattr(at, 'target', None);
+    right = getattr(at, 'right', None);
+    if not isinstance(base, uni.Name) or not isinstance(right, uni.IndexSlice)
+        or getattr(right, 'is_range', False) {
+        return None;
+    }
+    slices = list(getattr(right, 'slices', []) or []);
+    if len(slices) != 1 or getattr(slices[0], 'stop', None) is not None
+        or getattr(slices[0], 'step', None) is not None {
+        return None;
+    }
+    s = getattr(slices[0], 'start', None);
+    if not isinstance(s, uni.Name) or str(s.value) != key {
+        return None;
+    }
+    return base;
+}
+
+
+def _zero_init_name(st: object) -> (str | None) {
+    # `<cnt> = 0;` -> 'cnt'
+    if not isinstance(st, uni.Assignment) or getattr(st, 'aug_op', None) is not None {
+        return None;
+    }
+    tgts = list(getattr(st, 'target', []) or []);
+    if len(tgts) != 1 or not isinstance(tgts[0], uni.Name) {
+        return None;
+    }
+    if not _int_lit(getattr(st, 'value', None), 0) {
+        return None;
+    }
+    return str(tgts[0].value);
+}
+
+
+def _is_increment(st: object, cname: str) -> bool {
+    # `<cnt> += 1;` or `<cnt> = <cnt> + 1;`
+    if not isinstance(st, uni.Assignment) {
+        return False;
+    }
+    tgts = list(getattr(st, 'target', []) or []);
+    if len(tgts) != 1 or not isinstance(tgts[0], uni.Name)
+        or str(tgts[0].value) != cname {
+        return False;
+    }
+    v = getattr(st, 'value', None);
+    aug = getattr(st, 'aug_op', None);
+    if aug is not None {
+        return str(getattr(aug, 'value', '')) == '+=' and _int_lit(v, 1);
+    }
+    if not isinstance(v, uni.BinaryExpr)
+        or str(getattr(getattr(v, 'op', None), 'value', '')) != '+' {
+        return False;
+    }
+    lf = getattr(v, 'left', None);
+    return isinstance(lf, uni.Name) and str(lf.value) == cname
+        and _int_lit(getattr(v, 'right', None), 1);
+}
+
+
+def _membership_base(cond: object, cname: str, kname: str) -> (object | None) {
+    # `<c> and jid(<c>[0]) in <S>[<k>]` -> the `<S>` Name node.
+    # The truth test on `c` is what makes the SQL's inner join equivalent:
+    # without it the walker would index an empty list, so the shape that
+    # counts is exactly "has an E3 neighbour AND that neighbour is a member".
+    if not isinstance(cond, uni.BoolExpr)
+        or str(getattr(getattr(cond, 'op', None), 'value', '')) != 'and' {
+        return None;
+    }
+    vals = [_unwrap_cfg(v) for v in list(getattr(cond, 'values', []) or [])];
+    if len(vals) != 2 or not isinstance(vals[0], uni.Name)
+        or str(vals[0].value) != cname {
+        return None;
+    }
+    cmpe = vals[1];
+    if not isinstance(cmpe, uni.CompareExpr) {
+        return None;
+    }
+    ops = [str(getattr(o, 'value', '')) for o in list(getattr(cmpe, 'ops', []) or [])];
+    rights = list(getattr(cmpe, 'rights', []) or []);
+    if len(ops) != 1 or ops[0] != 'in' or len(rights) != 1 {
+        return None;
+    }
+    lhs = getattr(cmpe, 'left', None);
+    if not isinstance(lhs, uni.FuncCall) or _call_name(lhs) != 'jid' {
+        return None;
+    }
+    prms = list(getattr(lhs, 'params', []) or []);
+    if len(prms) != 1 {
+        return None;
+    }
+    at = prms[0];
+    if not isinstance(at, uni.AtomTrailer) or _subscript_lit(at) != 0 {
+        return None;
+    }
+    ct = getattr(at, 'target', None);
+    if not isinstance(ct, uni.Name) or str(ct.value) != cname {
+        return None;
+    }
+    return _name_subscript(rights[0], kname);
+}
+
+
+def _hopcount_plan(scopes: list, l2: object) -> tuple {
+    # -> (plan | None, reason). reason '' means "not a candidate" (silent);
+    # any other reason is a DECLINE of a loop that did look like the nest.
+    tgt = getattr(l2, 'target', None);
+    if not isinstance(tgt, uni.TupleVal) {
+        return (None, '');
+    }
+    tv = list(getattr(tgt, 'values', []) or []);
+    if len(tv) != 2 or not isinstance(tv[0], uni.Name)
+        or not isinstance(tv[1], uni.Name) {
+        return (None, '');
+    }
+    dname = _items_dict_name(getattr(l2, 'collection', None));
+    if dname is None {
+        return (None, '');
+    }
+    kname = str(tv[0].value);
+    vname = str(tv[1].value);
+    body = list(getattr(l2, 'body', []) or []);
+    if len(body) < 2 {
+        return (None, 'body has no `cnt = 0` + inner loop');
+    }
+    cname = _zero_init_name(body[0]);
+    if cname is None {
+        return (None, 'first statement is not `<cnt> = 0`');
+    }
+    l3 = body[1];
+    if not isinstance(l3, uni.InForStmt) {
+        return (None, 'second statement is not the inner loop');
+    }
+    xt = getattr(l3, 'target', None);
+    if not isinstance(xt, uni.Name) {
+        return (None, 'inner loop target is not a bare name');
+    }
+    xname = str(xt.value);
+    hop2 = _plain_hop(getattr(l3, 'collection', None), vname);
+    if hop2 is None {
+        return (None, 'inner loop is not a plain outbound hop from the value');
+    }
+    l3b = list(getattr(l3, 'body', []) or []);
+    if len(l3b) != 2 {
+        return (None, 'inner loop body is not exactly assign + if');
+    }
+    asg = l3b[0];
+    if not isinstance(asg, uni.Assignment)
+        or getattr(asg, 'aug_op', None) is not None {
+        return (None, 'inner loop body does not start with an assignment');
+    }
+    atg = list(getattr(asg, 'target', []) or []);
+    if len(atg) != 1 or not isinstance(atg[0], uni.Name) {
+        return (None, 'inner assignment target is not a bare name');
+    }
+    lname = str(atg[0].value);
+    hop3 = _plain_hop(getattr(asg, 'value', None), xname);
+    if hop3 is None {
+        return (None, 'inner assignment is not a plain outbound hop from the element');
+    }
+    ifs = l3b[1];
+    if not isinstance(ifs, uni.IfStmt)
+        or getattr(ifs, 'else_body', None) is not None {
+        return (None, 'inner loop body does not end with an else-less if');
+    }
+    ifb = list(getattr(ifs, 'body', []) or []);
+    if len(ifb) != 1 or not _is_increment(ifb[0], cname) {
+        return (None, 'if body is not exactly `<cnt> += 1`');
+    }
+    sbase = _membership_base(getattr(ifs, 'condition', None), lname, kname);
+    if sbase is None {
+        return (None, 'condition is not `<c> and jid(<c>[0]) in <S>[<k>]`');
+    }
+    sname = str(getattr(sbase, 'value', ''));
+    if sname == dname {
+        return (None, 'the member map and the iterated dict are the same name');
+    }
+    # (1) `x` / `c` must not escape the inner loop: the lowering never
+    #     materialises a Post or a Person, so any later use of either would
+    #     read a name the emitted code no longer binds.
+    inner: set = {id(n) for n in _walk(l3, uni.Name, [])};
+    for scope in scopes {
+        if scope is None {
+            return (None, 'unresolved scope');
+        }
+        for nm in _walk(scope, uni.Name, []) {
+            if str(nm.value) in (xname, lname) and id(nm) not in inner {
+                return (None, 'the inner element or its hop escapes the inner loop');
+            }
+        }
+    }
+    # (2) `cnt` must be read nowhere inside the inner loop but the increment
+    #     itself - the counter is replaced by a precomputed total, so a
+    #     mid-loop read of it would observe a value that no longer exists.
+    incr: set = {id(n) for n in _walk(ifb[0], uni.Name, [])};
+    for nm in _walk(l3, uni.Name, []) {
+        if str(nm.value) == cname and id(nm) not in incr {
+            return (None, 'the counter is read inside the inner loop');
+        }
+    }
+    # (3) the iterated dict and the member map must be untouched by the outer
+    #     body: the hoisted call reads `<S>` ONCE, before the loop runs.
+    outer_names = _walk_list(body, uni.Name);
+    if any((str(n.value) == dname) for n in outer_names) {
+        return (None, 'the iterated dict is referenced inside the loop');
+    }
+    smentions = [n for n in outer_names if str(n.value) == sname];
+    if len(smentions) != 1 or smentions[0] is not sbase {
+        return (None, 'the member map is referenced outside the membership test');
+    }
+    return (
+        (sname, hop2[0], hop2[1], hop3[0], hop3[1], kname, cname, l3), ''
+    );
+}
+
 class EffectPass(UniPass) {
 
     def before_pass(self: EffectPass) -> None {
@@ -688,6 +1007,17 @@ class EffectPass(UniPass) {
                     sys.stderr.write(
                         'EFFECTPASS ' + str(nd.name)
                         + ' hydrate projection internal: ' + str(e) + chr(10)
+                    );
+                }
+            }
+            try {
+                self._stamp_hopcount(nd);
+            } except Exception as e {
+                # rung B: same stance - any doubt leaves the nest as written
+                if os.environ.get('JAC_EFFECT_DEBUG') {
+                    sys.stderr.write(
+                        'EFFECTPASS ' + str(nd.name)
+                        + ' hopcount internal: ' + str(e) + chr(10)
                     );
                 }
             }
@@ -1000,6 +1330,49 @@ class EffectPass(UniPass) {
                             );
                         }
                     }
+                }
+            }
+        }
+    }
+
+    def _stamp_hopcount(self: EffectPass, w: uni.Archetype) -> None {
+        # Rung B: prove the ic5 counting nest (see _hopcount_plan above) and
+        # stamp the OUTER loop with the relational plan. PyastGenPass then
+        # hoists one `jhopcount(<S>, E2, T2, E3, T3)` in front of the loop and
+        # replaces `cnt = 0` + the whole inner nest with a dict lookup, so the
+        # request costs ONE statement instead of one per inner-hop element.
+        # Only reached for a walker that already proved effect-free, which is
+        # what makes "the loop reads and counts, nothing else" checkable at
+        # all. Advisory like the other two stamps: no stamp = today's codegen.
+        import os;
+        import sys;
+        scopes = self._scopes_of(w);
+        seen: set = set();
+        for scope in scopes {
+            if scope is None {
+                continue;
+            }
+            for l2 in _walk(scope, uni.InForStmt, []) {
+                if id(l2) in seen {
+                    continue;
+                }
+                seen.add(id(l2));
+                got = _hopcount_plan(scopes, l2);
+                plan = got[0];
+                why = str(got[1]);   # str(): a bare `tuple` element is `object`
+                if plan is None and not why {
+                    continue;   # not the nest at all: nothing to report
+                }
+                if os.environ.get('JAC_EFFECT_DEBUG') {
+                    sys.stderr.write(
+                        'EFFECTPASS ' + str(w.name) + ' hopcount@'
+                        + str(getattr(l2.loc, 'first_line', '?')) + ' '
+                        + ('accepted' if plan is not None else 'declined:' + why)
+                        + chr(10)
+                    );
+                }
+                if plan is not None {
+                    l2.hopcount_plan = plan;
                 }
             }
         }
