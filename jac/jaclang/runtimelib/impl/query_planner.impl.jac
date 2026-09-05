@@ -489,6 +489,48 @@ def _materialize_ids(
 }
 
 
+def _materialize_projected(
+    mem: Session, ids: list[UUID], proj: tuple
+) -> (list[Anchor] | None) {
+    # C2: the compiler proved this chain's elements are observed only through
+    # `proj`'s fields (+ jid / isinstance / truth), so hand the ids to the T6
+    # path - proj_cache, then hydrate_projected off the mirror columns, then
+    # the legacy per-id load for whatever the mirror cannot answer - instead
+    # of decoding one anchor blob each. Order is preserved and a dropped id
+    # is dropped exactly as _materialize_ids drops an unpopulated anchor.
+    #
+    # ACL: get_objects_many gives the FULL read verdict per id (the mirror
+    # predicate inside hydrate_projected, check_read_access on every legacy
+    # fallback) and answers None for a denied or unknown id, so the caller
+    # must NOT re-run _acl_read_ok over the result: a projected anchor
+    # deliberately carries no `access` scalar (hydrate_projected builds no
+    # Permission), which is exactly why the verdict is applied where the
+    # scalars are. Returning None here means the path did not run at all, and
+    # the caller takes the untouched legacy path, ACL filter included.
+    # ponytail: this ignores the walk's `local` dict and re-asks the session
+    # for those ids; Session.get answers them from __mem__ with no round trip
+    # (that is also what preserves read-your-writes), so the cost is a dict
+    # lookup per resident id, not a fetch.
+    import from jaclang.jac0core.runtime { JacRuntimeInterface }
+    try {
+        archs = JacRuntimeInterface.get_objects_many(
+            [i.hex for i in ids], _proj=proj
+        );
+    } except Exception as e {
+        logger.warning(f"projected chain hydration failed (falling back): {e}");
+        return None;
+    }
+    out: list[Anchor] = [];
+    for a in archs {
+        an = getattr(a, '__jac__', None) if a is not None else None;
+        if isinstance(an, Anchor) {
+            out.append(an);
+        }
+    }
+    return out;
+}
+
+
 def _unique_nodes(pairs: list[tuple[(UUID | None), (UUID | None)]]) -> list[UUID] {
     seen: set[UUID] = set();
     out: list[UUID] = [];
@@ -1532,7 +1574,9 @@ impl _fill_adj_level(
 }
 
 
-impl resolve_query(mem: Session, q: GraphQuery) -> list[Anchor] {
+impl resolve_query(
+    mem: Session, q: GraphQuery, proj: (tuple | None) = None
+) -> list[Anchor] {
     if not q.origin {
         return [];
     }
@@ -1550,6 +1594,11 @@ impl resolve_query(mem: Session, q: GraphQuery) -> list[Anchor] {
     ids = _unique_nodes(pairs);
     if (streamed := _try_stream(mem, q, ids, local)) is not None {
         return streamed;
+    }
+    if proj is not None
+        and (projected := _materialize_projected(mem, ids, proj)) is not None {
+        # the read verdict is already final - see _materialize_projected
+        return projected[q.slc] if q.slc is not None else projected;
     }
     out = _materialize_ids(mem, ids, local);
     if _acl_gated() {

@@ -1834,7 +1834,9 @@ impl JacBuiltin.log_report(expr: any, custom: bool = False) -> None {
 }
 
 impl JacGraph.refs(
-    path: GraphQuery | NodeArchetype | list[NodeArchetype], slc: (slice | None) = None
+    path: GraphQuery | NodeArchetype | list[NodeArchetype],
+    slc: (slice | None) = None,
+    proj: (tuple | None) = None
 ) -> list[NodeArchetype] | list[EdgeArchetype] | list[(NodeArchetype | EdgeArchetype)] {
     if not isinstance(path, GraphQuery) {
         path = GraphQuery(path, hops=[QHop(dir=EdgeDir.OUT.value)]);
@@ -1848,7 +1850,7 @@ impl JacGraph.refs(
     planned = (
         resolve_query_edges(ctx.mem, path)
             if path.edges_only
-            else resolve_query(ctx.mem, path)
+            else resolve_query(ctx.mem, path, proj)
     );
     return [
         a.archetype

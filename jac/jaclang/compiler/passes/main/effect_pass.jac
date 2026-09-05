@@ -487,11 +487,62 @@ def _call_name(fc: object) -> str {
 }
 
 
+def _in_dead(n: object, dead: set) -> bool {
+    # C2: the use sits inside a subtree another lowering DELETES (rung B's
+    # hopcount nest), so the emitted program never performs it
+    cur = n;
+    while cur is not None {
+        if id(cur) in dead {
+            return True;
+        }
+        cur = getattr(cur, 'parent', None);
+    }
+    return False;
+}
+
+
+def _dict_store_base(nm: object) -> (str | None) {
+    # `<D>[<k>] = <nm>` with `<D>` a bare Name and `nm` the assigned VALUE
+    # -> 'D'. The key expression is NOT excused here: every Name in it is
+    # swept like any other use, so `D[x] = x` still declines.
+    p = getattr(nm, 'parent', None);
+    if not isinstance(p, uni.Assignment) or getattr(p, 'aug_op', None) is not None
+        or getattr(p, 'value', None) is not nm {
+        return None;
+    }
+    tgts = list(getattr(p, 'target', []) or []);
+    if len(tgts) != 1 or not isinstance(tgts[0], uni.AtomTrailer) {
+        return None;
+    }
+    at = tgts[0];
+    base = getattr(at, 'target', None);
+    right = getattr(at, 'right', None);
+    if not isinstance(base, uni.Name) or not isinstance(right, uni.IndexSlice)
+        or getattr(right, 'is_range', False) {
+        return None;
+    }
+    slices = list(getattr(right, 'slices', []) or []);
+    if len(slices) != 1 or getattr(slices[0], 'stop', None) is not None
+        or getattr(slices[0], 'step', None) is not None {
+        return None;
+    }
+    return str(base.value);
+}
+
+
 def _projection_of(
-    scopes: list, bind: object, tgt: object, dflt_type: (str | None) = None
+    scopes: list,
+    bind: object,
+    tgt: object,
+    dflt_type: (str | None) = None,
+    alias: (str | None) = None,
+    dead: (set | None) = None
 ) -> (tuple | None) {
     # -> (type_name, (field, ...)) when EVERY use of the bound name in the
-    # walker is admissible, else None
+    # walker is admissible, else None. `alias` (C2) excuses the ONE escape
+    # shape `<alias>[<k>] = x` - only ever passed after _dict_alias_fields
+    # has audited every use of `<alias>` itself; `dead` (C2) is the set of
+    # subtrees another stamp deletes from the emitted program.
     vname = str(tgt.value);
     fields: set = set();
     types: set = set();
@@ -530,6 +581,12 @@ def _projection_of(
             }
             if _sibling_branch(nm, bind) {
                 continue;
+            }
+            if dead is not None and _in_dead(nm, dead) {
+                continue;
+            }
+            if alias is not None and _dict_store_base(nm) == alias {
+                continue;   # C2: the audited dict-alias escape
             }
             if _ancestor(nm, (uni.DeleteStmt, )) is not None {
                 return None;
@@ -648,6 +705,112 @@ def _ids_only_of(scopes: list, bind: object, tgt: object) -> bool {
         }
     }
     return True;
+}
+
+
+def _dict_alias_fields(
+    scopes: list, dname: str, vname: str, dflt_type: (str | None), dead: set
+) -> (set | None) {
+    # C2: `<D>` is a LOCAL dict the loop element escapes into
+    # (`<D>[<k>] = x`). -> the extra fields read off the element through
+    # `<D>`, or None if `<D>` itself is not provably a private staging dict.
+    # Admissible uses of `<D>`, and nothing else: the one `= {}` init, a
+    # `<D>[<k>] = <vname>` store, a membership test `<k> in <D>`, and
+    # `for (k2, v2) in <D>.items()` whose element is audited by
+    # _projection_of like any other binding (its fields union into ours).
+    # A read `<D>[<k>]`, `len(<D>)`, a call argument, a return or a report
+    # all decline: each hands the element to something this audit cannot
+    # see. Refusal over wrongness, exactly like _projection_of.
+    fields: set = set();
+    inits: set = set();   # by node id: _scopes_of can hand the same body twice
+    for scope in scopes {
+        if not isinstance(scope, uni.UniNode) {
+            return None;
+        }
+        for nm in _walk(scope, uni.Name, []) {
+            if str(nm.value) != dname {
+                continue;
+            }
+            p = getattr(nm, 'parent', None);
+            if isinstance(p, uni.AtomTrailer) and p.right is nm {
+                continue;   # an attribute NAME that happens to match
+            }
+            if isinstance(p, uni.KWPair) and getattr(p, 'key', None) is nm {
+                continue;
+            }
+            if dead is not None and _in_dead(nm, dead) {
+                continue;
+            }
+            # 1. the local init: `<D> = {}` / `<D>: dict = {}`
+            if isinstance(p, uni.Assignment) and nm in list(p.target or []) {
+                dv = getattr(p, 'value', None);
+                if isinstance(dv, uni.DictVal)
+                    and not list(getattr(dv, 'kv_pairs', []) or []) {
+                    inits.add(id(p));
+                    continue;
+                }
+                return None;   # bound to something this audit cannot see
+            }
+            if isinstance(p, uni.AtomTrailer) and p.target is nm {
+                right = getattr(p, 'right', None);
+                # 2. the store `<D>[<k>] = <vname>` (a READ `<D>[<k>]` is not
+                # admissible: it hands the element to an unaudited name)
+                if isinstance(right, uni.IndexSlice) {
+                    if not _on_store_path(p) {
+                        return None;
+                    }
+                    asg = _ancestor(p, (uni.Assignment, ));
+                    val = getattr(asg, 'value', None) if asg is not None else None;
+                    if not isinstance(val, uni.Name) or str(val.value) != vname {
+                        return None;   # some OTHER value in the same dict
+                    }
+                    continue;
+                }
+                # 3. `for (k2, v2) in <D>.items()`
+                if isinstance(right, uni.Name) and str(right.value) == 'items'
+                    and getattr(p, 'is_attr', False) {
+                    fc = getattr(p, 'parent', None);
+                    if not isinstance(fc, uni.FuncCall) or fc.target is not p
+                        or list(getattr(fc, 'params', []) or []) {
+                        return None;
+                    }
+                    lp = getattr(fc, 'parent', None);
+                    if not isinstance(lp, (uni.InForStmt, uni.InnerCompr))
+                        or getattr(lp, 'collection', None) is not fc {
+                        return None;
+                    }
+                    pair = _loop_pair(lp);
+                    ltgt = getattr(lp, 'target', None);
+                    if not isinstance(ltgt, uni.TupleVal) or pair[2] is None {
+                        return None;
+                    }
+                    v2 = list(getattr(ltgt, 'values', []) or [])[1];
+                    if not isinstance(v2, uni.Name) {
+                        return None;
+                    }
+                    if str(v2.value) == vname {
+                        continue;   # same name: the outer sweep already has it
+                    }
+                    sub = _projection_of(scopes, lp, v2, dflt_type, None, dead);
+                    if sub is None {
+                        return None;
+                    }
+                    fields.update(sub[1]);
+                    continue;
+                }
+                return None;
+            }
+            # 4. membership only: `<k> in <D>` / `<k> not in <D>`
+            if isinstance(p, uni.CompareExpr) and nm in list(p.rights or []) {
+                ops = [str(getattr(o, 'value', '')) for o in list(p.ops or [])];
+                if ops and all([o in ('in', 'not in') for o in ops]) {
+                    continue;
+                }
+            }
+            return None;
+        }
+    }
+    return fields if len(inits) == 1 else None;
 }
 
 
@@ -1000,17 +1163,6 @@ class EffectPass(UniPass) {
                 ;   # advisory stamp only: any doubt leaves the call as-is
             }
             try {
-                self._stamp_hydrate_projection(nd);
-            } except Exception as e {
-                # same stance: the T6 projection stamp is advisory
-                if os.environ.get('JAC_EFFECT_DEBUG') {
-                    sys.stderr.write(
-                        'EFFECTPASS ' + str(nd.name)
-                        + ' hydrate projection internal: ' + str(e) + chr(10)
-                    );
-                }
-            }
-            try {
                 self._stamp_hopcount(nd);
             } except Exception as e {
                 # rung B: same stance - any doubt leaves the nest as written
@@ -1018,6 +1170,20 @@ class EffectPass(UniPass) {
                     sys.stderr.write(
                         'EFFECTPASS ' + str(nd.name)
                         + ' hopcount internal: ' + str(e) + chr(10)
+                    );
+                }
+            }
+            # C2: the projection audit reads the hopcount stamps (a use of the
+            # element inside a nest the hopcount lowering DELETES is not an
+            # observation), so the hopcount stamp has to be in place first.
+            try {
+                self._stamp_hydrate_projection(nd);
+            } except Exception as e {
+                # same stance: the T6 projection stamp is advisory
+                if os.environ.get('JAC_EFFECT_DEBUG') {
+                    sys.stderr.write(
+                        'EFFECTPASS ' + str(nd.name)
+                        + ' hydrate projection internal: ' + str(e) + chr(10)
                     );
                 }
             }
@@ -1330,6 +1496,97 @@ class EffectPass(UniPass) {
                             );
                         }
                     }
+                }
+            }
+        }
+        # C2: the same proof over a PLAIN (unranged) edge-reference loop -
+        # `for x in [ <origin> <-:E:- [?:T] ]`. The type comes from the
+        # chain's own `[?:T]` filter; the element may additionally escape
+        # into ONE local staging dict (`D[k] = x`, read back by
+        # `for (k2, v2) in D.items()`), which _dict_alias_fields audits.
+        # Uses that sit inside a nest rung B's hopcount stamp DELETES are
+        # not observations of the element and are skipped.
+        dead: set = set();
+        for scope in scopes {
+            if scope is None {
+                continue;
+            }
+            for l2 in _walk(scope, uni.InForStmt, []) {
+                plan = getattr(l2, 'hopcount_plan', None);
+                if plan is not None {
+                    dead.add(id(plan[7]));
+                }
+            }
+        }
+        pseen: set = set();
+        for scope in scopes {
+            if scope is None {
+                continue;
+            }
+            for ert in _walk(scope, uni.EdgeRefTrailer, []) {
+                if _is_ranged(ert) or id(ert) in pseen
+                    or getattr(ert, 'edges_only', False)
+                    or _in_dead(ert, dead) {
+                    continue;   # a chain the hopcount lowering deletes
+                }
+                pseen.add(id(ert));
+                etype = _ranged_filter_type(ert);
+                pnt = getattr(ert, 'parent', None);
+                if etype is None
+                    or not isinstance(pnt, (uni.InForStmt, uni.InnerCompr))
+                    or getattr(pnt, 'collection', None) is not ert
+                    or not isinstance(getattr(pnt, 'target', None), uni.Name) {
+                    continue;   # not even a candidate: stay silent
+                }
+                tgt2 = pnt.target;
+                vn2 = str(getattr(tgt2, 'value', ''));
+                aliases: set = set();
+                for sc4 in scopes {
+                    if sc4 is None {
+                        continue;
+                    }
+                    for nm4 in _walk(sc4, uni.Name, []) {
+                        if str(nm4.value) != vn2 {
+                            continue;
+                        }
+                        dn = _dict_store_base(nm4);
+                        if dn is not None {
+                            aliases.add(dn);
+                        }
+                    }
+                }
+                pproj = None;
+                why = 'a use of the element is not admissible';
+                if len(aliases) > 1 {
+                    why = 'element escapes into more than one dict';
+                } else {
+                    alias = str(list(aliases)[0]) if aliases else None;
+                    pproj = _projection_of(scopes, pnt, tgt2, etype, alias, dead);
+                    if pproj is not None and alias is not None {
+                        af = _dict_alias_fields(scopes, alias, vn2, etype, dead);
+                        if af is None {
+                            pproj = None;
+                            why = 'dict alias ' + str(alias) + ' is not private';
+                        } else {
+                            pproj = (
+                                pproj[0], tuple(sorted(set(pproj[1]) | af))
+                            );
+                        }
+                    }
+                }
+                if os.environ.get('JAC_EFFECT_DEBUG') {
+                    sys.stderr.write(
+                        'EFFECTPASS ' + str(w.name) + ' hydrate projection edgeref@'
+                        + str(getattr(ert.loc, 'first_line', '?')) + ' '
+                        + (
+                            str(pproj)
+                                if pproj is not None
+                                else ('declined:' + why)
+                        ) + chr(10)
+                    );
+                }
+                if pproj is not None {
+                    ert.hydrate_proj = pproj;
                 }
             }
         }

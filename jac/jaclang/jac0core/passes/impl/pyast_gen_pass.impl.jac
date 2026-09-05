@@ -5316,8 +5316,20 @@ impl PyastGenPass.exit_edge_ref_trailer(nd: uni.EdgeRefTrailer) -> None {
             ast3.Call(func=self.jaclib_obj('arefs'), args=[pynode], keywords=[])
         );
     } else {
+        # C2: EffectPass proved every observation of this loop's elements is
+        # one of the stamped fields (+ jid / isinstance / truth), so the
+        # resolver may hydrate them from T's mirror columns instead of the
+        # anchor blob. No stamp -> byte-identical call.
+        refs_kws: list = [];
+        if (hp := getattr(nd, 'hydrate_proj', None)) is not None {
+            refs_kws.append(
+                self.sync(ast3.keyword(arg='proj', value=self._proj_tuple(hp)))
+            );
+        }
         pynode = self.sync(
-            ast3.Call(func=self.jaclib_obj('refs'), args=[pynode], keywords=[])
+            ast3.Call(
+                func=self.jaclib_obj('refs'), args=[pynode], keywords=refs_kws
+            )
         );
     }
     nd.gen.py_ast = [pynode];
