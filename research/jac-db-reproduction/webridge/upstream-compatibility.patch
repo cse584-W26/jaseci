@@ -1,0 +1,65 @@
+diff --git a/Application/my-blog/src/main/java/com/site/blog/my/core/controller/admin/BlogController.java b/Application/my-blog/src/main/java/com/site/blog/my/core/controller/admin/BlogController.java
+index 89aac4b79..c71192663 100644
+--- a/Application/my-blog/src/main/java/com/site/blog/my/core/controller/admin/BlogController.java
++++ b/Application/my-blog/src/main/java/com/site/blog/my/core/controller/admin/BlogController.java
+@@ -8,7 +8,7 @@ import com.site.blog.my.core.util.MyBlogUtils;
+ import com.site.blog.my.core.util.PageQueryUtil;
+ import com.site.blog.my.core.util.Result;
+ import com.site.blog.my.core.util.ResultGenerator;
+-import webridge.storedprocedure.invocation.SPInvokeManager;
++import webridge.wbridge.storedprocedure.invocation.SPInvokeManager;
+ import org.springframework.stereotype.Controller;
+ import org.springframework.util.ObjectUtils;
+ import org.springframework.util.StringUtils;
+diff --git a/Application/my-blog/src/main/java/com/site/blog/my/core/controller/blog/MyBlogController.java b/Application/my-blog/src/main/java/com/site/blog/my/core/controller/blog/MyBlogController.java
+index 3447ce798..dc278c1b0 100644
+--- a/Application/my-blog/src/main/java/com/site/blog/my/core/controller/blog/MyBlogController.java
++++ b/Application/my-blog/src/main/java/com/site/blog/my/core/controller/blog/MyBlogController.java
+@@ -6,7 +6,7 @@ import com.site.blog.my.core.entity.BlogComment;
+ import com.site.blog.my.core.entity.BlogLink;
+ import com.site.blog.my.core.service.*;
+ import com.site.blog.my.core.util.*;
+-import webridge.storedprocedure.invocation.SPInvokeManager;
++import webridge.wbridge.storedprocedure.invocation.SPInvokeManager;
+ import org.springframework.stereotype.Controller;
+ import org.springframework.util.StringUtils;
+ import org.springframework.web.bind.annotation.*;
+diff --git a/SourceCode/openjdk8-webridge/hotspot/src/share/vm/concolic/jdbc/reference/symbolicResultSet.cpp b/SourceCode/openjdk8-webridge/hotspot/src/share/vm/concolic/jdbc/reference/symbolicResultSet.cpp
+index de4965821..6902c31ed 100644
+--- a/SourceCode/openjdk8-webridge/hotspot/src/share/vm/concolic/jdbc/reference/symbolicResultSet.cpp
++++ b/SourceCode/openjdk8-webridge/hotspot/src/share/vm/concolic/jdbc/reference/symbolicResultSet.cpp
+@@ -20,7 +20,7 @@ std::set<std::string> SymResSet::init_target_class_names() {
+   set.insert("com/mysql/jdbc/JDBC42ResultSet");
+   set.insert("com/mysql/jdbc/ResultSetImpl");
+   set.insert("TestBigDecimal$StubResultSet"); // for test purpose only
+-  set.insert("webridge/sql/result/MultipleRowResultSetImpl");
++  set.insert("webridge/wbridge/sql/result/MultipleRowResultSetImpl");
+   return set;
+ }
+ 
+diff --git a/SourceCode/openjdk8-webridge/hotspot/src/share/vm/concolic/jdbc/reference/symbolicStatement.cpp b/SourceCode/openjdk8-webridge/hotspot/src/share/vm/concolic/jdbc/reference/symbolicStatement.cpp
+index e92f671e7..0151777c0 100644
+--- a/SourceCode/openjdk8-webridge/hotspot/src/share/vm/concolic/jdbc/reference/symbolicStatement.cpp
++++ b/SourceCode/openjdk8-webridge/hotspot/src/share/vm/concolic/jdbc/reference/symbolicStatement.cpp
+@@ -15,7 +15,7 @@
+ long SymStmt::execute_counter = 0;
+ int SymStmt::_global_query_id = 0;
+ #ifdef ENABLE_WEBRIDGE
+-std::string SymStmt::_webridge_recorder_class = "webridge/sql/ResultSetHolder";
++std::string SymStmt::_webridge_recorder_class = "webridge/wbridge/sql/ResultSetHolder";
+ #endif
+ 
+ std::set<std::string> SymStmt::target_class_names = init_target_class_names();
+diff --git a/SourceCode/openjdk8-webridge/hotspot/src/share/vm/webridge/pathCondition/pathConditionPruner.cpp b/SourceCode/openjdk8-webridge/hotspot/src/share/vm/webridge/pathCondition/pathConditionPruner.cpp
+index 9cb84803d..086c67558 100644
+--- a/SourceCode/openjdk8-webridge/hotspot/src/share/vm/webridge/pathCondition/pathConditionPruner.cpp
++++ b/SourceCode/openjdk8-webridge/hotspot/src/share/vm/webridge/pathCondition/pathConditionPruner.cpp
+@@ -110,7 +110,7 @@ std::set<std::string> PathConditionPruner::init_classes_to_skip_name_prefix() {
+   std::set<std::string> s;
+   s.insert("io/jsonwebtoken");
+   s.insert("com/fasterxml");
+-  s.insert("webridge/storedprocedure/invocation/SPInvokeManager");
++  s.insert("webridge/wbridge/storedprocedure/invocation/SPInvokeManager");
+   s.insert("java/io");
+   s.insert("java/util/Calendar");
+   s.insert("java/util/regex");

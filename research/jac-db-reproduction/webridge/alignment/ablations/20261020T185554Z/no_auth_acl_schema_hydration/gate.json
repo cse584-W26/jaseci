@@ -1,0 +1,52 @@
+{
+  "name": "no_auth_acl_schema_hydration",
+  "flags": [
+    "auth",
+    "acl",
+    "schema",
+    "hydration"
+  ],
+  "exit": 1,
+  "seconds": 2.9368195550050586,
+  "gate_pass": false,
+  "requests": 2,
+  "warm_repeat0_statements": null,
+  "rows": [
+    {
+      "round": 0,
+      "idx": 0,
+      "parity": true,
+      "independent_count": true,
+      "same_domain_hops": true,
+      "statements": 20,
+      "categories": {
+        "begin": 1,
+        "transaction-setting": 1,
+        "hop:Knows:out": 1,
+        "hop:Knows:in": 1,
+        "hop:HasMember:in": 15,
+        "commit": 1
+      }
+    },
+    {
+      "round": 0,
+      "idx": 1,
+      "parity": false,
+      "independent_count": true,
+      "same_domain_hops": true,
+      "statements": 3355,
+      "categories": {
+        "begin": 1,
+        "transaction-setting": 1,
+        "hop:Knows:out": 1,
+        "hop:Knows:in": 1,
+        "hop:HasMember:in": 10,
+        "hop:ContainerOf:out": 318,
+        "hop:HasCreator:out": 3022,
+        "commit": 1
+      }
+    }
+  ],
+  "observed_prefix_statements": 3375,
+  "cold20_statements": null
+}

@@ -1,0 +1,240 @@
+DROP PROCEDURE IF EXISTS `GetIndex_sp_1_ver0`;
+DELIMITER $$
+CREATE PROCEDURE GetIndex_sp_1_ver0 ()
+BEGIN
+
+DECLARE q1_i1 TINYINT DEFAULT NULL;
+DECLARE q1_i2 BIGINT DEFAULT NULL;
+DECLARE q1_i3 BIGINT DEFAULT NULL;
+DECLARE QUERY_ID_0 INT DEFAULT NULL;
+DECLARE RS_q2_r1_col1 BIGINT DEFAULT NULL;
+DECLARE RS_q2_r1_col2 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r1_col3 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r1_col4 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r1_col5 INT DEFAULT NULL;
+DECLARE RS_q2_r1_col6 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r1_col7 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r1_col8 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r1_col9 BIGINT DEFAULT NULL;
+DECLARE RS_q2_r1_col10 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r1_col11 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r1_col12 DATETIME DEFAULT NULL;
+DECLARE RS_q2_r1_col13 DATETIME DEFAULT NULL;
+DECLARE RS_q2_r2_col1 BIGINT DEFAULT NULL;
+DECLARE RS_q2_r2_col2 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r2_col3 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r2_col4 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r2_col5 INT DEFAULT NULL;
+DECLARE RS_q2_r2_col6 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r2_col7 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r2_col8 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r2_col9 BIGINT DEFAULT NULL;
+DECLARE RS_q2_r2_col10 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r2_col11 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r2_col12 DATETIME DEFAULT NULL;
+DECLARE RS_q2_r2_col13 DATETIME DEFAULT NULL;
+DECLARE RS_q2_r3_col1 BIGINT DEFAULT NULL;
+DECLARE RS_q2_r3_col2 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r3_col3 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r3_col4 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r3_col5 INT DEFAULT NULL;
+DECLARE RS_q2_r3_col6 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r3_col7 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r3_col8 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r3_col9 BIGINT DEFAULT NULL;
+DECLARE RS_q2_r3_col10 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r3_col11 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r3_col12 DATETIME DEFAULT NULL;
+DECLARE RS_q2_r3_col13 DATETIME DEFAULT NULL;
+DECLARE RS_q2_r4_col1 BIGINT DEFAULT NULL;
+DECLARE RS_q2_r4_col2 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r4_col3 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r4_col4 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r4_col5 INT DEFAULT NULL;
+DECLARE RS_q2_r4_col6 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r4_col7 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r4_col8 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r4_col9 BIGINT DEFAULT NULL;
+DECLARE RS_q2_r4_col10 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r4_col11 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r4_col12 DATETIME DEFAULT NULL;
+DECLARE RS_q2_r4_col13 DATETIME DEFAULT NULL;
+DECLARE RS_q2_r5_col1 BIGINT DEFAULT NULL;
+DECLARE RS_q2_r5_col2 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r5_col3 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r5_col4 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r5_col5 INT DEFAULT NULL;
+DECLARE RS_q2_r5_col6 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r5_col7 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r5_col8 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r5_col9 BIGINT DEFAULT NULL;
+DECLARE RS_q2_r5_col10 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r5_col11 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r5_col12 DATETIME DEFAULT NULL;
+DECLARE RS_q2_r5_col13 DATETIME DEFAULT NULL;
+DECLARE RS_q2_r6_col1 BIGINT DEFAULT NULL;
+DECLARE RS_q2_r6_col2 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r6_col3 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r6_col4 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r6_col5 INT DEFAULT NULL;
+DECLARE RS_q2_r6_col6 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r6_col7 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r6_col8 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r6_col9 BIGINT DEFAULT NULL;
+DECLARE RS_q2_r6_col10 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r6_col11 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r6_col12 DATETIME DEFAULT NULL;
+DECLARE RS_q2_r6_col13 DATETIME DEFAULT NULL;
+DECLARE RS_q2_r7_col1 BIGINT DEFAULT NULL;
+DECLARE RS_q2_r7_col2 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r7_col3 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r7_col4 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r7_col5 INT DEFAULT NULL;
+DECLARE RS_q2_r7_col6 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r7_col7 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r7_col8 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r7_col9 BIGINT DEFAULT NULL;
+DECLARE RS_q2_r7_col10 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r7_col11 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r7_col12 DATETIME DEFAULT NULL;
+DECLARE RS_q2_r7_col13 DATETIME DEFAULT NULL;
+DECLARE RS_q2_r8_col1 BIGINT DEFAULT NULL;
+DECLARE RS_q2_r8_col2 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r8_col3 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r8_col4 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r8_col5 INT DEFAULT NULL;
+DECLARE RS_q2_r8_col6 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r8_col7 VARCHAR(512) DEFAULT NULL;
+DECLARE RS_q2_r8_col8 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r8_col9 BIGINT DEFAULT NULL;
+DECLARE RS_q2_r8_col10 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r8_col11 TINYINT DEFAULT NULL;
+DECLARE RS_q2_r8_col12 DATETIME DEFAULT NULL;
+DECLARE RS_q2_r8_col13 DATETIME DEFAULT NULL;
+DECLARE M_I_RS_2_size INT DEFAULT NULL;
+DECLARE cursor_cnt_0 INT DEFAULT NULL;
+DECLARE cursor_0 int DEFAULT NULL;
+DECLARE indicator_0 int DEFAULT NULL;
+DECLARE q2_i1 INT DEFAULT NULL;
+DECLARE q2_i2 INT DEFAULT NULL;
+DECLARE q2_i3 INT DEFAULT NULL;
+DECLARE q2_i4 INT DEFAULT NULL;
+DECLARE q2_i5 INT DEFAULT NULL;
+DECLARE q2_i6 INT DEFAULT NULL;
+DECLARE q2_i7 INT DEFAULT NULL;
+DECLARE q2_i8 INT DEFAULT NULL;
+DECLARE QUERY_ID_1 INT DEFAULT NULL;
+DECLARE M_I_RS_3_size INT DEFAULT NULL;
+DECLARE cursor_cnt_1 INT DEFAULT NULL;
+DECLARE q3_i1 TINYINT DEFAULT NULL;
+DECLARE QUERY_ID_2 INT DEFAULT NULL;
+DECLARE M_I_RS_4_size INT DEFAULT NULL;
+DECLARE cursor_cnt_2 INT DEFAULT NULL;
+DECLARE q4_i1 BIGINT DEFAULT NULL;
+DECLARE QUERY_ID_3 INT DEFAULT NULL;
+DECLARE M_I_RS_5_size INT DEFAULT NULL;
+DECLARE cursor_cnt_3 INT DEFAULT NULL;
+DECLARE q5_i1 BIGINT DEFAULT NULL;
+DECLARE QUERY_ID_4 INT DEFAULT NULL;
+DECLARE M_I_RS_6_size INT DEFAULT NULL;
+DECLARE cursor_cnt_4 INT DEFAULT NULL;
+DECLARE QUERY_ID_5 INT DEFAULT NULL;
+DECLARE M_I_RS_7_size INT DEFAULT NULL;
+DECLARE cursor_cnt_5 INT DEFAULT NULL;
+DECLARE QUERY_ID_6 INT DEFAULT NULL;
+DECLARE M_I_RS_8_size INT DEFAULT NULL;
+DECLARE cursor_cnt_6 INT DEFAULT NULL;
+
+IF TRUE THEN
+SET q1_i1 = 1;
+SET q1_i2 = 0;
+SET q1_i3 = 8;
+SET QUERY_ID_0 = 0;
+SET indicator_0 = 0;
+SET cursor_cnt_0 = 0;
+BEGIN
+DECLARE cursor_0 CURSOR FOR SELECT blog_id, blog_title, blog_sub_url, blog_cover_image, blog_category_id , blog_category_name, blog_tags, blog_status, blog_views, enable_comment , is_deleted, create_time, update_time FROM tb_blog WHERE is_deleted = 0 AND blog_status = q1_i1 ORDER BY blog_id DESC LIMIT q1_i2, q1_i3;
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET indicator_0 = 1;
+OPEN cursor_0;
+loop_0: LOOP
+IF cursor_cnt_0=0 THEN
+FETCH cursor_0 INTO RS_q2_r1_col1, RS_q2_r1_col2, RS_q2_r1_col3, RS_q2_r1_col4, RS_q2_r1_col5, RS_q2_r1_col6, RS_q2_r1_col7, RS_q2_r1_col8, RS_q2_r1_col9, RS_q2_r1_col10, RS_q2_r1_col11, RS_q2_r1_col12, RS_q2_r1_col13;
+END IF;
+IF cursor_cnt_0=1 THEN
+FETCH cursor_0 INTO RS_q2_r2_col1, RS_q2_r2_col2, RS_q2_r2_col3, RS_q2_r2_col4, RS_q2_r2_col5, RS_q2_r2_col6, RS_q2_r2_col7, RS_q2_r2_col8, RS_q2_r2_col9, RS_q2_r2_col10, RS_q2_r2_col11, RS_q2_r2_col12, RS_q2_r2_col13;
+END IF;
+IF cursor_cnt_0=2 THEN
+FETCH cursor_0 INTO RS_q2_r3_col1, RS_q2_r3_col2, RS_q2_r3_col3, RS_q2_r3_col4, RS_q2_r3_col5, RS_q2_r3_col6, RS_q2_r3_col7, RS_q2_r3_col8, RS_q2_r3_col9, RS_q2_r3_col10, RS_q2_r3_col11, RS_q2_r3_col12, RS_q2_r3_col13;
+END IF;
+IF cursor_cnt_0=3 THEN
+FETCH cursor_0 INTO RS_q2_r4_col1, RS_q2_r4_col2, RS_q2_r4_col3, RS_q2_r4_col4, RS_q2_r4_col5, RS_q2_r4_col6, RS_q2_r4_col7, RS_q2_r4_col8, RS_q2_r4_col9, RS_q2_r4_col10, RS_q2_r4_col11, RS_q2_r4_col12, RS_q2_r4_col13;
+END IF;
+IF cursor_cnt_0=4 THEN
+FETCH cursor_0 INTO RS_q2_r5_col1, RS_q2_r5_col2, RS_q2_r5_col3, RS_q2_r5_col4, RS_q2_r5_col5, RS_q2_r5_col6, RS_q2_r5_col7, RS_q2_r5_col8, RS_q2_r5_col9, RS_q2_r5_col10, RS_q2_r5_col11, RS_q2_r5_col12, RS_q2_r5_col13;
+END IF;
+IF cursor_cnt_0=5 THEN
+FETCH cursor_0 INTO RS_q2_r6_col1, RS_q2_r6_col2, RS_q2_r6_col3, RS_q2_r6_col4, RS_q2_r6_col5, RS_q2_r6_col6, RS_q2_r6_col7, RS_q2_r6_col8, RS_q2_r6_col9, RS_q2_r6_col10, RS_q2_r6_col11, RS_q2_r6_col12, RS_q2_r6_col13;
+END IF;
+IF cursor_cnt_0=6 THEN
+FETCH cursor_0 INTO RS_q2_r7_col1, RS_q2_r7_col2, RS_q2_r7_col3, RS_q2_r7_col4, RS_q2_r7_col5, RS_q2_r7_col6, RS_q2_r7_col7, RS_q2_r7_col8, RS_q2_r7_col9, RS_q2_r7_col10, RS_q2_r7_col11, RS_q2_r7_col12, RS_q2_r7_col13;
+END IF;
+IF cursor_cnt_0=7 THEN
+FETCH cursor_0 INTO RS_q2_r8_col1, RS_q2_r8_col2, RS_q2_r8_col3, RS_q2_r8_col4, RS_q2_r8_col5, RS_q2_r8_col6, RS_q2_r8_col7, RS_q2_r8_col8, RS_q2_r8_col9, RS_q2_r8_col10, RS_q2_r8_col11, RS_q2_r8_col12, RS_q2_r8_col13;
+END IF;
+IF cursor_cnt_0>=8 THEN
+CLOSE cursor_0; LEAVE loop_0;END IF;
+IF indicator_0=1 THEN CLOSE cursor_0; LEAVE loop_0; END IF;
+SET cursor_cnt_0 = cursor_cnt_0 + 1;
+END LOOP loop_0;
+END;
+SET cursor_cnt_0 = FOUND_ROWS();
+SELECT cursor_cnt_0,RS_q2_r1_col1,RS_q2_r1_col2,RS_q2_r1_col3,RS_q2_r1_col4,RS_q2_r1_col5,RS_q2_r1_col6,RS_q2_r1_col7,RS_q2_r1_col8,RS_q2_r1_col9,RS_q2_r1_col10,RS_q2_r1_col11,RS_q2_r1_col12,RS_q2_r1_col13,RS_q2_r2_col1,RS_q2_r2_col2,RS_q2_r2_col3,RS_q2_r2_col4,RS_q2_r2_col5,RS_q2_r2_col6,RS_q2_r2_col7,RS_q2_r2_col8,RS_q2_r2_col9,RS_q2_r2_col10,RS_q2_r2_col11,RS_q2_r2_col12,RS_q2_r2_col13,RS_q2_r3_col1,RS_q2_r3_col2,RS_q2_r3_col3,RS_q2_r3_col4,RS_q2_r3_col5,RS_q2_r3_col6,RS_q2_r3_col7,RS_q2_r3_col8,RS_q2_r3_col9,RS_q2_r3_col10,RS_q2_r3_col11,RS_q2_r3_col12,RS_q2_r3_col13,RS_q2_r4_col1,RS_q2_r4_col2,RS_q2_r4_col3,RS_q2_r4_col4,RS_q2_r4_col5,RS_q2_r4_col6,RS_q2_r4_col7,RS_q2_r4_col8,RS_q2_r4_col9,RS_q2_r4_col10,RS_q2_r4_col11,RS_q2_r4_col12,RS_q2_r4_col13,RS_q2_r5_col1,RS_q2_r5_col2,RS_q2_r5_col3,RS_q2_r5_col4,RS_q2_r5_col5,RS_q2_r5_col6,RS_q2_r5_col7,RS_q2_r5_col8,RS_q2_r5_col9,RS_q2_r5_col10,RS_q2_r5_col11,RS_q2_r5_col12,RS_q2_r5_col13,RS_q2_r6_col1,RS_q2_r6_col2,RS_q2_r6_col3,RS_q2_r6_col4,RS_q2_r6_col5,RS_q2_r6_col6,RS_q2_r6_col7,RS_q2_r6_col8,RS_q2_r6_col9,RS_q2_r6_col10,RS_q2_r6_col11,RS_q2_r6_col12,RS_q2_r6_col13,RS_q2_r7_col1,RS_q2_r7_col2,RS_q2_r7_col3,RS_q2_r7_col4,RS_q2_r7_col5,RS_q2_r7_col6,RS_q2_r7_col7,RS_q2_r7_col8,RS_q2_r7_col9,RS_q2_r7_col10,RS_q2_r7_col11,RS_q2_r7_col12,RS_q2_r7_col13,RS_q2_r8_col1,RS_q2_r8_col2,RS_q2_r8_col3,RS_q2_r8_col4,RS_q2_r8_col5,RS_q2_r8_col6,RS_q2_r8_col7,RS_q2_r8_col8,RS_q2_r8_col9,RS_q2_r8_col10,RS_q2_r8_col11,RS_q2_r8_col12,RS_q2_r8_col13;
+SET M_I_RS_2_size = cursor_cnt_0;
+END IF;
+IF TRUE THEN
+IF cursor_cnt_0 > 7 THEN
+SET q2_i1 = RS_q2_r1_col5;
+SET q2_i2 = RS_q2_r2_col5;
+SET q2_i3 = RS_q2_r3_col5;
+SET q2_i4 = RS_q2_r4_col5;
+SET q2_i5 = RS_q2_r5_col5;
+SET q2_i6 = RS_q2_r6_col5;
+SET q2_i7 = RS_q2_r7_col5;
+SET q2_i8 = RS_q2_r8_col5;
+SET QUERY_ID_1 = 1;
+SELECT category_id, category_name, category_icon, category_rank, is_deleted , create_time FROM tb_blog_category WHERE category_id IN (q2_i1, q2_i2, q2_i3, q2_i4, q2_i5, q2_i6, q2_i7, q2_i8) AND is_deleted = 0;
+SET M_I_RS_3_size = FOUND_ROWS();
+END IF;
+END IF;
+IF TRUE THEN
+SET q3_i1 = 1;
+SET QUERY_ID_2 = 2;
+SELECT count(*) FROM tb_blog WHERE is_deleted = 0 AND blog_status = q3_i1;
+SET M_I_RS_4_size = FOUND_ROWS();
+END IF;
+IF TRUE THEN
+SET q4_i1 = 9;
+SET QUERY_ID_3 = 3;
+SELECT blog_id, blog_title, blog_sub_url, blog_cover_image, blog_category_id , blog_category_name, blog_tags, blog_status, blog_views, enable_comment , is_deleted, create_time, update_time FROM tb_blog WHERE is_deleted = 0 AND blog_status = 1 ORDER BY blog_id DESC LIMIT q4_i1;
+SET M_I_RS_5_size = FOUND_ROWS();
+END IF;
+IF TRUE THEN
+SET q5_i1 = 9;
+SET QUERY_ID_4 = 4;
+SELECT blog_id, blog_title, blog_sub_url, blog_cover_image, blog_category_id , blog_category_name, blog_tags, blog_status, blog_views, enable_comment , is_deleted, create_time, update_time FROM tb_blog WHERE is_deleted = 0 AND blog_status = 1 ORDER BY blog_views DESC LIMIT q5_i1;
+SET M_I_RS_6_size = FOUND_ROWS();
+END IF;
+IF TRUE THEN
+SET QUERY_ID_5 = 5;
+SELECT t_r.*, t.tag_name FROM ( SELECT r.tag_id, r.tag_count FROM ( SELECT tag_id, COUNT(*) AS tag_count FROM ( SELECT tr.tag_id FROM tb_blog_tag_relation tr LEFT JOIN tb_blog b ON tr.blog_id = b.blog_id WHERE b.is_deleted = 0 ) trb GROUP BY tag_id ) r ORDER BY tag_count DESC LIMIT 20 ) t_r LEFT JOIN tb_blog_tag t ON t_r.tag_id = t.tag_id WHERE t.is_deleted = 0;
+SET M_I_RS_7_size = FOUND_ROWS();
+END IF;
+IF TRUE THEN
+SET QUERY_ID_6 = 6;
+SELECT config_name, config_value, create_time, update_time FROM tb_config;
+SET M_I_RS_8_size = FOUND_ROWS();
+END IF;
+SELECT QUERY_ID_0,q1_i1,q1_i2,q1_i3,QUERY_ID_1,q2_i1,q2_i2,q2_i3,q2_i4,q2_i5,q2_i6,q2_i7,q2_i8,QUERY_ID_2,q3_i1,QUERY_ID_3,q4_i1,QUERY_ID_4,q5_i1,QUERY_ID_5,QUERY_ID_6;
+
+END $$
+DELIMITER ;

@@ -1,0 +1,61 @@
+{
+  "cpu_stat_fields": "After /proc/PID/stat comm: state field3 at index0; utime field14 index11, stime field15 index12. Collector indexes correct.",
+  "checks": [
+    {
+      "arm": "normal",
+      "role": "online",
+      "cpu_seconds": 55.96,
+      "average_cores": 0.09403096588629646,
+      "rss_MiB": 685.64453125,
+      "passed": true
+    },
+    {
+      "arm": "normal",
+      "role": "mysql",
+      "cpu_seconds": 100.17,
+      "average_cores": 0.16831811745586697,
+      "rss_MiB": 260.78125,
+      "passed": true
+    },
+    {
+      "arm": "optimized",
+      "role": "online",
+      "cpu_seconds": 97.04,
+      "average_cores": 0.16307136348474827,
+      "rss_MiB": 695.4609375,
+      "passed": true
+    },
+    {
+      "arm": "optimized",
+      "role": "mysql",
+      "cpu_seconds": 216.14,
+      "average_cores": 0.36321356660751736,
+      "rss_MiB": 284.21875,
+      "passed": true
+    }
+  ],
+  "windows": {
+    "normal": {
+      "samples": 120,
+      "prefix_not_sampled_seconds": 3.0929999351501465,
+      "suffix_not_sampled_seconds": 1.9149999618530273,
+      "timestamp_precision_note": "UTC labels have one-second resolution; monotonic sampled elapsed interval retains fractions."
+    },
+    "optimized": {
+      "samples": 120,
+      "prefix_not_sampled_seconds": 2.5280001163482666,
+      "suffix_not_sampled_seconds": 2.4779999256134033,
+      "timestamp_precision_note": "UTC labels have one-second resolution; monotonic sampled elapsed interval retains fractions."
+    }
+  },
+  "p50_speedups": {
+    "GETINDEX": 2.2858561394414836,
+    "GETBLOG": 3.009555724477208,
+    "EDITBLOG": 3.0718907199365226
+  },
+  "documentation_findings": [
+    "RESULTS stage2 says measures removals, while removal-ledger execution_status says prepared offline and validation awaits live window; label stage2 prepared, not already measured.",
+    "RESULTS shorthand resource-profile.json/roundtrip-model.json/independent-validation.json belong to paper/pair-20261020T181922, not reproduction/webridge root.",
+    "Resource sample wall UTC labels are whole seconds; monotonic intervals exact. Formal window lacks first/last few seconds of resource samples; profile correctly does not extrapolate."
+  ]
+}

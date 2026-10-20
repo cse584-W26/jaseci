@@ -1,0 +1,1 @@
+public class UniformFullWeBridge { public static void main(String[] args) { RegionCompatibleAlignedIc5.url=RegionCompatibleAlignedIc5.url.replace("/jac_alignment?","/jac_alignment_utf8?");RegionWeBridge.main(args); } }

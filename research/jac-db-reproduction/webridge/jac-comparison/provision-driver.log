@@ -1,0 +1,89 @@
+{
+  "skip_mirrors": false,
+  "from_step": 0,
+  "source": "/home/baichuan/jaseci/jac-db/jac",
+  "source_commit": "85b1efc073dd2071a7b554bbab1e1ddabe8f5e5f",
+  "python": "3.14.6 (main, Jun 11 2026, 04:03:53) [Clang 22.1.3 ]",
+  "database": "jac_webridge_matched_20261020",
+  "socket": "/tmp/jacpg-d6275e76eb",
+  "plan": [
+    {
+      "method": "ensure_mirror",
+      "class": "Person"
+    },
+    {
+      "method": "ensure_mirror",
+      "class": "Forum"
+    },
+    {
+      "method": "ensure_mirror",
+      "class": "Post"
+    },
+    {
+      "method": "ensure_mirror",
+      "class": "Comment"
+    },
+    {
+      "method": "ensure_mirror_endpoint",
+      "class": "Post",
+      "edge": "HasCreator",
+      "order_field": "creationDate",
+      "outbound": true
+    },
+    {
+      "method": "ensure_mirror_endpoint",
+      "class": "Comment",
+      "edge": "HasCreator",
+      "order_field": "creationDate",
+      "outbound": true
+    },
+    {
+      "method": "ensure_root_column",
+      "class": "Comment",
+      "edge": "ReplyOf",
+      "root": "Post"
+    },
+    {
+      "method": "ensure_mirror_order_index",
+      "class": "Person",
+      "field": "firstName",
+      "equality": true
+    },
+    {
+      "method": "ensure_adjacency_table",
+      "edge": "Knows",
+      "node": "Person"
+    },
+    {
+      "method": "ensure_adjacency_index",
+      "edge": "Knows",
+      "node": "Person"
+    },
+    {
+      "method": "ensure_adjacency_index",
+      "edge": "HasCreator",
+      "node": "Person"
+    },
+    {
+      "method": "ensure_adjacency_index",
+      "edge": "ContainerOf",
+      "node": "Post"
+    }
+  ],
+  "results": []
+}
+{"step": {"method": "ensure_mirror", "class": "Person"}, "attempt": 1, "result": true, "elapsed_ms": 200.07833209820092, "mirror_info": {"table": "g_n_person_d2a57d", "cols": {"person_id": "f_person_id", "firstName": "f_firstname", "lastName": "f_lastname", "gender": "f_gender", "birthday": "f_birthday", "creationDate": "f_creationdate", "locationIP": "f_locationip", "browserUsed": "f_browserused"}}}
+{"step": {"method": "ensure_mirror", "class": "Forum"}, "attempt": 1, "result": true, "elapsed_ms": 331.2212370801717, "mirror_info": {"table": "g_n_forum_d2a57d", "cols": {"forum_id": "f_forum_id", "title": "f_title", "creationDate": "f_creationdate"}}}
+{"step": {"method": "ensure_mirror", "class": "Post"}, "attempt": 1, "result": true, "elapsed_ms": 4248.8631380256265, "mirror_info": {"table": "g_n_post_d2a57d", "cols": {"post_id": "f_post_id", "imageFile": "f_imagefile", "creationDate": "f_creationdate", "locationIP": "f_locationip", "browserUsed": "f_browserused", "language": "f_language", "content": "f_content", "length": "f_length"}}}
+{"step": {"method": "ensure_mirror", "class": "Comment"}, "attempt": 1, "result": true, "elapsed_ms": 11.689649196341634, "mirror_info": {"table": "g_n_comment_d2a57d", "cols": {"comment_id": "f_comment_id", "creationDate": "f_creationdate", "locationIP": "f_locationip", "browserUsed": "f_browserused", "content": "f_content", "length": "f_length"}}}
+{"step": {"method": "ensure_mirror_endpoint", "class": "Post", "edge": "HasCreator", "order_field": "creationDate", "outbound": true}, "attempt": 1, "result": null, "elapsed_ms": 5.659226095303893, "mirror_info": {"table": "g_n_post_d2a57d", "cols": {"post_id": "f_post_id", "imageFile": "f_imagefile", "creationDate": "f_creationdate", "locationIP": "f_locationip", "browserUsed": "f_browserused", "language": "f_language", "content": "f_content", "length": "f_length"}}}
+{"retry_step": 4, "after_seconds": 2.1, "next_attempt": 2}
+{"step": {"method": "ensure_mirror_endpoint", "class": "Post", "edge": "HasCreator", "order_field": "creationDate", "outbound": true}, "attempt": 2, "result": "dst_endpoint_hascreator", "elapsed_ms": 3183.7596958503127, "mirror_info": {"table": "g_n_post_d2a57d", "cols": {"post_id": "f_post_id", "imageFile": "f_imagefile", "creationDate": "f_creationdate", "locationIP": "f_locationip", "browserUsed": "f_browserused", "language": "f_language", "content": "f_content", "length": "f_length"}}}
+{"step": {"method": "ensure_mirror_endpoint", "class": "Comment", "edge": "HasCreator", "order_field": "creationDate", "outbound": true}, "attempt": 1, "result": "dst_endpoint_hascreator", "elapsed_ms": 110.44040392152965, "mirror_info": {"table": "g_n_comment_d2a57d", "cols": {"comment_id": "f_comment_id", "creationDate": "f_creationdate", "locationIP": "f_locationip", "browserUsed": "f_browserused", "content": "f_content", "length": "f_length"}}}
+{"step": {"method": "ensure_root_column", "class": "Comment", "edge": "ReplyOf", "root": "Post"}, "attempt": 1, "result": "root_of_replyof", "elapsed_ms": 6.7881320137530565, "mirror_info": {"table": "g_n_comment_d2a57d", "cols": {"comment_id": "f_comment_id", "creationDate": "f_creationdate", "locationIP": "f_locationip", "browserUsed": "f_browserused", "content": "f_content", "length": "f_length"}}}
+{"step": {"method": "ensure_mirror_order_index", "class": "Person", "field": "firstName", "equality": true}, "attempt": 1, "result": true, "elapsed_ms": 44.532142113894224, "mirror_info": {"table": "g_n_person_d2a57d", "cols": {"person_id": "f_person_id", "firstName": "f_firstname", "lastName": "f_lastname", "gender": "f_gender", "birthday": "f_birthday", "creationDate": "f_creationdate", "locationIP": "f_locationip", "browserUsed": "f_browserused"}}}
+{"step": {"method": "ensure_adjacency_table", "edge": "Knows", "node": "Person"}, "attempt": 1, "result": "adj_knows", "elapsed_ms": 18.572617089375854}
+{"step": {"method": "ensure_adjacency_index", "edge": "Knows", "node": "Person"}, "attempt": 1, "result": true, "elapsed_ms": 2.067880006507039}
+{"step": {"method": "ensure_adjacency_index", "edge": "HasCreator", "node": "Person"}, "attempt": 1, "result": true, "elapsed_ms": 1.8438249826431274}
+{"step": {"method": "ensure_adjacency_index", "edge": "ContainerOf", "node": "Post"}, "attempt": 1, "result": true, "elapsed_ms": 1.8920451402664185}
+Record: /home/baichuan/jaseci/reproduction/webridge/jac-comparison/provision/provision-runtime-final-20261020T163101-2454932.json

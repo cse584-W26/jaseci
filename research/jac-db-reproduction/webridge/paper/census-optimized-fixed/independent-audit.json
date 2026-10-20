@@ -1,0 +1,158 @@
+{
+  "requests": 9,
+  "errors": [],
+  "by_api": {
+    "GI": {
+      "samples": 3,
+      "wall_median_ms": 10.8887511305511,
+      "top_level_commands": [
+        1,
+        2,
+        2
+      ],
+      "connection_test_select1": [
+        0,
+        1,
+        1
+      ],
+      "business_commands_excluding_select1": [
+        1,
+        1,
+        1
+      ],
+      "internal_sp_stmt_events": [
+        8,
+        8,
+        8
+      ],
+      "cursor_open_events": [
+        1,
+        1,
+        1
+      ],
+      "internal_sql_text_prefixes": [
+        {
+          "SELECT": 8
+        },
+        {
+          "SELECT": 8
+        },
+        {
+          "SELECT": 8
+        }
+      ]
+    },
+    "BD": {
+      "samples": 3,
+      "wall_median_ms": 10.041790083050728,
+      "top_level_commands": [
+        2,
+        2,
+        2
+      ],
+      "connection_test_select1": [
+        1,
+        1,
+        1
+      ],
+      "business_commands_excluding_select1": [
+        1,
+        1,
+        1
+      ],
+      "internal_sp_stmt_events": [
+        8,
+        8,
+        8
+      ],
+      "cursor_open_events": [
+        1,
+        1,
+        1
+      ],
+      "internal_sql_text_prefixes": [
+        {
+          "SELECT": 7,
+          "UPDATE": 1
+        },
+        {
+          "SELECT": 7,
+          "UPDATE": 1
+        },
+        {
+          "SELECT": 7,
+          "UPDATE": 1
+        }
+      ]
+    },
+    "EB": {
+      "samples": 3,
+      "wall_median_ms": 12.061403831467032,
+      "top_level_commands": [
+        3,
+        3,
+        3
+      ],
+      "connection_test_select1": [
+        1,
+        1,
+        1
+      ],
+      "business_commands_excluding_select1": [
+        2,
+        2,
+        2
+      ],
+      "internal_sp_stmt_events": [
+        20,
+        20,
+        20
+      ],
+      "cursor_open_events": [
+        3,
+        3,
+        3
+      ],
+      "internal_sql_text_prefixes": [
+        {
+          "SET": 2,
+          "SELECT": 9,
+          "SAVEPOINT": 4,
+          "UPDATE": 2,
+          "DELETE": 1,
+          "INSERT": 1,
+          "COMMIT": 1
+        },
+        {
+          "SET": 2,
+          "SELECT": 9,
+          "SAVEPOINT": 4,
+          "UPDATE": 2,
+          "DELETE": 1,
+          "INSERT": 1,
+          "COMMIT": 1
+        },
+        {
+          "SET": 2,
+          "SELECT": 9,
+          "SAVEPOINT": 4,
+          "UPDATE": 2,
+          "DELETE": 1,
+          "INSERT": 1,
+          "COMMIT": 1
+        }
+      ]
+    }
+  },
+  "restoration": {
+    "log_output": "FILE",
+    "general_log": 0,
+    "mysql_version": "5.7.25",
+    "performance_schema": 1,
+    "statement_instruments_match_original": true,
+    "consumers_match_original": true,
+    "global_settings_match_original": true
+  },
+  "passed": true,
+  "scope": "sp/stmt is executed body-statement events; copen executes cursor queries not duplicated in sp/stmt. Synthetic SELECT result serialization, SQL transaction commands and relational statements are retained separately, not all labeled application table queries. SQL_TEXT may be truncated by P_S maximum length."
+}

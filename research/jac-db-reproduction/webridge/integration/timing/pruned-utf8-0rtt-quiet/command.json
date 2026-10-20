@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/java",
+    "-Xmx8g",
+    "-Dorg.slf4j.simpleLogger.defaultLogLevel=error",
+    "-Dpruned.auth=true",
+    "-Dpruned.acl=true",
+    "-Dpruned.schema=true",
+    "-Dpruned.hydration=true",
+    "-Dintegration.dir=/home/baichuan/jaseci/reproduction/webridge/integration/cases/small-pruned-webridge-20261020",
+    "-Dexecution.dir=/home/baichuan/jaseci/reproduction/webridge/integration/timing/pruned-utf8-0rtt-quiet",
+    "-Dintegration.api=AlignedIc5_cold_b34d1de5389c",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/alignment/small-diagnostic/classes:/home/baichuan/jaseci/reproduction/webridge/integration/jdbc-string/combined:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+    "WarmTiming",
+    "/home/baichuan/jaseci/reproduction/webridge/alignment/small-diagnostic/runtime-data",
+    "/home/baichuan/jaseci/reproduction/webridge/integration/cases/small-pruned-webridge-20261020",
+    "/home/baichuan/jaseci/reproduction/webridge/integration/timing/pruned-utf8-0rtt-quiet/requests",
+    "pruned",
+    "jac_alignment_utf8",
+    "10",
+    "30"
+  ],
+  "cpu_affinity": "9,19",
+  "utc": "20261020T193722323746Z",
+  "timeout_s": 180
+}

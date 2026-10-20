@@ -1,0 +1,129 @@
+{
+  "working_directory": "/home/baichuan/jaseci/reproduction/webridge unless command explicitly begins reproduction/",
+  "application_affinity": "9,19 (retained actual-command.json)",
+  "database_container": "jac-webridge-mysql57",
+  "databases": [
+    "jac_alignment",
+    "jac_alignment_utf8"
+  ],
+  "overlays": {
+    "jdbc": "jdbc-string/src/webridge/wbridge/sql/result/MultipleRowResultSetImpl.java",
+    "frontend": "sql-frontend/provenance.json",
+    "numeric_width": "numeric-width/provenance.json",
+    "combined_classes": "jdbc-string/combined/"
+  },
+  "sources_sha256": {
+    "integration/small_control.py": "fc314485b25f46bac462d27bb096420509f5268335a186689981b71d97fb054f",
+    "integration/utf8_control.py": "7927d6269269dcf7c3a0b08e108a33aa2112ff108741f97d433c2244d2c01c78",
+    "integration/warm_timing.py": "8f667856c8b08ee432f4a61a0030ef674a6fd219271c5c1cb2eaff2126830d3b",
+    "integration/small_census.py": "d14dde289c4422c93c3ea193022074782c0beecbea9d23df3e2732293557e7d7",
+    "integration/analyze_small_census.py": "91a7ee00baa787807e2f371e3dae8d7c2bd70562b76b67644f30897a2e3b73cc",
+    "integration/delay_timing.py": "59f5e3eb019efbdd036ba19ae4cf20080dfa9ac5cae816cddcca5bd2ea7d82ba",
+    "integration/final_small_cleanup.py": "f11e9b6e8f7245a77de1389aab91c5909ced84c906fec3c1e38176db9556117f",
+    "alignment/small-diagnostic/select_input.py": "7db644a73eb51ffc51cc5cfac3ca54f89fc4b0a4db72512aba7e31d184637eab",
+    "alignment/small-diagnostic/capture_jac.py": "e28a6bee53f20b0bfd97f46dae3bf52c5769e3f027424e8dbd6399180a55d8b1",
+    "alignment/small-diagnostic/verify.py": "56289dbadab3dba64de79236c8adf42bd67696908481217061d6a182e22a8548",
+    "alignment/small-diagnostic/plan_probe.py": "bde1a2f10de4bee951f4216b6865b6ba1e25a1f98a8e3530de79a2f27c722eea",
+    "alignment/small-diagnostic/utf8-clone.sql": "15444d1f4f5e42b8cc71ecbf96ebbcbbaaf64a1d504fe608ca066e610ba06f75",
+    "alignment/small-diagnostic/WarmTiming.java": "677cdd677cbf07c35ff20b66a201282418caad0c298b6da4e7f1547e1d0d194f",
+    "alignment/small-diagnostic/UniformFullWeBridge.java": "eb8131e4b99ac409233993e213f7626caf941423ad6c328270434a90db62e8b6",
+    "alignment/small-diagnostic/UniformPrunedWeBridge.java": "0209e57bf8686e2f036710b679b9182d7a2684698f001a8533d13548e25f6430",
+    "integration/java/RegionCompatibleAlignedIc5.java": "915d5f4c6642a31fbc2bf74f114a583556cb1f4e908a3c13b27dd5e179f52310",
+    "integration/java/RegionCompatiblePrunedIc5.java": "8d49b33aed322f1f3643a2be353b10c908eca13c8b37a89dc5640b2d18f44be0",
+    "alignment/AlignedIc5.java": "acc9b168a3fb579829f2c52c8a07b7be3361a9be9d983bfd9bec0412003246a2",
+    "alignment/PrunedIc5.java": "32d67d833ed0624809316029af67586cd50f1b0f55bdc7446bb560fac0c2a3e7"
+  },
+  "commands": [
+    {
+      "stage": "select",
+      "command": "taskset -c 9,19 python reproduction/webridge/alignment/small-diagnostic/select_input.py",
+      "evidence": "../alignment/small-diagnostic/selection.json"
+    },
+    {
+      "stage": "Jac baseline",
+      "command": "taskset -c 9,19 reproduction/runtime/venv314/bin/python reproduction/webridge/alignment/small-diagnostic/capture_jac.py --out <fresh-output>",
+      "evidence": "../alignment/small-diagnostic/jac-capture/"
+    },
+    {
+      "stage": "full Java count parity",
+      "command": "python integration/small_control.py baseline --program region --idx 0 --repeats 3 --case <fresh-full-case> --allow-live",
+      "evidence": "cases/small-full-region-20261020/"
+    },
+    {
+      "stage": "Pruned Java count parity",
+      "command": "python integration/small_control.py baseline --program pruned-region --idx 0 --repeats 3 --case <fresh-pruned-case> --frontend-overlay integration/jdbc-string/combined --allow-live",
+      "evidence": "cases/small-pruned-region-20261020/"
+    },
+    {
+      "stage": "record and original replay, each variant",
+      "command": "python integration/small_control.py {record,replay} --program {region,pruned-region} --idx 0 --case <fresh-case> --frontend-overlay integration/jdbc-string/combined --heap 8g --rss-limit-gib 12 --output-limit-gib 8 --timeout 300 --allow-live [replay: --graph-window-confirmed]",
+      "evidence": [
+        "cases/small-full-webridge-20261020/",
+        "cases/small-pruned-webridge-20261020/"
+      ]
+    },
+    {
+      "stage": "synthesis",
+      "command": "python integration/small_control.py synth --program <same-program> --case <same-fresh-case> --graph <successful-replay/graph.json> --frontend-overlay integration/jdbc-string/combined --heap 8g --rss-limit-gib 12 --output-limit-gib 8 --timeout 300"
+    },
+    {
+      "stage": "install original procedure",
+      "command": "python integration/install_generated.py --case <case>",
+      "evidence": "cases/small-*-webridge-20261020/install-*/command.json"
+    },
+    {
+      "stage": "original ASCII schema actual invocation",
+      "command": "python integration/small_control.py optimized --program <same-program> --case <case> --idx 0 --repeats <1-full,3-pruned> --frontend-overlay integration/jdbc-string/combined --allow-live --timeout 120",
+      "evidence": [
+        "cases/small-full-webridge-20261020/optimized-20261020T193603340011Z/",
+        "cases/small-pruned-webridge-20261020/optimized-20261020T193059334024Z/"
+      ]
+    },
+    {
+      "stage": "same-SQL charset control",
+      "command": "taskset -c 9,19 python reproduction/webridge/alignment/small-diagnostic/plan_probe.py",
+      "evidence": "../alignment/small-diagnostic/plan-{literal,utf8,ascii}/"
+    },
+    {
+      "stage": "uniform storage clone",
+      "command": "docker exec -i jac-webridge-mysql57 mysql -uroot -N -B < reproduction/webridge/alignment/small-diagnostic/utf8-clone.sql",
+      "evidence": "../alignment/small-diagnostic/utf8-clone.{sql,stdout,stderr}"
+    },
+    {
+      "stage": "uniform install",
+      "command": "python integration/install_utf8.py --case <same-case>",
+      "note": "Same generated SQL file bytes; database URL/installation target differs."
+    },
+    {
+      "stage": "quiet warm timing",
+      "command": "python integration/warm_timing.py --variant {full,pruned} --db jac_alignment_utf8 --out <fresh-dir> --warm 10 --measure 30 --order {baseline,sp|sp,baseline}",
+      "evidence": "timing/{full,pruned}-utf8-0rtt-{quiet,reverse}/"
+    },
+    {
+      "stage": "independent instrumented census",
+      "command": "python integration/small_census.py --variant {full,pruned} --out <fresh-dir>; python integration/analyze_small_census.py",
+      "evidence": "census/small-{full,pruned}-utf8/"
+    },
+    {
+      "stage": "added RTT timing and finally restoration",
+      "command": "python integration/delay_timing.py",
+      "evidence": "timing/delay2100us/"
+    },
+    {
+      "stage": "stop owned baseline",
+      "command": "reproduction/runtime/venv314/bin/python reproduction/scripts/manage.py stop jac"
+    },
+    {
+      "stage": "verify final cleanup",
+      "command": "python integration/final_small_cleanup.py",
+      "evidence": "small-final-cleanup/receipt.json"
+    }
+  ],
+  "fresh_case_rule": "Choose fresh case/API on a new synthesis; retain prior attempts. Cases contain actual command/resource/cleanup receipts.",
+  "original20_alignment": "../alignment/verification.json",
+  "all_five_ablations": "../alignment/ablations/20261020T190438Z/exact-removal-verification.json",
+  "known_retained_failed_attempts": [
+    "cases/pruned-region-corrected-idx1-20261020/ (pre-byte-decoder native signal)",
+    "cases/pruned-jdbc-string-idx1-20261020/ (valid large native graph; whole Java array/string boundary)"
+  ]
+}

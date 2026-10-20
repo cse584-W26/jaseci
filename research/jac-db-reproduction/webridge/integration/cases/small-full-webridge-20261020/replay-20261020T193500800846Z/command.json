@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/bin/java",
+    "-Xmx8g",
+    "-Xss20m",
+    "-Dintegration.dir=/home/baichuan/jaseci/reproduction/webridge/integration/cases/small-full-webridge-20261020",
+    "-Dexecution.dir=/home/baichuan/jaseci/reproduction/webridge/integration/cases/small-full-webridge-20261020/replay-20261020T193500800846Z",
+    "-Dalignment.dir=/home/baichuan/jaseci/reproduction/webridge/alignment/small-diagnostic/runtime-data",
+    "-Daligned.source=/home/baichuan/jaseci/reproduction/webridge/integration/java/RegionCompatibleAlignedIc5.java",
+    "-Dintegration.scope=cold",
+    "-Dintegration.api=AlignedIc5_cold_dad50b3272aa",
+    "-Dalignment.finalRepeatFirst=true",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/integration/jdbc-string/combined:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+    "RegionWeBridge",
+    "replay",
+    "0",
+    "1"
+  ],
+  "cpu_affinity": "9,19",
+  "utc": "20261020T193500801091Z",
+  "timeout_s": 300
+}

@@ -1,0 +1,30 @@
+--- webridge/SourceCode/webridge-common/basic-components/src/main/java/webridge/wbridge/sql/result/MultipleRowResultSetImpl.java	2026-10-20 13:54:46.936313407 -0400
++++ reproduction/webridge/integration/jdbc-string/src/webridge/wbridge/sql/result/MultipleRowResultSetImpl.java	2026-10-20 15:23:21.064734847 -0400
+@@ -89,9 +89,17 @@
+     return lastReadObj == null;
+   }
+ 
++  private static String jdbcString(Object value) throws SQLException {
++    if (value == null) return null;
++    if (value instanceof String) return (String) value;
++    if (value instanceof byte[]) return new String((byte[]) value, java.nio.charset.StandardCharsets.UTF_8);
++    if (value instanceof Number) return value.toString();
++    throw new SQLException("Unsupported recorded getString value: " + value.getClass().getName());
++  }
++
+   @Override
+   public String getString(int columnIndex) throws SQLException {
+-    return (String) getColValByIndex(columnIndex);
++    return jdbcString(getColValByIndex(columnIndex));
+   }
+ 
+   @Override
+@@ -185,7 +193,7 @@
+ 
+   @Override
+   public String getString(String columnLabel) throws SQLException {
+-    return (String) getColValByName(columnLabel);
++    return jdbcString(getColValByName(columnLabel));
+   }
+ 
+   @Override

@@ -1,0 +1,6 @@
+#!/usr/bin/env python3
+"""Install unchanged original compiler SQL into only the alignment database."""
+import argparse,pathlib,subprocess,json,hashlib,datetime
+p=argparse.ArgumentParser();p.add_argument('--case',type=pathlib.Path,required=True);a=p.parse_args();R=pathlib.Path(__file__).resolve().parent;c=a.case.resolve();assert R in c.parents
+m=json.loads((c/'metadata.json').read_text());d=c/'generated/sql'/m['api'];files=[d/'graph-SP-function.sql',*sorted(d.glob('graph-SP-*_sp_*.sql'))];assert files and all(x.exists() for x in files)
+o=c/('install-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ'));o.mkdir();cmd=['docker','exec','-i','jac-webridge-mysql57','mysql','--default-character-set=utf8mb4','-uroot','jac_alignment'];(o/'command.json').write_text(json.dumps({'argv':cmd,'source_files':{str(f):hashlib.sha256(f.read_bytes()).hexdigest() for f in files}},indent=2));q=subprocess.run(cmd,input=b'\n'.join(f.read_bytes() for f in files),stdout=subprocess.PIPE,stderr=subprocess.PIPE);(o/'stdout.log').write_bytes(q.stdout);(o/'stderr.log').write_bytes(q.stderr);(o/'result.json').write_text(json.dumps({'returncode':q.returncode}));print(o);raise SystemExit(q.returncode)

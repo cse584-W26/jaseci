@@ -1,0 +1,132 @@
+{
+  "updated_utc": "2026-10-20T20:43:41.651865+00:00",
+  "task": "Actual WeBridge comparison and original-paper reproduction",
+  "user_baseline_steps": [
+    "Fully reproduce Jac benchmark behavior and per-input server SQL counts",
+    "Then remove only Jac-specific overhead with a removal ledger and new gates"
+  ],
+  "full_baseline": {
+    "status": "passed",
+    "gate": "alignment/alignment-gate.json",
+    "verification": "alignment/verification.json",
+    "inputs": 20,
+    "requests_including_warm_repeat": 21,
+    "source_sha256": "acc9b168a3fb579829f2c52c8a07b7be3361a9be9d983bfd9bec0412003246a2",
+    "cold_queries": 278773,
+    "historical_warm_queries": 278769,
+    "cold_delta": "identity1 + schema initialization3"
+  },
+  "pruned_baseline": {
+    "status": "All five cumulative configurations passed,105 requests; exact category removals verified",
+    "ledger": "alignment/removal-ledger.json",
+    "gate": "alignment/ablations/20261020T190438Z/no_auth_acl_schema_hydration/gate.json",
+    "cold_queries": 247930,
+    "warm_repeat0_queries": 20,
+    "removed_anchor_loads": 30839,
+    "removed_cold_identity_schema": 4,
+    "retained_domain_hops": 247870,
+    "retained_transaction_commands": 60
+  },
+  "paper_reproduction": {
+    "application": "Original My-Blog",
+    "protocol": "paper/protocol.json",
+    "pair": "paper/pair-20261020T181922/receipt.json",
+    "state": "Completed: both300s warmup +600s measurement; independent raw quantile/period verification passed; postformal blog4 fallback semantics passed",
+    "normal_output": "paper/measurements/20261020T181927",
+    "optimized_output": "paper/measurements/20261020T183432",
+    "instrumented_sql_census_both_passed": true,
+    "business_top_level_commands": {
+      "Original": [
+        7,
+        6,
+        10
+      ],
+      "WeBridge": [
+        1,
+        1,
+        2
+      ]
+    },
+    "table_access_operations_both": [
+      7,
+      6,
+      7
+    ],
+    "api_order": [
+      "GI",
+      "BD",
+      "EB"
+    ],
+    "p50_speedup": {
+      "GI": 2.2858561394414836,
+      "BD": 3.009555724477208,
+      "EB": 3.0718907199365226
+    },
+    "timed_fallbacks": 5,
+    "postformal_probe": "paper/postformal-blog4-20261020T185432/receipt.json"
+  },
+  "webridge_on_jac": {
+    "owner": "audit_reproduction",
+    "status": "Original-scale implementation limits measured and preserved. Separate nonempty diagnostic: full and Pruned capture/synth/install/invoke passed with documented compatibility overlays; controlled latency and independent census completed.",
+    "files": "integration/",
+    "report": "integration/SMALL_IC5_REPORT.md",
+    "commands": "integration/SMALL_IC5_COMMANDS.json",
+    "independent_timing_verification": "integration/timing/independent-verification.json",
+    "figure_pdf": "integration/timing/comparison.pdf",
+    "original_scale_outcome": "Native symbol-reference/memory boundaries; Pruned complete native graph3406074911bytes exceeds whole-Java-array/string interfaces",
+    "small_local_p50_ms": {
+      "full_baseline": 26.326314,
+      "full_sp": 26.710785,
+      "pruned_baseline": 24.5276805,
+      "pruned_sp": 25.0072275
+    },
+    "small_delay_p50_ms": {
+      "full_baseline": 118.5515165,
+      "full_sp": 35.4891105,
+      "pruned_baseline": 101.3879465,
+      "pruned_sp": 34.2873635
+    },
+    "cleanup": "integration/small-final-cleanup/receipt.json"
+  },
+  "active_exec_sessions": {},
+  "timing_rule": "All measurements complete; injected delay restored; own application processes exited. Dedicated databases retained.",
+  "repositories": "Original WeBridge source and repair patch are local; no new commits/pushes during this task yet",
+  "status": "completed: baseline alignment, declared ablations, actual WeBridge small-input comparison and My-Blog paper-condition experiment",
+  "overall_report": "RESULTS.md",
+  "native_jac_comparison": {
+    "state": "passed",
+    "input": "small nonempty IC5",
+    "matched_anchors": 460984,
+    "matched_edges": 300901,
+    "baseline_median_ms": 22.2975,
+    "pushdown_median_ms": 4.523,
+    "speedup": 4.929803227946054,
+    "warm_commands": [
+      38,
+      14
+    ],
+    "warmup_per_arm": 10,
+    "measured_per_arm": 30,
+    "verification": "jac-comparison/independent-verification.json",
+    "report": "jac-comparison/REPORT.md",
+    "logging_restored": true,
+    "services_stopped": true
+  },
+  "seven_arm_latency_comparison": {
+    "state": "passed",
+    "report": "latency-comparison/REPORT.md",
+    "verified_results": "latency-comparison/comparison.json",
+    "plot": "latency-comparison/comparison.pdf",
+    "settings_response_delay_ms": [
+      0,
+      2,
+      10
+    ],
+    "arms": 7,
+    "warmup_per_cell": 10,
+    "measured_per_cell": 30,
+    "timing_requests_verified": 840,
+    "idiomatic_java_original_plus_small_correctness_inputs": 21,
+    "all_proxies_stopped": true
+  }
+}

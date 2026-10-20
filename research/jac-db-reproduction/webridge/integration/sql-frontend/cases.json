@@ -1,0 +1,161 @@
+[
+  {
+    "name": "simple_control",
+    "sql": "SELECT id FROM anchors WHERE id=?",
+    "expected_return_columns": 1,
+    "expected_parameter_types": [
+      "VARCHAR"
+    ],
+    "expected_parameter_columns": [
+      "id"
+    ]
+  },
+  {
+    "name": "in_subquery_scope",
+    "sql": "SELECT id FROM anchors WHERE arch_type IN (SELECT type_name FROM graph_types WHERE ancestor=?)",
+    "expected_return_columns": 1,
+    "expected_parameter_types": [
+      "VARCHAR"
+    ],
+    "expected_parameter_columns": [
+      "ancestor"
+    ]
+  },
+  {
+    "name": "union_scope_without_in_subquery",
+    "sql": "SELECT n.id,e.id FROM (SELECT e.* FROM anchors e WHERE e.src=? UNION ALL SELECT e.* FROM anchors e WHERE e.dst=?) e JOIN anchors n ON n.id=e.src WHERE n.arch_type=?",
+    "expected_return_columns": 2,
+    "expected_parameter_types": [
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR"
+    ],
+    "expected_parameter_columns": [
+      "e.src",
+      "e.dst",
+      "n.arch_type"
+    ]
+  },
+  {
+    "name": "actual_first_knows_hop",
+    "sql": "SELECT n.id,e.id FROM (SELECT e.* FROM anchors e WHERE e.src=? AND e.kind='EdgeAnchor' AND (e.arch_type=? OR e.arch_type IN(SELECT type_name FROM graph_types WHERE ancestor=?)) AND (e.dst_type IS NULL OR e.dst_type=? OR e.dst_type IN(SELECT type_name FROM graph_types WHERE ancestor=?)) UNION ALL SELECT e.* FROM anchors e WHERE e.dst=? AND e.undirected=1 AND e.src<>e.dst AND e.kind='EdgeAnchor' AND (e.arch_type=? OR e.arch_type IN(SELECT type_name FROM graph_types WHERE ancestor=?)) AND (e.src_type IS NULL OR e.src_type=? OR e.src_type IN(SELECT type_name FROM graph_types WHERE ancestor=?))) e JOIN anchors n ON n.id=CASE WHEN e.src=? THEN e.dst ELSE e.src END AND n.kind='NodeAnchor' AND (n.arch_type=? OR n.arch_type IN(SELECT type_name FROM graph_types WHERE ancestor=?)) ORDER BY e.seq,e.id",
+    "expected_return_columns": 2,
+    "expected_parameter_types": [
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR",
+      "VARCHAR"
+    ],
+    "expected_parameter_columns": [
+      "e.src",
+      "e.arch_type",
+      "ancestor",
+      "e.dst_type",
+      "ancestor",
+      "e.dst",
+      "e.arch_type",
+      "ancestor",
+      "e.src_type",
+      "ancestor",
+      "e.src",
+      "n.arch_type",
+      "ancestor"
+    ]
+  },
+  {
+    "name": "mixed_scopes_global_parameter_order",
+    "sql": "SELECT n.id FROM (SELECT e.* FROM anchors e WHERE e.seq>?) e JOIN anchors n ON n.id=? WHERE n.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor=?) LIMIT ?,?",
+    "expected_return_columns": 1,
+    "expected_parameter_types": [
+      "BIGINT",
+      "VARCHAR",
+      "VARCHAR",
+      "BIGINT",
+      "BIGINT"
+    ],
+    "expected_parameter_columns": [
+      "e.seq",
+      "n.id",
+      "ancestor",
+      "?",
+      "?"
+    ]
+  },
+  {
+    "name": "literal_limit_has_no_bind",
+    "sql": "SELECT id FROM anchors WHERE seq>? LIMIT 20",
+    "expected_return_columns": 1,
+    "expected_parameter_types": [
+      "BIGINT"
+    ]
+  },
+  {
+    "name": "in_list_literals_and_bind",
+    "sql": "SELECT id FROM anchors WHERE kind IN ('NodeAnchor',?) AND seq>?",
+    "expected_return_columns": 1,
+    "expected_parameter_types": [
+      "VARCHAR",
+      "BIGINT"
+    ]
+  },
+  {
+    "name": "cast_json_date_parameter",
+    "sql": "SELECT id FROM anchors WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.joinDate')) AS SIGNED)>?",
+    "expected_return_columns": 1,
+    "expected_parameter_types": [
+      "BIGINT"
+    ]
+  },
+  {
+    "name": "scalar_forum_projection",
+    "sql": "SELECT n.id,e.id,CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props,'$.archetype.forum_id')) AS SIGNED) AS forum_id,JSON_UNQUOTE(JSON_EXTRACT(n.props,'$.archetype.title')) AS title FROM anchors n JOIN anchors e ON n.id=e.src WHERE e.dst=?",
+    "expected_return_columns": 4,
+    "expected_parameter_types": [
+      "VARCHAR"
+    ]
+  },
+  {
+    "name": "nested_in_subquery",
+    "sql": "SELECT id FROM anchors WHERE arch_type IN(SELECT type_name FROM graph_types WHERE ancestor IN(SELECT ancestor FROM graph_types WHERE type_name=?)) AND seq>?",
+    "expected_return_columns": 1,
+    "expected_parameter_types": [
+      "VARCHAR",
+      "BIGINT"
+    ]
+  },
+  {
+    "name": "legacy_aggregate",
+    "sql": "SELECT COUNT(*) FROM anchors WHERE seq>?",
+    "expected_return_columns": 1,
+    "expected_parameter_types": [
+      "BIGINT"
+    ]
+  },
+  {
+    "name": "legacy_update",
+    "sql": "UPDATE anchors SET arch_type=? WHERE id=?",
+    "expected_return_columns": 0,
+    "expected_parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  },
+  {
+    "name": "legacy_insert",
+    "sql": "INSERT INTO graph_types(type_name,ancestor) VALUES(?,?)",
+    "expected_return_columns": 0,
+    "expected_parameter_types": [
+      "VARCHAR",
+      "VARCHAR"
+    ]
+  }
+]

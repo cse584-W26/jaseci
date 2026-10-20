@@ -1,0 +1,161 @@
+{
+  "passed": true,
+  "pair": "/home/baichuan/jaseci/reproduction/webridge/paper/pair-20261020T181922",
+  "arms": {
+    "normal": {
+      "warmup_elapsed_seconds": 300.0,
+      "measurement_plus_stop_seconds": 600.008,
+      "elapsed_with_startup_seconds": 900.7453928350005,
+      "successful_requests": 23748,
+      "apis": {
+        "GETINDEX": {
+          "samples": 7871,
+          "period_counts": {
+            "0": 742,
+            "1": 772,
+            "2": 742,
+            "3": 766,
+            "4": 824,
+            "5": 937,
+            "6": 755,
+            "7": 757,
+            "8": 800,
+            "9": 776
+          },
+          "quantiles_ns": {
+            "50": 24148246,
+            "90": 40916317,
+            "99": 60896189
+          },
+          "mean_ns": 28314127.017151568,
+          "sha256": "d30b2d16f20ed6185cb132b0fe13f8231291ab00ba843cb85bef411aad8f0b80"
+        },
+        "GETBLOG": {
+          "samples": 7828,
+          "period_counts": {
+            "0": 777,
+            "1": 838,
+            "2": 758,
+            "3": 739,
+            "4": 813,
+            "5": 853,
+            "6": 745,
+            "7": 783,
+            "8": 741,
+            "9": 781
+          },
+          "quantiles_ns": {
+            "50": 17622282,
+            "90": 23505991,
+            "99": 27083117
+          },
+          "mean_ns": 18704690.196346447,
+          "sha256": "99117d2df674b1a2e8744850b1e013af134cab4e95adc411178e2096500863cc"
+        },
+        "EDITBLOG": {
+          "samples": 8049,
+          "period_counts": {
+            "0": 838,
+            "1": 819,
+            "2": 795,
+            "3": 788,
+            "4": 842,
+            "5": 873,
+            "6": 809,
+            "7": 751,
+            "8": 760,
+            "9": 774
+          },
+          "quantiles_ns": {
+            "50": 27247385,
+            "90": 34792271,
+            "99": 40502988
+          },
+          "mean_ns": 28645625.573238913,
+          "sha256": "dd0ea7736bf695730ece14e6096765d3b5963dd0739c0311cebfff8ab867a638"
+        }
+      },
+      "throughput_full_period_rows": 9,
+      "zero_logged_errors": true,
+      "command_sha256": "6c57b15e9e6ef50bed7eea838189974e76de0a60fa8e467a3aff29bcd4e03d2b"
+    },
+    "optimized": {
+      "warmup_elapsed_seconds": 300.0,
+      "measurement_plus_stop_seconds": 600.006,
+      "elapsed_with_startup_seconds": 900.7828413159586,
+      "successful_requests": 68647,
+      "apis": {
+        "GETINDEX": {
+          "samples": 22907,
+          "period_counts": {
+            "0": 2429,
+            "1": 2370,
+            "2": 2166,
+            "3": 2294,
+            "4": 2249,
+            "5": 2260,
+            "6": 2325,
+            "7": 2263,
+            "8": 2239,
+            "9": 2312
+          },
+          "quantiles_ns": {
+            "50": 10564202,
+            "90": 12064793,
+            "99": 19552492
+          },
+          "mean_ns": 11052174.995896451,
+          "sha256": "561910d0275ecd33413ca8a7265dd70b5eaeafce066473598e14d04bc8d72a97"
+        },
+        "GETBLOG": {
+          "samples": 22842,
+          "period_counts": {
+            "0": 2379,
+            "1": 2316,
+            "2": 2139,
+            "3": 2240,
+            "4": 2322,
+            "5": 2304,
+            "6": 2295,
+            "7": 2288,
+            "8": 2291,
+            "9": 2268
+          },
+          "quantiles_ns": {
+            "50": 5855443,
+            "90": 6317582,
+            "99": 8224383
+          },
+          "mean_ns": 5989701.015716663,
+          "sha256": "0fc16696a7d4d0675e2154a993d996fb88de031edb3ee93ece4dadce641b53a5"
+        },
+        "EDITBLOG": {
+          "samples": 22898,
+          "period_counts": {
+            "0": 2301,
+            "1": 2409,
+            "2": 2214,
+            "3": 2283,
+            "4": 2270,
+            "5": 2338,
+            "6": 2207,
+            "7": 2283,
+            "8": 2299,
+            "9": 2294
+          },
+          "quantiles_ns": {
+            "50": 8869907,
+            "90": 9500143,
+            "99": 12128158
+          },
+          "mean_ns": 9163014.819940606,
+          "sha256": "c04fb6a5674386d3e17ba1b69b620f80c86cbd5e9ce97c2dce565e4061b44c99"
+        }
+      },
+      "throughput_full_period_rows": 9,
+      "zero_logged_errors": true,
+      "command_sha256": "88409d0aaac82c2f62b6b652eddaf7e003c7cf1fc8baea152bb4b236e4c8c214"
+    }
+  },
+  "definition": "Original driver integer order statistic sorted[n*q//100], nanoseconds; no interpolation. Independent of summarize_pair.py."
+}

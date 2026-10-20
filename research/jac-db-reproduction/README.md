@@ -2,6 +2,8 @@
 
 Reproduce the colleague's database experiments on clarity3, starting 2026-10-19. Copied applications, isolated services, datasets and raw evidence live here.
 
+**WeBridge / conventional Java SQL comparison:** [seven-implementation latency report](webridge/latency-comparison/REPORT.md), [PDF chart](webridge/latency-comparison/comparison.pdf), [archive guide](webridge/ARCHIVE.md).
+
 **Main report:** [REPORT.md](REPORT.md). **Stage status:** [scripts/STATUS.md](scripts/STATUS.md).
 
 ## Targets

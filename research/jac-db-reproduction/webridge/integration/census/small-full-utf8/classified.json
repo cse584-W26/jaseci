@@ -1,0 +1,448 @@
+{
+  "all_wire_counts_match": true,
+  "requests": [
+    {
+      "phase": "baseline",
+      "warmup": true,
+      "iteration": 0,
+      "client_ms": 68.397333,
+      "app_thread_cpu_ms": 26.759138,
+      "wire_queries": 42,
+      "wire_categories": {
+        "SELECT": 39,
+        "START": 1,
+        "SET": 1,
+        "COMMIT": 1
+      },
+      "pfs_top_level_ms": 22.693942,
+      "pfs_top_level_rows_examined": 2312
+    },
+    {
+      "phase": "baseline",
+      "warmup": false,
+      "iteration": 1,
+      "client_ms": 40.353319,
+      "app_thread_cpu_ms": 11.619126,
+      "wire_queries": 38,
+      "wire_categories": {
+        "START": 1,
+        "SET": 1,
+        "SELECT": 35,
+        "COMMIT": 1
+      },
+      "pfs_top_level_ms": 22.089731,
+      "pfs_top_level_rows_examined": 2297
+    },
+    {
+      "phase": "baseline",
+      "warmup": false,
+      "iteration": 2,
+      "client_ms": 43.184725,
+      "app_thread_cpu_ms": 10.388203,
+      "wire_queries": 38,
+      "wire_categories": {
+        "START": 1,
+        "SET": 1,
+        "SELECT": 35,
+        "COMMIT": 1
+      },
+      "pfs_top_level_ms": 22.150653,
+      "pfs_top_level_rows_examined": 2297
+    },
+    {
+      "phase": "sp",
+      "warmup": true,
+      "iteration": 0,
+      "client_ms": 259.835152,
+      "app_thread_cpu_ms": 171.955226,
+      "wire_queries": 13,
+      "wire_categories": {
+        "START": 1,
+        "SET": 3,
+        "CALL": 1,
+        "SELECT": 7,
+        "COMMIT": 1
+      },
+      "pfs_top_level_ms": 47.675695,
+      "pfs_top_level_rows_examined": 0,
+      "call_ms": 45.760563,
+      "procedure_direct_children": {
+        "statement/sp/set": {
+          "n": 1436,
+          "ms": 0.9017429999999994,
+          "rows_examined": 0
+        },
+        "statement/sp/jump_if_not": {
+          "n": 810,
+          "ms": 0.41572500000000023,
+          "rows_examined": 0
+        },
+        "statement/sp/stmt": {
+          "n": 36,
+          "ms": 17.640384000000008,
+          "rows_examined": 44831
+        },
+        "statement/sp/cpush": {
+          "n": 10,
+          "ms": 0.004625000000000001,
+          "rows_examined": 0
+        },
+        "statement/sp/hpush_jump": {
+          "n": 10,
+          "ms": 0.0021230000000000003,
+          "rows_examined": 0
+        },
+        "statement/sp/copen": {
+          "n": 10,
+          "ms": 2.868813,
+          "rows_examined": 0
+        },
+        "statement/sp/cfetch": {
+          "n": 54,
+          "ms": 0.10404200000000001,
+          "rows_examined": 0
+        },
+        "statement/sp/jump": {
+          "n": 97,
+          "ms": 0.004385,
+          "rows_examined": 0
+        },
+        "statement/sp/cclose": {
+          "n": 10,
+          "ms": 0.06113500000000001,
+          "rows_examined": 0
+        },
+        "statement/sp/hpop": {
+          "n": 10,
+          "ms": 0.00204,
+          "rows_examined": 0
+        },
+        "statement/sp/cpop": {
+          "n": 10,
+          "ms": 0.0013460000000000002,
+          "rows_examined": 0
+        }
+      },
+      "top_nested_sql": [
+        {
+          "sql": "SELECT n.id, e.id FROM ( SELECT e.* FROM anchors e WHERE e.dst = q12_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q12_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q12_i3 )) AND (e.src_type IS NULL OR e.src_type = q12_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q12_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q12_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q12_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q12_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q12_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q12_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q12_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q12_i12 OR n.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q12_i13 )) WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(e.props, '$.archetype.joinDate')) AS SIGNED) > q12_i14 ORDER BY e.seq, e.id",
+          "name": "statement/sp/stmt",
+          "nest": 132,
+          "event": 1520,
+          "thread": 130,
+          "no_index": 1,
+          "timer_ps": 4591829000,
+          "rows_sent": 0,
+          "rows_examined": 1175
+        },
+        {
+          "sql": "SELECT n.id, e.id FROM ( SELECT e.* FROM anchors e WHERE e.dst = q13_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q13_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q13_i3 )) AND (e.src_type IS NULL OR e.src_type = q13_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q13_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q13_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q13_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q13_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q13_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q13_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q13_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q13_i12 OR n.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q13_i13 )) WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(e.props, '$.archetype.joinDate')) AS SIGNED) > q13_i14 ORDER BY e.seq, e.id",
+          "name": "statement/sp/stmt",
+          "nest": 132,
+          "event": 1540,
+          "thread": 130,
+          "no_index": 1,
+          "timer_ps": 2103303000,
+          "rows_sent": 0,
+          "rows_examined": 1462
+        },
+        {
+          "sql": "SELECT n.id, e.id FROM ( SELECT e.* FROM anchors e WHERE e.dst = q16_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q16_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q16_i3 )) AND (e.src_type IS NULL OR e.src_type = q16_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q16_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q16_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q16_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q16_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q16_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q16_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q16_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q16_i12 OR n.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q16_i13 )) WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(e.props, '$.archetype.joinDate')) AS SIGNED) > q16_i14 ORDER BY e.seq, e.id",
+          "name": "statement/sp/stmt",
+          "nest": 132,
+          "event": 1600,
+          "thread": 130,
+          "no_index": 1,
+          "timer_ps": 1885331000,
+          "rows_sent": 0,
+          "rows_examined": 2086
+        },
+        {
+          "sql": "SELECT n.id, e.id FROM ( SELECT e.* FROM anchors e WHERE e.dst = q8_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q8_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i3 )) AND (e.src_type IS NULL OR e.src_type = q8_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q8_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q8_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q8_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q8_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q8_i12 OR n.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i13 )) WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(e.props, '$.archetype.joinDate')) AS SIGNED) > q8_i14 ORDER BY e.seq, e.id",
+          "name": "statement/sp/stmt",
+          "nest": 132,
+          "event": 1417,
+          "thread": 130,
+          "no_index": 1,
+          "timer_ps": 1006611000,
+          "rows_sent": 0,
+          "rows_examined": 321
+        },
+        {
+          "sql": "SELECT n.id, e.id FROM ( SELECT e.* FROM anchors e WHERE e.dst = q15_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q15_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q15_i3 )) AND (e.src_type IS NULL OR e.src_type = q15_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q15_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q15_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q15_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q15_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q15_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q15_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q15_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q15_i12 OR n.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q15_i13 )) WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(e.props, '$.archetype.joinDate')) AS SIGNED) > q15_i14 ORDER BY e.seq, e.id",
+          "name": "statement/sp/stmt",
+          "nest": 132,
+          "event": 1580,
+          "thread": 130,
+          "no_index": 1,
+          "timer_ps": 947743000,
+          "rows_sent": 0,
+          "rows_examined": 1670
+        }
+      ]
+    },
+    {
+      "phase": "sp",
+      "warmup": false,
+      "iteration": 1,
+      "client_ms": 45.197405,
+      "app_thread_cpu_ms": 18.092242,
+      "wire_queries": 4,
+      "wire_categories": {
+        "START": 1,
+        "SET": 1,
+        "CALL": 1,
+        "COMMIT": 1
+      },
+      "pfs_top_level_ms": 24.033683999999997,
+      "pfs_top_level_rows_examined": 0,
+      "call_ms": 23.880905,
+      "procedure_direct_children": {
+        "statement/sp/set": {
+          "n": 1436,
+          "ms": 0.9406460000000015,
+          "rows_examined": 0
+        },
+        "statement/sp/jump_if_not": {
+          "n": 810,
+          "ms": 0.40922699999999984,
+          "rows_examined": 0
+        },
+        "statement/sp/stmt": {
+          "n": 36,
+          "ms": 17.529864,
+          "rows_examined": 44831
+        },
+        "statement/sp/cpush": {
+          "n": 10,
+          "ms": 0.004405999999999999,
+          "rows_examined": 0
+        },
+        "statement/sp/hpush_jump": {
+          "n": 10,
+          "ms": 0.0021939999999999998,
+          "rows_examined": 0
+        },
+        "statement/sp/copen": {
+          "n": 10,
+          "ms": 2.8947390000000004,
+          "rows_examined": 0
+        },
+        "statement/sp/cfetch": {
+          "n": 54,
+          "ms": 0.10422399999999997,
+          "rows_examined": 0
+        },
+        "statement/sp/jump": {
+          "n": 97,
+          "ms": 0.0045889999999999985,
+          "rows_examined": 0
+        },
+        "statement/sp/cclose": {
+          "n": 10,
+          "ms": 0.059022000000000005,
+          "rows_examined": 0
+        },
+        "statement/sp/hpop": {
+          "n": 10,
+          "ms": 0.0014889999999999999,
+          "rows_examined": 0
+        },
+        "statement/sp/cpop": {
+          "n": 10,
+          "ms": 0.001372,
+          "rows_examined": 0
+        }
+      },
+      "top_nested_sql": [
+        {
+          "sql": "SELECT n.id, e.id FROM ( SELECT e.* FROM anchors e WHERE e.dst = q12_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q12_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q12_i3 )) AND (e.src_type IS NULL OR e.src_type = q12_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q12_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q12_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q12_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q12_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q12_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q12_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q12_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q12_i12 OR n.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q12_i13 )) WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(e.props, '$.archetype.joinDate')) AS SIGNED) > q12_i14 ORDER BY e.seq, e.id",
+          "name": "statement/sp/stmt",
+          "nest": 2640,
+          "event": 4028,
+          "thread": 130,
+          "no_index": 1,
+          "timer_ps": 4636973000,
+          "rows_sent": 0,
+          "rows_examined": 1175
+        },
+        {
+          "sql": "SELECT n.id, e.id FROM ( SELECT e.* FROM anchors e WHERE e.dst = q13_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q13_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q13_i3 )) AND (e.src_type IS NULL OR e.src_type = q13_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q13_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q13_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q13_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q13_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q13_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q13_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q13_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q13_i12 OR n.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q13_i13 )) WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(e.props, '$.archetype.joinDate')) AS SIGNED) > q13_i14 ORDER BY e.seq, e.id",
+          "name": "statement/sp/stmt",
+          "nest": 2640,
+          "event": 4048,
+          "thread": 130,
+          "no_index": 1,
+          "timer_ps": 2160253000,
+          "rows_sent": 0,
+          "rows_examined": 1462
+        },
+        {
+          "sql": "SELECT n.id, e.id FROM ( SELECT e.* FROM anchors e WHERE e.dst = q16_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q16_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q16_i3 )) AND (e.src_type IS NULL OR e.src_type = q16_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q16_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q16_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q16_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q16_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q16_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q16_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q16_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q16_i12 OR n.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q16_i13 )) WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(e.props, '$.archetype.joinDate')) AS SIGNED) > q16_i14 ORDER BY e.seq, e.id",
+          "name": "statement/sp/stmt",
+          "nest": 2640,
+          "event": 4108,
+          "thread": 130,
+          "no_index": 1,
+          "timer_ps": 1897164000,
+          "rows_sent": 0,
+          "rows_examined": 2086
+        },
+        {
+          "sql": "SELECT n.id, e.id FROM ( SELECT e.* FROM anchors e WHERE e.dst = q8_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q8_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i3 )) AND (e.src_type IS NULL OR e.src_type = q8_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q8_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q8_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q8_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q8_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q8_i12 OR n.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i13 )) WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(e.props, '$.archetype.joinDate')) AS SIGNED) > q8_i14 ORDER BY e.seq, e.id",
+          "name": "statement/sp/stmt",
+          "nest": 2640,
+          "event": 3925,
+          "thread": 130,
+          "no_index": 1,
+          "timer_ps": 987319000,
+          "rows_sent": 0,
+          "rows_examined": 321
+        },
+        {
+          "sql": "SELECT n.id, e.id FROM ( SELECT e.* FROM anchors e WHERE e.dst = q15_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q15_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q15_i3 )) AND (e.src_type IS NULL OR e.src_type = q15_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q15_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q15_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q15_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q15_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q15_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q15_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q15_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q15_i12 OR n.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q15_i13 )) WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(e.props, '$.archetype.joinDate')) AS SIGNED) > q15_i14 ORDER BY e.seq, e.id",
+          "name": "statement/sp/stmt",
+          "nest": 2640,
+          "event": 4088,
+          "thread": 130,
+          "no_index": 1,
+          "timer_ps": 941112000,
+          "rows_sent": 0,
+          "rows_examined": 1670
+        }
+      ]
+    },
+    {
+      "phase": "sp",
+      "warmup": false,
+      "iteration": 2,
+      "client_ms": 44.571323,
+      "app_thread_cpu_ms": 12.348905,
+      "wire_queries": 4,
+      "wire_categories": {
+        "START": 1,
+        "SET": 1,
+        "CALL": 1,
+        "COMMIT": 1
+      },
+      "pfs_top_level_ms": 24.109785,
+      "pfs_top_level_rows_examined": 0,
+      "call_ms": 23.960233,
+      "procedure_direct_children": {
+        "statement/sp/set": {
+          "n": 1436,
+          "ms": 0.949120000000002,
+          "rows_examined": 0
+        },
+        "statement/sp/jump_if_not": {
+          "n": 810,
+          "ms": 0.4262510000000002,
+          "rows_examined": 0
+        },
+        "statement/sp/stmt": {
+          "n": 36,
+          "ms": 17.441708999999996,
+          "rows_examined": 44831
+        },
+        "statement/sp/cpush": {
+          "n": 10,
+          "ms": 0.004065,
+          "rows_examined": 0
+        },
+        "statement/sp/hpush_jump": {
+          "n": 10,
+          "ms": 0.018384,
+          "rows_examined": 0
+        },
+        "statement/sp/copen": {
+          "n": 10,
+          "ms": 2.8465670000000003,
+          "rows_examined": 0
+        },
+        "statement/sp/cfetch": {
+          "n": 54,
+          "ms": 0.11401199999999999,
+          "rows_examined": 0
+        },
+        "statement/sp/jump": {
+          "n": 97,
+          "ms": 0.004468000000000001,
+          "rows_examined": 0
+        },
+        "statement/sp/cclose": {
+          "n": 10,
+          "ms": 0.057538,
+          "rows_examined": 0
+        },
+        "statement/sp/hpop": {
+          "n": 10,
+          "ms": 0.0014399999999999999,
+          "rows_examined": 0
+        },
+        "statement/sp/cpop": {
+          "n": 10,
+          "ms": 0.001412,
+          "rows_examined": 0
+        }
+      },
+      "top_nested_sql": [
+        {
+          "sql": "SELECT n.id, e.id FROM ( SELECT e.* FROM anchors e WHERE e.dst = q12_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q12_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q12_i3 )) AND (e.src_type IS NULL OR e.src_type = q12_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q12_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q12_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q12_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q12_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q12_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q12_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q12_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q12_i12 OR n.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q12_i13 )) WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(e.props, '$.archetype.joinDate')) AS SIGNED) > q12_i14 ORDER BY e.seq, e.id",
+          "name": "statement/sp/stmt",
+          "nest": 5139,
+          "event": 6527,
+          "thread": 130,
+          "no_index": 1,
+          "timer_ps": 4622898000,
+          "rows_sent": 0,
+          "rows_examined": 1175
+        },
+        {
+          "sql": "SELECT n.id, e.id FROM ( SELECT e.* FROM anchors e WHERE e.dst = q13_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q13_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q13_i3 )) AND (e.src_type IS NULL OR e.src_type = q13_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q13_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q13_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q13_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q13_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q13_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q13_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q13_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q13_i12 OR n.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q13_i13 )) WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(e.props, '$.archetype.joinDate')) AS SIGNED) > q13_i14 ORDER BY e.seq, e.id",
+          "name": "statement/sp/stmt",
+          "nest": 5139,
+          "event": 6547,
+          "thread": 130,
+          "no_index": 1,
+          "timer_ps": 2227556000,
+          "rows_sent": 0,
+          "rows_examined": 1462
+        },
+        {
+          "sql": "SELECT n.id, e.id FROM ( SELECT e.* FROM anchors e WHERE e.dst = q16_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q16_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q16_i3 )) AND (e.src_type IS NULL OR e.src_type = q16_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q16_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q16_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q16_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q16_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q16_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q16_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q16_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q16_i12 OR n.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q16_i13 )) WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(e.props, '$.archetype.joinDate')) AS SIGNED) > q16_i14 ORDER BY e.seq, e.id",
+          "name": "statement/sp/stmt",
+          "nest": 5139,
+          "event": 6607,
+          "thread": 130,
+          "no_index": 1,
+          "timer_ps": 1869288000,
+          "rows_sent": 0,
+          "rows_examined": 2086
+        },
+        {
+          "sql": "SELECT n.id, e.id FROM ( SELECT e.* FROM anchors e WHERE e.dst = q8_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q8_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i3 )) AND (e.src_type IS NULL OR e.src_type = q8_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q8_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q8_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q8_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q8_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q8_i12 OR n.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i13 )) WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(e.props, '$.archetype.joinDate')) AS SIGNED) > q8_i14 ORDER BY e.seq, e.id",
+          "name": "statement/sp/stmt",
+          "nest": 5139,
+          "event": 6424,
+          "thread": 130,
+          "no_index": 1,
+          "timer_ps": 970931000,
+          "rows_sent": 0,
+          "rows_examined": 321
+        },
+        {
+          "sql": "SELECT n.id, e.id FROM ( SELECT e.* FROM anchors e WHERE e.dst = q15_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q15_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q15_i3 )) AND (e.src_type IS NULL OR e.src_type = q15_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q15_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q15_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q15_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q15_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q15_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q15_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q15_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q15_i12 OR n.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q15_i13 )) WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(e.props, '$.archetype.joinDate')) AS SIGNED) > q15_i14 ORDER BY e.seq, e.id",
+          "name": "statement/sp/stmt",
+          "nest": 5139,
+          "event": 6587,
+          "thread": 130,
+          "no_index": 1,
+          "timer_ps": 910166000,
+          "rows_sent": 0,
+          "rows_examined": 1670
+        }
+      ]
+    }
+  ],
+  "pfs_note": "Top-level times inclusive of stored procedure children; child categories reported separately and not added twice. Instrumented census, separate from quiet timings."
+}

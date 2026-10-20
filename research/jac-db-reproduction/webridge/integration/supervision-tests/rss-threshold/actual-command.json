@@ -1,0 +1,12 @@
+[
+  "/usr/bin/time",
+  "-v",
+  "-o",
+  "/home/baichuan/jaseci/reproduction/webridge/integration/supervision-tests/rss-threshold/resource-usage.txt",
+  "taskset",
+  "-c",
+  "9,19",
+  "/home/baichuan/.pyenv/versions/3.12.11/bin/python3",
+  "-c",
+  "import time; x=bytearray(4*1024*1024); time.sleep(5)"
+]

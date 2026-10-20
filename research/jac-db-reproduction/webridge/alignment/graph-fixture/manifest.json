@@ -1,0 +1,109 @@
+{
+  "source_database": "jac_snb_bench_pg_fbdb3a2c",
+  "created_unix": 1792519835.6933386,
+  "scope": "Exact union of queried IC5 edge relations for the declared20inputs, plus their endpoint anchors and transitive owner roots. Generic node/edge records preserve original UUIDs, sequence, properties and ACL.",
+  "steps": [
+    {
+      "name": "inputs",
+      "sql": "CREATE TEMP TABLE align_inputs(idx int, id uuid, min_date bigint)",
+      "seconds": 0.001151941018179059,
+      "rowcount": -1
+    },
+    {
+      "name": "knows",
+      "sql": "CREATE TEMP TABLE align_knows AS SELECT DISTINCT e.id FROM align_inputs i JOIN anchors e ON e.kind='EdgeAnchor' AND e.arch_type='Knows' AND (e.src=i.id OR e.dst=i.id)",
+      "seconds": 0.00353787699714303,
+      "rowcount": 283
+    },
+    {
+      "name": "friends",
+      "sql": "CREATE TEMP TABLE align_friends AS SELECT DISTINCT i.idx,i.min_date,CASE WHEN e.src=i.id THEN e.dst ELSE e.src END AS id FROM align_inputs i JOIN anchors e ON e.kind='EdgeAnchor' AND e.arch_type='Knows' AND (e.src=i.id OR e.dst=i.id) JOIN anchors n ON n.id=CASE WHEN e.src=i.id THEN e.dst ELSE e.src END AND n.arch_type='Person'",
+      "seconds": 0.0052207959815859795,
+      "rowcount": 284
+    },
+    {
+      "name": "members",
+      "sql": "CREATE TEMP TABLE align_members AS SELECT DISTINCT e.id,e.src AS forum FROM align_friends f JOIN anchors e ON e.dst=f.id AND e.kind='EdgeAnchor' AND e.arch_type='HasMember' AND (e.props->'archetype'->>'joinDate')::bigint>f.min_date JOIN anchors n ON n.id=e.src AND n.arch_type='Forum'",
+      "seconds": 0.935018067015335,
+      "rowcount": 15016
+    },
+    {
+      "name": "forums",
+      "sql": "CREATE TEMP TABLE align_forums AS SELECT DISTINCT forum AS id FROM align_members",
+      "seconds": 0.006216890178620815,
+      "rowcount": 12894
+    },
+    {
+      "name": "forum_index",
+      "sql": "CREATE UNIQUE INDEX ON align_forums(id)",
+      "seconds": 0.0038043910171836615,
+      "rowcount": -1
+    },
+    {
+      "name": "containers",
+      "sql": "CREATE TEMP TABLE align_containers AS SELECT e.id,e.dst AS post FROM align_forums f JOIN anchors e ON e.src=f.id AND e.kind='EdgeAnchor' AND e.arch_type='ContainerOf' JOIN anchors n ON n.id=e.dst AND n.arch_type='Post'",
+      "seconds": 1.0647617818322033,
+      "rowcount": 142801
+    },
+    {
+      "name": "posts",
+      "sql": "CREATE TEMP TABLE align_posts AS SELECT DISTINCT post AS id FROM align_containers",
+      "seconds": 0.06871651508845389,
+      "rowcount": 142801
+    },
+    {
+      "name": "post_index",
+      "sql": "CREATE UNIQUE INDEX ON align_posts(id)",
+      "seconds": 0.0390261800494045,
+      "rowcount": -1
+    },
+    {
+      "name": "creators",
+      "sql": "CREATE TEMP TABLE align_creators AS SELECT e.id FROM align_posts p JOIN anchors e ON e.src=p.id AND e.kind='EdgeAnchor' AND e.arch_type='HasCreator' JOIN anchors n ON n.id=e.dst AND n.arch_type='Person'",
+      "seconds": 3.293157998006791,
+      "rowcount": 142801
+    },
+    {
+      "name": "edges",
+      "sql": "CREATE TEMP TABLE align_edges AS SELECT id FROM align_knows UNION SELECT id FROM align_members UNION SELECT id FROM align_containers UNION SELECT id FROM align_creators",
+      "seconds": 0.15426879818551242,
+      "rowcount": 300901
+    },
+    {
+      "name": "edge_index",
+      "sql": "CREATE UNIQUE INDEX ON align_edges(id)",
+      "seconds": 0.09494564100168645,
+      "rowcount": -1
+    },
+    {
+      "name": "nodes",
+      "sql": "CREATE TEMP TABLE align_ids(id uuid PRIMARY KEY); INSERT INTO align_ids SELECT id FROM align_edges UNION SELECT a.src FROM anchors a JOIN align_edges e ON e.id=a.id WHERE a.src IS NOT NULL UNION SELECT a.dst FROM anchors a JOIN align_edges e ON e.id=a.id WHERE a.dst IS NOT NULL UNION SELECT id FROM align_inputs",
+      "seconds": 7.059653626987711,
+      "rowcount": -1
+    }
+  ],
+  "files": {
+    "anchors": {
+      "bytes": 295422071,
+      "sha256": "f8e03ad554f01f466588fbf8c018370901d529284796f5c0562b113e382b45bd"
+    },
+    "graph_types": {
+      "bytes": 216,
+      "sha256": "dbc6732e6803f031e3adb3aaeb2b3967b534e0512a63d3e287ed1f10881820df"
+    },
+    "identity_users": {
+      "bytes": 606,
+      "sha256": "9cbecef7e7771395faab656429edf40b2b28e2b7c44604512cc8bf6ad48d539e"
+    },
+    "kv_state": {
+      "bytes": 49,
+      "sha256": "28209412af623bcec609abc27fad545ef780055bac6f9ff26360215b6e11fdc4"
+    }
+  },
+  "align_inputs": 20,
+  "align_friends": 284,
+  "align_forums": 12894,
+  "align_posts": 142801,
+  "align_edges": 300901,
+  "align_ids": 460984
+}

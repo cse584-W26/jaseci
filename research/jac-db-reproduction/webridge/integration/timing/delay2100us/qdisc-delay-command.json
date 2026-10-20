@@ -1,0 +1,1 @@
+["docker", "run", "--rm", "--cpuset-cpus", "9,19", "--network", "container:jac-webridge-mysql57", "--cap-add", "NET_ADMIN", "jac-webridge-network:ubuntu22", "tc", "-s", "qdisc", "show", "dev", "eth0"]

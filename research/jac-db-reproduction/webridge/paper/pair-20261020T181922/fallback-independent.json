@@ -1,0 +1,106 @@
+{
+  "driver_measurement_local_start": "14:39:33.472",
+  "driver_measurement_local_stop": "14:49:33.478",
+  "log_sha256": "da9be32362903239d929a9f83e2ba3b55847ea94e523f452b58db7fa1c741ea6",
+  "wrong_sql_events": [
+    {
+      "timestamp": "2026-10-20 14:35:20.012",
+      "blog_id": 4,
+      "comment_status": 1,
+      "phase": "warmup",
+      "line": 1779
+    },
+    {
+      "timestamp": "2026-10-20 14:36:01.871",
+      "blog_id": 4,
+      "comment_status": 1,
+      "phase": "warmup",
+      "line": 3659
+    },
+    {
+      "timestamp": "2026-10-20 14:37:01.681",
+      "blog_id": 4,
+      "comment_status": 1,
+      "phase": "warmup",
+      "line": 6201
+    },
+    {
+      "timestamp": "2026-10-20 14:37:09.445",
+      "blog_id": 4,
+      "comment_status": 1,
+      "phase": "warmup",
+      "line": 6613
+    },
+    {
+      "timestamp": "2026-10-20 14:39:58.029",
+      "blog_id": 4,
+      "comment_status": 1,
+      "phase": "timed",
+      "line": 13441
+    },
+    {
+      "timestamp": "2026-10-20 14:41:21.755",
+      "blog_id": 4,
+      "comment_status": 1,
+      "phase": "timed",
+      "line": 16904
+    },
+    {
+      "timestamp": "2026-10-20 14:43:58.696",
+      "blog_id": 4,
+      "comment_status": 1,
+      "phase": "timed",
+      "line": 22860
+    },
+    {
+      "timestamp": "2026-10-20 14:46:15.661",
+      "blog_id": 4,
+      "comment_status": 1,
+      "phase": "timed",
+      "line": 28252
+    },
+    {
+      "timestamp": "2026-10-20 14:47:02.243",
+      "blog_id": 4,
+      "comment_status": 1,
+      "phase": "timed",
+      "line": 30218
+    }
+  ],
+  "warmup_count": 4,
+  "timed_count": 5,
+  "timed_GETBLOG_samples": 22842,
+  "timed_fallback_fraction": 0.00021889501794939147,
+  "comment_rows_after_run": [
+    {
+      "blog_id": 4,
+      "comment_id": 26,
+      "is_deleted": 0,
+      "comment_status": 1
+    }
+  ],
+  "blog_counts_after_run": [
+    {
+      "blogs": 5000,
+      "max_id": 5000,
+      "min_id": 1,
+      "visible": 5000,
+      "sum_views": 39628
+    }
+  ],
+  "mysql_settings_after_run": {
+    "log_output": "FILE",
+    "general_log": 0,
+    "mysql_version": "5.7.25",
+    "performance_schema": 1
+  },
+  "source_explanation": "BlogServiceImpl.getBlogDetailVO always gets comment count; CommentServiceImpl.getCommentPageByBlogIdAndPageNum lists comments and, if nonempty, gets count again. The generated GetBlog trace has only one count then the list then configuration SELECT. For the sole retained visible comment (blog4), the second incoming count arrives when the buffered next SQL is configuration SELECT; validator rejects that mismatch and switches subsequent queries to normal execution.",
+  "semantic_scope": "Formal driver checks HTTP status without retaining HTML; separate postformal blog4 probes validate fallback semantics, exact +1 views and one UPDATE per measured request. All six saved HTML responses agree after replacing only the displayed view count.",
+  "evidence_paths": [
+    "Application/my-blog/src/main/java/com/site/blog/my/core/service/impl/BlogServiceImpl.java:337",
+    "Application/my-blog/src/main/java/com/site/blog/my/core/service/impl/CommentServiceImpl.java:74-76",
+    "paper/generated/sql/GetBlog/graph-ConcreteSQL-ver0.sql",
+    "SourceCode/webridge-common/basic-components/src/main/java/webridge/wbridge/storedprocedure/invocation/SPInvokeManager.java:171-183"
+  ],
+  "postformal_semantic_receipt": "../postformal-blog4-20261020T185432/receipt.json"
+}

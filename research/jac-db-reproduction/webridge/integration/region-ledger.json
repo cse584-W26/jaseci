@@ -1,0 +1,17 @@
+{
+  "source": "/home/baichuan/jaseci/reproduction/webridge/integration/java/ReplayCompatibleAlignedIc5.java",
+  "source_sha256": "8c7c0577745278b2ad4544e6342b67d6f7cce742767e2847d915f13adc097e3d",
+  "derived": "/home/baichuan/jaseci/reproduction/webridge/integration/java/RegionCompatibleAlignedIc5.java",
+  "derived_sha256": "915d5f4c6642a31fbc2bf74f114a583556cb1f4e908a3c13b27dd5e179f52310",
+  "region": "After original SET SESSION statement, before original COMMIT; all original body code remains",
+  "default_hook": "No-op; count/result gate runs this exact default",
+  "preserved_outside_region": [
+    "Identity resolution and process schema/type ensure",
+    "START TRANSACTION READ ONLY",
+    "SET SESSION innodb_lock_wait_timeout=10",
+    "COMMIT or original exception ROLLBACK"
+  ],
+  "changes_to_sql": [],
+  "changes_to_original_webridge_algorithms": [],
+  "automatic_whole_request_support": false
+}

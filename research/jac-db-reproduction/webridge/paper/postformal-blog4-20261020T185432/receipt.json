@@ -1,0 +1,289 @@
+{
+  "purpose": "Separate postformal blog4 fallback semantic diagnostic. GETs only; no reset. Not formal latency.",
+  "formal_pair": "pair-20261020T181922",
+  "before": {
+    "blog": {
+      "id": 4,
+      "tags": "zz",
+      "title": "asdddmm",
+      "views": 10,
+      "status": 1,
+      "content": "asd",
+      "deleted": 0,
+      "category": 24
+    },
+    "all_blog_counts": [
+      {
+        "n": 5000,
+        "max_id": 5000,
+        "min_id": 1,
+        "sum_views": 39628
+      }
+    ],
+    "comments": [
+      {
+        "id": 26,
+        "body": "第一条评论",
+        "status": 1,
+        "blog_id": 4,
+        "deleted": 0,
+        "commentator": "十三"
+      }
+    ],
+    "settings": {
+      "log_output": "FILE",
+      "general_log": 0,
+      "mysql_version": "5.7.25",
+      "performance_schema": 1
+    }
+  },
+  "arms": {
+    "normal": {
+      "pid": 2246833,
+      "before": {
+        "blog": {
+          "id": 4,
+          "tags": "zz",
+          "title": "asdddmm",
+          "views": 10,
+          "status": 1,
+          "content": "asd",
+          "deleted": 0,
+          "category": 24
+        },
+        "all_blog_counts": [
+          {
+            "n": 5000,
+            "max_id": 5000,
+            "min_id": 1,
+            "sum_views": 39628
+          }
+        ],
+        "comments": [
+          {
+            "id": 26,
+            "body": "第一条评论",
+            "status": 1,
+            "blog_id": 4,
+            "deleted": 0,
+            "commentator": "十三"
+          }
+        ],
+        "settings": {
+          "log_output": "FILE",
+          "general_log": 0,
+          "mysql_version": "5.7.25",
+          "performance_schema": 1
+        }
+      },
+      "after": {
+        "blog": {
+          "id": 4,
+          "tags": "zz",
+          "title": "asdddmm",
+          "views": 21,
+          "status": 1,
+          "content": "asd",
+          "deleted": 0,
+          "category": 24
+        },
+        "all_blog_counts": [
+          {
+            "n": 5000,
+            "max_id": 5000,
+            "min_id": 1,
+            "sum_views": 39639
+          }
+        ],
+        "comments": [
+          {
+            "id": 26,
+            "body": "第一条评论",
+            "status": 1,
+            "blog_id": 4,
+            "deleted": 0,
+            "commentator": "十三"
+          }
+        ],
+        "settings": {
+          "log_output": "FILE",
+          "general_log": 0,
+          "mysql_version": "5.7.25",
+          "performance_schema": 1
+        }
+      },
+      "request_checks": [
+        {
+          "repeat": 0,
+          "views_delta": 1,
+          "executed_blog_update_statements": 1,
+          "title_rendered": true,
+          "comment26_rendered": true,
+          "html_sha256": "c5fc2770a499b5d5bff7a4bedee2ac88769b8e0985c6bb04ffae2848782d1b04"
+        },
+        {
+          "repeat": 1,
+          "views_delta": 1,
+          "executed_blog_update_statements": 1,
+          "title_rendered": true,
+          "comment26_rendered": true,
+          "html_sha256": "f4acf5a8124e123426cc377d8be7e53f4f241a214d42786b19931d12c2d5a407"
+        },
+        {
+          "repeat": 2,
+          "views_delta": 1,
+          "executed_blog_update_statements": 1,
+          "title_rendered": true,
+          "comment26_rendered": true,
+          "html_sha256": "3b998c5be76b521814701d67e266b1ece6308272bcd975ef0d5c6dd9453da5c2"
+        }
+      ],
+      "including_warm_views_delta": 11
+    },
+    "optimized": {
+      "pid": 2248710,
+      "before": {
+        "blog": {
+          "id": 4,
+          "tags": "zz",
+          "title": "asdddmm",
+          "views": 21,
+          "status": 1,
+          "content": "asd",
+          "deleted": 0,
+          "category": 24
+        },
+        "all_blog_counts": [
+          {
+            "n": 5000,
+            "max_id": 5000,
+            "min_id": 1,
+            "sum_views": 39639
+          }
+        ],
+        "comments": [
+          {
+            "id": 26,
+            "body": "第一条评论",
+            "status": 1,
+            "blog_id": 4,
+            "deleted": 0,
+            "commentator": "十三"
+          }
+        ],
+        "settings": {
+          "log_output": "FILE",
+          "general_log": 0,
+          "mysql_version": "5.7.25",
+          "performance_schema": 1
+        }
+      },
+      "after": {
+        "blog": {
+          "id": 4,
+          "tags": "zz",
+          "title": "asdddmm",
+          "views": 32,
+          "status": 1,
+          "content": "asd",
+          "deleted": 0,
+          "category": 24
+        },
+        "all_blog_counts": [
+          {
+            "n": 5000,
+            "max_id": 5000,
+            "min_id": 1,
+            "sum_views": 39650
+          }
+        ],
+        "comments": [
+          {
+            "id": 26,
+            "body": "第一条评论",
+            "status": 1,
+            "blog_id": 4,
+            "deleted": 0,
+            "commentator": "十三"
+          }
+        ],
+        "settings": {
+          "log_output": "FILE",
+          "general_log": 0,
+          "mysql_version": "5.7.25",
+          "performance_schema": 1
+        }
+      },
+      "request_checks": [
+        {
+          "repeat": 0,
+          "views_delta": 1,
+          "executed_blog_update_statements": 1,
+          "title_rendered": true,
+          "comment26_rendered": true,
+          "html_sha256": "b034d0049bb1810f91ed0f91498dc553008fe4ed1fc7e6fb38a48da719dbbef8"
+        },
+        {
+          "repeat": 1,
+          "views_delta": 1,
+          "executed_blog_update_statements": 1,
+          "title_rendered": true,
+          "comment26_rendered": true,
+          "html_sha256": "6dad7ae1879cb6616c5640376ca50baa393a8dc54a5a350a9e6c2a0536d6d309"
+        },
+        {
+          "repeat": 2,
+          "views_delta": 1,
+          "executed_blog_update_statements": 1,
+          "title_rendered": true,
+          "comment26_rendered": true,
+          "html_sha256": "a2c4b5ccfd05a7a80575f4ce2121254025258751f6f0ef6353900195834cd928"
+        }
+      ],
+      "including_warm_views_delta": 11
+    }
+  },
+  "passed": true,
+  "after": {
+    "blog": {
+      "id": 4,
+      "tags": "zz",
+      "title": "asdddmm",
+      "views": 32,
+      "status": 1,
+      "content": "asd",
+      "deleted": 0,
+      "category": 24
+    },
+    "all_blog_counts": [
+      {
+        "n": 5000,
+        "max_id": 5000,
+        "min_id": 1,
+        "sum_views": 39650
+      }
+    ],
+    "comments": [
+      {
+        "id": 26,
+        "body": "第一条评论",
+        "status": 1,
+        "blog_id": 4,
+        "deleted": 0,
+        "commentator": "十三"
+      }
+    ],
+    "settings": {
+      "log_output": "FILE",
+      "general_log": 0,
+      "mysql_version": "5.7.25",
+      "performance_schema": 1
+    }
+  },
+  "html_comparison": {
+    "only_normalized_field": "displayed view count (regex digits+浏览)",
+    "all_six_normalized_html_equal": true,
+    "normalized_sha256": "82d2bef33d22682a550fc62fbfc4ea08bbb823f1fa0d18d8714622504544e150",
+    "all_render_one_comment": true
+  }
+}

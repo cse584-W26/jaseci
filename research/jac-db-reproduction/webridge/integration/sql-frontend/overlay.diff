@@ -1,0 +1,193 @@
+--- /home/baichuan/jaseci/webridge/SourceCode/webridge-common/basic-components/src/main/java/webridge/wbridge/sql/ast/SQLAstVisitor.java
++++ /home/baichuan/jaseci/reproduction/webridge/integration/sql-frontend/src/webridge/wbridge/sql/ast/SQLAstVisitor.java
+@@ -192,19 +192,8 @@
+ 
+   @Override
+   public void endVisit(MySqlSelectQueryBlock x) {
+-    SQLTableSource from = x.getFrom();
+-    if (from == null) {
+-      // select `constant`;
+-      sqlType = SqlType.SELECT;
+-      super.endVisit(x);
+-      return;
+-    }
+-    fromTableName = from.toString();
+-    final SQLExpr where = x.getWhere();
+-
+-    x.getSelectList().forEach(this::handleSelectItem);
+-    handleWhere(where);
+-    handleLimit(x.getLimit());
++    // Schema resolution still visits every nested scope. Result columns and
++    // parameters are registered once at the top-level SELECT statement.
+     sqlType = SqlType.SELECT;
+     super.endVisit(x);
+   }
+@@ -473,9 +462,166 @@
+     }
+   }
+ 
++  // An independent frontend metadata pass. It never rewrites the SQL AST.
+   @Override
+-  public void endVisit(SQLSelectStatement selectStatement) {
+-    super.endVisit(selectStatement);
++  public void endVisit(SQLSelectStatement statement) {
++    super.endVisit(statement);
++    retValNameTypeMap.clear(); retValNameAliasMap.clear();
++    argExprLst.clear(); argTypeLst.clear(); argParentExprLst.clear();
++    SQLSelectQuery query = statement.getSelect().getQuery();
++    MySqlSelectQueryBlock outer = firstBlock(query);
++    fromTableName = outer.getFrom() == null ? null : outer.getFrom().toString();
++    for (SQLSelectItem item : outer.getSelectList()) registerProjection(item, outer);
++    final TreeMap<Integer, SQLVariantRefExpr> ordered = new TreeMap<>();
++    statement.accept(new com.alibaba.druid.sql.dialect.mysql.visitor.MySqlASTVisitorAdapter() {
++      @Override public boolean visit(SQLVariantRefExpr p) {
++        if (!PLACE_HOLDER.equals(p.getName())) return true;
++        if (p.getIndex() < 0 || ordered.put(p.getIndex(), p) != null)
++          throw new IllegalArgumentException("Non-unique positional placeholder index: " + p.getIndex());
++        return true;
++      }
++    });
++    int expected = 0;
++    for (Map.Entry<Integer,SQLVariantRefExpr> e : ordered.entrySet()) {
++      if (e.getKey() != expected++) throw new IllegalArgumentException("Non-contiguous SQL placeholders");
++      SQLVariantRefExpr p = e.getValue();
++      Pair<String,String> inferred = parameterType(p);
++      argExprLst.add(Pair.of(inferred.getLeft(), PLACE_HOLDER));
++      argTypeLst.add(SQLVarType.of(normalType(inferred.getRight())));
++    }
++    sqlType = SqlType.SELECT;
++  }
++
++  private String normalType(String type) {
++    if (type.equalsIgnoreCase("SIGNED") || type.equalsIgnoreCase("SIGNED INTEGER")) return "BIGINT";
++    if (type.equalsIgnoreCase("UNSIGNED")) return "BIGINT";
++    if (type.equalsIgnoreCase("JSON")) return "LONGTEXT";
++    return type;
++  }
++
++  private MySqlSelectQueryBlock firstBlock(SQLSelectQuery q) {
++    if (q instanceof MySqlSelectQueryBlock) return (MySqlSelectQueryBlock)q;
++    if (q instanceof SQLUnionQuery) return firstBlock(((SQLUnionQuery)q).getLeft());
++    throw new IllegalArgumentException("Unsupported SELECT query shape: " + q.getClass());
++  }
++
++  private MySqlSelectQueryBlock scope(SQLObject o) {
++    while (o != null && !(o instanceof MySqlSelectQueryBlock)) o = o.getParent();
++    return (MySqlSelectQueryBlock)o;
++  }
++
++  private String unquote(String text) { return text.replace("`", ""); }
++
++  private SQLTableSource table(SQLTableSource source, String alias) {
++    if (source == null) return null;
++    if (source.getAlias() != null && unquote(source.getAlias()).equalsIgnoreCase(unquote(alias))) return source;
++    if (source instanceof SQLExprTableSource) {
++      String name = ((SQLExprTableSource)source).getExpr().toString();
++      if (unquote(name).equalsIgnoreCase(unquote(alias))) return source;
++    }
++    if (source instanceof SQLJoinTableSource) {
++      SQLTableSource left = table(((SQLJoinTableSource)source).getLeft(),alias);
++      return left != null ? left : table(((SQLJoinTableSource)source).getRight(),alias);
++    }
++    return null;
++  }
++
++  private String columnType(SQLTableSource source,String name) {
++    if (source instanceof SQLExprTableSource) {
++      SQLExprTableSource base = (SQLExprTableSource)source;
++      if (base.getSchemaObject() == null) throw new IllegalArgumentException("Unresolved schema table: "+source);
++      for (SQLObject child : base.getSchemaObject().getStatement().getChildren()) {
++        if (child instanceof SQLColumnDefinition) {
++          SQLColumnDefinition col = (SQLColumnDefinition)child;
++          if (unquote(col.getName().getSimpleName()).equalsIgnoreCase(unquote(name))) return col.getDataType().toString();
++        }
++      }
++    } else if (source instanceof SQLSubqueryTableSource) {
++      return outputType(((SQLSubqueryTableSource)source).getSelect().getQuery(),name);
++    } else if (source instanceof SQLUnionQueryTableSource) {
++      return outputType(((SQLUnionQueryTableSource)source).getUnion(),name);
++    }
++    throw new IllegalArgumentException("Cannot resolve column "+name+" from "+source);
++  }
++
++  private String outputType(SQLSelectQuery query,String name) {
++    if (query instanceof SQLUnionQuery) {
++      String left=outputType(((SQLUnionQuery)query).getLeft(),name);
++      String right=outputType(((SQLUnionQuery)query).getRight(),name);
++      if (!left.equalsIgnoreCase(right)) throw new IllegalArgumentException("UNION type coercion requires explicit metadata: "+left+" / "+right);
++      return left;
++    }
++    MySqlSelectQueryBlock block=firstBlock(query);
++    for (SQLSelectItem item:block.getSelectList()) {
++      SQLExpr expr=item.getExpr();
++      if (item.getAlias()!=null && unquote(item.getAlias()).equalsIgnoreCase(unquote(name))) return expressionType(expr,block);
++      if (expr instanceof SQLPropertyExpr) {
++        SQLPropertyExpr prop=(SQLPropertyExpr)expr;
++        if ("*".equals(prop.getName())) return columnType(table(block.getFrom(),prop.getOwner().toString()),name);
++        if (unquote(prop.getName()).equalsIgnoreCase(unquote(name))) return expressionType(expr,block);
++      } else if (expr instanceof SQLIdentifierExpr && unquote(((SQLIdentifierExpr)expr).getName()).equalsIgnoreCase(unquote(name))) return expressionType(expr,block);
++      else if (expr instanceof SQLAllColumnExpr) return columnType(block.getFrom(),name);
++    }
++    throw new IllegalArgumentException("No derived output column "+name+" in "+query);
++  }
++
++  private String expressionType(SQLExpr expr,MySqlSelectQueryBlock block) {
++    if (expr instanceof SQLPropertyExpr) {
++      SQLPropertyExpr prop=(SQLPropertyExpr)expr;
++      SQLColumnDefinition col=prop.getResolvedColumn();
++      if (col!=null) return col.getDataType().toString();
++      return columnType(table(block.getFrom(),prop.getOwner().toString()),prop.getName());
++    }
++    if (expr instanceof SQLIdentifierExpr) {
++      SQLColumnDefinition col=((SQLIdentifierExpr)expr).getResolvedColumn();
++      if (col!=null) return col.getDataType().toString();
++      return columnType(block.getFrom(),((SQLIdentifierExpr)expr).getName());
++    }
++    if (expr instanceof SQLCastExpr) return normalType(((SQLCastExpr)expr).getDataType().toString());
++    if (expr instanceof SQLMethodInvokeExpr) {
++      String method=((SQLMethodInvokeExpr)expr).getMethodName();
++      if (method.equalsIgnoreCase("JSON_UNQUOTE") || method.equalsIgnoreCase("JSON_EXTRACT")) return "LONGTEXT";
++    }
++    SQLDataType type=expr.computeDataType();
++    if(type!=null)return normalType(type.toString());
++    throw new IllegalArgumentException("Cannot infer SQL expression type: "+expr);
++  }
++
++  private void registerProjection(SQLSelectItem item,MySqlSelectQueryBlock block) {
++    SQLExpr expr=item.getExpr();
++    if (expr instanceof SQLAllColumnExpr || (expr instanceof SQLPropertyExpr && "*".equals(((SQLPropertyExpr)expr).getName()))) {
++      // Keep the original wildcard expansion for a top-level base table;
++      // nested wildcard projections are visited only when resolving a derived column.
++      handleSelectItem(item); return;
++    }
++    if(expr instanceof SQLAggregateExpr || expr instanceof SQLCaseExpr){handleSelectItem(item);return;}
++    String alias=item.getAlias();
++    String name=alias!=null && !(expr instanceof SQLPropertyExpr) && !(expr instanceof SQLIdentifierExpr)?alias:expr.toString();
++    retValNameTypeMap.add(Pair.of(name,expressionType(expr,block)));
++    retValNameAliasMap.add(Pair.of(name,alias));
++  }
++
++  private boolean contains(SQLObject child,SQLObject target) {
++    for(SQLObject p=target;p!=null;p=p.getParent())if(p==child)return true;
++    return false;
++  }
++
++  private Pair<String,String> parameterType(SQLVariantRefExpr parameter) {
++    for(SQLObject p=parameter.getParent();p!=null;p=p.getParent()) {
++      if(p instanceof SQLCastExpr)return Pair.of(parameter.toString(),normalType(((SQLCastExpr)p).getDataType().toString()));
++      if(p instanceof SQLLimit)return Pair.of(parameter.toString(),"BIGINT");
++      if(p instanceof SQLInListExpr)return Pair.of(((SQLInListExpr)p).getExpr().toString(),expressionType(((SQLInListExpr)p).getExpr(),scope(p)));
++      if(p instanceof SQLBinaryOpExpr) {
++        SQLBinaryOpExpr bin=(SQLBinaryOpExpr)p;
++        if(bin.getOperator()==SQLBinaryOperator.BooleanAnd || bin.getOperator()==SQLBinaryOperator.BooleanOr)continue;
++        SQLExpr opposite=contains(bin.getLeft(),parameter)?bin.getRight():bin.getLeft();
++        if(opposite instanceof SQLVariantRefExpr)continue;
++        String inferred=expressionType(opposite,scope(bin));
++        argParentExprLst.add(bin);
++        return Pair.of(opposite.toString(),inferred);
++      }
++    }
++    throw new IllegalArgumentException("Cannot infer positional parameter "+parameter.getIndex());
+   }
+ 
+   public String getColumnType(String columnName) {

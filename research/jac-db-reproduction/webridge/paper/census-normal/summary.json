@@ -1,0 +1,75 @@
+{
+  "arm": "normal",
+  "measured_requests": 9,
+  "semantic_passed": true,
+  "diagnostic": true,
+  "scope": "Top-level SQL=general_log Query+Execute; Prepare/Close logged separately. P_S account deltas include CALL wrapper and nested SQL/SP control events; not a round-trip or packet count. Exclusive traffic required. EB alternates two fixed diagnostic payloads. Logged diagnostic wall time is not formal performance latency.",
+  "by_api": {
+    "GI": {
+      "activation_passed": true,
+      "census_observed": true,
+      "requests": 3,
+      "wall_median_ms": 29.29751994088292,
+      "top_level_sql_per_request": [
+        7,
+        7,
+        8
+      ],
+      "calls_per_request": [
+        0,
+        0,
+        0
+      ],
+      "statement_account_event_counts": {
+        "statement/sql/select": 22
+      },
+      "semantic_passed": true
+    },
+    "BD": {
+      "activation_passed": true,
+      "census_observed": true,
+      "requests": 3,
+      "wall_median_ms": 23.998579941689968,
+      "top_level_sql_per_request": [
+        7,
+        7,
+        7
+      ],
+      "calls_per_request": [
+        0,
+        0,
+        0
+      ],
+      "statement_account_event_counts": {
+        "statement/sql/select": 18,
+        "statement/sql/update": 3
+      },
+      "semantic_passed": true
+    },
+    "EB": {
+      "activation_passed": true,
+      "census_observed": true,
+      "requests": 3,
+      "wall_median_ms": 31.002300092950463,
+      "top_level_sql_per_request": [
+        11,
+        11,
+        11
+      ],
+      "calls_per_request": [
+        0,
+        0,
+        0
+      ],
+      "statement_account_event_counts": {
+        "statement/sql/select": 12,
+        "statement/sql/update": 6,
+        "statement/sql/insert": 3,
+        "statement/sql/delete": 3,
+        "statement/sql/set_option": 6,
+        "statement/sql/commit": 3
+      },
+      "semantic_passed": true
+    }
+  }
+}

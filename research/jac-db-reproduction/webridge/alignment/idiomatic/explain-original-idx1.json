@@ -1,0 +1,428 @@
+{
+  "query_block": {
+    "select_id": 1,
+    "cost_info": {
+      "query_cost": "15.52"
+    },
+    "ordering_operation": {
+      "using_filesort": true,
+      "grouping_operation": {
+        "using_temporary_table": true,
+        "using_filesort": true,
+        "buffer_result": {
+          "using_temporary_table": true,
+          "nested_loop": [
+            {
+              "table": {
+                "table_name": "memberships",
+                "access_type": "ALL",
+                "rows_examined_per_scan": 2,
+                "rows_produced_per_join": 2,
+                "filtered": "100.00",
+                "cost_info": {
+                  "read_cost": "10.10",
+                  "eval_cost": "0.40",
+                  "prefix_cost": "10.50",
+                  "data_read_per_join": "592"
+                },
+                "used_columns": [
+                  "forum_id",
+                  "friend_id"
+                ],
+                "attached_condition": "(`memberships`.`forum_id` is not null)",
+                "materialized_from_subquery": {
+                  "using_temporary_table": true,
+                  "dependent": false,
+                  "cacheable": true,
+                  "query_block": {
+                    "select_id": 2,
+                    "cost_info": {
+                      "query_cost": "16.67"
+                    },
+                    "duplicates_removal": {
+                      "using_temporary_table": true,
+                      "using_filesort": false,
+                      "nested_loop": [
+                        {
+                          "table": {
+                            "table_name": "friends",
+                            "access_type": "ALL",
+                            "rows_examined_per_scan": 4,
+                            "rows_produced_per_join": 4,
+                            "filtered": "100.00",
+                            "cost_info": {
+                              "read_cost": "10.20",
+                              "eval_cost": "0.80",
+                              "prefix_cost": "11.00",
+                              "data_read_per_join": "608"
+                            },
+                            "used_columns": [
+                              "id"
+                            ],
+                            "attached_condition": "(`friends`.`id` is not null)",
+                            "materialized_from_subquery": {
+                              "using_temporary_table": true,
+                              "dependent": false,
+                              "cacheable": true,
+                              "query_block": {
+                                "union_result": {
+                                  "using_temporary_table": true,
+                                  "table_name": "<union3,4>",
+                                  "access_type": "ALL",
+                                  "query_specifications": [
+                                    {
+                                      "dependent": false,
+                                      "cacheable": true,
+                                      "query_block": {
+                                        "select_id": 3,
+                                        "cost_info": {
+                                          "query_cost": "8.40"
+                                        },
+                                        "table": {
+                                          "table_name": "k",
+                                          "access_type": "ref",
+                                          "possible_keys": [
+                                            "source_type",
+                                            "kind_type"
+                                          ],
+                                          "key": "source_type",
+                                          "used_key_parts": [
+                                            "src",
+                                            "arch_type"
+                                          ],
+                                          "key_length": "547",
+                                          "ref": [
+                                            "const",
+                                            "const"
+                                          ],
+                                          "rows_examined_per_scan": 7,
+                                          "rows_produced_per_join": 1,
+                                          "filtered": "19.00",
+                                          "cost_info": {
+                                            "read_cost": "7.00",
+                                            "eval_cost": "0.27",
+                                            "prefix_cost": "8.40",
+                                            "data_read_per_join": "4K"
+                                          },
+                                          "used_columns": [
+                                            "kind",
+                                            "arch_type",
+                                            "src",
+                                            "dst",
+                                            "dst_type"
+                                          ],
+                                          "attached_condition": "((`jac_alignment_utf8`.`k`.`kind` = 'EdgeAnchor') and (isnull(`jac_alignment_utf8`.`k`.`dst_type`) or (`jac_alignment_utf8`.`k`.`dst_type` = 'Person')))"
+                                        }
+                                      }
+                                    },
+                                    {
+                                      "dependent": false,
+                                      "cacheable": true,
+                                      "query_block": {
+                                        "select_id": 4,
+                                        "cost_info": {
+                                          "query_cost": "3.60"
+                                        },
+                                        "table": {
+                                          "table_name": "k",
+                                          "access_type": "ref",
+                                          "possible_keys": [
+                                            "target_type",
+                                            "kind_type"
+                                          ],
+                                          "key": "target_type",
+                                          "used_key_parts": [
+                                            "dst",
+                                            "arch_type"
+                                          ],
+                                          "key_length": "547",
+                                          "ref": [
+                                            "const",
+                                            "const"
+                                          ],
+                                          "rows_examined_per_scan": 3,
+                                          "rows_produced_per_join": 0,
+                                          "filtered": "19.00",
+                                          "cost_info": {
+                                            "read_cost": "3.00",
+                                            "eval_cost": "0.11",
+                                            "prefix_cost": "3.60",
+                                            "data_read_per_join": "2K"
+                                          },
+                                          "used_columns": [
+                                            "kind",
+                                            "arch_type",
+                                            "src",
+                                            "dst",
+                                            "src_type"
+                                          ],
+                                          "attached_condition": "((`jac_alignment_utf8`.`k`.`kind` = 'EdgeAnchor') and (isnull(`jac_alignment_utf8`.`k`.`src_type`) or (`jac_alignment_utf8`.`k`.`src_type` = 'Person')))"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "table": {
+                            "table_name": "friend",
+                            "access_type": "eq_ref",
+                            "possible_keys": [
+                              "PRIMARY",
+                              "kind_type"
+                            ],
+                            "key": "PRIMARY",
+                            "used_key_parts": [
+                              "id"
+                            ],
+                            "key_length": "144",
+                            "ref": [
+                              "friends.id"
+                            ],
+                            "rows_examined_per_scan": 1,
+                            "rows_produced_per_join": 0,
+                            "filtered": "5.00",
+                            "cost_info": {
+                              "read_cost": "4.00",
+                              "eval_cost": "0.04",
+                              "prefix_cost": "15.80",
+                              "data_read_per_join": "734"
+                            },
+                            "used_columns": [
+                              "id",
+                              "kind",
+                              "arch_type"
+                            ],
+                            "attached_condition": "((`jac_alignment_utf8`.`friend`.`arch_type` = 'Person') and (`jac_alignment_utf8`.`friend`.`kind` = 'NodeAnchor'))"
+                          }
+                        },
+                        {
+                          "table": {
+                            "table_name": "member",
+                            "access_type": "ref",
+                            "possible_keys": [
+                              "target_type",
+                              "kind_type"
+                            ],
+                            "key": "target_type",
+                            "used_key_parts": [
+                              "dst",
+                              "arch_type"
+                            ],
+                            "key_length": "547",
+                            "ref": [
+                              "friends.id",
+                              "const"
+                            ],
+                            "rows_examined_per_scan": 3,
+                            "rows_produced_per_join": 0,
+                            "filtered": "19.00",
+                            "cost_info": {
+                              "read_cost": "0.72",
+                              "eval_cost": "0.03",
+                              "prefix_cost": "16.67",
+                              "data_read_per_join": "504"
+                            },
+                            "used_columns": [
+                              "id",
+                              "kind",
+                              "arch_type",
+                              "src",
+                              "dst",
+                              "props",
+                              "src_type"
+                            ],
+                            "attached_condition": "((`jac_alignment_utf8`.`member`.`kind` = 'EdgeAnchor') and (isnull(`jac_alignment_utf8`.`member`.`src_type`) or (`jac_alignment_utf8`.`member`.`src_type` = 'Forum')) and (cast(json_unquote(json_extract(`jac_alignment_utf8`.`member`.`props`,'$.archetype.joinDate')) as signed) > 1347062400000))"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "table": {
+                "table_name": "f",
+                "access_type": "eq_ref",
+                "possible_keys": [
+                  "PRIMARY",
+                  "kind_type"
+                ],
+                "key": "PRIMARY",
+                "used_key_parts": [
+                  "id"
+                ],
+                "key_length": "144",
+                "ref": [
+                  "memberships.forum_id"
+                ],
+                "rows_examined_per_scan": 1,
+                "rows_produced_per_join": 0,
+                "filtered": "5.00",
+                "cost_info": {
+                  "read_cost": "2.00",
+                  "eval_cost": "0.02",
+                  "prefix_cost": "12.90",
+                  "data_read_per_join": "367"
+                },
+                "used_columns": [
+                  "id",
+                  "kind",
+                  "arch_type",
+                  "props"
+                ],
+                "attached_condition": "((`jac_alignment_utf8`.`f`.`arch_type` = 'Forum') and (`jac_alignment_utf8`.`f`.`kind` = 'NodeAnchor'))"
+              }
+            },
+            {
+              "table": {
+                "table_name": "co",
+                "access_type": "ref",
+                "possible_keys": [
+                  "source_type",
+                  "kind_type"
+                ],
+                "key": "source_type",
+                "used_key_parts": [
+                  "src",
+                  "arch_type"
+                ],
+                "key_length": "547",
+                "ref": [
+                  "memberships.forum_id",
+                  "const"
+                ],
+                "rows_examined_per_scan": 2,
+                "rows_produced_per_join": 0,
+                "filtered": "100.00",
+                "cost_info": {
+                  "read_cost": "0.28",
+                  "eval_cost": "0.06",
+                  "prefix_cost": "13.24",
+                  "data_read_per_join": "1K"
+                },
+                "used_columns": [
+                  "id",
+                  "kind",
+                  "arch_type",
+                  "src",
+                  "dst",
+                  "dst_type"
+                ],
+                "attached_condition": "<if>(is_not_null_compl(co), ((`jac_alignment_utf8`.`co`.`kind` = 'EdgeAnchor') and (isnull(`jac_alignment_utf8`.`co`.`dst_type`) or (`jac_alignment_utf8`.`co`.`dst_type` = 'Post'))), true)"
+              }
+            },
+            {
+              "table": {
+                "table_name": "p",
+                "access_type": "eq_ref",
+                "possible_keys": [
+                  "PRIMARY",
+                  "kind_type"
+                ],
+                "key": "PRIMARY",
+                "used_key_parts": [
+                  "id"
+                ],
+                "key_length": "144",
+                "ref": [
+                  "jac_alignment_utf8.co.dst"
+                ],
+                "rows_examined_per_scan": 1,
+                "rows_produced_per_join": 0,
+                "filtered": "100.00",
+                "cost_info": {
+                  "read_cost": "0.28",
+                  "eval_cost": "0.06",
+                  "prefix_cost": "13.58",
+                  "data_read_per_join": "1K"
+                },
+                "used_columns": [
+                  "id",
+                  "kind",
+                  "arch_type"
+                ],
+                "attached_condition": "<if>(is_not_null_compl(p), ((`jac_alignment_utf8`.`p`.`arch_type` = 'Post') and (`jac_alignment_utf8`.`p`.`kind` = 'NodeAnchor')), true)"
+              }
+            },
+            {
+              "table": {
+                "table_name": "hc",
+                "access_type": "ref",
+                "possible_keys": [
+                  "source_type",
+                  "kind_type"
+                ],
+                "key": "source_type",
+                "used_key_parts": [
+                  "src",
+                  "arch_type"
+                ],
+                "key_length": "547",
+                "ref": [
+                  "jac_alignment_utf8.p.id",
+                  "const"
+                ],
+                "rows_examined_per_scan": 2,
+                "rows_produced_per_join": 0,
+                "filtered": "100.00",
+                "cost_info": {
+                  "read_cost": "0.81",
+                  "eval_cost": "0.16",
+                  "prefix_cost": "14.55",
+                  "data_read_per_join": "2K"
+                },
+                "used_columns": [
+                  "id",
+                  "kind",
+                  "arch_type",
+                  "src",
+                  "dst",
+                  "dst_type"
+                ],
+                "attached_condition": "<if>(is_not_null_compl(hc), ((`jac_alignment_utf8`.`hc`.`kind` = 'EdgeAnchor') and (isnull(`jac_alignment_utf8`.`hc`.`dst_type`) or (`jac_alignment_utf8`.`hc`.`dst_type` = 'Person'))), true)"
+              }
+            },
+            {
+              "table": {
+                "table_name": "author",
+                "access_type": "eq_ref",
+                "possible_keys": [
+                  "PRIMARY",
+                  "kind_type"
+                ],
+                "key": "PRIMARY",
+                "used_key_parts": [
+                  "id"
+                ],
+                "key_length": "144",
+                "ref": [
+                  "jac_alignment_utf8.hc.dst"
+                ],
+                "rows_examined_per_scan": 1,
+                "rows_produced_per_join": 0,
+                "filtered": "100.00",
+                "cost_info": {
+                  "read_cost": "0.81",
+                  "eval_cost": "0.16",
+                  "prefix_cost": "15.52",
+                  "data_read_per_join": "2K"
+                },
+                "used_columns": [
+                  "id",
+                  "kind",
+                  "arch_type"
+                ],
+                "attached_condition": "<if>(is_not_null_compl(author), ((`jac_alignment_utf8`.`author`.`arch_type` = 'Person') and (`jac_alignment_utf8`.`author`.`kind` = 'NodeAnchor')), true)"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "literal": [
+    {
+      "table_name": "e",
+      "access_type": "ALL",
+      "rows_examined_per_scan": 5
+    },
+    {
+      "table_name": "e",
+      "access_type": "ref",
+      "key": "source_type",
+      "used_key_parts": [
+        "src"
+      ],
+      "rows_examined_per_scan": 7,
+      "attached_condition": "((`jac_alignment`.`e`.`kind` = 'EdgeAnchor') and ((`jac_alignment`.`e`.`arch_type` = 'Knows') or <in_optimizer>(`jac_alignment`.`e`.`arch_type`,`jac_alignment`.`e`.`arch_type` in ( <materialize> (/* select#3 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = 'Knows') ), <primary_index_lookup>(`jac_alignment`.`e`.`arch_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`e`.`arch_type` = `materialized-subquery`.`type_name`)))))) and (isnull(`jac_alignment`.`e`.`dst_type`) or (`jac_alignment`.`e`.`dst_type` = 'Person') or <in_optimizer>(`jac_alignment`.`e`.`dst_type`,`jac_alignment`.`e`.`dst_type` in ( <materialize> (/* select#4 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = 'Person') ), <primary_index_lookup>(`jac_alignment`.`e`.`dst_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`e`.`dst_type` = `materialized-subquery`.`type_name`)))))))"
+    },
+    {
+      "table_name": "e",
+      "access_type": "ref",
+      "key": "target_type",
+      "used_key_parts": [
+        "dst"
+      ],
+      "rows_examined_per_scan": 6,
+      "attached_condition": "((`jac_alignment`.`e`.`kind` = 'EdgeAnchor') and (`jac_alignment`.`e`.`undirected` = 1) and (`jac_alignment`.`e`.`src` <> '6c0eeb86-bda6-5055-b3cf-81a8bf523191') and ((`jac_alignment`.`e`.`arch_type` = 'Knows') or <in_optimizer>(`jac_alignment`.`e`.`arch_type`,`jac_alignment`.`e`.`arch_type` in ( <materialize> (/* select#6 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = 'Knows') ), <primary_index_lookup>(`jac_alignment`.`e`.`arch_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`e`.`arch_type` = `materialized-subquery`.`type_name`)))))) and (isnull(`jac_alignment`.`e`.`src_type`) or (`jac_alignment`.`e`.`src_type` = 'Person') or <in_optimizer>(`jac_alignment`.`e`.`src_type`,`jac_alignment`.`e`.`src_type` in ( <materialize> (/* select#7 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = 'Person') ), <primary_index_lookup>(`jac_alignment`.`e`.`src_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`e`.`src_type` = `materialized-subquery`.`type_name`)))))))"
+    }
+  ],
+  "utf8": [
+    {
+      "table_name": "e",
+      "access_type": "ALL",
+      "rows_examined_per_scan": 234017
+    },
+    {
+      "table_name": "e",
+      "access_type": "ref",
+      "key": "kind_type",
+      "used_key_parts": [
+        "kind"
+      ],
+      "rows_examined_per_scan": 214695,
+      "attached_condition": "((convert(`jac_alignment`.`e`.`src` using utf8mb4) = '6c0eeb86-bda6-5055-b3cf-81a8bf523191') and ((`jac_alignment`.`e`.`arch_type` = <cache>(q2@1)) or <in_optimizer>(`jac_alignment`.`e`.`arch_type`,`jac_alignment`.`e`.`arch_type` in ( <materialize> (/* select#3 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = <cache>(q3@2)) ), <primary_index_lookup>(`jac_alignment`.`e`.`arch_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`e`.`arch_type` = `materialized-subquery`.`type_name`)))))) and (isnull(`jac_alignment`.`e`.`dst_type`) or (`jac_alignment`.`e`.`dst_type` = <cache>(q4@3)) or <in_optimizer>(`jac_alignment`.`e`.`dst_type`,`jac_alignment`.`e`.`dst_type` in ( <materialize> (/* select#4 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = <cache>(q5@4)) ), <primary_index_lookup>(`jac_alignment`.`e`.`dst_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`e`.`dst_type` = `materialized-subquery`.`type_name`)))))))"
+    },
+    {
+      "table_name": "e",
+      "access_type": "ref",
+      "key": "kind_type",
+      "used_key_parts": [
+        "kind"
+      ],
+      "rows_examined_per_scan": 214695,
+      "attached_condition": "((`jac_alignment`.`e`.`undirected` = 1) and (convert(`jac_alignment`.`e`.`dst` using utf8mb4) = '6c0eeb86-bda6-5055-b3cf-81a8bf523191') and (`jac_alignment`.`e`.`src` <> `jac_alignment`.`e`.`dst`) and ((`jac_alignment`.`e`.`arch_type` = <cache>(q7@6)) or <in_optimizer>(`jac_alignment`.`e`.`arch_type`,`jac_alignment`.`e`.`arch_type` in ( <materialize> (/* select#6 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = <cache>(q8@7)) ), <primary_index_lookup>(`jac_alignment`.`e`.`arch_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`e`.`arch_type` = `materialized-subquery`.`type_name`)))))) and (isnull(`jac_alignment`.`e`.`src_type`) or (`jac_alignment`.`e`.`src_type` = <cache>(q9@8)) or <in_optimizer>(`jac_alignment`.`e`.`src_type`,`jac_alignment`.`e`.`src_type` in ( <materialize> (/* select#7 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = <cache>(q10@9)) ), <primary_index_lookup>(`jac_alignment`.`e`.`src_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`e`.`src_type` = `materialized-subquery`.`type_name`)))))))"
+    }
+  ],
+  "ascii": [
+    {
+      "table_name": "e",
+      "access_type": "ALL",
+      "rows_examined_per_scan": 5
+    },
+    {
+      "table_name": "e",
+      "access_type": "ref",
+      "key": "source_type",
+      "used_key_parts": [
+        "src"
+      ],
+      "rows_examined_per_scan": 7,
+      "attached_condition": "((`jac_alignment`.`e`.`kind` = 'EdgeAnchor') and ((`jac_alignment`.`e`.`arch_type` = <cache>(q2@1)) or <in_optimizer>(`jac_alignment`.`e`.`arch_type`,`jac_alignment`.`e`.`arch_type` in ( <materialize> (/* select#3 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = <cache>(q3@2)) ), <primary_index_lookup>(`jac_alignment`.`e`.`arch_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`e`.`arch_type` = `materialized-subquery`.`type_name`)))))) and (isnull(`jac_alignment`.`e`.`dst_type`) or (`jac_alignment`.`e`.`dst_type` = <cache>(q4@3)) or <in_optimizer>(`jac_alignment`.`e`.`dst_type`,`jac_alignment`.`e`.`dst_type` in ( <materialize> (/* select#4 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = <cache>(q5@4)) ), <primary_index_lookup>(`jac_alignment`.`e`.`dst_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`e`.`dst_type` = `materialized-subquery`.`type_name`)))))))"
+    },
+    {
+      "table_name": "e",
+      "access_type": "ref",
+      "key": "target_type",
+      "used_key_parts": [
+        "dst"
+      ],
+      "rows_examined_per_scan": 6,
+      "attached_condition": "((`jac_alignment`.`e`.`kind` = 'EdgeAnchor') and (`jac_alignment`.`e`.`undirected` = 1) and (`jac_alignment`.`e`.`src` <> <cache>(q6@5)) and ((`jac_alignment`.`e`.`arch_type` = <cache>(q7@6)) or <in_optimizer>(`jac_alignment`.`e`.`arch_type`,`jac_alignment`.`e`.`arch_type` in ( <materialize> (/* select#6 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = <cache>(q8@7)) ), <primary_index_lookup>(`jac_alignment`.`e`.`arch_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`e`.`arch_type` = `materialized-subquery`.`type_name`)))))) and (isnull(`jac_alignment`.`e`.`src_type`) or (`jac_alignment`.`e`.`src_type` = <cache>(q9@8)) or <in_optimizer>(`jac_alignment`.`e`.`src_type`,`jac_alignment`.`e`.`src_type` in ( <materialize> (/* select#7 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = <cache>(q10@9)) ), <primary_index_lookup>(`jac_alignment`.`e`.`src_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`e`.`src_type` = `materialized-subquery`.`type_name`)))))))"
+    }
+  ]
+}

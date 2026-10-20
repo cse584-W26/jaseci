@@ -1,0 +1,50 @@
+[
+  {
+    "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)) ORDER BY f0.ord, e1.seq, e1.id",
+    "executions": 41303,
+    "duration_ms": 2731.2690000003195,
+    "first_ordinal": 5
+  },
+  {
+    "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint, a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+    "executions": 4112,
+    "duration_ms": 247.80700000000095,
+    "first_ordinal": 3
+  },
+  {
+    "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $2 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $3 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) AND e1.props->'archetype'->'joinDate' > to_jsonb(CAST($5 AS bigint)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $6 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $6)) ORDER BY f0.ord, e1.seq, e1.id",
+    "executions": 6,
+    "duration_ms": 90.151,
+    "first_ordinal": 9
+  },
+  {
+    "sql": "SELECT doc FROM identity_users WHERE user_id = $1",
+    "executions": 1,
+    "duration_ms": 0.018,
+    "first_ordinal": 0
+  },
+  {
+    "sql": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+    "executions": 1,
+    "duration_ms": 0.006,
+    "first_ordinal": 1
+  },
+  {
+    "sql": "SET LOCAL lock_timeout = '10s'",
+    "executions": 1,
+    "duration_ms": 0.005,
+    "first_ordinal": 2
+  },
+  {
+    "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $2 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $3 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)) ORDER BY f0.ord, e1.seq, e1.id",
+    "executions": 1,
+    "duration_ms": 0.117,
+    "first_ordinal": 7
+  },
+  {
+    "sql": "COMMIT",
+    "executions": 1,
+    "duration_ms": 0.011,
+    "first_ordinal": 45425
+  }
+]

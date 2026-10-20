@@ -1,0 +1,1755 @@
+{
+  "database": [
+    {
+      "datname": "jac_snb_bench_pg_fbdb3a2c",
+      "encoding": "UTF8",
+      "datcollate": "C",
+      "datctype": "C"
+    }
+  ],
+  "tables": [
+    {
+      "name": "adj_knows",
+      "relkind": "r",
+      "relpersistence": "p"
+    },
+    {
+      "name": "adj_knows_pkey",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "anchors",
+      "relkind": "r",
+      "relpersistence": "p"
+    },
+    {
+      "name": "anchors_pkey",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "anchors_seq_seq",
+      "relkind": "S",
+      "relpersistence": "p"
+    },
+    {
+      "name": "g_n_comment_d2a57d",
+      "relkind": "r",
+      "relpersistence": "p"
+    },
+    {
+      "name": "g_n_comment_d2a57d_epo_hascreator_f_creationdate",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "g_n_comment_d2a57d_pkey",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "g_n_forum_d2a57d",
+      "relkind": "r",
+      "relpersistence": "p"
+    },
+    {
+      "name": "g_n_forum_d2a57d_pkey",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "g_n_person_d2a57d",
+      "relkind": "r",
+      "relpersistence": "p"
+    },
+    {
+      "name": "g_n_person_d2a57d_gval_f_firstname",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "g_n_person_d2a57d_gval_f_person_id",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "g_n_person_d2a57d_pkey",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "g_n_post_d2a57d",
+      "relkind": "r",
+      "relpersistence": "p"
+    },
+    {
+      "name": "g_n_post_d2a57d_epo_hascreator_f_creationdate",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "g_n_post_d2a57d_pkey",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "graph_types",
+      "relkind": "r",
+      "relpersistence": "p"
+    },
+    {
+      "name": "graph_types_pkey",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "identity_lookups",
+      "relkind": "r",
+      "relpersistence": "p"
+    },
+    {
+      "name": "identity_lookups_pkey",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "identity_users",
+      "relkind": "r",
+      "relpersistence": "p"
+    },
+    {
+      "name": "identity_users_pkey",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "idx_adj_containerof_post_dst",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "idx_adj_containerof_post_src",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "idx_adj_hascreator_person_dst",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "idx_adj_hascreator_person_src",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "idx_adj_knows_person_dst",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "idx_adj_knows_person_src",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "idx_anchors_dst",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "idx_anchors_dst_typed",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "idx_anchors_kind_type",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "idx_anchors_root",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "idx_anchors_src",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "idx_anchors_src_typed",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "idx_identity_lookups_user",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "jac_docs",
+      "relkind": "r",
+      "relpersistence": "p"
+    },
+    {
+      "name": "jac_docs_pkey",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "jac_ep_violation",
+      "relkind": "r",
+      "relpersistence": "p"
+    },
+    {
+      "name": "jac_ep_violation_pkey",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "kv_state",
+      "relkind": "r",
+      "relpersistence": "p"
+    },
+    {
+      "name": "kv_state_pkey",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "quarantine",
+      "relkind": "r",
+      "relpersistence": "p"
+    },
+    {
+      "name": "quarantine_pkey",
+      "relkind": "i",
+      "relpersistence": "p"
+    },
+    {
+      "name": "sso_lookups",
+      "relkind": "r",
+      "relpersistence": "p"
+    },
+    {
+      "name": "sso_lookups_pkey",
+      "relkind": "i",
+      "relpersistence": "p"
+    }
+  ],
+  "columns": [
+    {
+      "table_name": "adj_knows",
+      "column_name": "src",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 1,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "adj_knows",
+      "column_name": "dst",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 2,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "anchors",
+      "column_name": "id",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 1,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "anchors",
+      "column_name": "kind",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 2,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "anchors",
+      "column_name": "arch_type",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 3,
+      "column_default": "''::text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "anchors",
+      "column_name": "arch_module",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 4,
+      "column_default": "''::text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "anchors",
+      "column_name": "fingerprint",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 5,
+      "column_default": "''::text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "anchors",
+      "column_name": "root_id",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 6,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "anchors",
+      "column_name": "src",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 7,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "anchors",
+      "column_name": "dst",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 8,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "anchors",
+      "column_name": "undirected",
+      "data_type": "boolean",
+      "udt_name": "bool",
+      "ordinal_position": 9,
+      "column_default": "false",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "anchors",
+      "column_name": "props",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 10,
+      "column_default": "'{}'::jsonb",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "anchors",
+      "column_name": "format_version",
+      "data_type": "integer",
+      "udt_name": "int4",
+      "ordinal_position": 11,
+      "column_default": "1",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "anchors",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "ordinal_position": 12,
+      "column_default": "now()",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "anchors",
+      "column_name": "seq",
+      "data_type": "bigint",
+      "udt_name": "int8",
+      "ordinal_position": 13,
+      "column_default": "nextval('anchors_seq_seq'::regclass)",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "anchors",
+      "column_name": "src_type",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 14,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "anchors",
+      "column_name": "dst_type",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 15,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_comment_d2a57d",
+      "column_name": "id",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 1,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "g_n_comment_d2a57d",
+      "column_name": "root_id",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 2,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_comment_d2a57d",
+      "column_name": "acl_all",
+      "data_type": "smallint",
+      "udt_name": "int2",
+      "ordinal_position": 3,
+      "column_default": "'-1'::integer",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "g_n_comment_d2a57d",
+      "column_name": "acl_spec",
+      "data_type": "boolean",
+      "udt_name": "bool",
+      "ordinal_position": 4,
+      "column_default": "false",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "g_n_comment_d2a57d",
+      "column_name": "frag",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 5,
+      "column_default": "'[]'::text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "g_n_comment_d2a57d",
+      "column_name": "f_comment_id",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 6,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_comment_d2a57d",
+      "column_name": "f_creationdate",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 7,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_comment_d2a57d",
+      "column_name": "f_locationip",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 8,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_comment_d2a57d",
+      "column_name": "f_browserused",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 9,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_comment_d2a57d",
+      "column_name": "f_content",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 10,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_comment_d2a57d",
+      "column_name": "f_length",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 11,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_comment_d2a57d",
+      "column_name": "root_of_replyof",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 12,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_comment_d2a57d",
+      "column_name": "dst_endpoint_hascreator",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 13,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_forum_d2a57d",
+      "column_name": "id",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 1,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "g_n_forum_d2a57d",
+      "column_name": "root_id",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 2,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_forum_d2a57d",
+      "column_name": "acl_all",
+      "data_type": "smallint",
+      "udt_name": "int2",
+      "ordinal_position": 3,
+      "column_default": "'-1'::integer",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "g_n_forum_d2a57d",
+      "column_name": "acl_spec",
+      "data_type": "boolean",
+      "udt_name": "bool",
+      "ordinal_position": 4,
+      "column_default": "false",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "g_n_forum_d2a57d",
+      "column_name": "frag",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 5,
+      "column_default": "'[]'::text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "g_n_forum_d2a57d",
+      "column_name": "f_forum_id",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 6,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_forum_d2a57d",
+      "column_name": "f_title",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 7,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_forum_d2a57d",
+      "column_name": "f_creationdate",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 8,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_person_d2a57d",
+      "column_name": "id",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 1,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "g_n_person_d2a57d",
+      "column_name": "root_id",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 2,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_person_d2a57d",
+      "column_name": "acl_all",
+      "data_type": "smallint",
+      "udt_name": "int2",
+      "ordinal_position": 3,
+      "column_default": "'-1'::integer",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "g_n_person_d2a57d",
+      "column_name": "acl_spec",
+      "data_type": "boolean",
+      "udt_name": "bool",
+      "ordinal_position": 4,
+      "column_default": "false",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "g_n_person_d2a57d",
+      "column_name": "frag",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 5,
+      "column_default": "'[]'::text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "g_n_person_d2a57d",
+      "column_name": "f_person_id",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 6,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_person_d2a57d",
+      "column_name": "f_firstname",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 7,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_person_d2a57d",
+      "column_name": "f_lastname",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 8,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_person_d2a57d",
+      "column_name": "f_gender",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 9,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_person_d2a57d",
+      "column_name": "f_birthday",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 10,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_person_d2a57d",
+      "column_name": "f_creationdate",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 11,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_person_d2a57d",
+      "column_name": "f_locationip",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 12,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_person_d2a57d",
+      "column_name": "f_browserused",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 13,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_post_d2a57d",
+      "column_name": "id",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 1,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "g_n_post_d2a57d",
+      "column_name": "root_id",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 2,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_post_d2a57d",
+      "column_name": "acl_all",
+      "data_type": "smallint",
+      "udt_name": "int2",
+      "ordinal_position": 3,
+      "column_default": "'-1'::integer",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "g_n_post_d2a57d",
+      "column_name": "acl_spec",
+      "data_type": "boolean",
+      "udt_name": "bool",
+      "ordinal_position": 4,
+      "column_default": "false",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "g_n_post_d2a57d",
+      "column_name": "frag",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 5,
+      "column_default": "'[]'::text",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "g_n_post_d2a57d",
+      "column_name": "f_post_id",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 6,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_post_d2a57d",
+      "column_name": "f_imagefile",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 7,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_post_d2a57d",
+      "column_name": "f_creationdate",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 8,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_post_d2a57d",
+      "column_name": "f_locationip",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 9,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_post_d2a57d",
+      "column_name": "f_browserused",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 10,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_post_d2a57d",
+      "column_name": "f_language",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 11,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_post_d2a57d",
+      "column_name": "f_content",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 12,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_post_d2a57d",
+      "column_name": "f_length",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 13,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "g_n_post_d2a57d",
+      "column_name": "dst_endpoint_hascreator",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 14,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "graph_types",
+      "column_name": "type_name",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 1,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "graph_types",
+      "column_name": "ancestor",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 2,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "identity_lookups",
+      "column_name": "value_normalized",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 1,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "identity_lookups",
+      "column_name": "user_id",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 2,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "identity_users",
+      "column_name": "user_id",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 1,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "identity_users",
+      "column_name": "doc",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 2,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "jac_docs",
+      "column_name": "collection",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 1,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "jac_docs",
+      "column_name": "id",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 2,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "jac_docs",
+      "column_name": "doc",
+      "data_type": "jsonb",
+      "udt_name": "jsonb",
+      "ordinal_position": 3,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "jac_ep_violation",
+      "column_name": "tbl",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 1,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "jac_ep_violation",
+      "column_name": "edge_type",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 2,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "jac_ep_violation",
+      "column_name": "src",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 3,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "jac_ep_violation",
+      "column_name": "noticed_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "ordinal_position": 4,
+      "column_default": "now()",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "kv_state",
+      "column_name": "key",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 1,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "kv_state",
+      "column_name": "value",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 2,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "kv_state",
+      "column_name": "expires_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "ordinal_position": 3,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "kv_state",
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "ordinal_position": 4,
+      "column_default": "now()",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "quarantine",
+      "column_name": "missing_id",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 1,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "quarantine",
+      "column_name": "referrer_id",
+      "data_type": "uuid",
+      "udt_name": "uuid",
+      "ordinal_position": 2,
+      "column_default": null,
+      "is_nullable": "YES"
+    },
+    {
+      "table_name": "quarantine",
+      "column_name": "kind",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 3,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "quarantine",
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "udt_name": "timestamptz",
+      "ordinal_position": 4,
+      "column_default": "now()",
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sso_lookups",
+      "column_name": "provider",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 1,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sso_lookups",
+      "column_name": "external_id",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 2,
+      "column_default": null,
+      "is_nullable": "NO"
+    },
+    {
+      "table_name": "sso_lookups",
+      "column_name": "user_id",
+      "data_type": "text",
+      "udt_name": "text",
+      "ordinal_position": 3,
+      "column_default": null,
+      "is_nullable": "NO"
+    }
+  ],
+  "indexes": [
+    {
+      "tablename": "adj_knows",
+      "indexname": "adj_knows_pkey",
+      "indexdef": "CREATE UNIQUE INDEX adj_knows_pkey ON public.adj_knows USING btree (src, dst)"
+    },
+    {
+      "tablename": "anchors",
+      "indexname": "anchors_pkey",
+      "indexdef": "CREATE UNIQUE INDEX anchors_pkey ON public.anchors USING btree (id)"
+    },
+    {
+      "tablename": "anchors",
+      "indexname": "idx_adj_containerof_post_dst",
+      "indexdef": "CREATE INDEX idx_adj_containerof_post_dst ON public.anchors USING btree (dst) INCLUDE (src) WHERE ((arch_type = 'ContainerOf'::text) AND (src_type = 'Post'::text))"
+    },
+    {
+      "tablename": "anchors",
+      "indexname": "idx_adj_containerof_post_src",
+      "indexdef": "CREATE INDEX idx_adj_containerof_post_src ON public.anchors USING btree (src) INCLUDE (dst) WHERE ((arch_type = 'ContainerOf'::text) AND (dst_type = 'Post'::text))"
+    },
+    {
+      "tablename": "anchors",
+      "indexname": "idx_adj_hascreator_person_dst",
+      "indexdef": "CREATE INDEX idx_adj_hascreator_person_dst ON public.anchors USING btree (dst) INCLUDE (src) WHERE ((arch_type = 'HasCreator'::text) AND (src_type = 'Person'::text))"
+    },
+    {
+      "tablename": "anchors",
+      "indexname": "idx_adj_hascreator_person_src",
+      "indexdef": "CREATE INDEX idx_adj_hascreator_person_src ON public.anchors USING btree (src) INCLUDE (dst) WHERE ((arch_type = 'HasCreator'::text) AND (dst_type = 'Person'::text))"
+    },
+    {
+      "tablename": "anchors",
+      "indexname": "idx_adj_knows_person_dst",
+      "indexdef": "CREATE INDEX idx_adj_knows_person_dst ON public.anchors USING btree (dst) INCLUDE (src) WHERE ((arch_type = 'Knows'::text) AND (src_type = 'Person'::text))"
+    },
+    {
+      "tablename": "anchors",
+      "indexname": "idx_adj_knows_person_src",
+      "indexdef": "CREATE INDEX idx_adj_knows_person_src ON public.anchors USING btree (src) INCLUDE (dst) WHERE ((arch_type = 'Knows'::text) AND (dst_type = 'Person'::text))"
+    },
+    {
+      "tablename": "anchors",
+      "indexname": "idx_anchors_dst",
+      "indexdef": "CREATE INDEX idx_anchors_dst ON public.anchors USING btree (dst, arch_type) WHERE (dst IS NOT NULL)"
+    },
+    {
+      "tablename": "anchors",
+      "indexname": "idx_anchors_dst_typed",
+      "indexdef": "CREATE INDEX idx_anchors_dst_typed ON public.anchors USING btree (dst, arch_type, src_type) INCLUDE (src) WHERE (dst IS NOT NULL)"
+    },
+    {
+      "tablename": "anchors",
+      "indexname": "idx_anchors_kind_type",
+      "indexdef": "CREATE INDEX idx_anchors_kind_type ON public.anchors USING btree (kind, arch_type)"
+    },
+    {
+      "tablename": "anchors",
+      "indexname": "idx_anchors_root",
+      "indexdef": "CREATE INDEX idx_anchors_root ON public.anchors USING btree (root_id) WHERE (root_id IS NOT NULL)"
+    },
+    {
+      "tablename": "anchors",
+      "indexname": "idx_anchors_src",
+      "indexdef": "CREATE INDEX idx_anchors_src ON public.anchors USING btree (src, arch_type) WHERE (src IS NOT NULL)"
+    },
+    {
+      "tablename": "anchors",
+      "indexname": "idx_anchors_src_typed",
+      "indexdef": "CREATE INDEX idx_anchors_src_typed ON public.anchors USING btree (src, arch_type, dst_type) INCLUDE (dst) WHERE (src IS NOT NULL)"
+    },
+    {
+      "tablename": "g_n_comment_d2a57d",
+      "indexname": "g_n_comment_d2a57d_epo_hascreator_f_creationdate",
+      "indexdef": "CREATE INDEX g_n_comment_d2a57d_epo_hascreator_f_creationdate ON public.g_n_comment_d2a57d USING btree (dst_endpoint_hascreator, (((f_creationdate #>> '{}'::text[]))::bigint) DESC)"
+    },
+    {
+      "tablename": "g_n_comment_d2a57d",
+      "indexname": "g_n_comment_d2a57d_pkey",
+      "indexdef": "CREATE UNIQUE INDEX g_n_comment_d2a57d_pkey ON public.g_n_comment_d2a57d USING btree (id)"
+    },
+    {
+      "tablename": "g_n_forum_d2a57d",
+      "indexname": "g_n_forum_d2a57d_pkey",
+      "indexdef": "CREATE UNIQUE INDEX g_n_forum_d2a57d_pkey ON public.g_n_forum_d2a57d USING btree (id)"
+    },
+    {
+      "tablename": "g_n_person_d2a57d",
+      "indexname": "g_n_person_d2a57d_gval_f_firstname",
+      "indexdef": "CREATE INDEX g_n_person_d2a57d_gval_f_firstname ON public.g_n_person_d2a57d USING btree (((f_firstname #>> '{}'::text[])))"
+    },
+    {
+      "tablename": "g_n_person_d2a57d",
+      "indexname": "g_n_person_d2a57d_gval_f_person_id",
+      "indexdef": "CREATE INDEX g_n_person_d2a57d_gval_f_person_id ON public.g_n_person_d2a57d USING btree (((f_person_id #>> '{}'::text[])))"
+    },
+    {
+      "tablename": "g_n_person_d2a57d",
+      "indexname": "g_n_person_d2a57d_pkey",
+      "indexdef": "CREATE UNIQUE INDEX g_n_person_d2a57d_pkey ON public.g_n_person_d2a57d USING btree (id)"
+    },
+    {
+      "tablename": "g_n_post_d2a57d",
+      "indexname": "g_n_post_d2a57d_epo_hascreator_f_creationdate",
+      "indexdef": "CREATE INDEX g_n_post_d2a57d_epo_hascreator_f_creationdate ON public.g_n_post_d2a57d USING btree (dst_endpoint_hascreator, (((f_creationdate #>> '{}'::text[]))::bigint) DESC)"
+    },
+    {
+      "tablename": "g_n_post_d2a57d",
+      "indexname": "g_n_post_d2a57d_pkey",
+      "indexdef": "CREATE UNIQUE INDEX g_n_post_d2a57d_pkey ON public.g_n_post_d2a57d USING btree (id)"
+    },
+    {
+      "tablename": "graph_types",
+      "indexname": "graph_types_pkey",
+      "indexdef": "CREATE UNIQUE INDEX graph_types_pkey ON public.graph_types USING btree (type_name, ancestor)"
+    },
+    {
+      "tablename": "identity_lookups",
+      "indexname": "identity_lookups_pkey",
+      "indexdef": "CREATE UNIQUE INDEX identity_lookups_pkey ON public.identity_lookups USING btree (value_normalized)"
+    },
+    {
+      "tablename": "identity_lookups",
+      "indexname": "idx_identity_lookups_user",
+      "indexdef": "CREATE INDEX idx_identity_lookups_user ON public.identity_lookups USING btree (user_id)"
+    },
+    {
+      "tablename": "identity_users",
+      "indexname": "identity_users_pkey",
+      "indexdef": "CREATE UNIQUE INDEX identity_users_pkey ON public.identity_users USING btree (user_id)"
+    },
+    {
+      "tablename": "jac_docs",
+      "indexname": "jac_docs_pkey",
+      "indexdef": "CREATE UNIQUE INDEX jac_docs_pkey ON public.jac_docs USING btree (collection, id)"
+    },
+    {
+      "tablename": "jac_ep_violation",
+      "indexname": "jac_ep_violation_pkey",
+      "indexdef": "CREATE UNIQUE INDEX jac_ep_violation_pkey ON public.jac_ep_violation USING btree (tbl, edge_type, src)"
+    },
+    {
+      "tablename": "kv_state",
+      "indexname": "kv_state_pkey",
+      "indexdef": "CREATE UNIQUE INDEX kv_state_pkey ON public.kv_state USING btree (key)"
+    },
+    {
+      "tablename": "quarantine",
+      "indexname": "quarantine_pkey",
+      "indexdef": "CREATE UNIQUE INDEX quarantine_pkey ON public.quarantine USING btree (missing_id, kind)"
+    },
+    {
+      "tablename": "sso_lookups",
+      "indexname": "sso_lookups_pkey",
+      "indexdef": "CREATE UNIQUE INDEX sso_lookups_pkey ON public.sso_lookups USING btree (provider, external_id)"
+    }
+  ],
+  "constraints": [
+    {
+      "tablename": "anchors",
+      "conname": "anchors_arch_module_not_null",
+      "contype": "n",
+      "definition": "NOT NULL arch_module"
+    },
+    {
+      "tablename": "anchors",
+      "conname": "anchors_arch_type_not_null",
+      "contype": "n",
+      "definition": "NOT NULL arch_type"
+    },
+    {
+      "tablename": "anchors",
+      "conname": "anchors_fingerprint_not_null",
+      "contype": "n",
+      "definition": "NOT NULL fingerprint"
+    },
+    {
+      "tablename": "anchors",
+      "conname": "anchors_format_version_not_null",
+      "contype": "n",
+      "definition": "NOT NULL format_version"
+    },
+    {
+      "tablename": "anchors",
+      "conname": "anchors_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL id"
+    },
+    {
+      "tablename": "anchors",
+      "conname": "anchors_kind_not_null",
+      "contype": "n",
+      "definition": "NOT NULL kind"
+    },
+    {
+      "tablename": "anchors",
+      "conname": "anchors_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "tablename": "anchors",
+      "conname": "anchors_props_not_null",
+      "contype": "n",
+      "definition": "NOT NULL props"
+    },
+    {
+      "tablename": "anchors",
+      "conname": "anchors_seq_not_null",
+      "contype": "n",
+      "definition": "NOT NULL seq"
+    },
+    {
+      "tablename": "anchors",
+      "conname": "anchors_undirected_not_null",
+      "contype": "n",
+      "definition": "NOT NULL undirected"
+    },
+    {
+      "tablename": "anchors",
+      "conname": "anchors_updated_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL updated_at"
+    },
+    {
+      "tablename": "graph_types",
+      "conname": "graph_types_ancestor_not_null",
+      "contype": "n",
+      "definition": "NOT NULL ancestor"
+    },
+    {
+      "tablename": "graph_types",
+      "conname": "graph_types_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (type_name, ancestor)"
+    },
+    {
+      "tablename": "graph_types",
+      "conname": "graph_types_type_name_not_null",
+      "contype": "n",
+      "definition": "NOT NULL type_name"
+    },
+    {
+      "tablename": "kv_state",
+      "conname": "kv_state_key_not_null",
+      "contype": "n",
+      "definition": "NOT NULL key"
+    },
+    {
+      "tablename": "kv_state",
+      "conname": "kv_state_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (key)"
+    },
+    {
+      "tablename": "kv_state",
+      "conname": "kv_state_updated_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL updated_at"
+    },
+    {
+      "tablename": "kv_state",
+      "conname": "kv_state_value_not_null",
+      "contype": "n",
+      "definition": "NOT NULL value"
+    },
+    {
+      "tablename": "quarantine",
+      "conname": "quarantine_created_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL created_at"
+    },
+    {
+      "tablename": "quarantine",
+      "conname": "quarantine_kind_not_null",
+      "contype": "n",
+      "definition": "NOT NULL kind"
+    },
+    {
+      "tablename": "quarantine",
+      "conname": "quarantine_missing_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL missing_id"
+    },
+    {
+      "tablename": "quarantine",
+      "conname": "quarantine_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (missing_id, kind)"
+    },
+    {
+      "tablename": "identity_users",
+      "conname": "identity_users_doc_not_null",
+      "contype": "n",
+      "definition": "NOT NULL doc"
+    },
+    {
+      "tablename": "identity_users",
+      "conname": "identity_users_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (user_id)"
+    },
+    {
+      "tablename": "identity_users",
+      "conname": "identity_users_user_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL user_id"
+    },
+    {
+      "tablename": "identity_lookups",
+      "conname": "identity_lookups_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (value_normalized)"
+    },
+    {
+      "tablename": "identity_lookups",
+      "conname": "identity_lookups_user_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL user_id"
+    },
+    {
+      "tablename": "identity_lookups",
+      "conname": "identity_lookups_value_normalized_not_null",
+      "contype": "n",
+      "definition": "NOT NULL value_normalized"
+    },
+    {
+      "tablename": "sso_lookups",
+      "conname": "sso_lookups_external_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL external_id"
+    },
+    {
+      "tablename": "sso_lookups",
+      "conname": "sso_lookups_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (provider, external_id)"
+    },
+    {
+      "tablename": "sso_lookups",
+      "conname": "sso_lookups_provider_not_null",
+      "contype": "n",
+      "definition": "NOT NULL provider"
+    },
+    {
+      "tablename": "sso_lookups",
+      "conname": "sso_lookups_user_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL user_id"
+    },
+    {
+      "tablename": "jac_docs",
+      "conname": "jac_docs_collection_not_null",
+      "contype": "n",
+      "definition": "NOT NULL collection"
+    },
+    {
+      "tablename": "jac_docs",
+      "conname": "jac_docs_doc_not_null",
+      "contype": "n",
+      "definition": "NOT NULL doc"
+    },
+    {
+      "tablename": "jac_docs",
+      "conname": "jac_docs_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL id"
+    },
+    {
+      "tablename": "jac_docs",
+      "conname": "jac_docs_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (collection, id)"
+    },
+    {
+      "tablename": "adj_knows",
+      "conname": "adj_knows_dst_not_null",
+      "contype": "n",
+      "definition": "NOT NULL dst"
+    },
+    {
+      "tablename": "adj_knows",
+      "conname": "adj_knows_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (src, dst)"
+    },
+    {
+      "tablename": "adj_knows",
+      "conname": "adj_knows_src_not_null",
+      "contype": "n",
+      "definition": "NOT NULL src"
+    },
+    {
+      "tablename": "jac_ep_violation",
+      "conname": "jac_ep_violation_edge_type_not_null",
+      "contype": "n",
+      "definition": "NOT NULL edge_type"
+    },
+    {
+      "tablename": "jac_ep_violation",
+      "conname": "jac_ep_violation_noticed_at_not_null",
+      "contype": "n",
+      "definition": "NOT NULL noticed_at"
+    },
+    {
+      "tablename": "jac_ep_violation",
+      "conname": "jac_ep_violation_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (tbl, edge_type, src)"
+    },
+    {
+      "tablename": "jac_ep_violation",
+      "conname": "jac_ep_violation_src_not_null",
+      "contype": "n",
+      "definition": "NOT NULL src"
+    },
+    {
+      "tablename": "jac_ep_violation",
+      "conname": "jac_ep_violation_tbl_not_null",
+      "contype": "n",
+      "definition": "NOT NULL tbl"
+    },
+    {
+      "tablename": "g_n_person_d2a57d",
+      "conname": "g_n_person_d2a57d_acl_all_not_null",
+      "contype": "n",
+      "definition": "NOT NULL acl_all"
+    },
+    {
+      "tablename": "g_n_person_d2a57d",
+      "conname": "g_n_person_d2a57d_acl_spec_not_null",
+      "contype": "n",
+      "definition": "NOT NULL acl_spec"
+    },
+    {
+      "tablename": "g_n_person_d2a57d",
+      "conname": "g_n_person_d2a57d_frag_not_null",
+      "contype": "n",
+      "definition": "NOT NULL frag"
+    },
+    {
+      "tablename": "g_n_person_d2a57d",
+      "conname": "g_n_person_d2a57d_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL id"
+    },
+    {
+      "tablename": "g_n_person_d2a57d",
+      "conname": "g_n_person_d2a57d_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "tablename": "g_n_post_d2a57d",
+      "conname": "g_n_post_d2a57d_acl_all_not_null",
+      "contype": "n",
+      "definition": "NOT NULL acl_all"
+    },
+    {
+      "tablename": "g_n_post_d2a57d",
+      "conname": "g_n_post_d2a57d_acl_spec_not_null",
+      "contype": "n",
+      "definition": "NOT NULL acl_spec"
+    },
+    {
+      "tablename": "g_n_post_d2a57d",
+      "conname": "g_n_post_d2a57d_frag_not_null",
+      "contype": "n",
+      "definition": "NOT NULL frag"
+    },
+    {
+      "tablename": "g_n_post_d2a57d",
+      "conname": "g_n_post_d2a57d_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL id"
+    },
+    {
+      "tablename": "g_n_post_d2a57d",
+      "conname": "g_n_post_d2a57d_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "tablename": "g_n_comment_d2a57d",
+      "conname": "g_n_comment_d2a57d_acl_all_not_null",
+      "contype": "n",
+      "definition": "NOT NULL acl_all"
+    },
+    {
+      "tablename": "g_n_comment_d2a57d",
+      "conname": "g_n_comment_d2a57d_acl_spec_not_null",
+      "contype": "n",
+      "definition": "NOT NULL acl_spec"
+    },
+    {
+      "tablename": "g_n_comment_d2a57d",
+      "conname": "g_n_comment_d2a57d_frag_not_null",
+      "contype": "n",
+      "definition": "NOT NULL frag"
+    },
+    {
+      "tablename": "g_n_comment_d2a57d",
+      "conname": "g_n_comment_d2a57d_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL id"
+    },
+    {
+      "tablename": "g_n_comment_d2a57d",
+      "conname": "g_n_comment_d2a57d_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    },
+    {
+      "tablename": "g_n_forum_d2a57d",
+      "conname": "g_n_forum_d2a57d_acl_all_not_null",
+      "contype": "n",
+      "definition": "NOT NULL acl_all"
+    },
+    {
+      "tablename": "g_n_forum_d2a57d",
+      "conname": "g_n_forum_d2a57d_acl_spec_not_null",
+      "contype": "n",
+      "definition": "NOT NULL acl_spec"
+    },
+    {
+      "tablename": "g_n_forum_d2a57d",
+      "conname": "g_n_forum_d2a57d_frag_not_null",
+      "contype": "n",
+      "definition": "NOT NULL frag"
+    },
+    {
+      "tablename": "g_n_forum_d2a57d",
+      "conname": "g_n_forum_d2a57d_id_not_null",
+      "contype": "n",
+      "definition": "NOT NULL id"
+    },
+    {
+      "tablename": "g_n_forum_d2a57d",
+      "conname": "g_n_forum_d2a57d_pkey",
+      "contype": "p",
+      "definition": "PRIMARY KEY (id)"
+    }
+  ],
+  "triggers": [
+    {
+      "tablename": "anchors",
+      "tgname": "adj_knows_del",
+      "definition": "CREATE TRIGGER adj_knows_del AFTER DELETE ON anchors FOR EACH ROW WHEN (old.kind = 'EdgeAnchor'::text AND old.arch_type = 'Knows'::text AND old.src_type = 'Person'::text AND old.dst_type = 'Person'::text AND old.src IS NOT NULL AND old.dst IS NOT NULL) EXECUTE FUNCTION adj_knows_sync()"
+    },
+    {
+      "tablename": "anchors",
+      "tgname": "adj_knows_ins",
+      "definition": "CREATE TRIGGER adj_knows_ins AFTER INSERT OR UPDATE ON anchors FOR EACH ROW WHEN (new.kind = 'EdgeAnchor'::text AND new.arch_type = 'Knows'::text AND new.src_type = 'Person'::text AND new.dst_type = 'Person'::text AND new.src IS NOT NULL AND new.dst IS NOT NULL) EXECUTE FUNCTION adj_knows_sync()"
+    },
+    {
+      "tablename": "anchors",
+      "tgname": "g_n_comment_d2a57d_del",
+      "definition": "CREATE TRIGGER g_n_comment_d2a57d_del AFTER DELETE ON anchors FOR EACH ROW WHEN (old.kind = 'NodeAnchor'::text AND old.arch_type = 'Comment'::text) EXECUTE FUNCTION g_n_comment_d2a57d_sync()"
+    },
+    {
+      "tablename": "anchors",
+      "tgname": "g_n_comment_d2a57d_epo_hascreator_d",
+      "definition": "CREATE TRIGGER g_n_comment_d2a57d_epo_hascreator_d AFTER DELETE ON anchors FOR EACH ROW WHEN (old.kind = 'EdgeAnchor'::text AND old.arch_type = 'HasCreator'::text AND old.src_type = 'Comment'::text) EXECUTE FUNCTION g_n_comment_d2a57d_epo_hascreator()"
+    },
+    {
+      "tablename": "anchors",
+      "tgname": "g_n_comment_d2a57d_epo_hascreator_iu",
+      "definition": "CREATE TRIGGER g_n_comment_d2a57d_epo_hascreator_iu AFTER INSERT OR UPDATE ON anchors FOR EACH ROW WHEN (new.kind = 'EdgeAnchor'::text AND new.arch_type = 'HasCreator'::text AND new.src_type = 'Comment'::text) EXECUTE FUNCTION g_n_comment_d2a57d_epo_hascreator()"
+    },
+    {
+      "tablename": "anchors",
+      "tgname": "g_n_comment_d2a57d_ins",
+      "definition": "CREATE TRIGGER g_n_comment_d2a57d_ins AFTER INSERT OR UPDATE ON anchors FOR EACH ROW WHEN (new.kind = 'NodeAnchor'::text AND new.arch_type = 'Comment'::text) EXECUTE FUNCTION g_n_comment_d2a57d_sync()"
+    },
+    {
+      "tablename": "anchors",
+      "tgname": "g_n_comment_d2a57d_root_replyof_d",
+      "definition": "CREATE TRIGGER g_n_comment_d2a57d_root_replyof_d AFTER DELETE ON anchors FOR EACH ROW WHEN (old.kind = 'EdgeAnchor'::text AND old.arch_type = 'ReplyOf'::text AND old.src_type = 'Comment'::text) EXECUTE FUNCTION g_n_comment_d2a57d_root_replyof()"
+    },
+    {
+      "tablename": "anchors",
+      "tgname": "g_n_comment_d2a57d_root_replyof_iu",
+      "definition": "CREATE TRIGGER g_n_comment_d2a57d_root_replyof_iu AFTER INSERT OR UPDATE ON anchors FOR EACH ROW WHEN (new.kind = 'EdgeAnchor'::text AND new.arch_type = 'ReplyOf'::text AND new.src_type = 'Comment'::text) EXECUTE FUNCTION g_n_comment_d2a57d_root_replyof()"
+    },
+    {
+      "tablename": "anchors",
+      "tgname": "g_n_forum_d2a57d_del",
+      "definition": "CREATE TRIGGER g_n_forum_d2a57d_del AFTER DELETE ON anchors FOR EACH ROW WHEN (old.kind = 'NodeAnchor'::text AND old.arch_type = 'Forum'::text) EXECUTE FUNCTION g_n_forum_d2a57d_sync()"
+    },
+    {
+      "tablename": "anchors",
+      "tgname": "g_n_forum_d2a57d_ins",
+      "definition": "CREATE TRIGGER g_n_forum_d2a57d_ins AFTER INSERT OR UPDATE ON anchors FOR EACH ROW WHEN (new.kind = 'NodeAnchor'::text AND new.arch_type = 'Forum'::text) EXECUTE FUNCTION g_n_forum_d2a57d_sync()"
+    },
+    {
+      "tablename": "anchors",
+      "tgname": "g_n_person_d2a57d_del",
+      "definition": "CREATE TRIGGER g_n_person_d2a57d_del AFTER DELETE ON anchors FOR EACH ROW WHEN (old.kind = 'NodeAnchor'::text AND old.arch_type = 'Person'::text) EXECUTE FUNCTION g_n_person_d2a57d_sync()"
+    },
+    {
+      "tablename": "anchors",
+      "tgname": "g_n_person_d2a57d_ins",
+      "definition": "CREATE TRIGGER g_n_person_d2a57d_ins AFTER INSERT OR UPDATE ON anchors FOR EACH ROW WHEN (new.kind = 'NodeAnchor'::text AND new.arch_type = 'Person'::text) EXECUTE FUNCTION g_n_person_d2a57d_sync()"
+    },
+    {
+      "tablename": "anchors",
+      "tgname": "g_n_post_d2a57d_del",
+      "definition": "CREATE TRIGGER g_n_post_d2a57d_del AFTER DELETE ON anchors FOR EACH ROW WHEN (old.kind = 'NodeAnchor'::text AND old.arch_type = 'Post'::text) EXECUTE FUNCTION g_n_post_d2a57d_sync()"
+    },
+    {
+      "tablename": "anchors",
+      "tgname": "g_n_post_d2a57d_epo_hascreator_d",
+      "definition": "CREATE TRIGGER g_n_post_d2a57d_epo_hascreator_d AFTER DELETE ON anchors FOR EACH ROW WHEN (old.kind = 'EdgeAnchor'::text AND old.arch_type = 'HasCreator'::text AND old.src_type = 'Post'::text) EXECUTE FUNCTION g_n_post_d2a57d_epo_hascreator()"
+    },
+    {
+      "tablename": "anchors",
+      "tgname": "g_n_post_d2a57d_epo_hascreator_iu",
+      "definition": "CREATE TRIGGER g_n_post_d2a57d_epo_hascreator_iu AFTER INSERT OR UPDATE ON anchors FOR EACH ROW WHEN (new.kind = 'EdgeAnchor'::text AND new.arch_type = 'HasCreator'::text AND new.src_type = 'Post'::text) EXECUTE FUNCTION g_n_post_d2a57d_epo_hascreator()"
+    },
+    {
+      "tablename": "anchors",
+      "tgname": "g_n_post_d2a57d_ins",
+      "definition": "CREATE TRIGGER g_n_post_d2a57d_ins AFTER INSERT OR UPDATE ON anchors FOR EACH ROW WHEN (new.kind = 'NodeAnchor'::text AND new.arch_type = 'Post'::text) EXECUTE FUNCTION g_n_post_d2a57d_sync()"
+    }
+  ],
+  "functions": [
+    {
+      "name": "adj_knows_sync()",
+      "definition": "CREATE OR REPLACE FUNCTION public.adj_knows_sync()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $function$ BEGIN IF TG_OP = 'DELETE' THEN DELETE FROM adj_knows a WHERE (a.src, a.dst) IN ((OLD.src, OLD.dst), (OLD.dst, OLD.src)) AND NOT EXISTS (SELECT 1 FROM anchors e WHERE e.kind = 'EdgeAnchor' AND e.arch_type = 'Knows' AND e.src_type = 'Person' AND e.dst_type = 'Person' AND e.src IS NOT NULL AND e.dst IS NOT NULL AND ((e.src = a.src AND e.dst = a.dst) OR (e.src = a.dst AND e.dst = a.src))); RETURN OLD; END IF; INSERT INTO adj_knows (src, dst) VALUES (NEW.src, NEW.dst), (NEW.dst, NEW.src) ON CONFLICT DO NOTHING; RETURN NEW; END $function$\n"
+    },
+    {
+      "name": "g_n_comment_d2a57d_epo_hascreator()",
+      "definition": "CREATE OR REPLACE FUNCTION public.g_n_comment_d2a57d_epo_hascreator()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $function$ DECLARE cur uuid; BEGIN IF to_regclass('g_n_comment_d2a57d') IS NULL THEN RETURN COALESCE(NEW, OLD); END IF; IF TG_OP <> 'INSERT' THEN UPDATE g_n_comment_d2a57d SET dst_endpoint_hascreator = NULL WHERE id = OLD.src AND dst_endpoint_hascreator = OLD.dst; IF TG_OP = 'DELETE' THEN RETURN OLD; END IF; END IF; SELECT dst_endpoint_hascreator INTO cur FROM g_n_comment_d2a57d WHERE id = NEW.src FOR UPDATE; IF cur IS NOT NULL AND cur <> NEW.dst THEN INSERT INTO jac_ep_violation (tbl, edge_type, src) VALUES ('g_n_comment_d2a57d', 'HasCreator', NEW.src) ON CONFLICT DO NOTHING; UPDATE g_n_comment_d2a57d SET dst_endpoint_hascreator = NULL WHERE id = NEW.src; RAISE WARNING 'jac: g_n_comment_d2a57d.dst_endpoint_hascreator cardinality violated at % - a second HasCreator edge appeared; endpoint column disabled for this mirror', NEW.src; RETURN NEW; END IF; INSERT INTO g_n_comment_d2a57d (id, dst_endpoint_hascreator) VALUES (NEW.src, NEW.dst) ON CONFLICT (id) DO UPDATE SET dst_endpoint_hascreator = EXCLUDED.dst_endpoint_hascreator; RETURN NEW; END $function$\n"
+    },
+    {
+      "name": "g_n_comment_d2a57d_root_replyof()",
+      "definition": "CREATE OR REPLACE FUNCTION public.g_n_comment_d2a57d_root_replyof()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $function$ DECLARE r uuid; BEGIN IF to_regclass('g_n_comment_d2a57d') IS NULL THEN RETURN COALESCE(NEW, OLD); END IF; IF TG_OP = 'DELETE' OR (TG_OP = 'UPDATE' AND (OLD.src IS DISTINCT FROM NEW.src OR OLD.dst IS DISTINCT FROM NEW.dst)) THEN INSERT INTO jac_ep_violation (tbl, edge_type, src) VALUES ('g_n_comment_d2a57d', 'ReplyOf', OLD.src) ON CONFLICT DO NOTHING; RAISE WARNING 'jac: g_n_comment_d2a57d.root_of_replyof chain edge mutated at % (%); root column disabled for this mirror', OLD.src, TG_OP; RETURN COALESCE(NEW, OLD); END IF; IF NEW.dst_type = 'Post' THEN r := NEW.dst; ELSE SELECT root_of_replyof INTO r FROM g_n_comment_d2a57d WHERE id = NEW.dst; END IF; IF r IS NULL THEN RETURN NEW; END IF; INSERT INTO g_n_comment_d2a57d (id, root_of_replyof) VALUES (NEW.src, r) ON CONFLICT (id) DO UPDATE SET root_of_replyof = EXCLUDED.root_of_replyof; RETURN NEW; END $function$\n"
+    },
+    {
+      "name": "g_n_comment_d2a57d_sync()",
+      "definition": "CREATE OR REPLACE FUNCTION public.g_n_comment_d2a57d_sync()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $function$ BEGIN IF TG_OP = 'DELETE' THEN DELETE FROM g_n_comment_d2a57d WHERE id = OLD.id; RETURN OLD; END IF; INSERT INTO g_n_comment_d2a57d (id, root_id, acl_all, acl_spec, frag, f_comment_id, f_creationdate, f_locationip, f_browserused, f_content, f_length) VALUES (NEW.id, NEW.root_id, CASE WHEN jsonb_typeof(NEW.props->'access'->'all') = 'number' THEN (NEW.props->'access'->>'all')::smallint ELSE -1 END, COALESCE(NEW.props->'access'->'roots'->'anchors', '{}'::jsonb) <> '{}'::jsonb, (COALESCE((SELECT jsonb_object_agg(k.key, k.value) FROM jsonb_each(COALESCE(NEW.props->'archetype', '{}'::jsonb)) k WHERE left(k.key, 2) <> '__'), '{}'::jsonb) || jsonb_build_object('_jac_type', NEW.arch_type, '_jac_id', replace(NEW.id::text, '-', ''), '_jac_archetype', 'node'))::text, NEW.props->'archetype'->'comment_id', NEW.props->'archetype'->'creationDate', NEW.props->'archetype'->'locationIP', NEW.props->'archetype'->'browserUsed', NEW.props->'archetype'->'content', NEW.props->'archetype'->'length') ON CONFLICT (id) DO UPDATE SET root_id = EXCLUDED.root_id, acl_all = EXCLUDED.acl_all, acl_spec = EXCLUDED.acl_spec, frag = EXCLUDED.frag, f_comment_id = EXCLUDED.f_comment_id, f_creationdate = EXCLUDED.f_creationdate, f_locationip = EXCLUDED.f_locationip, f_browserused = EXCLUDED.f_browserused, f_content = EXCLUDED.f_content, f_length = EXCLUDED.f_length; RETURN NEW; END $function$\n"
+    },
+    {
+      "name": "g_n_forum_d2a57d_sync()",
+      "definition": "CREATE OR REPLACE FUNCTION public.g_n_forum_d2a57d_sync()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $function$ BEGIN IF TG_OP = 'DELETE' THEN DELETE FROM g_n_forum_d2a57d WHERE id = OLD.id; RETURN OLD; END IF; INSERT INTO g_n_forum_d2a57d (id, root_id, acl_all, acl_spec, frag, f_forum_id, f_title, f_creationdate) VALUES (NEW.id, NEW.root_id, CASE WHEN jsonb_typeof(NEW.props->'access'->'all') = 'number' THEN (NEW.props->'access'->>'all')::smallint ELSE -1 END, COALESCE(NEW.props->'access'->'roots'->'anchors', '{}'::jsonb) <> '{}'::jsonb, (COALESCE((SELECT jsonb_object_agg(k.key, k.value) FROM jsonb_each(COALESCE(NEW.props->'archetype', '{}'::jsonb)) k WHERE left(k.key, 2) <> '__'), '{}'::jsonb) || jsonb_build_object('_jac_type', NEW.arch_type, '_jac_id', replace(NEW.id::text, '-', ''), '_jac_archetype', 'node'))::text, NEW.props->'archetype'->'forum_id', NEW.props->'archetype'->'title', NEW.props->'archetype'->'creationDate') ON CONFLICT (id) DO UPDATE SET root_id = EXCLUDED.root_id, acl_all = EXCLUDED.acl_all, acl_spec = EXCLUDED.acl_spec, frag = EXCLUDED.frag, f_forum_id = EXCLUDED.f_forum_id, f_title = EXCLUDED.f_title, f_creationdate = EXCLUDED.f_creationdate; RETURN NEW; END $function$\n"
+    },
+    {
+      "name": "g_n_person_d2a57d_sync()",
+      "definition": "CREATE OR REPLACE FUNCTION public.g_n_person_d2a57d_sync()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $function$ BEGIN IF TG_OP = 'DELETE' THEN DELETE FROM g_n_person_d2a57d WHERE id = OLD.id; RETURN OLD; END IF; INSERT INTO g_n_person_d2a57d (id, root_id, acl_all, acl_spec, frag, f_person_id, f_firstname, f_lastname, f_gender, f_birthday, f_creationdate, f_locationip, f_browserused) VALUES (NEW.id, NEW.root_id, CASE WHEN jsonb_typeof(NEW.props->'access'->'all') = 'number' THEN (NEW.props->'access'->>'all')::smallint ELSE -1 END, COALESCE(NEW.props->'access'->'roots'->'anchors', '{}'::jsonb) <> '{}'::jsonb, (COALESCE((SELECT jsonb_object_agg(k.key, k.value) FROM jsonb_each(COALESCE(NEW.props->'archetype', '{}'::jsonb)) k WHERE left(k.key, 2) <> '__'), '{}'::jsonb) || jsonb_build_object('_jac_type', NEW.arch_type, '_jac_id', replace(NEW.id::text, '-', ''), '_jac_archetype', 'node'))::text, NEW.props->'archetype'->'person_id', NEW.props->'archetype'->'firstName', NEW.props->'archetype'->'lastName', NEW.props->'archetype'->'gender', NEW.props->'archetype'->'birthday', NEW.props->'archetype'->'creationDate', NEW.props->'archetype'->'locationIP', NEW.props->'archetype'->'browserUsed') ON CONFLICT (id) DO UPDATE SET root_id = EXCLUDED.root_id, acl_all = EXCLUDED.acl_all, acl_spec = EXCLUDED.acl_spec, frag = EXCLUDED.frag, f_person_id = EXCLUDED.f_person_id, f_firstname = EXCLUDED.f_firstname, f_lastname = EXCLUDED.f_lastname, f_gender = EXCLUDED.f_gender, f_birthday = EXCLUDED.f_birthday, f_creationdate = EXCLUDED.f_creationdate, f_locationip = EXCLUDED.f_locationip, f_browserused = EXCLUDED.f_browserused; RETURN NEW; END $function$\n"
+    },
+    {
+      "name": "g_n_post_d2a57d_epo_hascreator()",
+      "definition": "CREATE OR REPLACE FUNCTION public.g_n_post_d2a57d_epo_hascreator()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $function$ DECLARE cur uuid; BEGIN IF to_regclass('g_n_post_d2a57d') IS NULL THEN RETURN COALESCE(NEW, OLD); END IF; IF TG_OP <> 'INSERT' THEN UPDATE g_n_post_d2a57d SET dst_endpoint_hascreator = NULL WHERE id = OLD.src AND dst_endpoint_hascreator = OLD.dst; IF TG_OP = 'DELETE' THEN RETURN OLD; END IF; END IF; SELECT dst_endpoint_hascreator INTO cur FROM g_n_post_d2a57d WHERE id = NEW.src FOR UPDATE; IF cur IS NOT NULL AND cur <> NEW.dst THEN INSERT INTO jac_ep_violation (tbl, edge_type, src) VALUES ('g_n_post_d2a57d', 'HasCreator', NEW.src) ON CONFLICT DO NOTHING; UPDATE g_n_post_d2a57d SET dst_endpoint_hascreator = NULL WHERE id = NEW.src; RAISE WARNING 'jac: g_n_post_d2a57d.dst_endpoint_hascreator cardinality violated at % - a second HasCreator edge appeared; endpoint column disabled for this mirror', NEW.src; RETURN NEW; END IF; INSERT INTO g_n_post_d2a57d (id, dst_endpoint_hascreator) VALUES (NEW.src, NEW.dst) ON CONFLICT (id) DO UPDATE SET dst_endpoint_hascreator = EXCLUDED.dst_endpoint_hascreator; RETURN NEW; END $function$\n"
+    },
+    {
+      "name": "g_n_post_d2a57d_sync()",
+      "definition": "CREATE OR REPLACE FUNCTION public.g_n_post_d2a57d_sync()\n RETURNS trigger\n LANGUAGE plpgsql\nAS $function$ BEGIN IF TG_OP = 'DELETE' THEN DELETE FROM g_n_post_d2a57d WHERE id = OLD.id; RETURN OLD; END IF; INSERT INTO g_n_post_d2a57d (id, root_id, acl_all, acl_spec, frag, f_post_id, f_imagefile, f_creationdate, f_locationip, f_browserused, f_language, f_content, f_length) VALUES (NEW.id, NEW.root_id, CASE WHEN jsonb_typeof(NEW.props->'access'->'all') = 'number' THEN (NEW.props->'access'->>'all')::smallint ELSE -1 END, COALESCE(NEW.props->'access'->'roots'->'anchors', '{}'::jsonb) <> '{}'::jsonb, (COALESCE((SELECT jsonb_object_agg(k.key, k.value) FROM jsonb_each(COALESCE(NEW.props->'archetype', '{}'::jsonb)) k WHERE left(k.key, 2) <> '__'), '{}'::jsonb) || jsonb_build_object('_jac_type', NEW.arch_type, '_jac_id', replace(NEW.id::text, '-', ''), '_jac_archetype', 'node'))::text, NEW.props->'archetype'->'post_id', NEW.props->'archetype'->'imageFile', NEW.props->'archetype'->'creationDate', NEW.props->'archetype'->'locationIP', NEW.props->'archetype'->'browserUsed', NEW.props->'archetype'->'language', NEW.props->'archetype'->'content', NEW.props->'archetype'->'length') ON CONFLICT (id) DO UPDATE SET root_id = EXCLUDED.root_id, acl_all = EXCLUDED.acl_all, acl_spec = EXCLUDED.acl_spec, frag = EXCLUDED.frag, f_post_id = EXCLUDED.f_post_id, f_imagefile = EXCLUDED.f_imagefile, f_creationdate = EXCLUDED.f_creationdate, f_locationip = EXCLUDED.f_locationip, f_browserused = EXCLUDED.f_browserused, f_language = EXCLUDED.f_language, f_content = EXCLUDED.f_content, f_length = EXCLUDED.f_length; RETURN NEW; END $function$\n"
+    }
+  ],
+  "database_overrides": [],
+  "settings": [
+    {
+      "name": "effective_cache_size",
+      "setting": "524288",
+      "unit": "8kB",
+      "source": "default"
+    },
+    {
+      "name": "fsync",
+      "setting": "on",
+      "unit": null,
+      "source": "default"
+    },
+    {
+      "name": "log_min_duration_statement",
+      "setting": "-1",
+      "unit": "ms",
+      "source": "configuration file"
+    },
+    {
+      "name": "log_statement",
+      "setting": "none",
+      "unit": null,
+      "source": "configuration file"
+    },
+    {
+      "name": "max_connections",
+      "setting": "256",
+      "unit": null,
+      "source": "command line"
+    },
+    {
+      "name": "shared_buffers",
+      "setting": "16384",
+      "unit": "8kB",
+      "source": "configuration file"
+    },
+    {
+      "name": "synchronous_commit",
+      "setting": "on",
+      "unit": null,
+      "source": "default"
+    },
+    {
+      "name": "work_mem",
+      "setting": "4096",
+      "unit": "kB",
+      "source": "default"
+    }
+  ]
+}

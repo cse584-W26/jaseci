@@ -1,0 +1,1 @@
+public class UniformPrunedWeBridge { public static void main(String[] args) { RegionCompatiblePrunedIc5.url=RegionCompatiblePrunedIc5.url.replace("/jac_alignment?","/jac_alignment_utf8?");PrunedRegionWeBridge.main(args); } }

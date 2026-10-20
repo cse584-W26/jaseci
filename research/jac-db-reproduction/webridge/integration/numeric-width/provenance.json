@@ -1,0 +1,22 @@
+{
+  "original": "/home/baichuan/jaseci/webridge/SourceCode/webridge-common/basic-components/src/main/java/webridge/wbridge/storedprocedure/StoredProcedureManager.java",
+  "original_sha256": "bffaa35aa07ad28990cb25e1b4410af5b0dc21c298b85ed887b53542c5c7cb43",
+  "overlay_sha256": "c29f055ff1c9ec043b2d1ded1770aa86152eab735a22d9aa724891ff55503f3b",
+  "change": "Preserve native graph J symbol as typed Java long instead of default untyped integer",
+  "frontend_overlay": "/home/baichuan/jaseci/reproduction/webridge/integration/sql-frontend/provenance.json",
+  "command": [
+    "taskset",
+    "-c",
+    "9,19",
+    "/home/baichuan/jaseci/reproduction/webridge/boot-jdk8/bin/javac",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/classes:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+    "-d",
+    "/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/classes",
+    "/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/src/webridge/wbridge/storedprocedure/StoredProcedureManager.java"
+  ],
+  "returncode": 0,
+  "rename_original_sha256": "2439c1f4dede8e9fd0b1e469638b1de8829ddcd16da0c13dc1f67aa085606471",
+  "rename_overlay_sha256": "294833a3517cec807778601f6b9baa21a5f55d30b8d84317896d46ff7289e1e3",
+  "rename_change": "Preserve original symbolic integer typecode and bounds during alpha-renaming"
+}

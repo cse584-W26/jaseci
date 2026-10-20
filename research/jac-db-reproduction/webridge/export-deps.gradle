@@ -1,0 +1,13 @@
+gradle.projectsEvaluated {
+    gradle.rootProject.project(':basic-components').tasks.register('exportExperimentDeps', org.gradle.api.tasks.Copy) {
+        dependsOn gradle.rootProject.project(':basic-components').tasks.named('jar'), gradle.rootProject.project(':mysql-driver-extended').tasks.named('jar')
+        from gradle.rootProject.project(':basic-components').configurations.runtimeClasspath
+        from gradle.rootProject.project(':basic-components').configurations.compileClasspath
+        from gradle.rootProject.project(':utils').configurations.compileClasspath
+        from gradle.rootProject.project(':mysql-driver-extended').configurations.runtimeClasspath
+        from gradle.rootProject.project(':basic-components').tasks.named('jar')
+        from gradle.rootProject.project(':mysql-driver-extended').tasks.named('jar')
+        into '/home/baichuan/jaseci/reproduction/webridge/deps'
+        duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
+    }
+}

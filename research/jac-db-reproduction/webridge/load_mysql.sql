@@ -1,0 +1,10 @@
+SET GLOBAL local_infile=1;
+USE jac_webridge;
+SOURCE /tmp/webridge-schema.sql;
+LOAD DATA LOCAL INFILE '/tmp/webridge-data/knows.tsv' INTO TABLE knows;
+LOAD DATA LOCAL INFILE '/tmp/webridge-data/forum.tsv' INTO TABLE forum CHARACTER SET utf8mb4;
+LOAD DATA LOCAL INFILE '/tmp/webridge-data/forum_member.tsv' INTO TABLE forum_member;
+LOAD DATA LOCAL INFILE '/tmp/webridge-data/post.tsv' INTO TABLE post;
+ANALYZE TABLE knows,forum,forum_member,post;
+SELECT 'knows',COUNT(*) FROM knows UNION ALL SELECT 'forum',COUNT(*) FROM forum UNION ALL SELECT 'forum_member',COUNT(*) FROM forum_member UNION ALL SELECT 'post',COUNT(*) FROM post;
+UPDATE performance_schema.setup_consumers SET ENABLED='YES' WHERE NAME IN ('events_statements_current','events_statements_history','events_statements_history_long');

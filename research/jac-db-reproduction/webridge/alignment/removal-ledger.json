@@ -1,0 +1,102 @@
+{
+  "base_source": "AlignedIc5.java",
+  "base_sha256": "acc9b168a3fb579829f2c52c8a07b7be3361a9be9d983bfd9bec0412003246a2",
+  "derivative": "PrunedIc5.java",
+  "derivative_sha256": "32d67d833ed0624809316029af67586cd50f1b0f55bdc7446bb560fac0c2a3e7",
+  "default": "All removal flags false: derivative follows full port",
+  "execution_status": "All five cumulative configurations passed all20 inputs plus warm repeat0:105 requests with result parity, independent server Questions and exact category deltas.",
+  "removals": [
+    {
+      "flag": "-Dpruned.auth=true",
+      "removes": "Identity lookup/root-context establishment",
+      "replacement": "Previously validated service user/root supplied by declared fixture context",
+      "keeps": "Same logical service root and input UUIDs"
+    },
+    {
+      "flag": "-Dpruned.acl=true",
+      "removes": "Owner-root initialization/prefetch and object permission evaluation",
+      "replacement": "Benchmark fixture has one service-account owner for the social graph",
+      "keeps": "Graph relation predicates, type tests and traversal ordering"
+    },
+    {
+      "flag": "-Dpruned.schema=true",
+      "removes": "Cold VERSION/schema-fingerprint/type-registry initialization",
+      "replacement": "Preloaded declared experiment fixture/schema",
+      "keeps": "Type-inheritance predicates inside actual domain hop SQL"
+    },
+    {
+      "flag": "-Dpruned.hydration=true",
+      "requires": "pruned.acl=true",
+      "removes": "Session batch_get full-anchor object loads and entry object reconstruction",
+      "replacement": "Lightweight UUID/type records; Only forum_id/title scalar fields project from the existing Forum traversal, constructing lightweight typed fields",
+      "keeps": "Same number/order of Knows, HasMember, ContainerOf and per-post HasCreator traversal calls, plus request-local identity deduplication"
+    }
+  ],
+  "retained": [
+    "Read-only repeatable-read transaction and lock-wait setting",
+    "Every original friend/forum/post/creator traversal loop",
+    "UUID and edge sequence identity",
+    "Membership date predicate",
+    "Per-forum joined-friend sets and per-post creator membership test",
+    "Final sort and top20",
+    "Original generic graph storage and joins; no relational count aggregation"
+  ],
+  "validation_required": [
+    "All20 result oracles",
+    "Independent MySQL Questions count equals executed JDBC count",
+    "Per-input per-domain-hop counts exactly equal full port",
+    "Stepwise flags report actual removed categories; no prescribed count padding"
+  ],
+  "failed_attempts": [
+    {
+      "directory": "ablations/20261020T185554Z/no_auth_acl_schema_hydration",
+      "status": "failed at input1 title byte[] representation",
+      "evidence": "diagnosis.json",
+      "source_snapshot": "PrunedIc5.failed-source.java.txt"
+    }
+  ],
+  "coordination_aborted_attempts": [
+    {
+      "directory": "ablations/20261020T190222Z/no_auth_acl_schema_hydration",
+      "receipt": "coordination-abort.json"
+    }
+  ],
+  "scalar_projection": {
+    "columns": [
+      "n.id",
+      "e.id",
+      "CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props,'$.archetype.forum_id')) AS SIGNED)",
+      "JSON_UNQUOTE(JSON_EXTRACT(n.props,'$.archetype.title'))"
+    ],
+    "title_read": "Typed ResultSet.getString(4) preserves character data when JDBC getObject returns binary-collation bytes",
+    "arity": 4
+  },
+  "all_removals_gate": {
+    "path": "ablations/20261020T190438Z/no_auth_acl_schema_hydration/gate.json",
+    "source_sha256": "32d67d833ed0624809316029af67586cd50f1b0f55bdc7446bb560fac0c2a3e7",
+    "pass": true,
+    "cold20_statements": 247930,
+    "warm_repeat0_statements": 20
+  },
+  "ablation_gate": {
+    "directory": "ablations/20261020T190438Z",
+    "summary": "summary.json",
+    "exact_delta_verifier": "exact-removal-verification.json",
+    "all_pass": true,
+    "requests": 105,
+    "cold20_totals": [
+      278773,
+      278772,
+      278752,
+      278749,
+      247930
+    ],
+    "warm_repeat0_totals": [
+      24,
+      24,
+      23,
+      23,
+      20
+    ]
+  }
+}

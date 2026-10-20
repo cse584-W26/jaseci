@@ -1,0 +1,456 @@
+utf8
+Handler_read_key	2
+Handler_read_next	0
+Handler_read_rnd_next	0
+Select_scan	0
+{
+  "query_block": {
+    "select_id": 1,
+    "cost_info": {
+      "query_cost": "444634.03"
+    },
+    "ordering_operation": {
+      "using_filesort": true,
+      "cost_info": {
+        "sort_cost": "117008.23"
+      },
+      "nested_loop": [
+        {
+          "table": {
+            "table_name": "e",
+            "access_type": "ALL",
+            "rows_examined_per_scan": 234017,
+            "rows_produced_per_join": 234017,
+            "filtered": "100.00",
+            "cost_info": {
+              "read_cost": "2.00",
+              "eval_cost": "46803.40",
+              "prefix_cost": "46805.40",
+              "data_read_per_join": "723M"
+            },
+            "used_columns": [
+              "id",
+              "kind",
+              "arch_type",
+              "arch_module",
+              "fingerprint",
+              "root_id",
+              "src",
+              "dst",
+              "undirected",
+              "props",
+              "row_version",
+              "seq",
+              "src_type",
+              "dst_type"
+            ],
+            "materialized_from_subquery": {
+              "using_temporary_table": true,
+              "dependent": false,
+              "cacheable": true,
+              "query_block": {
+                "union_result": {
+                  "using_temporary_table": false,
+                  "query_specifications": [
+                    {
+                      "dependent": false,
+                      "cacheable": true,
+                      "query_block": {
+                        "select_id": 2,
+                        "cost_info": {
+                          "query_cost": "85878.10"
+                        },
+                        "table": {
+                          "table_name": "e",
+                          "access_type": "ref",
+                          "possible_keys": [
+                            "kind_type"
+                          ],
+                          "key": "kind_type",
+                          "used_key_parts": [
+                            "kind"
+                          ],
+                          "key_length": "130",
+                          "ref": [
+                            "const"
+                          ],
+                          "rows_examined_per_scan": 214695,
+                          "rows_produced_per_join": 214695,
+                          "filtered": "100.00",
+                          "cost_info": {
+                            "read_cost": "42939.10",
+                            "eval_cost": "42939.00",
+                            "prefix_cost": "85878.10",
+                            "data_read_per_join": "663M"
+                          },
+                          "used_columns": [
+                            "id",
+                            "kind",
+                            "arch_type",
+                            "arch_module",
+                            "fingerprint",
+                            "root_id",
+                            "src",
+                            "dst",
+                            "undirected",
+                            "props",
+                            "row_version",
+                            "seq",
+                            "src_type",
+                            "dst_type"
+                          ],
+                          "attached_condition": "((convert(`jac_alignment`.`e`.`src` using utf8mb4) = '6c0eeb86-bda6-5055-b3cf-81a8bf523191') and ((`jac_alignment`.`e`.`arch_type` = <cache>(q2@1)) or <in_optimizer>(`jac_alignment`.`e`.`arch_type`,`jac_alignment`.`e`.`arch_type` in ( <materialize> (/* select#3 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = <cache>(q3@2)) ), <primary_index_lookup>(`jac_alignment`.`e`.`arch_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`e`.`arch_type` = `materialized-subquery`.`type_name`)))))) and (isnull(`jac_alignment`.`e`.`dst_type`) or (`jac_alignment`.`e`.`dst_type` = <cache>(q4@3)) or <in_optimizer>(`jac_alignment`.`e`.`dst_type`,`jac_alignment`.`e`.`dst_type` in ( <materialize> (/* select#4 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = <cache>(q5@4)) ), <primary_index_lookup>(`jac_alignment`.`e`.`dst_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`e`.`dst_type` = `materialized-subquery`.`type_name`)))))))",
+                          "attached_subqueries": [
+                            {
+                              "table": {
+                                "table_name": "<materialized_subquery>",
+                                "access_type": "eq_ref",
+                                "key": "<auto_key>",
+                                "key_length": "402",
+                                "rows_examined_per_scan": 1,
+                                "materialized_from_subquery": {
+                                  "using_temporary_table": true,
+                                  "dependent": true,
+                                  "cacheable": false,
+                                  "query_block": {
+                                    "select_id": 4,
+                                    "cost_info": {
+                                      "query_cost": "3.60"
+                                    },
+                                    "table": {
+                                      "table_name": "graph_types",
+                                      "access_type": "index",
+                                      "possible_keys": [
+                                        "PRIMARY"
+                                      ],
+                                      "key": "PRIMARY",
+                                      "used_key_parts": [
+                                        "type_name",
+                                        "ancestor"
+                                      ],
+                                      "key_length": "804",
+                                      "rows_examined_per_scan": 13,
+                                      "rows_produced_per_join": 1,
+                                      "filtered": "10.00",
+                                      "using_index": true,
+                                      "cost_info": {
+                                        "read_cost": "3.34",
+                                        "eval_cost": "0.26",
+                                        "prefix_cost": "3.60",
+                                        "data_read_per_join": "1K"
+                                      },
+                                      "used_columns": [
+                                        "type_name",
+                                        "ancestor"
+                                      ],
+                                      "attached_condition": "(`jac_alignment`.`graph_types`.`ancestor` = <cache>(q5@4))"
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "table": {
+                                "table_name": "<materialized_subquery>",
+                                "access_type": "eq_ref",
+                                "key": "<auto_key>",
+                                "key_length": "402",
+                                "rows_examined_per_scan": 1,
+                                "materialized_from_subquery": {
+                                  "using_temporary_table": true,
+                                  "dependent": true,
+                                  "cacheable": false,
+                                  "query_block": {
+                                    "select_id": 3,
+                                    "cost_info": {
+                                      "query_cost": "3.60"
+                                    },
+                                    "table": {
+                                      "table_name": "graph_types",
+                                      "access_type": "index",
+                                      "possible_keys": [
+                                        "PRIMARY"
+                                      ],
+                                      "key": "PRIMARY",
+                                      "used_key_parts": [
+                                        "type_name",
+                                        "ancestor"
+                                      ],
+                                      "key_length": "804",
+                                      "rows_examined_per_scan": 13,
+                                      "rows_produced_per_join": 1,
+                                      "filtered": "10.00",
+                                      "using_index": true,
+                                      "cost_info": {
+                                        "read_cost": "3.34",
+                                        "eval_cost": "0.26",
+                                        "prefix_cost": "3.60",
+                                        "data_read_per_join": "1K"
+                                      },
+                                      "used_columns": [
+                                        "type_name",
+                                        "ancestor"
+                                      ],
+                                      "attached_condition": "(`jac_alignment`.`graph_types`.`ancestor` = <cache>(q3@2))"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "dependent": false,
+                      "cacheable": true,
+                      "query_block": {
+                        "select_id": 5,
+                        "cost_info": {
+                          "query_cost": "85878.10"
+                        },
+                        "table": {
+                          "table_name": "e",
+                          "access_type": "ref",
+                          "possible_keys": [
+                            "kind_type"
+                          ],
+                          "key": "kind_type",
+                          "used_key_parts": [
+                            "kind"
+                          ],
+                          "key_length": "130",
+                          "ref": [
+                            "const"
+                          ],
+                          "rows_examined_per_scan": 214695,
+                          "rows_produced_per_join": 19322,
+                          "filtered": "9.00",
+                          "cost_info": {
+                            "read_cost": "42939.10",
+                            "eval_cost": "3864.51",
+                            "prefix_cost": "85878.10",
+                            "data_read_per_join": "59M"
+                          },
+                          "used_columns": [
+                            "id",
+                            "kind",
+                            "arch_type",
+                            "arch_module",
+                            "fingerprint",
+                            "root_id",
+                            "src",
+                            "dst",
+                            "undirected",
+                            "props",
+                            "row_version",
+                            "seq",
+                            "src_type",
+                            "dst_type"
+                          ],
+                          "attached_condition": "((`jac_alignment`.`e`.`undirected` = 1) and (convert(`jac_alignment`.`e`.`dst` using utf8mb4) = '6c0eeb86-bda6-5055-b3cf-81a8bf523191') and (`jac_alignment`.`e`.`src` <> `jac_alignment`.`e`.`dst`) and ((`jac_alignment`.`e`.`arch_type` = <cache>(q7@6)) or <in_optimizer>(`jac_alignment`.`e`.`arch_type`,`jac_alignment`.`e`.`arch_type` in ( <materialize> (/* select#6 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = <cache>(q8@7)) ), <primary_index_lookup>(`jac_alignment`.`e`.`arch_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`e`.`arch_type` = `materialized-subquery`.`type_name`)))))) and (isnull(`jac_alignment`.`e`.`src_type`) or (`jac_alignment`.`e`.`src_type` = <cache>(q9@8)) or <in_optimizer>(`jac_alignment`.`e`.`src_type`,`jac_alignment`.`e`.`src_type` in ( <materialize> (/* select#7 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = <cache>(q10@9)) ), <primary_index_lookup>(`jac_alignment`.`e`.`src_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`e`.`src_type` = `materialized-subquery`.`type_name`)))))))",
+                          "attached_subqueries": [
+                            {
+                              "table": {
+                                "table_name": "<materialized_subquery>",
+                                "access_type": "eq_ref",
+                                "key": "<auto_key>",
+                                "key_length": "402",
+                                "rows_examined_per_scan": 1,
+                                "materialized_from_subquery": {
+                                  "using_temporary_table": true,
+                                  "dependent": true,
+                                  "cacheable": false,
+                                  "query_block": {
+                                    "select_id": 7,
+                                    "cost_info": {
+                                      "query_cost": "3.60"
+                                    },
+                                    "table": {
+                                      "table_name": "graph_types",
+                                      "access_type": "index",
+                                      "possible_keys": [
+                                        "PRIMARY"
+                                      ],
+                                      "key": "PRIMARY",
+                                      "used_key_parts": [
+                                        "type_name",
+                                        "ancestor"
+                                      ],
+                                      "key_length": "804",
+                                      "rows_examined_per_scan": 13,
+                                      "rows_produced_per_join": 1,
+                                      "filtered": "10.00",
+                                      "using_index": true,
+                                      "cost_info": {
+                                        "read_cost": "3.34",
+                                        "eval_cost": "0.26",
+                                        "prefix_cost": "3.60",
+                                        "data_read_per_join": "1K"
+                                      },
+                                      "used_columns": [
+                                        "type_name",
+                                        "ancestor"
+                                      ],
+                                      "attached_condition": "(`jac_alignment`.`graph_types`.`ancestor` = <cache>(q10@9))"
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "table": {
+                                "table_name": "<materialized_subquery>",
+                                "access_type": "eq_ref",
+                                "key": "<auto_key>",
+                                "key_length": "402",
+                                "rows_examined_per_scan": 1,
+                                "materialized_from_subquery": {
+                                  "using_temporary_table": true,
+                                  "dependent": true,
+                                  "cacheable": false,
+                                  "query_block": {
+                                    "select_id": 6,
+                                    "cost_info": {
+                                      "query_cost": "3.60"
+                                    },
+                                    "table": {
+                                      "table_name": "graph_types",
+                                      "access_type": "index",
+                                      "possible_keys": [
+                                        "PRIMARY"
+                                      ],
+                                      "key": "PRIMARY",
+                                      "used_key_parts": [
+                                        "type_name",
+                                        "ancestor"
+                                      ],
+                                      "key_length": "804",
+                                      "rows_examined_per_scan": 13,
+                                      "rows_produced_per_join": 1,
+                                      "filtered": "10.00",
+                                      "using_index": true,
+                                      "cost_info": {
+                                        "read_cost": "3.34",
+                                        "eval_cost": "0.26",
+                                        "prefix_cost": "3.60",
+                                        "data_read_per_join": "1K"
+                                      },
+                                      "used_columns": [
+                                        "type_name",
+                                        "ancestor"
+                                      ],
+                                      "attached_condition": "(`jac_alignment`.`graph_types`.`ancestor` = <cache>(q8@7))"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "table": {
+            "table_name": "n",
+            "access_type": "eq_ref",
+            "possible_keys": [
+              "PRIMARY",
+              "kind_type"
+            ],
+            "key": "PRIMARY",
+            "used_key_parts": [
+              "id"
+            ],
+            "key_length": "36",
+            "ref": [
+              "func"
+            ],
+            "rows_examined_per_scan": 1,
+            "rows_produced_per_join": 117008,
+            "filtered": "50.00",
+            "cost_info": {
+              "read_cost": "234017.00",
+              "eval_cost": "23401.65",
+              "prefix_cost": "327625.80",
+              "data_read_per_join": "361M"
+            },
+            "used_columns": [
+              "id",
+              "kind",
+              "arch_type"
+            ],
+            "attached_condition": "((`jac_alignment`.`n`.`kind` = 'NodeAnchor') and (`jac_alignment`.`n`.`id` = (case when (convert(`e`.`src` using utf8mb4) = <cache>(q11@10)) then `e`.`dst` else `e`.`src` end)) and ((`jac_alignment`.`n`.`arch_type` = <cache>(q12@11)) or <in_optimizer>(`jac_alignment`.`n`.`arch_type`,`jac_alignment`.`n`.`arch_type` in ( <materialize> (/* select#8 */ select `jac_alignment`.`graph_types`.`type_name` from `jac_alignment`.`graph_types` where (`jac_alignment`.`graph_types`.`ancestor` = <cache>(q13@12)) ), <primary_index_lookup>(`jac_alignment`.`n`.`arch_type` in <temporary table> on <auto_key> where ((`jac_alignment`.`n`.`arch_type` = `materialized-subquery`.`type_name`)))))))",
+            "attached_subqueries": [
+              {
+                "table": {
+                  "table_name": "<materialized_subquery>",
+                  "access_type": "eq_ref",
+                  "key": "<auto_key>",
+                  "key_length": "402",
+                  "rows_examined_per_scan": 1,
+                  "materialized_from_subquery": {
+                    "using_temporary_table": true,
+                    "dependent": true,
+                    "cacheable": false,
+                    "query_block": {
+                      "select_id": 8,
+                      "cost_info": {
+                        "query_cost": "3.60"
+                      },
+                      "table": {
+                        "table_name": "graph_types",
+                        "access_type": "index",
+                        "possible_keys": [
+                          "PRIMARY"
+                        ],
+                        "key": "PRIMARY",
+                        "used_key_parts": [
+                          "type_name",
+                          "ancestor"
+                        ],
+                        "key_length": "804",
+                        "rows_examined_per_scan": 13,
+                        "rows_produced_per_join": 1,
+                        "filtered": "10.00",
+                        "using_index": true,
+                        "cost_info": {
+                          "read_cost": "3.34",
+                          "eval_cost": "0.26",
+                          "prefix_cost": "3.60",
+                          "data_read_per_join": "1K"
+                        },
+                        "used_columns": [
+                          "type_name",
+                          "ancestor"
+                        ],
+                        "attached_condition": "(`jac_alignment`.`graph_types`.`ancestor` = <cache>(q13@12))"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
+9318bb7f-6689-5bb5-ae52-d43e4aa8120e	3e716556-d10e-5b3a-a3ae-8ff0dcca7897
+14bd08cc-e262-52ca-a300-d428a799770d	fffb0be1-7bb5-56be-8fd2-217aae1b98c3
+48d0580b-af66-5bd5-ab48-c82d42237c00	776055db-9115-5734-b8f8-cbd204be9ef9
+b5fa090d-62bd-5922-a29e-235221102fd8	10738d0c-4d7d-58f4-a6b3-66bfb387b3eb
+4a46d0fe-3418-5600-bdf1-3c82cd823c7a	f868d540-b3a1-5881-97d4-bfdc52da8994
+bebbafa7-33e6-514a-877d-111f520a43b8	b988ee8b-e47a-5742-94f0-8d8ce07705b6
+734eca9e-46ff-5f43-bf7a-4670fce3801b	12b0c9c9-a19d-58ae-80a6-5151750543b8
+Handler_read_key	19
+Handler_read_next	601802
+Handler_read_rnd_next	8
+Select_scan	6

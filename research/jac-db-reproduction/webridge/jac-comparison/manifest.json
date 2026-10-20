@@ -1,0 +1,22 @@
+{
+  "files_sha256": {
+    "service.py": "6e8b8dd4a7a10106a43c4aabf88a9b354633ae16176e78474ea0191edc93a111",
+    "run.py": "e453756d6349e76e5635c16e11d186f23f19245d9a41f435ab113ac8fcbddbec",
+    "provision.py": "705aaa0c9f12ce8a68fd2f728c51c6c13765f2f0a1cd0bcf03b6d430d8cb1404",
+    "connection_shim.py": "44eeb71e6b0de5c9036979251662c312f93dd7cef23f34a0be8b2d7377445613",
+    "cleanup.py": "2263d0aebd706e661b05f2d37c1a22584781781e827bcfccdfa00bcbfe7ea5c1"
+  },
+  "source_fixture": {
+    "load": "fixture/load-receipt.json",
+    "independent_verification": "fixture/independent-verification.json"
+  },
+  "input": "../alignment/small-diagnostic/input.json",
+  "connection_adapter_scope": "Declare Unixsocket host from URL query; same routing adapter for both variants",
+  "primary_timing": "x-server-total-ms+x-server-commit-ms",
+  "timing_samples_per_variant": 30,
+  "warmup_per_variant": 10,
+  "census_requests_per_variant": 3,
+  "results": "summary.json",
+  "independent_verification": "independent-verification.json",
+  "cleanup": "cleanup.json"
+}

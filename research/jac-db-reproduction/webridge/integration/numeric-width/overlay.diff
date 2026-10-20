@@ -1,0 +1,14 @@
+--- /home/baichuan/jaseci/webridge/SourceCode/webridge-common/basic-components/src/main/java/webridge/wbridge/storedprocedure/StoredProcedureManager.java
++++ /home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/src/webridge/wbridge/storedprocedure/StoredProcedureManager.java
+@@ -267,9 +267,10 @@
+             case "B":
+             case "C":
+             case "I":
+-            case "J":
+             case "S":
+               return new SymbolicInteger(expStr);
++            case "J":
++              return new SymbolicInteger(expStr, Types.T_LONG);
+             case "D":
+             case "F":
+               return new SymbolicReal(expStr);

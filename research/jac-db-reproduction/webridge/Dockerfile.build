@@ -1,0 +1,5 @@
+FROM ubuntu:18.04
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends gcc-6 g++-6 openjdk-8-jdk-headless make autoconf zip unzip file cpio pkg-config libx11-dev libxext-dev libxrender-dev libxtst-dev libxt-dev libcups2-dev libfreetype6-dev libasound2-dev libfontconfig1-dev libffi-dev ca-certificates curl && rm -rf /var/lib/apt/lists/*
+ENV JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+WORKDIR /work

@@ -1,0 +1,29 @@
+{
+  "command": [
+    "taskset",
+    "-c",
+    "9,19",
+    "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/java",
+    "-Didiomatic.sql=/home/baichuan/jaseci/reproduction/webridge/alignment/idiomatic/ic5.sql",
+    "-Didiomatic.jdbcUrl=jdbc:mysql://127.0.0.1:18537/jac_alignment_utf8?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/alignment/idiomatic/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-connector-java-5.1.46.jar:/home/baichuan/jaseci/reproduction/webridge/deps/fastjson2-2.0.9.jar",
+    "IdiomaticIc5",
+    "time",
+    "/home/baichuan/jaseci/reproduction/webridge/alignment",
+    "/home/baichuan/jaseci/reproduction/webridge/alignment/idiomatic/delay-results/delay-10ms/timing",
+    "10",
+    "30"
+  ],
+  "started_unix": 1792528957.859381,
+  "ended_unix": 1792528962.4505508,
+  "returncode": 0,
+  "source_sha256": {
+    "/home/baichuan/jaseci/reproduction/webridge/alignment/idiomatic/IdiomaticIc5.java": "c6b5aeff96c7f00b9ac32b491b43a04e9a2710ab8b2c26a58b3332028879aac8",
+    "/home/baichuan/jaseci/reproduction/webridge/alignment/idiomatic/ic5.sql": "1ac3de943f8265b6051548864ad5bce4478693602485b95079f2546b3a4c0c8d",
+    "/home/baichuan/jaseci/reproduction/webridge/deps/mysql-connector-java-5.1.46.jar": "3122089761e6403f02e8a81ed4a2d65a2e1029734651ba00f2ea92d920ff7b1e",
+    "/home/baichuan/jaseci/reproduction/webridge/deps/fastjson2-2.0.9.jar": "4af622a010e77aa4a7cf282b1211163bab62644137a8a4cd7758d30a8ca13645"
+  },
+  "timer": "System.nanoTime around BEGIN/SET/query/read rows/COMMIT; same current-thread CPU API as WarmTiming",
+  "auth": "Conventional trusted-input SQL baseline omits Jac identity/ACL/schema/hydration services"
+}

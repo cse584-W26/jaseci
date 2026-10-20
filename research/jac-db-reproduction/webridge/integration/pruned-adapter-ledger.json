@@ -1,0 +1,17 @@
+{
+  "base_source": "/home/baichuan/jaseci/reproduction/webridge/alignment/PrunedIc5.java",
+  "base_sha256": "32d67d833ed0624809316029af67586cd50f1b0f55bdc7446bb560fac0c2a3e7",
+  "typed_sha256": "4b8cc5a98d3bfdfefb25e504338341b3cec546ea520de921526b019f7791c178",
+  "region_sha256": "8d49b33aed322f1f3643a2be353b10c908eca13c8b37a89dc5640b2d18f44be0",
+  "jac_only_removal_ledger": "/home/baichuan/jaseci/reproduction/webridge/alignment/removal-ledger.json",
+  "adapter_changes": [
+    "Class renaming for isolated compilation",
+    "Explicit generic SELECT arities: hops2, projected Forum4, lifecycle1",
+    "String-valued columns getString; SQL BIGINT Forum id read with getLong+wasNull, preserving Long and NULL",
+    "Default no-op source body hooks after SET and before COMMIT"
+  ],
+  "additional_jac_semantic_removals": [],
+  "sql_changes": [],
+  "original_compiler_algorithm_changes": [],
+  "gate_required": "All20+repeat original projected Pruned counts/categories/results before capture"
+}

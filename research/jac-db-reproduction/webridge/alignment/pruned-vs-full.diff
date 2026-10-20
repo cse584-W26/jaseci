@@ -1,0 +1,99 @@
+--- AlignedIc5.java
++++ PrunedIc5.java
+@@ -4,24 +4,29 @@
+ import com.alibaba.fastjson2.*;
+ 
+ /** IC5 over original UUID anchors: request-local hydration, ordered graph hops and ACL. */
+-public class AlignedIc5 {
++public class PrunedIc5 {
+  static Path home=Paths.get(System.getProperty("alignment.dir","."));
+  static String url="jdbc:mysql://127.0.0.1:55337/jac_alignment?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true";
+  static String uuid(String s){if(s==null||s.length()!=32)return s;return s.substring(0,8)+"-"+s.substring(8,12)+"-"+s.substring(12,16)+"-"+s.substring(16,20)+"-"+s.substring(20);}
++ static final boolean REMOVE_AUTH=Boolean.getBoolean("pruned.auth");
++ static final boolean REMOVE_ACL=Boolean.getBoolean("pruned.acl");
++ static final boolean REMOVE_SCHEMA=Boolean.getBoolean("pruned.schema");
++ static final boolean REMOVE_HYDRATION=Boolean.getBoolean("pruned.hydration");
+  static long calls; static Map<String,Long> kinds=new LinkedHashMap<>();
+  static boolean schemaReady=false; static Set<String> knownTypes=new HashSet<>();
+  static JSONObject context; static JSONObject input;
+  static Map<String,String> clientRootContext=new HashMap<>();
+  static class Anchor {String id,kind,type,root,src,dst; JSONObject props,arch,access;
+-  Anchor(ResultSet r)throws Exception{id=r.getString(1);kind=r.getString(2);type=r.getString(3);root=r.getString(6);src=r.getString(7);dst=r.getString(8);if(!knownTypes.contains(type))throw new IllegalStateException("Unregistered anchor type:"+type);props=JSON.parseObject(r.getString(10));arch=props.getJSONObject("archetype");access=props.getJSONObject("access");}}
++  Anchor(String id,String type,JSONObject props){this.id=id;this.type=type;this.kind="NodeAnchor";this.props=props;this.arch=props==null?null:props.getJSONObject("archetype");}
++  Anchor(ResultSet r)throws Exception{id=r.getString(1);kind=r.getString(2);type=r.getString(3);root=r.getString(6);src=r.getString(7);dst=r.getString(8);if(!REMOVE_SCHEMA&&!knownTypes.contains(type))throw new IllegalStateException("Unregistered anchor type:"+type);props=JSON.parseObject(r.getString(10));arch=props.getJSONObject("archetype");access=props.getJSONObject("access");}}
+  static void count(String kind){calls++;kinds.put(kind,kinds.getOrDefault(kind,0L)+1);}
+  static List<List<Object>> query(Connection c,String kind,String sql,Object...args)throws Exception{
+   count(kind);try(PreparedStatement p=c.prepareStatement(sql)){for(int i=0;i<args.length;i++)p.setObject(i+1,args[i]);try(ResultSet r=p.executeQuery()){
+-   List<List<Object>> rows=new ArrayList<>();int n=r.getMetaData().getColumnCount();while(r.next()){List<Object> row=new ArrayList<>();for(int i=1;i<=n;i++)row.add(r.getObject(i));rows.add(row);}return rows;}}
++   List<List<Object>> rows=new ArrayList<>();int n=r.getMetaData().getColumnCount();while(r.next()){List<Object> row=new ArrayList<>();for(int i=1;i<=n;i++)row.add(REMOVE_HYDRATION && n==4 && i==4 ? r.getString(i) : r.getObject(i));rows.add(row);}return rows;}}
+  }
+  static void command(Connection c,String kind,String sql)throws Exception{count(kind);try(Statement s=c.createStatement()){s.execute(sql);}}
+  static void ensure(Connection c)throws Exception{
+-  if(schemaReady)return;
++  if(REMOVE_SCHEMA||schemaReady)return;
+   List<List<Object>> version=query(c,"server-version","SELECT VERSION()");if(!version.get(0).get(0).toString().startsWith("5.7."))throw new IllegalStateException("Wrong MySQL version");
+   List<List<Object>> fingerprint=query(c,"schema-fingerprint","SELECT value FROM kv_state WHERE `key`=? AND (expires_at IS NULL OR expires_at>CURRENT_TIMESTAMP)","schema_fingerprint");if(fingerprint.isEmpty())throw new IllegalStateException("Missing original schema fingerprint");
+   String expectedFingerprint=new String(Files.readAllBytes(home.resolve("graph-fixture/kv_state.tsv")),"UTF-8").split("\t")[1];if(!expectedFingerprint.equals(fingerprint.get(0).get(0).toString()))throw new IllegalStateException("Schema fingerprint differs from exported source");
+@@ -45,6 +50,7 @@
+   int all(Anchor a){if(a.access==null)return -1;Object v=a.access.get("all");return v instanceof Number?((Number)v).intValue():-1;}
+   Integer grant(Anchor a){if(a.access==null)return null;JSONObject rs=a.access.getJSONObject("roots");if(rs==null)return null;JSONObject grants=rs.getJSONObject("anchors");if(grants==null)return null;Object x=grants.get(root);return x instanceof Number?((Number)x).intValue():null;}
+   boolean readable(Anchor a)throws Exception{
++   if(REMOVE_ACL)return true;
+    if(root.equals(a.root)||root.equals(a.id))return true;
+    int level=all(a);if(a.root!=null){Anchor owner=get(a.root);if(owner!=null){level=Math.max(level,all(owner));Integer x=grant(owner);if(x!=null)level=x;}}
+    Integer x=grant(a);if(x!=null)level=x;return level>=0;
+@@ -57,20 +63,27 @@
+    String filter="e.kind='EdgeAnchor' AND (e.arch_type=? OR e.arch_type IN(SELECT type_name FROM graph_types WHERE ancestor=?))";
+    String branch1="SELECT e.* FROM anchors e WHERE e."+primary+"=? AND "+filter+" AND (e."+endpoint+" IS NULL OR e."+endpoint+"=? OR e."+endpoint+" IN(SELECT type_name FROM graph_types WHERE ancestor=?))";
+    String branch2="SELECT e.* FROM anchors e WHERE e."+reverse+"=? AND e.undirected=1 AND e.src<>e.dst AND "+filter+" AND (e."+other+" IS NULL OR e."+other+"=? OR e."+other+" IN(SELECT type_name FROM graph_types WHERE ancestor=?))";
+-   String sql="SELECT n.id,e.id FROM ("+branch1+" UNION ALL "+branch2+") e JOIN anchors n ON n.id=CASE WHEN e.src=? THEN e.dst ELSE e.src END AND n.kind='NodeAnchor' AND (n.arch_type=? OR n.arch_type IN(SELECT type_name FROM graph_types WHERE ancestor=?))";
++   String sql="SELECT n.id,e.id"+(REMOVE_HYDRATION&&target.equals("Forum")?",CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props,'$.archetype.forum_id')) AS SIGNED) AS forum_id,JSON_UNQUOTE(JSON_EXTRACT(n.props,'$.archetype.title')) AS title":"")+" FROM ("+branch1+" UNION ALL "+branch2+") e JOIN anchors n ON n.id=CASE WHEN e.src=? THEN e.dst ELSE e.src END AND n.kind='NodeAnchor' AND (n.arch_type=? OR n.arch_type IN(SELECT type_name FROM graph_types WHERE ancestor=?))";
+    List<Object> params=new ArrayList<>();for(int i=0;i<2;i++)Collections.addAll(params,origin.id,edge,edge,target,target);Collections.addAll(params,origin.id,target,target);
+    if(minDate!=null){sql+=" WHERE CAST(JSON_UNQUOTE(JSON_EXTRACT(e.props,'$.archetype.joinDate')) AS SIGNED)>?";params.add(minDate);}
+    sql+=" ORDER BY e.seq,e.id";
+    List<List<Object>> rows=query(c,"hop:"+edge+":"+(incoming?"in":"out"),sql,params.toArray());
+    LinkedHashSet<String> ids=new LinkedHashSet<>();for(List<Object> r:rows)if(r.get(0)!=null)ids.add(r.get(0).toString());
+-   List<Anchor> materialized=load(new ArrayList<>(ids));LinkedHashSet<String> roots=new LinkedHashSet<>();for(Anchor a:materialized)if(a.root!=null&&!mem.containsKey(a.root))roots.add(a.root);if(!roots.isEmpty())load(new ArrayList<>(roots));
++   List<Anchor> materialized;
++   if(REMOVE_HYDRATION){
++    for(List<Object> row:rows){String id=row.get(0).toString();if(!mem.containsKey(id)){
++     JSONObject props=null;if(target.equals("Forum")){JSONObject fields=new JSONObject();fields.put("forum_id",Long.parseLong(row.get(2).toString()));fields.put("title",row.get(3));props=new JSONObject();props.put("archetype",fields);}
++     mem.put(id,new Anchor(id,target,props));
++    }}
++    materialized=new ArrayList<>();for(String id:ids)materialized.add(mem.get(id));
++   }else materialized=load(new ArrayList<>(ids));LinkedHashSet<String> roots=new LinkedHashSet<>();for(Anchor a:materialized)if(a.root!=null&&!mem.containsKey(a.root))roots.add(a.root);if(!REMOVE_ACL&&!roots.isEmpty())load(new ArrayList<>(roots));
+    List<Anchor> out=new ArrayList<>();for(Anchor a:materialized)if(readable(a))out.add(a);return out;
+   }
+  }
+  public static List<List<Object>> request(Connection c,JSONObject x)throws Exception{
+   // jwt_validation_middleware resolves on the connection's main context first.
+   // The worker inherits its root map; later requests on that keepalive context reuse it.
+-  String uid=context.getString("user_id");String root=clientRootContext.get(uid);
++  String uid=context.getString("user_id");String root=REMOVE_AUTH?uuid(context.getString("root_id")):clientRootContext.get(uid);
+   if(root==null){
+    List<List<Object>> identities=query(c,"identity","SELECT doc FROM identity_users WHERE user_id=?",uid);
+    if(identities.size()!=1)throw new SecurityException("Unknown identity");JSONObject identity=JSON.parseObject(identities.get(0).get(0).toString());if("disabled".equals(identity.getString("status")))throw new SecurityException("Disabled identity");
+@@ -79,7 +92,7 @@
+   ensure(c);
+   command(c,"begin","START TRANSACTION READ ONLY");command(c,"transaction-setting","SET SESSION innodb_lock_wait_timeout=10");
+   try{
+-   Session s=new Session(c,root);Anchor rootAnchor=s.get(root);if(rootAnchor==null)throw new SecurityException("Missing root anchor");Anchor person=s.get(x.getString("person_jid"));if(person==null||!"Person".equals(person.type)||!s.readable(person))throw new SecurityException("Unreadable person");
++   Session s=new Session(c,root);if(!REMOVE_ACL){Anchor rootAnchor=s.get(root);if(rootAnchor==null)throw new SecurityException("Missing root anchor");}Anchor person=REMOVE_HYDRATION?new Anchor(x.getString("person_jid"),"Person",null):s.get(x.getString("person_jid"));if(person==null||!"Person".equals(person.type)||!s.readable(person))throw new SecurityException("Unreadable person");
+    List<Anchor> friends=new ArrayList<>(s.hop(person,"Knows","Person",false,null));friends.addAll(s.hop(person,"Knows","Person",true,null));
+    LinkedHashMap<String,Anchor> forums=new LinkedHashMap<>();Map<String,Set<String>> joined=new HashMap<>();
+    for(Anchor friend:friends)for(Anchor forum:s.hop(friend,"HasMember","Forum",true,x.getLong("min_date"))){forums.put(forum.id,forum);joined.computeIfAbsent(forum.id,k->new HashSet<>()).add(friend.id);}
+@@ -94,12 +107,13 @@
+  static long questions(Connection c)throws Exception{try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SHOW SESSION STATUS LIKE 'Questions'")){r.next();return r.getLong(2);}}
+  public static void configure(Path directory)throws Exception{home=directory;context=JSON.parseObject(new String(Files.readAllBytes(home.resolve("graph-fixture/request-context.json")),"UTF-8"));}
+  public static void main(String[]args)throws Exception{
++  if(REMOVE_HYDRATION&&!REMOVE_ACL)throw new IllegalArgumentException("Hydration removal requires ACL removal: ACL reads original object permissions");
+   Class.forName("com.mysql.jdbc.Driver");context=JSON.parseObject(new String(Files.readAllBytes(home.resolve("graph-fixture/request-context.json")),"UTF-8"));JSONArray inputs=JSON.parseArray(new String(Files.readAllBytes(home.resolve("graph-fixture/inputs.json")),"UTF-8"));
+   int first=args.length>0?Integer.parseInt(args[0]):0,last=args.length>1?Integer.parseInt(args[1]):first,rounds=args.length>2?Integer.parseInt(args[2]):1;
+   try(Connection c=DriverManager.getConnection(url,"root","")){
+    for(int round=0;round<rounds;round++)for(int idx=first;idx<=last;idx++){
+     JSONObject x=inputs.getJSONObject(idx);long before=questions(c);calls=0;kinds.clear();long t=System.nanoTime();List<List<Object>> result=request(c,x);double ms=(System.nanoTime()-t)/1e6;long server=questions(c)-before-1;
+-    boolean parity=JSON.toJSONString(result).equals(x.getJSONArray("expected").toJSONString());JSONObject row=new JSONObject();row.put("round",round);row.put("idx",idx);row.put("client_ms",ms);row.put("jdbc_calls",calls);row.put("server_questions",server);row.put("categories",new LinkedHashMap<>(kinds));row.put("result",result);row.put("parity",parity);System.out.println(row.toJSONString());
++    boolean parity=JSON.toJSONString(result).equals(x.getJSONArray("expected").toJSONString());JSONObject row=new JSONObject();row.put("removals",Arrays.asList(REMOVE_AUTH,REMOVE_ACL,REMOVE_SCHEMA,REMOVE_HYDRATION));row.put("round",round);row.put("idx",idx);row.put("client_ms",ms);row.put("jdbc_calls",calls);row.put("server_questions",server);row.put("categories",new LinkedHashMap<>(kinds));row.put("result",result);row.put("parity",parity);System.out.println(row.toJSONString());
+     if(!parity||server!=calls)throw new IllegalStateException("Result or independently counted SQL mismatch");
+    }
+    if(Boolean.getBoolean("alignment.finalRepeatFirst")){

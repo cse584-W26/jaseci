@@ -1,0 +1,184 @@
+{
+  "passed": true,
+  "requests": [
+    {
+      "arm": "Original",
+      "api": "GI",
+      "repeat": 0,
+      "table_statements": 7,
+      "cursor_open": 0,
+      "total": 7
+    },
+    {
+      "arm": "Original",
+      "api": "BD",
+      "repeat": 0,
+      "table_statements": 6,
+      "cursor_open": 0,
+      "total": 6
+    },
+    {
+      "arm": "Original",
+      "api": "EB",
+      "repeat": 0,
+      "table_statements": 7,
+      "cursor_open": 0,
+      "total": 7
+    },
+    {
+      "arm": "Original",
+      "api": "GI",
+      "repeat": 1,
+      "table_statements": 7,
+      "cursor_open": 0,
+      "total": 7
+    },
+    {
+      "arm": "Original",
+      "api": "BD",
+      "repeat": 1,
+      "table_statements": 6,
+      "cursor_open": 0,
+      "total": 6
+    },
+    {
+      "arm": "Original",
+      "api": "EB",
+      "repeat": 1,
+      "table_statements": 7,
+      "cursor_open": 0,
+      "total": 7
+    },
+    {
+      "arm": "Original",
+      "api": "GI",
+      "repeat": 2,
+      "table_statements": 7,
+      "cursor_open": 0,
+      "total": 7
+    },
+    {
+      "arm": "Original",
+      "api": "BD",
+      "repeat": 2,
+      "table_statements": 6,
+      "cursor_open": 0,
+      "total": 6
+    },
+    {
+      "arm": "Original",
+      "api": "EB",
+      "repeat": 2,
+      "table_statements": 7,
+      "cursor_open": 0,
+      "total": 7
+    },
+    {
+      "arm": "WeBridge",
+      "api": "GI",
+      "repeat": 0,
+      "table_statements": 6,
+      "cursor_open": 1,
+      "total": 7
+    },
+    {
+      "arm": "WeBridge",
+      "api": "BD",
+      "repeat": 0,
+      "table_statements": 5,
+      "cursor_open": 1,
+      "total": 6
+    },
+    {
+      "arm": "WeBridge",
+      "api": "EB",
+      "repeat": 0,
+      "table_statements": 4,
+      "cursor_open": 3,
+      "total": 7
+    },
+    {
+      "arm": "WeBridge",
+      "api": "GI",
+      "repeat": 1,
+      "table_statements": 6,
+      "cursor_open": 1,
+      "total": 7
+    },
+    {
+      "arm": "WeBridge",
+      "api": "BD",
+      "repeat": 1,
+      "table_statements": 5,
+      "cursor_open": 1,
+      "total": 6
+    },
+    {
+      "arm": "WeBridge",
+      "api": "EB",
+      "repeat": 1,
+      "table_statements": 4,
+      "cursor_open": 3,
+      "total": 7
+    },
+    {
+      "arm": "WeBridge",
+      "api": "GI",
+      "repeat": 2,
+      "table_statements": 6,
+      "cursor_open": 1,
+      "total": 7
+    },
+    {
+      "arm": "WeBridge",
+      "api": "BD",
+      "repeat": 2,
+      "table_statements": 5,
+      "cursor_open": 1,
+      "total": 6
+    },
+    {
+      "arm": "WeBridge",
+      "api": "EB",
+      "repeat": 2,
+      "table_statements": 4,
+      "cursor_open": 3,
+      "total": 7
+    }
+  ],
+  "cursor_declarations": [
+    {
+      "file": "reproduction/webridge/paper/generated/sql/EditBlog/graph-SP-EditBlog_sp_1_ver0.sql",
+      "declaration": "DECLARE cursor_1 CURSOR FOR SELECT blog_id, blog_title, blog_sub_url, blog_cover_image, blog_category_id , blog_category_name, blog_tags, blog_status, blog_views, enable_comment , is_deleted, create_time, update_time, blog_content FROM tb_blog WHERE blog_id = q2_i1 AND is_deleted = 0;"
+    },
+    {
+      "file": "reproduction/webridge/paper/generated/sql/EditBlog/graph-SP-EditBlog_sp_1_ver0.sql",
+      "declaration": "DECLARE cursor_2 CURSOR FOR SELECT category_id, category_name, category_icon, category_rank, is_deleted , create_time FROM tb_blog_category WHERE category_id = q3_i1 AND is_deleted = 0;"
+    },
+    {
+      "file": "reproduction/webridge/paper/generated/sql/EditBlog/graph-SP-EditBlog_sp_1_ver0.sql",
+      "declaration": "DECLARE cursor_3 CURSOR FOR SELECT tag_id, tag_name, is_deleted, create_time FROM tb_blog_tag WHERE tag_name = q4_i1 AND is_deleted = 0;"
+    },
+    {
+      "file": "reproduction/webridge/paper/generated/sql/EditBlog/graph-SP-EditBlog_sp_1_ver1.sql",
+      "declaration": "DECLARE cursor_1 CURSOR FOR SELECT blog_id, blog_title, blog_sub_url, blog_cover_image, blog_category_id , blog_category_name, blog_tags, blog_status, blog_views, enable_comment , is_deleted, create_time, update_time, blog_content FROM tb_blog WHERE blog_id = q2_i1 AND is_deleted = 0;"
+    },
+    {
+      "file": "reproduction/webridge/paper/generated/sql/EditBlog/graph-SP-EditBlog_sp_1_ver1.sql",
+      "declaration": "DECLARE cursor_2 CURSOR FOR SELECT category_id, category_name, category_icon, category_rank, is_deleted , create_time FROM tb_blog_category WHERE category_id = q3_i1 AND is_deleted = 0;"
+    },
+    {
+      "file": "reproduction/webridge/paper/generated/sql/EditBlog/graph-SP-EditBlog_sp_1_ver1.sql",
+      "declaration": "DECLARE cursor_3 CURSOR FOR SELECT tag_id, tag_name, is_deleted, create_time FROM tb_blog_tag WHERE tag_name = q4_i1 AND is_deleted = 0;"
+    },
+    {
+      "file": "reproduction/webridge/paper/generated/sql/GetIndex/graph-SP-GetIndex_sp_1_ver0.sql",
+      "declaration": "DECLARE cursor_0 CURSOR FOR SELECT blog_id, blog_title, blog_sub_url, blog_cover_image, blog_category_id , blog_category_name, blog_tags, blog_status, blog_views, enable_comment , is_deleted, create_time, update_time FROM tb_blog WHERE is_deleted = 0 AND blog_status = q1_i1 ORDER BY blog_id DESC LIMIT q1_i2, q1_i3;"
+    },
+    {
+      "file": "reproduction/webridge/paper/generated/sql/GetBlog/graph-SP-GetBlog_sp_1_ver0.sql",
+      "declaration": "DECLARE cursor_0 CURSOR FOR SELECT blog_id, blog_title, blog_sub_url, blog_cover_image, blog_category_id , blog_category_name, blog_tags, blog_status, blog_views, enable_comment , is_deleted, create_time, update_time, blog_content FROM tb_blog WHERE blog_id = q1_i1 AND is_deleted = 0;"
+    }
+  ],
+  "scope": "Actual raw table-bearing SQL statements plus cursor-open event counts; all retained cursor declarations access application tables."
+}

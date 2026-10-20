@@ -1,0 +1,51 @@
+{
+  "status": "in_progress",
+  "source": {
+    "repository": "https://github.com/Novemser/webridge-materials",
+    "commit": "ae2e4c2642815ee8622e4af955d406859f718795"
+  },
+  "gate_1": {
+    "name": "Java/Jac original-baseline SQL equivalence",
+    "required": [
+      "identical input schedule",
+      "identical results",
+      "identical server-received SQL count per request",
+      "SQL templates/parameters/order archived",
+      "all discrepancies explained through real runtime operations"
+    ],
+    "initial_java_port": "unvalidated; input 1 has 3669 queries versus Jac's 3938; counts must be reconciled before a performance comparison",
+    "count_padding": "forbidden",
+    "steps": [
+      {
+        "name": "full-runtime Java port",
+        "includes": "Jac identity, access checks, anchor loading, traversal, schema guards, transaction commands and request-local memo behavior; identical per-request SQL count and result required"
+      },
+      {
+        "name": "Jac-overhead-stripped Java port",
+        "method": "remove individually justified Jac-specific operations from validated full port; preserve removal ledger with SQL-count/time effects and result checks"
+      }
+    ]
+  },
+  "gate_2": {
+    "name": "Original WeBridge paper reproduction",
+    "paper": {
+      "mysql": "5.7.25",
+      "jdk": "OpenJDK 8",
+      "hot_path_threshold": 20,
+      "warmup_seconds": 300,
+      "measurement_seconds": 600,
+      "client_app_db": "three separate machines, each eight 3.4GHz vCPUs and 16GB RAM",
+      "offline_compiler": "fourth machine",
+      "rtt_ms": 2.1
+    },
+    "requirements": [
+      "original application and workload generator",
+      "scripted population and table cardinality checks",
+      "original and WeBridge arms",
+      "saved generated procedures and fallback/coverage measurements",
+      "SQL counts measured independently from JDBC calls",
+      "all configuration differences from paper explicitly recorded"
+    ],
+    "current_pilot_mysql": "5.7.44; pilot only; formal paper reproduction requires 5.7.25"
+  }
+}

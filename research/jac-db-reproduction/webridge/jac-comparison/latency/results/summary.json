@@ -1,0 +1,190 @@
+{
+  "conditions": [
+    {
+      "delay_ms": 0,
+      "rtt_before": 0.11935888323932886,
+      "rtt_after": 0.09637454058974981,
+      "proxy": {
+        "connections": 9,
+        "client_bytes": 359865,
+        "server_bytes": 1562827,
+        "delay_ms": 0.0,
+        "listen_port": 18532,
+        "target": "/tmp/jacpg-d6275e76eb/.s.PGSQL.5432",
+        "stopped": true
+      },
+      "arms": {
+        "baseline": {
+          "n": 30,
+          "warmup": 10,
+          "server_median_ms": 25.893500000000003,
+          "server_mean_ms": 25.5639,
+          "server_p95_nearest_rank_ms": 26.47,
+          "client_median_ms": 26.86482050921768,
+          "cpu": {
+            "process_cpu_ms": 190.0,
+            "requests": 30,
+            "mean_ms_per_request": 6.333333333333333,
+            "tick_ms": 10.0,
+            "scope": "Whole measured interval including inter-request housekeeping; isolated application process"
+          }
+        },
+        "final": {
+          "n": 30,
+          "warmup": 10,
+          "server_median_ms": 5.7330000000000005,
+          "server_mean_ms": 5.7857666666666665,
+          "server_p95_nearest_rank_ms": 6.144,
+          "client_median_ms": 6.590994540601969,
+          "cpu": {
+            "process_cpu_ms": 70.0,
+            "requests": 30,
+            "mean_ms_per_request": 2.3333333333333335,
+            "tick_ms": 10.0,
+            "scope": "Whole measured interval including inter-request housekeeping; isolated application process"
+          }
+        }
+      },
+      "same_stack_speedup": 4.516570730856445
+    },
+    {
+      "delay_ms": 2,
+      "rtt_before": 2.201567403972149,
+      "rtt_after": 2.3741520708426833,
+      "proxy": {
+        "connections": 9,
+        "client_bytes": 359865,
+        "server_bytes": 1562827,
+        "delay_ms": 2.0,
+        "listen_port": 18532,
+        "target": "/tmp/jacpg-d6275e76eb/.s.PGSQL.5432",
+        "stopped": true
+      },
+      "arms": {
+        "baseline": {
+          "n": 30,
+          "warmup": 10,
+          "server_median_ms": 145.2595,
+          "server_mean_ms": 144.5564,
+          "server_p95_nearest_rank_ms": 199.452,
+          "client_median_ms": 146.91136649344116,
+          "cpu": {
+            "process_cpu_ms": 480.0,
+            "requests": 30,
+            "mean_ms_per_request": 16.0,
+            "tick_ms": 10.0,
+            "scope": "Whole measured interval including inter-request housekeeping; isolated application process"
+          }
+        },
+        "final": {
+          "n": 30,
+          "warmup": 10,
+          "server_median_ms": 39.531499999999994,
+          "server_mean_ms": 44.0436,
+          "server_p95_nearest_rank_ms": 67.574,
+          "client_median_ms": 41.567957028746605,
+          "cpu": {
+            "process_cpu_ms": 180.0,
+            "requests": 30,
+            "mean_ms_per_request": 6.0,
+            "tick_ms": 10.0,
+            "scope": "Whole measured interval including inter-request housekeeping; isolated application process"
+          }
+        }
+      },
+      "same_stack_speedup": 3.674525378495631
+    },
+    {
+      "delay_ms": 10,
+      "rtt_before": 10.655637946911156,
+      "rtt_after": 10.479366057552397,
+      "proxy": {
+        "connections": 16,
+        "client_bytes": 419685,
+        "server_bytes": 1691880,
+        "delay_ms": 10.0,
+        "listen_port": 18532,
+        "target": "/tmp/jacpg-d6275e76eb/.s.PGSQL.5432",
+        "stopped": true
+      },
+      "arms": {
+        "baseline": {
+          "n": 30,
+          "warmup": 10,
+          "server_median_ms": 469.41700000000003,
+          "server_mean_ms": 468.59923333333336,
+          "server_p95_nearest_rank_ms": 511.792,
+          "client_median_ms": 471.7915930086747,
+          "cpu": {
+            "process_cpu_ms": 630.0,
+            "requests": 30,
+            "mean_ms_per_request": 21.0,
+            "tick_ms": 10.0,
+            "scope": "Whole measured interval including inter-request housekeeping; isolated application process"
+          },
+          "census_counts": [
+            42,
+            38,
+            38
+          ],
+          "census_pids": [
+            {
+              "2470553": 1,
+              "2470557": 41
+            },
+            {
+              "2470557": 38
+            },
+            {
+              "2470557": 38
+            }
+          ]
+        },
+        "final": {
+          "n": 30,
+          "warmup": 10,
+          "server_median_ms": 160.22899999999998,
+          "server_mean_ms": 162.73153333333335,
+          "server_p95_nearest_rank_ms": 181.154,
+          "client_median_ms": 163.04998006671667,
+          "cpu": {
+            "process_cpu_ms": 250.0,
+            "requests": 30,
+            "mean_ms_per_request": 8.333333333333334,
+            "tick_ms": 10.0,
+            "scope": "Whole measured interval including inter-request housekeeping; isolated application process"
+          },
+          "census_counts": [
+            30,
+            14,
+            14
+          ],
+          "census_pids": [
+            {
+              "2470878": 1,
+              "2470883": 18,
+              "2470903": 3,
+              "2470904": 3,
+              "2470905": 5
+            },
+            {
+              "2470883": 14
+            },
+            {
+              "2470883": 14
+            }
+          ]
+        }
+      },
+      "same_stack_speedup": 2.929663169588527
+    }
+  ],
+  "timing_validation": {
+    "requests": 240,
+    "measured": 180,
+    "all_parity": true,
+    "header_formula": true
+  },
+  "direct-unix-control": 0.0317450612783432,
+  "direct-unix-after": 0.030184048227965832
+}

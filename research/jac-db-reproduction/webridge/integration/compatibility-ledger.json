@@ -1,0 +1,31 @@
+{
+  "base_source": "/home/baichuan/jaseci/reproduction/webridge/alignment/AlignedIc5.java",
+  "base_sha256": "acc9b168a3fb579829f2c52c8a07b7be3361a9be9d983bfd9bec0412003246a2",
+  "derivative_source": "/home/baichuan/jaseci/reproduction/webridge/integration/java/ReplayCompatibleAlignedIc5.java",
+  "derivative_sha256": "8c7c0577745278b2ad4544e6342b67d6f7cce742767e2847d915f13adc097e3d",
+  "changes": [
+    {
+      "change": "Rename class for isolated side-by-side compilation",
+      "semantic_removal": false
+    },
+    {
+      "change": "query helper metadata column count replaced with declared SELECT arity",
+      "arities": {
+        "hop:*": 2,
+        "server-version": 1,
+        "schema-fingerprint": 1,
+        "type-registry": 1,
+        "identity": 1
+      },
+      "semantic_removal": false
+    },
+    {
+      "change": "query helper getObject(i) replaced with getString(i)",
+      "types": "All columns in these declared generic query shapes are String-valued: UUID, JSON text, version, fingerprint, type name",
+      "semantic_removal": false
+    }
+  ],
+  "preserved": "All original SQL, session/ACL/hydration/transactions, graph traversal, request/process/client state and source counters",
+  "gate": "Tiny probe only until all20 result/SQL-count gate after formal window",
+  "upstream_compiler_changes": []
+}

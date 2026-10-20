@@ -1,0 +1,1238 @@
+{
+  "cases": [
+    {
+      "case": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/all20-region-noop-gate-20261020",
+      "metadata": {
+        "api": "AlignedIc5_cold_opgate20261020",
+        "scope": "cold",
+        "alignment_gate": "/home/baichuan/jaseci/reproduction/webridge/alignment/alignment-gate.json",
+        "aligned_source": "/home/baichuan/jaseci/reproduction/webridge/alignment/AlignedIc5.java",
+        "aligned_sha256": "acc9b168a3fb579829f2c52c8a07b7be3361a9be9d983bfd9bec0412003246a2",
+        "upstream_commit": "ae2e4c2642815ee8622e4af955d406859f718795",
+        "schema_sha256": "150c3145fbe78af13f296da0f132da5e1757e1a49db1c309982cb3bc3a1edcde",
+        "classpath": "/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T184524319685Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+        "java_wrapper_sha256": "377cd226a721f25bb8aef0d3a4b2782cc7ca694d86c961211eed4d1c1e299e42",
+        "request_scope": "Validated AlignedIc5 request after upstream-authenticated CLI context; retains source session, ACL, hydration, transaction and process/client memo semantics",
+        "program": "region"
+      },
+      "attempts": [
+        {
+          "directory": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/all20-region-noop-gate-20261020/gate-20261020T185335504458Z",
+          "process-result.json": {
+            "returncode": 0,
+            "wall_s": 103.69527640007436,
+            "utc": "20261020T185519199916Z",
+            "stop_reason": null,
+            "limits": {},
+            "peak_process_group_rss_bytes": 0,
+            "peak_case_output_bytes": 0
+          },
+          "gate-verification.json": {
+            "raw_stdout": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/all20-region-noop-gate-20261020/gate-20261020T185335504458Z/stdout.log",
+            "raw_sha256": "a292d743ce4f2dfd7ecccc8b26621b5360c437224680fb9201f63ea1d395fc78",
+            "reference": "/home/baichuan/jaseci/reproduction/webridge/alignment/alignment-gate.json",
+            "all_passed": true,
+            "requests": 21,
+            "cold20_total": 278773,
+            "warm_repeat_calls": 24,
+            "rows": [
+              {
+                "idx": 0,
+                "round": 0,
+                "calls": 28,
+                "categories": {
+                  "identity": 1,
+                  "server-version": 1,
+                  "schema-fingerprint": 1,
+                  "type-registry": 1,
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 4,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 15,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 1,
+                "round": 0,
+                "calls": 3938,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 583,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 10,
+                  "hop:ContainerOf:out": 318,
+                  "hop:HasCreator:out": 3022,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 2,
+                "round": 0,
+                "calls": 37302,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 3564,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 5,
+                  "hop:ContainerOf:out": 2455,
+                  "hop:HasCreator:out": 31273,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 3,
+                "round": 0,
+                "calls": 5188,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 754,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 15,
+                  "hop:ContainerOf:out": 427,
+                  "hop:HasCreator:out": 3987,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 4,
+                "round": 0,
+                "calls": 11465,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 1598,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 10,
+                  "hop:ContainerOf:out": 906,
+                  "hop:HasCreator:out": 8946,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 5,
+                "round": 0,
+                "calls": 49,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 4,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 40,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 6,
+                "round": 0,
+                "calls": 14243,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 1340,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 16,
+                  "hop:ContainerOf:out": 813,
+                  "hop:HasCreator:out": 12069,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 7,
+                "round": 0,
+                "calls": 38225,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 3583,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 7,
+                  "hop:ContainerOf:out": 2505,
+                  "hop:HasCreator:out": 32125,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 8,
+                "round": 0,
+                "calls": 6202,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 910,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 17,
+                  "hop:ContainerOf:out": 484,
+                  "hop:HasCreator:out": 4786,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 9,
+                "round": 0,
+                "calls": 16986,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 2157,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 14,
+                  "hop:ContainerOf:out": 1379,
+                  "hop:HasCreator:out": 13431,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 10,
+                "round": 0,
+                "calls": 34,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 4,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 25,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 11,
+                "round": 0,
+                "calls": 7448,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 893,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 17,
+                  "hop:ContainerOf:out": 519,
+                  "hop:HasCreator:out": 6014,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 12,
+                "round": 0,
+                "calls": 15948,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 2056,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 9,
+                  "hop:ContainerOf:out": 1300,
+                  "hop:HasCreator:out": 12578,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 13,
+                "round": 0,
+                "calls": 18379,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 2211,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 10,
+                  "hop:ContainerOf:out": 1506,
+                  "hop:HasCreator:out": 14647,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 14,
+                "round": 0,
+                "calls": 18014,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 2197,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 10,
+                  "hop:ContainerOf:out": 1442,
+                  "hop:HasCreator:out": 14360,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 15,
+                "round": 0,
+                "calls": 20370,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 2477,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 9,
+                  "hop:ContainerOf:out": 1682,
+                  "hop:HasCreator:out": 16197,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 16,
+                "round": 0,
+                "calls": 11048,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 1458,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 16,
+                  "hop:ContainerOf:out": 867,
+                  "hop:HasCreator:out": 8702,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 17,
+                "round": 0,
+                "calls": 8448,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 931,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 8,
+                  "hop:ContainerOf:out": 590,
+                  "hop:HasCreator:out": 6914,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 18,
+                "round": 0,
+                "calls": 33,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 3,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 25,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 19,
+                "round": 0,
+                "calls": 45425,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 4112,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 6,
+                  "hop:ContainerOf:out": 2877,
+                  "hop:HasCreator:out": 38425,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 0,
+                "round": 1,
+                "calls": 24,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 4,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 15,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "case": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/all20-typed-gate-20261020",
+      "metadata": {
+        "api": "AlignedIc5_cold_edgate20261020",
+        "scope": "cold",
+        "alignment_gate": "/home/baichuan/jaseci/reproduction/webridge/alignment/alignment-gate.json",
+        "aligned_source": "/home/baichuan/jaseci/reproduction/webridge/alignment/AlignedIc5.java",
+        "aligned_sha256": "acc9b168a3fb579829f2c52c8a07b7be3361a9be9d983bfd9bec0412003246a2",
+        "upstream_commit": "ae2e4c2642815ee8622e4af955d406859f718795",
+        "schema_sha256": "150c3145fbe78af13f296da0f132da5e1757e1a49db1c309982cb3bc3a1edcde",
+        "classpath": "/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T184524319685Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+        "java_wrapper_sha256": "377cd226a721f25bb8aef0d3a4b2782cc7ca694d86c961211eed4d1c1e299e42",
+        "request_scope": "Validated AlignedIc5 request after upstream-authenticated CLI context; retains source session, ACL, hydration, transaction and process/client memo semantics",
+        "program": "typed"
+      },
+      "attempts": [
+        {
+          "directory": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/all20-typed-gate-20261020/gate-20261020T185145672666Z",
+          "process-result.json": {
+            "returncode": 0,
+            "wall_s": 103.19970799679868,
+            "utc": "20261020T185328872557Z"
+          },
+          "gate-verification.json": {
+            "raw_stdout": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/all20-typed-gate-20261020/gate-20261020T185145672666Z/stdout.log",
+            "raw_sha256": "57dd7e021fe4d89004d74c951c61ee7738290bcb06dbc54cf835829e805c2a7e",
+            "reference": "/home/baichuan/jaseci/reproduction/webridge/alignment/alignment-gate.json",
+            "all_passed": true,
+            "requests": 21,
+            "cold20_total": 278773,
+            "warm_repeat_calls": 24,
+            "rows": [
+              {
+                "idx": 0,
+                "round": 0,
+                "calls": 28,
+                "categories": {
+                  "identity": 1,
+                  "server-version": 1,
+                  "schema-fingerprint": 1,
+                  "type-registry": 1,
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 4,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 15,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 1,
+                "round": 0,
+                "calls": 3938,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 583,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 10,
+                  "hop:ContainerOf:out": 318,
+                  "hop:HasCreator:out": 3022,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 2,
+                "round": 0,
+                "calls": 37302,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 3564,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 5,
+                  "hop:ContainerOf:out": 2455,
+                  "hop:HasCreator:out": 31273,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 3,
+                "round": 0,
+                "calls": 5188,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 754,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 15,
+                  "hop:ContainerOf:out": 427,
+                  "hop:HasCreator:out": 3987,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 4,
+                "round": 0,
+                "calls": 11465,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 1598,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 10,
+                  "hop:ContainerOf:out": 906,
+                  "hop:HasCreator:out": 8946,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 5,
+                "round": 0,
+                "calls": 49,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 4,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 40,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 6,
+                "round": 0,
+                "calls": 14243,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 1340,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 16,
+                  "hop:ContainerOf:out": 813,
+                  "hop:HasCreator:out": 12069,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 7,
+                "round": 0,
+                "calls": 38225,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 3583,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 7,
+                  "hop:ContainerOf:out": 2505,
+                  "hop:HasCreator:out": 32125,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 8,
+                "round": 0,
+                "calls": 6202,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 910,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 17,
+                  "hop:ContainerOf:out": 484,
+                  "hop:HasCreator:out": 4786,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 9,
+                "round": 0,
+                "calls": 16986,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 2157,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 14,
+                  "hop:ContainerOf:out": 1379,
+                  "hop:HasCreator:out": 13431,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 10,
+                "round": 0,
+                "calls": 34,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 4,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 25,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 11,
+                "round": 0,
+                "calls": 7448,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 893,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 17,
+                  "hop:ContainerOf:out": 519,
+                  "hop:HasCreator:out": 6014,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 12,
+                "round": 0,
+                "calls": 15948,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 2056,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 9,
+                  "hop:ContainerOf:out": 1300,
+                  "hop:HasCreator:out": 12578,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 13,
+                "round": 0,
+                "calls": 18379,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 2211,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 10,
+                  "hop:ContainerOf:out": 1506,
+                  "hop:HasCreator:out": 14647,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 14,
+                "round": 0,
+                "calls": 18014,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 2197,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 10,
+                  "hop:ContainerOf:out": 1442,
+                  "hop:HasCreator:out": 14360,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 15,
+                "round": 0,
+                "calls": 20370,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 2477,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 9,
+                  "hop:ContainerOf:out": 1682,
+                  "hop:HasCreator:out": 16197,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 16,
+                "round": 0,
+                "calls": 11048,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 1458,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 16,
+                  "hop:ContainerOf:out": 867,
+                  "hop:HasCreator:out": 8702,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 17,
+                "round": 0,
+                "calls": 8448,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 931,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 8,
+                  "hop:ContainerOf:out": 590,
+                  "hop:HasCreator:out": 6914,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 18,
+                "round": 0,
+                "calls": 33,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 3,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 25,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 19,
+                "round": 0,
+                "calls": 45425,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 4112,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 6,
+                  "hop:ContainerOf:out": 2877,
+                  "hop:HasCreator:out": 38425,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              },
+              {
+                "idx": 0,
+                "round": 1,
+                "calls": 24,
+                "categories": {
+                  "begin": 1,
+                  "transaction-setting": 1,
+                  "anchor-load": 4,
+                  "hop:Knows:out": 1,
+                  "hop:Knows:in": 1,
+                  "hop:HasMember:in": 15,
+                  "commit": 1
+                },
+                "result_parity": true,
+                "counts_equal_to_reference": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "case": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/input-audit-20261020",
+      "metadata": {
+        "api": "AlignedIc5_cold_taudit20261020",
+        "scope": "cold",
+        "alignment_gate": "/home/baichuan/jaseci/reproduction/webridge/alignment/alignment-gate.json",
+        "aligned_source": "/home/baichuan/jaseci/reproduction/webridge/alignment/AlignedIc5.java",
+        "aligned_sha256": "acc9b168a3fb579829f2c52c8a07b7be3361a9be9d983bfd9bec0412003246a2",
+        "upstream_commit": "ae2e4c2642815ee8622e4af955d406859f718795",
+        "schema_sha256": "150c3145fbe78af13f296da0f132da5e1757e1a49db1c309982cb3bc3a1edcde",
+        "classpath": "/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T183414092889Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+        "java_wrapper_sha256": "377cd226a721f25bb8aef0d3a4b2782cc7ca694d86c961211eed4d1c1e299e42",
+        "request_scope": "Validated AlignedIc5 request after upstream-authenticated CLI context; retains source session, ACL, hydration, transaction and process/client memo semantics",
+        "program": "typed"
+      },
+      "attempts": [
+        {
+          "directory": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/input-audit-20261020/input-audit-20261020T183420547422Z",
+          "process-result.json": {
+            "returncode": 0,
+            "wall_s": 0.46475892700254917,
+            "utc": "20261020T183421012366Z"
+          }
+        }
+      ]
+    },
+    {
+      "case": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/tiny-full-cold-20261020",
+      "metadata": {
+        "api": "AlignedIc5_cold_llcold20261020",
+        "scope": "cold",
+        "alignment_gate": "/home/baichuan/jaseci/reproduction/webridge/alignment/alignment-gate.json",
+        "aligned_source": "/home/baichuan/jaseci/reproduction/webridge/alignment/AlignedIc5.java",
+        "aligned_sha256": "acc9b168a3fb579829f2c52c8a07b7be3361a9be9d983bfd9bec0412003246a2",
+        "upstream_commit": "ae2e4c2642815ee8622e4af955d406859f718795",
+        "schema_sha256": "150c3145fbe78af13f296da0f132da5e1757e1a49db1c309982cb3bc3a1edcde",
+        "classpath": "/home/baichuan/jaseci/reproduction/webridge/integration/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+        "java_wrapper_sha256": "cef8e9a982e7f3a59f582179a4f81a29f5e8dc68ed6c401ee7e4a4b06ce1eb2f",
+        "request_scope": "Validated AlignedIc5 request after upstream-authenticated CLI context; retains source session, ACL, hydration, transaction and process/client memo semantics"
+      },
+      "attempts": [
+        {
+          "directory": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/tiny-full-cold-20261020/inspect-20261020T182516290513Z",
+          "process-result.json": {
+            "returncode": 0,
+            "wall_s": 0.3646920961327851,
+            "utc": "20261020T182516655386Z"
+          }
+        },
+        {
+          "directory": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/tiny-full-cold-20261020/record-20261020T182601687571Z",
+          "process-result.json": {
+            "returncode": 0,
+            "wall_s": 0.6653359949123114,
+            "utc": "20261020T182602353134Z"
+          },
+          "report.json": {
+            "alignedSource": "/home/baichuan/jaseci/reproduction/webridge/alignment/AlignedIc5.java",
+            "alignedSourceSha256": "acc9b168a3fb579829f2c52c8a07b7be3361a9be9d983bfd9bec0412003246a2",
+            "scope": "cold",
+            "api": "AlignedIc5_cold_llcold20261020",
+            "javaVersion": "1.8.0-internal",
+            "javaVm": "OpenJDK 64-Bit Server VM",
+            "classOrigins": {
+              "AlignedIc5": "file:/home/baichuan/jaseci/reproduction/webridge/integration/classes/",
+              "com.mysql.jdbc.Driver": "file:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-connector-java-5.1.46.jar",
+              "com.mysql.jdbc.PreparedStatement": "file:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar",
+              "webridge.wbridge.storedprocedure.invocation.SPInvokeManager": "file:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar",
+              "webridge.wbridge.storedprocedure.StoredProcedureManager": "file:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar"
+            },
+            "mode": "record",
+            "idx": 0,
+            "elapsed_ms": 63.988828,
+            "source_jdbc_calls": 28,
+            "source_categories": {
+              "identity": 1,
+              "server-version": 1,
+              "schema-fingerprint": 1,
+              "type-registry": 1,
+              "begin": 1,
+              "transaction-setting": 1,
+              "anchor-load": 4,
+              "hop:Knows:out": 1,
+              "hop:Knows:in": 1,
+              "hop:HasMember:in": 15,
+              "commit": 1
+            },
+            "session_status_delta": {
+              "Bytes_received": 20079,
+              "Bytes_sent": 17647,
+              "Com_begin": 1,
+              "Com_call_procedure": 0,
+              "Com_commit": 1,
+              "Com_select": 25,
+              "Com_stmt_execute": 0,
+              "Queries": 29,
+              "Questions": 29
+            },
+            "server_questions_excluding_final_observer": 28,
+            "result": [],
+            "oracle_ok": true,
+            "statement_commands_outside_prepared_statement_interceptor": {
+              "begin": 1,
+              "transaction-setting": 1,
+              "commit": 1
+            },
+            "recorded_items": 25,
+            "state_before": {
+              "schemaReady": false,
+              "knownTypes": [],
+              "clientRootContext": {}
+            }
+          }
+        },
+        {
+          "directory": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/tiny-full-cold-20261020/replay-20261020T182612183945Z",
+          "process-result.json": {
+            "returncode": 1,
+            "wall_s": 1.5666736839339137,
+            "utc": "20261020T182613750856Z"
+          },
+          "error.json": {
+            "type": "java.lang.RuntimeException",
+            "message": "java.lang.RuntimeException: Not implemented"
+          }
+        }
+      ]
+    },
+    {
+      "case": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/tiny-region-cold-20261020",
+      "metadata": {
+        "api": "AlignedIc5_cold_oncold20261020",
+        "scope": "cold",
+        "alignment_gate": "/home/baichuan/jaseci/reproduction/webridge/alignment/alignment-gate.json",
+        "aligned_source": "/home/baichuan/jaseci/reproduction/webridge/alignment/AlignedIc5.java",
+        "aligned_sha256": "acc9b168a3fb579829f2c52c8a07b7be3361a9be9d983bfd9bec0412003246a2",
+        "upstream_commit": "ae2e4c2642815ee8622e4af955d406859f718795",
+        "schema_sha256": "150c3145fbe78af13f296da0f132da5e1757e1a49db1c309982cb3bc3a1edcde",
+        "classpath": "/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T183924817191Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+        "java_wrapper_sha256": "377cd226a721f25bb8aef0d3a4b2782cc7ca694d86c961211eed4d1c1e299e42",
+        "request_scope": "Validated AlignedIc5 request after upstream-authenticated CLI context; retains source session, ACL, hydration, transaction and process/client memo semantics",
+        "program": "region"
+      },
+      "attempts": [
+        {
+          "directory": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/tiny-region-cold-20261020/record-20261020T183945512135Z",
+          "process-result.json": {
+            "returncode": 0,
+            "wall_s": 0.6652015969157219,
+            "utc": "20261020T183946177538Z"
+          },
+          "report-0.json": {
+            "alignedSource": "/home/baichuan/jaseci/reproduction/webridge/integration/java/RegionCompatibleAlignedIc5.java",
+            "alignedSourceSha256": "915d5f4c6642a31fbc2bf74f114a583556cb1f4e908a3c13b27dd5e179f52310",
+            "scope": "cold",
+            "api": "AlignedIc5_cold_oncold20261020",
+            "javaVersion": "1.8.0-internal",
+            "javaVm": "OpenJDK 64-Bit Server VM",
+            "classOrigins": {
+              "AlignedIc5": "file:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T183924817191Z/classes/",
+              "com.mysql.jdbc.Driver": "file:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-connector-java-5.1.46.jar",
+              "com.mysql.jdbc.PreparedStatement": "file:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar",
+              "webridge.wbridge.storedprocedure.invocation.SPInvokeManager": "file:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar",
+              "webridge.wbridge.storedprocedure.StoredProcedureManager": "file:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar"
+            },
+            "program": "explicit-body-region",
+            "mode": "record",
+            "idx": 0,
+            "source_jdbc_calls": 28,
+            "source_categories": {
+              "identity": 1,
+              "server-version": 1,
+              "schema-fingerprint": 1,
+              "type-registry": 1,
+              "begin": 1,
+              "transaction-setting": 1,
+              "anchor-load": 4,
+              "hop:Knows:out": 1,
+              "hop:Knows:in": 1,
+              "hop:HasMember:in": 15,
+              "commit": 1
+            },
+            "session_status_delta": {
+              "Bytes_received": 20079,
+              "Bytes_sent": 17647,
+              "Com_begin": 1,
+              "Com_call_procedure": 0,
+              "Com_commit": 1,
+              "Com_select": 25,
+              "Com_stmt_execute": 0,
+              "Queries": 29,
+              "Questions": 29
+            },
+            "server_questions_excluding_final_observer": 28,
+            "full_request_ms": 92.91797,
+            "body": {
+              "source_calls_before": 6,
+              "body_source_calls": 21,
+              "recorded_items": 21
+            },
+            "result": [],
+            "oracle_ok": true,
+            "compiled_region": "After SET and before COMMIT; setup/identity/txn SQL retained outside",
+            "iteration": 0
+          }
+        },
+        {
+          "directory": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/tiny-region-cold-20261020/replay-20261020T183952616652Z",
+          "process-result.json": {
+            "returncode": 0,
+            "wall_s": 79.1241615160834,
+            "utc": "20261020T184111741056Z"
+          },
+          "report-0.json": {
+            "alignedSource": "/home/baichuan/jaseci/reproduction/webridge/integration/java/RegionCompatibleAlignedIc5.java",
+            "alignedSourceSha256": "915d5f4c6642a31fbc2bf74f114a583556cb1f4e908a3c13b27dd5e179f52310",
+            "scope": "cold",
+            "api": "AlignedIc5_cold_oncold20261020",
+            "javaVersion": "1.8.0-internal",
+            "javaVm": "OpenJDK 64-Bit Zero VM",
+            "classOrigins": {
+              "AlignedIc5": "file:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T183924817191Z/classes/",
+              "com.mysql.jdbc.Driver": "file:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-connector-java-5.1.46.jar",
+              "com.mysql.jdbc.PreparedStatement": "file:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar",
+              "webridge.wbridge.storedprocedure.invocation.SPInvokeManager": "file:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar",
+              "webridge.wbridge.storedprocedure.StoredProcedureManager": "file:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar"
+            },
+            "program": "explicit-body-region",
+            "mode": "replay",
+            "idx": 0,
+            "source_jdbc_calls": 28,
+            "source_categories": {
+              "identity": 1,
+              "server-version": 1,
+              "schema-fingerprint": 1,
+              "type-registry": 1,
+              "begin": 1,
+              "transaction-setting": 1,
+              "anchor-load": 4,
+              "hop:Knows:out": 1,
+              "hop:Knows:in": 1,
+              "hop:HasMember:in": 15,
+              "commit": 1
+            },
+            "session_status_delta": {
+              "Bytes_received": 543,
+              "Bytes_sent": 1463,
+              "Com_begin": 1,
+              "Com_call_procedure": 0,
+              "Com_commit": 1,
+              "Com_select": 4,
+              "Com_stmt_execute": 0,
+              "Queries": 8,
+              "Questions": 8
+            },
+            "server_questions_excluding_final_observer": 7,
+            "full_request_ms": 77993.878723,
+            "body": {
+              "source_calls_before": 6,
+              "body_source_calls": 21,
+              "graph_sha256": "e65a48aaa834ed541cc65e698a8b8bd7f3223aacd5dadf9d90a7781abc8698f3",
+              "recorded_results_consumed": 21
+            },
+            "result": [],
+            "oracle_ok": true,
+            "compiled_region": "After SET and before COMMIT; setup/identity/txn SQL retained outside",
+            "iteration": 0
+          },
+          "graph.json": {
+            "bytes": 31457953,
+            "path": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/tiny-region-cold-20261020/replay-20261020T183952616652Z/graph.json"
+          }
+        },
+        {
+          "directory": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/tiny-region-cold-20261020/synth-20261020T184127333558Z",
+          "process-result.json": {
+            "returncode": 1,
+            "wall_s": 1.0161078420933336,
+            "utc": "20261020T184128349917Z"
+          },
+          "error.json": {
+            "type": "webridge.wbridge.exception.NotImplementedException",
+            "message": "webridge.wbridge.exception.NotImplementedException: Not implemented yet"
+          }
+        },
+        {
+          "directory": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/tiny-region-cold-20261020/synth-20261020T185541349162Z",
+          "process-result.json": {
+            "returncode": 0,
+            "wall_s": 13.115224605891854,
+            "utc": "20261020T185554464739Z",
+            "stop_reason": null,
+            "limits": {},
+            "peak_process_group_rss_bytes": 0,
+            "peak_case_output_bytes": 0
+          }
+        }
+      ]
+    },
+    {
+      "case": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/tiny-typed-cold-20261020",
+      "metadata": {
+        "api": "AlignedIc5_cold_edcold20261020",
+        "scope": "cold",
+        "alignment_gate": "/home/baichuan/jaseci/reproduction/webridge/alignment/alignment-gate.json",
+        "aligned_source": "/home/baichuan/jaseci/reproduction/webridge/alignment/AlignedIc5.java",
+        "aligned_sha256": "acc9b168a3fb579829f2c52c8a07b7be3361a9be9d983bfd9bec0412003246a2",
+        "upstream_commit": "ae2e4c2642815ee8622e4af955d406859f718795",
+        "schema_sha256": "150c3145fbe78af13f296da0f132da5e1757e1a49db1c309982cb3bc3a1edcde",
+        "classpath": "/home/baichuan/jaseci/reproduction/webridge/integration/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+        "java_wrapper_sha256": "cef8e9a982e7f3a59f582179a4f81a29f5e8dc68ed6c401ee7e4a4b06ce1eb2f",
+        "request_scope": "Validated AlignedIc5 request after upstream-authenticated CLI context; retains source session, ACL, hydration, transaction and process/client memo semantics",
+        "program": "typed"
+      },
+      "attempts": [
+        {
+          "directory": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/tiny-typed-cold-20261020/record-20261020T182854038323Z",
+          "process-result.json": {
+            "returncode": 0,
+            "wall_s": 0.6652597971260548,
+            "utc": "20261020T182854703797Z"
+          },
+          "report.json": {
+            "alignedSource": "/home/baichuan/jaseci/reproduction/webridge/integration/java/ReplayCompatibleAlignedIc5.java",
+            "alignedSourceSha256": "8c7c0577745278b2ad4544e6342b67d6f7cce742767e2847d915f13adc097e3d",
+            "scope": "cold",
+            "api": "AlignedIc5_cold_edcold20261020",
+            "javaVersion": "1.8.0-internal",
+            "javaVm": "OpenJDK 64-Bit Server VM",
+            "classOrigins": {
+              "ReplayCompatibleAlignedIc5": "file:/home/baichuan/jaseci/reproduction/webridge/integration/classes/",
+              "com.mysql.jdbc.Driver": "file:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-connector-java-5.1.46.jar",
+              "com.mysql.jdbc.PreparedStatement": "file:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar",
+              "webridge.wbridge.storedprocedure.invocation.SPInvokeManager": "file:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar",
+              "webridge.wbridge.storedprocedure.StoredProcedureManager": "file:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar"
+            },
+            "mode": "record",
+            "idx": 0,
+            "elapsed_ms": 52.261558,
+            "source_jdbc_calls": 28,
+            "source_categories": {
+              "identity": 1,
+              "server-version": 1,
+              "schema-fingerprint": 1,
+              "type-registry": 1,
+              "begin": 1,
+              "transaction-setting": 1,
+              "anchor-load": 4,
+              "hop:Knows:out": 1,
+              "hop:Knows:in": 1,
+              "hop:HasMember:in": 15,
+              "commit": 1
+            },
+            "session_status_delta": {
+              "Bytes_received": 20079,
+              "Bytes_sent": 17647,
+              "Com_begin": 1,
+              "Com_call_procedure": 0,
+              "Com_commit": 1,
+              "Com_select": 25,
+              "Com_stmt_execute": 0,
+              "Queries": 29,
+              "Questions": 29
+            },
+            "server_questions_excluding_final_observer": 28,
+            "result": [],
+            "oracle_ok": true,
+            "statement_commands_outside_prepared_statement_interceptor": {
+              "begin": 1,
+              "transaction-setting": 1,
+              "commit": 1
+            },
+            "recorded_items": 25,
+            "state_before": {
+              "schemaReady": false,
+              "knownTypes": [],
+              "clientRootContext": {}
+            }
+          }
+        },
+        {
+          "directory": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/tiny-typed-cold-20261020/replay-20261020T182900031491Z",
+          "process-result.json": {
+            "returncode": 143,
+            "wall_s": 96.04612017795444,
+            "utc": "20261020T183036077856Z"
+          },
+          "engine-graph-early.json": {
+            "bytes": 38600762,
+            "path": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/tiny-typed-cold-20261020/replay-20261020T182900031491Z/engine-graph-early.json"
+          }
+        },
+        {
+          "directory": "/home/baichuan/jaseci/reproduction/webridge/integration/cases/tiny-typed-cold-20261020/synth-20261020T183215526541Z",
+          "process-result.json": {
+            "returncode": 1,
+            "wall_s": 1.0657692679669708,
+            "utc": "20261020T183216592572Z"
+          },
+          "error.json": {
+            "type": "com.alibaba.druid.sql.parser.ParserException",
+            "message": "com.alibaba.druid.sql.parser.ParserException: syntax error, error in :'READ ONLY', expect IDENTIFIER, actual IDENTIFIER pos 22, line 1, column 23, token IDENTIFIER ONLY"
+          }
+        }
+      ]
+    }
+  ],
+  "all20_derivative_gate": {
+    "all20-typed-gate-20261020": true,
+    "all20-region-noop-gate-20261020": true
+  },
+  "jac_only_overhead_removals_in_full_stage": [],
+  "upstream_graph_or_synthesis_algorithm_edits": []
+}

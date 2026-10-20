@@ -1,0 +1,12 @@
+{
+ "scope":"My-Blog Original versus WeBridge latency experiment",
+ "source":"Original public WeBridge JVM, runtime, synthesizer, JDBC driver, application and workload generator",
+ "paper_conditions":{"mysql":"5.7.25","blog_count":5000,"hot_path_threshold":20,"warmup_seconds":300,"measurement_seconds":600,"client_threads":1,"db_rtt_ms_approx":2.1},
+ "workload_choice":"Equal GI/BD/EB traffic, report each API separately; paper specifies equal probabilities for throughput, leaves latency driving mix unspecified",
+ "declared_repairs":["Restore missing standard JDK build tools from pinned OpenJDK upstream","Repair stale package-name references; no optimizer transformation changes","Use direct supported GI/BD/EB API names in isolated driver copy","Generate valid IDs 1..5000","Save already-collected raw latency samples after timing ends","Use UTF-8 database default and procedure-installation client charset","Initialize offline connection pool before concolic replay"],
+ "retained_artifact_behavior":"Fourteen sample tag relations remain after population; missing relation addBatch is recorded and preserved",
+ "deployment":{"host":"single shared physical host","app_cpus":"0-3,10-13","db_cpus":"4-7,14-17","client_cpus":"8,18","offline_cpus":"9,19","db_memory_limit_gib":16,"web_heap_max_gib":16,"client_to_web":"host loopback","web_to_db":"own Docker network namespace, database egress netem 2100us; measured ICMP mean2.145ms"},
+ "paper_deployment_difference":"Paper uses three separate eight-vCPU/16GB machines plus a separate offline compiler; CPU model, client-web RTT, process memory envelope and shared-host resources differ locally",
+ "measurements":{"latency":"Original WeBench callback boundary includes HTTP response-body reading; raw nanoseconds and original quantiles archived","sql_census":"Separate instrumented diagnostic; general_log top-level commands and independently cross-checked P_S nested events","pool_validation":"SELECT 1 is counted and separately classified","formal_logging":"general_log disabled and original P_S settings restored; per-request hit-rate logging disabled"},
+ "comparison_boundary":"Within-Java Original versus WeBridge on identical MySQL fixtures. Separate Jac/Java alignment is a correctness/query-count gate; cross-database absolute timings have different execution plans."
+}

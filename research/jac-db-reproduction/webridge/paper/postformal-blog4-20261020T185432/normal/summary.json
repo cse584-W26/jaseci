@@ -1,0 +1,30 @@
+{
+  "arm": "normal",
+  "measured_requests": 3,
+  "semantic_passed": true,
+  "diagnostic": true,
+  "scope": "Top-level SQL=general_log Query+Execute; Prepare/Close logged separately. P_S account deltas include CALL wrapper and nested SQL/SP control events; not a round-trip or packet count. Exclusive traffic required. EB alternates two fixed diagnostic payloads. Logged diagnostic wall time is not formal performance latency.",
+  "by_api": {
+    "BD": {
+      "activation_passed": true,
+      "census_observed": true,
+      "requests": 3,
+      "wall_median_ms": 30.91794508509338,
+      "top_level_sql_per_request": [
+        7,
+        8,
+        8
+      ],
+      "calls_per_request": [
+        0,
+        0,
+        0
+      ],
+      "statement_account_event_counts": {
+        "statement/sql/select": 20,
+        "statement/sql/update": 3
+      },
+      "semantic_passed": true
+    }
+  }
+}

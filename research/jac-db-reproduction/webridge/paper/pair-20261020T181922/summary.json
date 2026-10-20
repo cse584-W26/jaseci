@@ -1,0 +1,99 @@
+{
+  "pair": "/home/baichuan/jaseci/reproduction/webridge/paper/pair-20261020T181922",
+  "scope": "My-Blog Original versus actual original WeBridge; equal mixed API driving with separate per-API latency",
+  "timing": {
+    "warmup_seconds": 300,
+    "measurement_seconds": 600
+  },
+  "deviations": [
+    "single physical host with disjoint logical CPU affinities, rather than four separate machines",
+    "observed host CPU model/governor differs from paper",
+    "latency-driving API mix unspecified in paper; use equal GI/BD/EB and report separately"
+  ],
+  "arms": {
+    "normal": {
+      "path": "/home/baichuan/jaseci/reproduction/webridge/paper/measurements/20261020T181927",
+      "apis": {
+        "EDITBLOG": {
+          "n": 8049,
+          "p50_ms": 27.247385,
+          "p90_ms": 34.792271,
+          "p99_ms": 40.502988,
+          "conventional_median_ms": 27.247385,
+          "mean_ms": 28.645625573238913,
+          "raw_sha256": "dd0ea7736bf695730ece14e6096765d3b5963dd0739c0311cebfff8ab867a638"
+        },
+        "GETBLOG": {
+          "n": 7828,
+          "p50_ms": 17.622282,
+          "p90_ms": 23.505991,
+          "p99_ms": 27.083117,
+          "conventional_median_ms": 17.622275,
+          "mean_ms": 18.704690196346448,
+          "raw_sha256": "99117d2df674b1a2e8744850b1e013af134cab4e95adc411178e2096500863cc"
+        },
+        "GETINDEX": {
+          "n": 7871,
+          "p50_ms": 24.148246,
+          "p90_ms": 40.916317,
+          "p99_ms": 60.896189,
+          "conventional_median_ms": 24.148246,
+          "mean_ms": 28.314127017151566,
+          "raw_sha256": "d30b2d16f20ed6185cb132b0fe13f8231291ab00ba843cb85bef411aad8f0b80"
+        }
+      },
+      "successful_requests": 23748,
+      "driver_errors": 0,
+      "raw_quantiles_match_original_driver": true
+    },
+    "optimized": {
+      "path": "/home/baichuan/jaseci/reproduction/webridge/paper/measurements/20261020T183432",
+      "apis": {
+        "EDITBLOG": {
+          "n": 22898,
+          "p50_ms": 8.869907,
+          "p90_ms": 9.500143,
+          "p99_ms": 12.128158,
+          "conventional_median_ms": 8.869902,
+          "mean_ms": 9.163014819940607,
+          "raw_sha256": "c04fb6a5674386d3e17ba1b69b620f80c86cbd5e9ce97c2dce565e4061b44c99"
+        },
+        "GETBLOG": {
+          "n": 22842,
+          "p50_ms": 5.855443,
+          "p90_ms": 6.317582,
+          "p99_ms": 8.224383,
+          "conventional_median_ms": 5.8554145,
+          "mean_ms": 5.989701015716663,
+          "raw_sha256": "0fc16696a7d4d0675e2154a993d996fb88de031edb3ee93ece4dadce641b53a5"
+        },
+        "GETINDEX": {
+          "n": 22907,
+          "p50_ms": 10.564202,
+          "p90_ms": 12.064793,
+          "p99_ms": 19.552492,
+          "conventional_median_ms": 10.564202,
+          "mean_ms": 11.05217499589645,
+          "raw_sha256": "561910d0275ecd33413ca8a7265dd70b5eaeafce066473598e14d04bc8d72a97"
+        }
+      },
+      "successful_requests": 68647,
+      "driver_errors": 0,
+      "raw_quantiles_match_original_driver": true
+    }
+  },
+  "comparison": {
+    "GETINDEX": {
+      "p50_speedup": 2.2858561394414836,
+      "p50_reduction_percent": 56.25271500050148
+    },
+    "GETBLOG": {
+      "p50_speedup": 3.009555724477208,
+      "p50_reduction_percent": 66.77250426477114
+    },
+    "EDITBLOG": {
+      "p50_speedup": 3.0718907199365226,
+      "p50_reduction_percent": 67.44675865225231
+    }
+  }
+}

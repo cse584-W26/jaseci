@@ -1,0 +1,26 @@
+{
+  "started_utc": "2026-10-20T18:19:22Z",
+  "arms": [
+    {
+      "mode": "normal",
+      "output": "/home/baichuan/jaseci/reproduction/webridge/paper/measurements/20261020T181927",
+      "elapsed_seconds": 900.7453928350005
+    },
+    {
+      "mode": "optimized",
+      "output": "/home/baichuan/jaseci/reproduction/webridge/paper/measurements/20261020T183432",
+      "elapsed_seconds": 900.7828413159586
+    }
+  ],
+  "timing": {
+    "warmup_seconds": 300,
+    "measurement_seconds": 600
+  },
+  "workload": "Original My-Blog and WeBench with separately recorded paper-condition fixes",
+  "deviations": [
+    "single physical host with disjoint logical CPU affinities, rather than four separate machines",
+    "observed host CPU model/governor differs from paper",
+    "latency-driving API mix unspecified in paper; use equal GI/BD/EB and report separately"
+  ],
+  "status": "completed"
+}

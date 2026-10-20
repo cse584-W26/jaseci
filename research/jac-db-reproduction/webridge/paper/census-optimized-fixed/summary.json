@@ -1,0 +1,105 @@
+{
+  "arm": "optimized",
+  "measured_requests": 9,
+  "semantic_passed": true,
+  "diagnostic": true,
+  "scope": "Top-level SQL=general_log Query+Execute; Prepare/Close logged separately. P_S account deltas include CALL wrapper and nested SQL/SP control events; not a round-trip or packet count. Exclusive traffic required. EB alternates two fixed diagnostic payloads. Logged diagnostic wall time is not formal performance latency.",
+  "by_api": {
+    "GI": {
+      "activation_passed": true,
+      "census_observed": true,
+      "requests": 3,
+      "wall_median_ms": 10.8887511305511,
+      "top_level_sql_per_request": [
+        1,
+        2,
+        2
+      ],
+      "calls_per_request": [
+        1,
+        1,
+        1
+      ],
+      "statement_account_event_counts": {
+        "statement/sql/call_procedure": 3,
+        "statement/sp/stmt": 24,
+        "statement/sp/set": 540,
+        "statement/sp/jump": 30,
+        "statement/sp/jump_if_not": 291,
+        "statement/sp/hpush_jump": 3,
+        "statement/sp/hpop": 3,
+        "statement/sp/cpush": 3,
+        "statement/sp/cpop": 3,
+        "statement/sp/copen": 3,
+        "statement/sp/cclose": 3,
+        "statement/sp/cfetch": 24,
+        "statement/sql/select": 2
+      },
+      "semantic_passed": true
+    },
+    "BD": {
+      "activation_passed": true,
+      "census_observed": true,
+      "requests": 3,
+      "wall_median_ms": 10.041790083050728,
+      "top_level_sql_per_request": [
+        2,
+        2,
+        2
+      ],
+      "calls_per_request": [
+        1,
+        1,
+        1
+      ],
+      "statement_account_event_counts": {
+        "statement/sql/select": 3,
+        "statement/sql/call_procedure": 3,
+        "statement/sp/stmt": 24,
+        "statement/sp/set": 276,
+        "statement/sp/jump": 15,
+        "statement/sp/jump_if_not": 42,
+        "statement/sp/hpush_jump": 3,
+        "statement/sp/hpop": 3,
+        "statement/sp/cpush": 3,
+        "statement/sp/cpop": 3,
+        "statement/sp/copen": 3,
+        "statement/sp/cclose": 3,
+        "statement/sp/cfetch": 3
+      },
+      "semantic_passed": true
+    },
+    "EB": {
+      "activation_passed": true,
+      "census_observed": true,
+      "requests": 3,
+      "wall_median_ms": 12.061403831467032,
+      "top_level_sql_per_request": [
+        3,
+        3,
+        3
+      ],
+      "calls_per_request": [
+        2,
+        2,
+        2
+      ],
+      "statement_account_event_counts": {
+        "statement/sql/select": 3,
+        "statement/sql/call_procedure": 6,
+        "statement/sp/stmt": 60,
+        "statement/sp/set": 405,
+        "statement/sp/jump": 27,
+        "statement/sp/jump_if_not": 84,
+        "statement/sp/hpush_jump": 9,
+        "statement/sp/hpop": 9,
+        "statement/sp/cpush": 9,
+        "statement/sp/cpop": 9,
+        "statement/sp/copen": 9,
+        "statement/sp/cclose": 9,
+        "statement/sp/cfetch": 9
+      },
+      "semantic_passed": true
+    }
+  }
+}

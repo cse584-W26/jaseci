@@ -1,0 +1,38 @@
+--- /home/baichuan/jaseci/reproduction/webridge/integration/java/ReplayCompatibleAlignedIc5.java
++++ /home/baichuan/jaseci/reproduction/webridge/integration/java/RegionCompatibleAlignedIc5.java
+@@ -4,7 +4,7 @@
+ import com.alibaba.fastjson2.*;
+ 
+ /** IC5 over original UUID anchors: request-local hydration, ordered graph hops and ACL. */
+-public class ReplayCompatibleAlignedIc5 {
++public class RegionCompatibleAlignedIc5 {
+  static Path home=Paths.get(System.getProperty("alignment.dir","."));
+  static String url="jdbc:mysql://127.0.0.1:55337/jac_alignment?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true";
+  static String uuid(String s){if(s==null||s.length()!=32)return s;return s.substring(0,8)+"-"+s.substring(8,12)+"-"+s.substring(12,16)+"-"+s.substring(16,20)+"-"+s.substring(20);}
+@@ -12,6 +12,9 @@
+  static boolean schemaReady=false; static Set<String> knownTypes=new HashSet<>();
+  static JSONObject context; static JSONObject input;
+  static Map<String,String> clientRootContext=new HashMap<>();
++ public interface RegionBoundary {void enter(Connection c)throws Exception;void leave(Connection c)throws Exception;}
++ static RegionBoundary regionBoundary=new RegionBoundary(){public void enter(Connection c){}public void leave(Connection c){}};
++
+  static class Anchor {String id,kind,type,root,src,dst; JSONObject props,arch,access;
+   Anchor(ResultSet r)throws Exception{id=r.getString(1);kind=r.getString(2);type=r.getString(3);root=r.getString(6);src=r.getString(7);dst=r.getString(8);if(!knownTypes.contains(type))throw new IllegalStateException("Unregistered anchor type:"+type);props=JSON.parseObject(r.getString(10));arch=props.getJSONObject("archetype");access=props.getJSONObject("access");}}
+  static void count(String kind){calls++;kinds.put(kind,kinds.getOrDefault(kind,0L)+1);}
+@@ -79,6 +82,7 @@
+   ensure(c);
+   command(c,"begin","START TRANSACTION READ ONLY");command(c,"transaction-setting","SET SESSION innodb_lock_wait_timeout=10");
+   try{
++   regionBoundary.enter(c);
+    Session s=new Session(c,root);Anchor rootAnchor=s.get(root);if(rootAnchor==null)throw new SecurityException("Missing root anchor");Anchor person=s.get(x.getString("person_jid"));if(person==null||!"Person".equals(person.type)||!s.readable(person))throw new SecurityException("Unreadable person");
+    List<Anchor> friends=new ArrayList<>(s.hop(person,"Knows","Person",false,null));friends.addAll(s.hop(person,"Knows","Person",true,null));
+    LinkedHashMap<String,Anchor> forums=new LinkedHashMap<>();Map<String,Set<String>> joined=new HashMap<>();
+@@ -88,7 +92,7 @@
+     out.add(Arrays.<Object>asList(forum.arch.getLong("forum_id"),forum.arch.getString("title"),count));
+    }
+    out.sort((a,b)->{int n=Long.compare(((Number)b.get(2)).longValue(),((Number)a.get(2)).longValue());return n!=0?n:Long.compare(((Number)a.get(0)).longValue(),((Number)b.get(0)).longValue());});
+-   command(c,"commit","COMMIT");return new ArrayList<>(out.subList(0,Math.min(20,out.size())));
++   regionBoundary.leave(c);command(c,"commit","COMMIT");return new ArrayList<>(out.subList(0,Math.min(20,out.size())));
+   }catch(Exception e){command(c,"rollback","ROLLBACK");throw e;}
+  }
+  static long questions(Connection c)throws Exception{try(Statement s=c.createStatement();ResultSet r=s.executeQuery("SHOW SESSION STATUS LIKE 'Questions'")){r.next();return r.getLong(2);}}

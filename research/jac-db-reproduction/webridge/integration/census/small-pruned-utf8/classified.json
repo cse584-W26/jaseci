@@ -1,0 +1,448 @@
+{
+  "all_wire_counts_match": true,
+  "requests": [
+    {
+      "phase": "baseline",
+      "warmup": true,
+      "iteration": 0,
+      "client_ms": 54.460505,
+      "app_thread_cpu_ms": 22.765238,
+      "wire_queries": 31,
+      "wire_categories": {
+        "START": 1,
+        "SET": 1,
+        "SELECT": 28,
+        "COMMIT": 1
+      },
+      "pfs_top_level_ms": 21.917125,
+      "pfs_top_level_rows_examined": 2268
+    },
+    {
+      "phase": "baseline",
+      "warmup": false,
+      "iteration": 1,
+      "client_ms": 39.387873,
+      "app_thread_cpu_ms": 9.336572,
+      "wire_queries": 31,
+      "wire_categories": {
+        "START": 1,
+        "SET": 1,
+        "SELECT": 28,
+        "COMMIT": 1
+      },
+      "pfs_top_level_ms": 22.13563,
+      "pfs_top_level_rows_examined": 2268
+    },
+    {
+      "phase": "baseline",
+      "warmup": false,
+      "iteration": 2,
+      "client_ms": 40.901215,
+      "app_thread_cpu_ms": 8.719465,
+      "wire_queries": 31,
+      "wire_categories": {
+        "START": 1,
+        "SET": 1,
+        "SELECT": 28,
+        "COMMIT": 1
+      },
+      "pfs_top_level_ms": 21.411614,
+      "pfs_top_level_rows_examined": 2268
+    },
+    {
+      "phase": "sp",
+      "warmup": true,
+      "iteration": 0,
+      "client_ms": 230.756194,
+      "app_thread_cpu_ms": 174.847973,
+      "wire_queries": 9,
+      "wire_categories": {
+        "START": 1,
+        "SET": 3,
+        "CALL": 1,
+        "SELECT": 3,
+        "COMMIT": 1
+      },
+      "pfs_top_level_ms": 33.493410000000004,
+      "pfs_top_level_rows_examined": 0,
+      "call_ms": 32.124332,
+      "procedure_direct_children": {
+        "statement/sp/set": {
+          "n": 988,
+          "ms": 0.621111,
+          "rows_examined": 0
+        },
+        "statement/sp/jump_if_not": {
+          "n": 420,
+          "ms": 0.21679900000000005,
+          "rows_examined": 0
+        },
+        "statement/sp/cpush": {
+          "n": 4,
+          "ms": 0.0020829999999999998,
+          "rows_examined": 0
+        },
+        "statement/sp/hpush_jump": {
+          "n": 4,
+          "ms": 0.000721,
+          "rows_examined": 0
+        },
+        "statement/sp/copen": {
+          "n": 4,
+          "ms": 2.2085359999999996,
+          "rows_examined": 0
+        },
+        "statement/sp/cfetch": {
+          "n": 26,
+          "ms": 0.018873999999999995,
+          "rows_examined": 0
+        },
+        "statement/sp/jump": {
+          "n": 56,
+          "ms": 0.004337999999999999,
+          "rows_examined": 0
+        },
+        "statement/sp/cclose": {
+          "n": 4,
+          "ms": 0.010964,
+          "rows_examined": 0
+        },
+        "statement/sp/hpop": {
+          "n": 4,
+          "ms": 0.000622,
+          "rows_examined": 0
+        },
+        "statement/sp/cpop": {
+          "n": 4,
+          "ms": 0.000567,
+          "rows_examined": 0
+        },
+        "statement/sp/stmt": {
+          "n": 29,
+          "ms": 17.789327999999998,
+          "rows_examined": 44281
+        }
+      },
+      "top_nested_sql": [
+        {
+          "sql": "SELECT n.id, e.id, CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.forum_id')) AS SIGNED) AS forum_id , JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.title')) AS title FROM ( SELECT e.* FROM anchors e WHERE e.dst = q7_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q7_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q7_i3 )) AND (e.src_type IS NULL OR e.src_type = q7_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q7_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q7_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q7_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q7_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q7_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q7_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q7_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q7_i12 OR n.arch_type IN ( SELECT type_name FROM graph_typ...",
+          "name": "statement/sp/stmt",
+          "nest": 107,
+          "event": 917,
+          "thread": 121,
+          "no_index": 1,
+          "timer_ps": 4648873000,
+          "rows_sent": 0,
+          "rows_examined": 1162
+        },
+        {
+          "sql": "SELECT n.id, e.id, CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.forum_id')) AS SIGNED) AS forum_id , JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.title')) AS title FROM ( SELECT e.* FROM anchors e WHERE e.dst = q8_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q8_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i3 )) AND (e.src_type IS NULL OR e.src_type = q8_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q8_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q8_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q8_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q8_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q8_i12 OR n.arch_type IN ( SELECT type_name FROM graph_typ...",
+          "name": "statement/sp/stmt",
+          "nest": 107,
+          "event": 937,
+          "thread": 121,
+          "no_index": 1,
+          "timer_ps": 2117220000,
+          "rows_sent": 0,
+          "rows_examined": 1449
+        },
+        {
+          "sql": "SELECT n.id, e.id, CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.forum_id')) AS SIGNED) AS forum_id , JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.title')) AS title FROM ( SELECT e.* FROM anchors e WHERE e.dst = q11_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q11_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q11_i3 )) AND (e.src_type IS NULL OR e.src_type = q11_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q11_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q11_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q11_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q11_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q11_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q11_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q11_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q11_i12 OR n.arch_type IN ( SELECT type_name FR...",
+          "name": "statement/sp/stmt",
+          "nest": 107,
+          "event": 997,
+          "thread": 121,
+          "no_index": 1,
+          "timer_ps": 1873350000,
+          "rows_sent": 0,
+          "rows_examined": 2073
+        },
+        {
+          "sql": "SELECT n.id, e.id, CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.forum_id')) AS SIGNED) AS forum_id , JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.title')) AS title FROM ( SELECT e.* FROM anchors e WHERE e.dst = q4_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q4_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q4_i3 )) AND (e.src_type IS NULL OR e.src_type = q4_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q4_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q4_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q4_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q4_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q4_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q4_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q4_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q4_i12 OR n.arch_type IN ( SELECT type_name FROM graph_typ...",
+          "name": "statement/sp/stmt",
+          "nest": 107,
+          "event": 839,
+          "thread": 121,
+          "no_index": 1,
+          "timer_ps": 974667000,
+          "rows_sent": 0,
+          "rows_examined": 309
+        },
+        {
+          "sql": "SELECT n.id, e.id, CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.forum_id')) AS SIGNED) AS forum_id , JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.title')) AS title FROM ( SELECT e.* FROM anchors e WHERE e.dst = q10_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q10_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q10_i3 )) AND (e.src_type IS NULL OR e.src_type = q10_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q10_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q10_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q10_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q10_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q10_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q10_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q10_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q10_i12 OR n.arch_type IN ( SELECT type_name FR...",
+          "name": "statement/sp/stmt",
+          "nest": 107,
+          "event": 977,
+          "thread": 121,
+          "no_index": 1,
+          "timer_ps": 947642000,
+          "rows_sent": 0,
+          "rows_examined": 1657
+        }
+      ]
+    },
+    {
+      "phase": "sp",
+      "warmup": false,
+      "iteration": 1,
+      "client_ms": 35.001229,
+      "app_thread_cpu_ms": 13.514873,
+      "wire_queries": 4,
+      "wire_categories": {
+        "START": 1,
+        "SET": 1,
+        "CALL": 1,
+        "COMMIT": 1
+      },
+      "pfs_top_level_ms": 21.939331,
+      "pfs_top_level_rows_examined": 0,
+      "call_ms": 21.8142,
+      "procedure_direct_children": {
+        "statement/sp/set": {
+          "n": 988,
+          "ms": 0.6272679999999998,
+          "rows_examined": 0
+        },
+        "statement/sp/jump_if_not": {
+          "n": 420,
+          "ms": 0.22538800000000006,
+          "rows_examined": 0
+        },
+        "statement/sp/cpush": {
+          "n": 4,
+          "ms": 0.0028390000000000004,
+          "rows_examined": 0
+        },
+        "statement/sp/hpush_jump": {
+          "n": 4,
+          "ms": 0.0007750000000000001,
+          "rows_examined": 0
+        },
+        "statement/sp/copen": {
+          "n": 4,
+          "ms": 2.129733,
+          "rows_examined": 0
+        },
+        "statement/sp/cfetch": {
+          "n": 26,
+          "ms": 0.020925000000000003,
+          "rows_examined": 0
+        },
+        "statement/sp/jump": {
+          "n": 56,
+          "ms": 0.0026949999999999995,
+          "rows_examined": 0
+        },
+        "statement/sp/cclose": {
+          "n": 4,
+          "ms": 0.010371,
+          "rows_examined": 0
+        },
+        "statement/sp/hpop": {
+          "n": 4,
+          "ms": 0.000641,
+          "rows_examined": 0
+        },
+        "statement/sp/cpop": {
+          "n": 4,
+          "ms": 0.000565,
+          "rows_examined": 0
+        },
+        "statement/sp/stmt": {
+          "n": 29,
+          "ms": 17.56926,
+          "rows_examined": 44281
+        }
+      },
+      "top_nested_sql": [
+        {
+          "sql": "SELECT n.id, e.id, CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.forum_id')) AS SIGNED) AS forum_id , JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.title')) AS title FROM ( SELECT e.* FROM anchors e WHERE e.dst = q7_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q7_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q7_i3 )) AND (e.src_type IS NULL OR e.src_type = q7_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q7_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q7_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q7_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q7_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q7_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q7_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q7_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q7_i12 OR n.arch_type IN ( SELECT type_name FROM graph_typ...",
+          "name": "statement/sp/stmt",
+          "nest": 1661,
+          "event": 2471,
+          "thread": 121,
+          "no_index": 1,
+          "timer_ps": 4586172000,
+          "rows_sent": 0,
+          "rows_examined": 1162
+        },
+        {
+          "sql": "SELECT n.id, e.id, CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.forum_id')) AS SIGNED) AS forum_id , JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.title')) AS title FROM ( SELECT e.* FROM anchors e WHERE e.dst = q8_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q8_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i3 )) AND (e.src_type IS NULL OR e.src_type = q8_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q8_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q8_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q8_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q8_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q8_i12 OR n.arch_type IN ( SELECT type_name FROM graph_typ...",
+          "name": "statement/sp/stmt",
+          "nest": 1661,
+          "event": 2491,
+          "thread": 121,
+          "no_index": 1,
+          "timer_ps": 2104761000,
+          "rows_sent": 0,
+          "rows_examined": 1449
+        },
+        {
+          "sql": "SELECT n.id, e.id, CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.forum_id')) AS SIGNED) AS forum_id , JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.title')) AS title FROM ( SELECT e.* FROM anchors e WHERE e.dst = q11_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q11_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q11_i3 )) AND (e.src_type IS NULL OR e.src_type = q11_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q11_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q11_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q11_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q11_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q11_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q11_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q11_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q11_i12 OR n.arch_type IN ( SELECT type_name FR...",
+          "name": "statement/sp/stmt",
+          "nest": 1661,
+          "event": 2551,
+          "thread": 121,
+          "no_index": 1,
+          "timer_ps": 1862784000,
+          "rows_sent": 0,
+          "rows_examined": 2073
+        },
+        {
+          "sql": "SELECT n.id, e.id, CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.forum_id')) AS SIGNED) AS forum_id , JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.title')) AS title FROM ( SELECT e.* FROM anchors e WHERE e.dst = q4_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q4_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q4_i3 )) AND (e.src_type IS NULL OR e.src_type = q4_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q4_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q4_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q4_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q4_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q4_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q4_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q4_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q4_i12 OR n.arch_type IN ( SELECT type_name FROM graph_typ...",
+          "name": "statement/sp/stmt",
+          "nest": 1661,
+          "event": 2393,
+          "thread": 121,
+          "no_index": 1,
+          "timer_ps": 982346000,
+          "rows_sent": 0,
+          "rows_examined": 309
+        },
+        {
+          "sql": "SELECT n.id, e.id, CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.forum_id')) AS SIGNED) AS forum_id , JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.title')) AS title FROM ( SELECT e.* FROM anchors e WHERE e.dst = q10_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q10_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q10_i3 )) AND (e.src_type IS NULL OR e.src_type = q10_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q10_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q10_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q10_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q10_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q10_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q10_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q10_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q10_i12 OR n.arch_type IN ( SELECT type_name FR...",
+          "name": "statement/sp/stmt",
+          "nest": 1661,
+          "event": 2531,
+          "thread": 121,
+          "no_index": 1,
+          "timer_ps": 948144000,
+          "rows_sent": 0,
+          "rows_examined": 1657
+        }
+      ]
+    },
+    {
+      "phase": "sp",
+      "warmup": false,
+      "iteration": 2,
+      "client_ms": 32.382272,
+      "app_thread_cpu_ms": 11.583967,
+      "wire_queries": 4,
+      "wire_categories": {
+        "START": 1,
+        "SET": 1,
+        "CALL": 1,
+        "COMMIT": 1
+      },
+      "pfs_top_level_ms": 21.745327000000003,
+      "pfs_top_level_rows_examined": 0,
+      "call_ms": 21.609705,
+      "procedure_direct_children": {
+        "statement/sp/set": {
+          "n": 988,
+          "ms": 0.6382100000000006,
+          "rows_examined": 0
+        },
+        "statement/sp/jump_if_not": {
+          "n": 420,
+          "ms": 0.22079700000000005,
+          "rows_examined": 0
+        },
+        "statement/sp/cpush": {
+          "n": 4,
+          "ms": 0.00283,
+          "rows_examined": 0
+        },
+        "statement/sp/hpush_jump": {
+          "n": 4,
+          "ms": 0.0007130000000000001,
+          "rows_examined": 0
+        },
+        "statement/sp/copen": {
+          "n": 4,
+          "ms": 2.083116,
+          "rows_examined": 0
+        },
+        "statement/sp/cfetch": {
+          "n": 26,
+          "ms": 0.019481,
+          "rows_examined": 0
+        },
+        "statement/sp/jump": {
+          "n": 56,
+          "ms": 0.0033770000000000007,
+          "rows_examined": 0
+        },
+        "statement/sp/cclose": {
+          "n": 4,
+          "ms": 0.010663,
+          "rows_examined": 0
+        },
+        "statement/sp/hpop": {
+          "n": 4,
+          "ms": 0.000601,
+          "rows_examined": 0
+        },
+        "statement/sp/cpop": {
+          "n": 4,
+          "ms": 0.0005660000000000001,
+          "rows_examined": 0
+        },
+        "statement/sp/stmt": {
+          "n": 29,
+          "ms": 17.413754,
+          "rows_examined": 44281
+        }
+      },
+      "top_nested_sql": [
+        {
+          "sql": "SELECT n.id, e.id, CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.forum_id')) AS SIGNED) AS forum_id , JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.title')) AS title FROM ( SELECT e.* FROM anchors e WHERE e.dst = q7_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q7_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q7_i3 )) AND (e.src_type IS NULL OR e.src_type = q7_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q7_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q7_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q7_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q7_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q7_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q7_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q7_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q7_i12 OR n.arch_type IN ( SELECT type_name FROM graph_typ...",
+          "name": "statement/sp/stmt",
+          "nest": 3210,
+          "event": 4020,
+          "thread": 121,
+          "no_index": 1,
+          "timer_ps": 4565737000,
+          "rows_sent": 0,
+          "rows_examined": 1162
+        },
+        {
+          "sql": "SELECT n.id, e.id, CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.forum_id')) AS SIGNED) AS forum_id , JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.title')) AS title FROM ( SELECT e.* FROM anchors e WHERE e.dst = q8_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q8_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i3 )) AND (e.src_type IS NULL OR e.src_type = q8_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q8_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q8_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q8_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q8_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q8_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q8_i12 OR n.arch_type IN ( SELECT type_name FROM graph_typ...",
+          "name": "statement/sp/stmt",
+          "nest": 3210,
+          "event": 4040,
+          "thread": 121,
+          "no_index": 1,
+          "timer_ps": 2097760000,
+          "rows_sent": 0,
+          "rows_examined": 1449
+        },
+        {
+          "sql": "SELECT n.id, e.id, CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.forum_id')) AS SIGNED) AS forum_id , JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.title')) AS title FROM ( SELECT e.* FROM anchors e WHERE e.dst = q11_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q11_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q11_i3 )) AND (e.src_type IS NULL OR e.src_type = q11_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q11_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q11_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q11_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q11_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q11_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q11_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q11_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q11_i12 OR n.arch_type IN ( SELECT type_name FR...",
+          "name": "statement/sp/stmt",
+          "nest": 3210,
+          "event": 4100,
+          "thread": 121,
+          "no_index": 1,
+          "timer_ps": 1860065000,
+          "rows_sent": 0,
+          "rows_examined": 2073
+        },
+        {
+          "sql": "SELECT n.id, e.id, CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.forum_id')) AS SIGNED) AS forum_id , JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.title')) AS title FROM ( SELECT e.* FROM anchors e WHERE e.dst = q4_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q4_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q4_i3 )) AND (e.src_type IS NULL OR e.src_type = q4_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q4_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q4_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q4_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q4_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q4_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q4_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q4_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q4_i12 OR n.arch_type IN ( SELECT type_name FROM graph_typ...",
+          "name": "statement/sp/stmt",
+          "nest": 3210,
+          "event": 3942,
+          "thread": 121,
+          "no_index": 1,
+          "timer_ps": 967166000,
+          "rows_sent": 0,
+          "rows_examined": 309
+        },
+        {
+          "sql": "SELECT n.id, e.id, CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.forum_id')) AS SIGNED) AS forum_id , JSON_UNQUOTE(JSON_EXTRACT(n.props, '$.archetype.title')) AS title FROM ( SELECT e.* FROM anchors e WHERE e.dst = q10_i1 AND e.kind = 'EdgeAnchor' AND (e.arch_type = q10_i2 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q10_i3 )) AND (e.src_type IS NULL OR e.src_type = q10_i4 OR e.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q10_i5 )) UNION ALL SELECT e.* FROM anchors e WHERE e.src = q10_i6 AND e.undirected = 1 AND e.src <> e.dst AND e.kind = 'EdgeAnchor' AND (e.arch_type = q10_i7 OR e.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q10_i8 )) AND (e.dst_type IS NULL OR e.dst_type = q10_i9 OR e.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = q10_i10 )) ) e JOIN anchors n ON n.id = CASE  WHEN e.src = q10_i11 THEN e.dst ELSE e.src END AND n.kind = 'NodeAnchor' AND (n.arch_type = q10_i12 OR n.arch_type IN ( SELECT type_name FR...",
+          "name": "statement/sp/stmt",
+          "nest": 3210,
+          "event": 4080,
+          "thread": 121,
+          "no_index": 1,
+          "timer_ps": 937161000,
+          "rows_sent": 0,
+          "rows_examined": 1657
+        }
+      ]
+    }
+  ],
+  "pfs_note": "Top-level times inclusive of stored procedure children; child categories reported separately and not added twice. Instrumented census, separate from quiet timings."
+}

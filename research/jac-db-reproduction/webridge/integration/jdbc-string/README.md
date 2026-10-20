@@ -1,0 +1,11 @@
+# Recorded JDBC string conversion
+
+The actual Pruned input1 recording contains6376rows and13396cells. All322 Forum rows have JavaLong in column3 and byte[] in column4. The adapter reads the identifier with getLong/wasNull and title with getString. The original recorded ResultSet casts getString to String, while the real MySQL driver decodes the binary-collation JSON_UNQUOTE title.
+
+This isolated class overlay adds UTF8 byte-array decoding and Number string conversion to indexed and named getString. Null and String behavior stay unchanged. Original and overlay computed serialVersionUID are both−981665221153297535. The request SQL, parameters, Pruned source and native engine remain the recorded versions. `overlay.diff` and `provenance.json` record the change. `RecordedTest.java` checks every recorded cell with the actual adapter getter and checks null/numeric/UTF8 cases; `test.log` records PASS.
+
+`combined/` contains this compatibility class plus the separately recorded SQL frontend and numeric-width overlays. Freshcase `../cases/pruned-jdbc-string-idx1-20261020/` records the full request and oracle parity, then replays using the original100k native engine with8g heap,12GiB sampled process-group RSS,300s wall and8GiB output limits.
+
+Replay reaches native graph serialization after3352 cached results. The native graph is3406074911bytes; the native-to-Java return throws NegativeArraySizeException after60.364s (peak sampledRSS7027486720bytes). `JVM_WeBridgeAnalysis` converts the entire serialized graph to a JavaString in `hotspot/src/share/vm/prims/jvm.cpp:517`. `StoredProcedureManager.run` subsequently reads the entire graph through Files.readAllBytes (`StoredProcedureManager.java:919`), which also uses a single Java byte array. This graph exceeds the signed32bit array length boundary. The native file is retained as `native-graph-before-java-return.json`; the replay error and process cleanup receipts are in its attempt directory.
+
+Bounded synthesis attempted the retained graph directly in a fresh case. It failed in0.828s with `OutOfMemoryError: Required array size too large` at `Files.readAllBytes`, sampledRSS75952128bytes. Attempt: `../cases/pruned-jdbc-string-idx1-20261020/synth-20261020T192639313398Z/`. The graph SHA256 is70564d8f7d80437d49952afd3b9b403395a569758b924cdbb3ed490d20a02805 (`native-graph.sha256`).

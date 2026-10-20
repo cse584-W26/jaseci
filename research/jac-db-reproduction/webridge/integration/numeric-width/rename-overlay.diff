@@ -1,0 +1,11 @@
+--- /home/baichuan/jaseci/webridge/SourceCode/webridge-common/basic-components/src/main/java/webridge/wbridge/graph/visit/impl/SQLGraphExpressionRenameVisitor.java
++++ /home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/src/webridge/wbridge/graph/visit/impl/SQLGraphExpressionRenameVisitor.java
+@@ -176,7 +176,7 @@
+       if (newExpression == null) {
+         final String oldName = oldExpression.toString();
+         final String newName = getNewName(oldName);
+-        newExpression = new SymbolicInteger(newName);
++        newExpression = new SymbolicInteger(newName, ((SymbolicInteger) oldExpression)._min, ((SymbolicInteger) oldExpression)._max, ((SymbolicInteger) oldExpression).getTypeCode());
+         expressionMapping.put(oldExpression, newExpression);
+       }
+       return newExpression;

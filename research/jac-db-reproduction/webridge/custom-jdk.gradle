@@ -1,0 +1,6 @@
+allprojects {
+    tasks.withType(JavaCompile).configureEach {
+        options.bootstrapClasspath = files('/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/rt.jar')
+        options.compilerArgs += ['-XDignore.symbol.file']
+    }
+}

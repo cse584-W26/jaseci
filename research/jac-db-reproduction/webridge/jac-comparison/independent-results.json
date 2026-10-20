@@ -1,0 +1,126 @@
+{
+  "timing": {
+    "baseline": {
+      "warm": 10,
+      "measured": 30,
+      "client_median_ms": 23.251368897035718,
+      "server_median_ms": 22.2975,
+      "client_mean_ms": 23.167843651026487,
+      "server_mean_ms": 22.170099999999998,
+      "process_cpu_interval_ms": 180.0,
+      "process_cpu_mean_ms_per_request": 6.0,
+      "cpu_scope": "Whole measured interval including inter-request housekeeping; isolated application process",
+      "raw_sha256": "7ba539d657d769637c722ae88d10fdaa17940feaefbb22f86b1f4f3632deea77",
+      "source": {
+        "variant": "baseline",
+        "database": "jac_webridge_matched_20261020",
+        "source": "/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac",
+        "source_commit": "c12ba889d484d7fcdfb3780ac98d416d1e13ec8b",
+        "source_files_sha256": {
+          "main.jac": "36765f20eae73507f5c4857722fb2137ab65d9f8281d6647c1cc8ab875fe6fde",
+          "app.jac": "60aa325001594bf900a8ebcfa24dd1d36fa0f00d0fd3fc9589a781f37f9a32a7",
+          "import_data.jac": "d2a676c2e9f791333629a1d2863f0c07b6eb7d5d1ed1070d22b5e0ddc14aa7b0"
+        },
+        "app": "/home/baichuan/jaseci/reproduction/webridge/jac-comparison/baseline/app",
+        "python": "/home/baichuan/jaseci/reproduction/runtime/venv314/bin/python"
+      }
+    },
+    "final": {
+      "warm": 10,
+      "measured": 30,
+      "client_median_ms": 5.407603457570076,
+      "server_median_ms": 4.523,
+      "client_mean_ms": 5.5065352624903126,
+      "server_mean_ms": 4.612733333333333,
+      "process_cpu_interval_ms": 80.0,
+      "process_cpu_mean_ms_per_request": 2.6666666666666665,
+      "cpu_scope": "Whole measured interval including inter-request housekeeping; isolated application process",
+      "raw_sha256": "a0ae8a0fbea2b60d6d2b6ed55918913245d0b3dcdcda0b4f25d57a331885ff1f",
+      "source": {
+        "variant": "final",
+        "database": "jac_webridge_matched_20261020",
+        "source": "/home/baichuan/jaseci/jac-db/jac",
+        "source_commit": "85b1efc073dd2071a7b554bbab1e1ddabe8f5e5f",
+        "source_files_sha256": {
+          "main.jac": "36765f20eae73507f5c4857722fb2137ab65d9f8281d6647c1cc8ab875fe6fde",
+          "app.jac": "60aa325001594bf900a8ebcfa24dd1d36fa0f00d0fd3fc9589a781f37f9a32a7",
+          "import_data.jac": "d2a676c2e9f791333629a1d2863f0c07b6eb7d5d1ed1070d22b5e0ddc14aa7b0"
+        },
+        "app": "/home/baichuan/jaseci/reproduction/webridge/jac-comparison/final/app",
+        "python": "/home/baichuan/jaseci/reproduction/runtime/venv314/bin/python"
+      }
+    }
+  },
+  "census": {
+    "baseline": {
+      "requests": 3,
+      "execution_counts": [
+        42,
+        38,
+        38
+      ],
+      "warm_stable": [
+        38,
+        38
+      ],
+      "scope": "Separate logged windows; top-level execute/statement events, parse/bind excluded; first request includes initialization and background setup PIDs."
+    },
+    "final": {
+      "requests": 3,
+      "execution_counts": [
+        30,
+        14,
+        14
+      ],
+      "warm_stable": [
+        14,
+        14
+      ],
+      "scope": "Separate logged windows; top-level execute/statement events, parse/bind excluded; first request includes initialization and background setup PIDs."
+    }
+  },
+  "checks": [
+    {
+      "arm": "baseline",
+      "mode": "timing",
+      "passed": true
+    },
+    {
+      "arm": "baseline",
+      "mode": "census",
+      "passed": true
+    },
+    {
+      "arm": "final",
+      "mode": "timing",
+      "passed": true
+    },
+    {
+      "arm": "final",
+      "mode": "census",
+      "passed": true
+    }
+  ],
+  "comparison": {
+    "server_median_speedup": 4.929803227946054,
+    "client_median_speedup": 4.299754795164621,
+    "data_scope": "Matched 460984-anchor PostgreSQL closure, same application-source hashes; independently selected small diagnostic derived from original idx1 with raised min_date. Separate from native capture idx1 and MySQL Java/SP experiments.",
+    "boundary": "Jac client time is HTTP; server header total+commit is separately reported. Compare Java CLI timing only with its declared boundary and database engine."
+  },
+  "input": {
+    "original_idx": 1,
+    "person_jid": "6c0eeb86-bda6-5055-b3cf-81a8bf523191",
+    "min_date": 1347527525888,
+    "expected": {
+      "forums": [
+        {
+          "forumId": 2061584375281,
+          "title": "Album 7 of Jie Xie",
+          "postCount": 0
+        }
+      ]
+    },
+    "file_sha256": "ac3f4e0e6f9c99aed37466e4b8544cab5e759708503baea1a0ee2d14a4fe0270"
+  },
+  "passed": true
+}

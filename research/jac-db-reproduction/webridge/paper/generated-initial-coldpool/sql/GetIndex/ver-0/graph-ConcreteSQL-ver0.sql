@@ -1,0 +1,7 @@
+SELECT blog_id, blog_title, blog_sub_url, blog_cover_image, blog_category_id , blog_category_name, blog_tags, blog_status, blog_views, enable_comment , is_deleted, create_time, update_time FROM tb_blog WHERE is_deleted = 0 AND blog_status = ? ORDER BY blog_id DESC LIMIT ?, ?
+SELECT category_id, category_name, category_icon, category_rank, is_deleted , create_time FROM tb_blog_category WHERE category_id IN (?, ?, ?, ?, ?, ?, ?, ?) AND is_deleted = 0
+SELECT count(*) FROM tb_blog WHERE is_deleted = 0 AND blog_status = ?
+SELECT blog_id, blog_title, blog_sub_url, blog_cover_image, blog_category_id , blog_category_name, blog_tags, blog_status, blog_views, enable_comment , is_deleted, create_time, update_time FROM tb_blog WHERE is_deleted = 0 AND blog_status = 1 ORDER BY blog_id DESC LIMIT ?
+SELECT blog_id, blog_title, blog_sub_url, blog_cover_image, blog_category_id , blog_category_name, blog_tags, blog_status, blog_views, enable_comment , is_deleted, create_time, update_time FROM tb_blog WHERE is_deleted = 0 AND blog_status = 1 ORDER BY blog_views DESC LIMIT ?
+SELECT t_r.*, t.tag_name FROM ( SELECT r.tag_id, r.tag_count FROM ( SELECT tag_id, COUNT(*) AS tag_count FROM ( SELECT tr.tag_id FROM tb_blog_tag_relation tr LEFT JOIN tb_blog b ON tr.blog_id = b.blog_id WHERE b.is_deleted = 0 ) trb GROUP BY tag_id ) r ORDER BY tag_count DESC LIMIT 20 ) t_r LEFT JOIN tb_blog_tag t ON t_r.tag_id = t.tag_id WHERE t.is_deleted = 0
+SELECT config_name, config_value, create_time, update_time FROM tb_config

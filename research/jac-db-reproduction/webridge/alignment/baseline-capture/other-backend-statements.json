@@ -1,0 +1,194 @@
+[
+  {
+    "round": 0,
+    "idx": 4,
+    "pid": 2138362,
+    "sql_first_line": "BEGIN"
+  },
+  {
+    "round": 0,
+    "idx": 4,
+    "pid": 2138362,
+    "sql_first_line": "SELECT doc FROM identity_users WHERE user_id=$1"
+  },
+  {
+    "round": 0,
+    "idx": 9,
+    "pid": 2140258,
+    "sql_first_line": "BEGIN"
+  },
+  {
+    "round": 0,
+    "idx": 9,
+    "pid": 2140258,
+    "sql_first_line": "CREATE TEMP TABLE align_inputs(idx int, id uuid, min_date bigint)"
+  },
+  {
+    "round": 0,
+    "idx": 9,
+    "pid": 2140258,
+    "sql_first_line": "COPY align_inputs FROM STDIN"
+  },
+  {
+    "round": 0,
+    "idx": 9,
+    "pid": 2140258,
+    "sql_first_line": "CREATE TEMP TABLE align_knows AS SELECT DISTINCT e.id FROM align_inputs i JOIN anchors e ON e.kind='EdgeAnchor' AND e.arch_type='Knows' AND (e.src=i.id OR e.dst=i.id)"
+  },
+  {
+    "round": 0,
+    "idx": 9,
+    "pid": 2140258,
+    "sql_first_line": "CREATE TEMP TABLE align_friends AS SELECT DISTINCT i.idx,i.min_date,CASE WHEN e.src=i.id THEN e.dst ELSE e.src END AS id FROM align_inputs i JOIN anchors e ON e.kind='EdgeAnchor' AND e.arch_type='Knows' AND (e.src=i.id OR e.dst=i.id) JOIN anchors n ON n.id=CASE WHEN e.src=i.id THEN e.dst ELSE e.src END AND n.arch_type='Person'"
+  },
+  {
+    "round": 0,
+    "idx": 9,
+    "pid": 2140258,
+    "sql_first_line": "CREATE TEMP TABLE align_members AS SELECT DISTINCT e.id,e.src AS forum FROM align_friends f JOIN anchors e ON e.dst=f.id AND e.kind='EdgeAnchor' AND e.arch_type='HasMember' AND (e.props->'archetype'->>'joinDate')::bigint>f.min_date JOIN anchors n ON n.id=e.src AND n.arch_type='Forum'"
+  },
+  {
+    "round": 0,
+    "idx": 9,
+    "pid": 2140258,
+    "sql_first_line": "CREATE TEMP TABLE align_forums AS SELECT DISTINCT forum AS id FROM align_members"
+  },
+  {
+    "round": 0,
+    "idx": 9,
+    "pid": 2140258,
+    "sql_first_line": "CREATE UNIQUE INDEX ON align_forums(id)"
+  },
+  {
+    "round": 0,
+    "idx": 9,
+    "pid": 2140258,
+    "sql_first_line": "CREATE TEMP TABLE align_containers AS SELECT e.id,e.dst AS post FROM align_forums f JOIN anchors e ON e.src=f.id AND e.kind='EdgeAnchor' AND e.arch_type='ContainerOf' JOIN anchors n ON n.id=e.dst AND n.arch_type='Post'"
+  },
+  {
+    "round": 0,
+    "idx": 9,
+    "pid": 2140258,
+    "sql_first_line": "CREATE TEMP TABLE align_posts AS SELECT DISTINCT post AS id FROM align_containers"
+  },
+  {
+    "round": 0,
+    "idx": 9,
+    "pid": 2140258,
+    "sql_first_line": "CREATE UNIQUE INDEX ON align_posts(id)"
+  },
+  {
+    "round": 0,
+    "idx": 9,
+    "pid": 2140258,
+    "sql_first_line": "CREATE TEMP TABLE align_creators AS SELECT e.id FROM align_posts p JOIN anchors e ON e.src=p.id AND e.kind='EdgeAnchor' AND e.arch_type='HasCreator' JOIN anchors n ON n.id=e.dst AND n.arch_type='Person'"
+  },
+  {
+    "round": 0,
+    "idx": 9,
+    "pid": 2140258,
+    "sql_first_line": "CREATE TEMP TABLE align_edges AS SELECT id FROM align_knows UNION SELECT id FROM align_members UNION SELECT id FROM align_containers UNION SELECT id FROM align_creators"
+  },
+  {
+    "round": 0,
+    "idx": 9,
+    "pid": 2140258,
+    "sql_first_line": "CREATE UNIQUE INDEX ON align_edges(id)"
+  },
+  {
+    "round": 0,
+    "idx": 12,
+    "pid": 2140258,
+    "sql_first_line": "CREATE TEMP TABLE align_ids(id uuid PRIMARY KEY); INSERT INTO align_ids SELECT id FROM align_edges UNION SELECT a.src FROM anchors a JOIN align_edges e ON e.id=a.id WHERE a.src IS NOT NULL UNION SELECT a.dst FROM anchors a JOIN align_edges e ON e.id=a.id WHERE a.dst IS NOT NULL UNION SELECT id FROM align_inputs"
+  },
+  {
+    "round": 0,
+    "idx": 12,
+    "pid": 2140258,
+    "sql_first_line": "SELECT doc FROM identity_users WHERE user_id=$1"
+  },
+  {
+    "round": 0,
+    "idx": 12,
+    "pid": 2140258,
+    "sql_first_line": "INSERT INTO align_ids VALUES($1) ON CONFLICT DO NOTHING"
+  },
+  {
+    "round": 0,
+    "idx": 12,
+    "pid": 2140258,
+    "sql_first_line": "INSERT INTO align_ids SELECT DISTINCT a.root_id FROM anchors a JOIN align_ids i ON i.id=a.id WHERE a.root_id IS NOT NULL ON CONFLICT DO NOTHING"
+  },
+  {
+    "round": 0,
+    "idx": 12,
+    "pid": 2140258,
+    "sql_first_line": "COPY (SELECT a.id,a.kind,a.arch_type,a.arch_module,a.fingerprint,a.root_id,a.src,a.dst,a.undirected,a.props::text,a.xmin::text,a.seq,a.src_type,a.dst_type FROM anchors a JOIN align_ids i ON i.id=a.id ORDER BY a.id) TO STDOUT WITH(FORMAT text)"
+  },
+  {
+    "round": 0,
+    "idx": 12,
+    "pid": 2140258,
+    "sql_first_line": "COPY (SELECT type_name,ancestor FROM graph_types ORDER BY type_name,ancestor) TO STDOUT WITH(FORMAT text)"
+  },
+  {
+    "round": 0,
+    "idx": 12,
+    "pid": 2140258,
+    "sql_first_line": "COPY (SELECT user_id,doc::text FROM identity_users WHERE user_id='77ef1e57-4ce2-47c4-8616-451db58ce558') TO STDOUT WITH(FORMAT text)"
+  },
+  {
+    "round": 0,
+    "idx": 12,
+    "pid": 2140258,
+    "sql_first_line": "SELECT count(*) FROM align_inputs"
+  },
+  {
+    "round": 0,
+    "idx": 12,
+    "pid": 2140258,
+    "sql_first_line": "SELECT count(*) FROM align_friends"
+  },
+  {
+    "round": 0,
+    "idx": 12,
+    "pid": 2140258,
+    "sql_first_line": "SELECT count(*) FROM align_forums"
+  },
+  {
+    "round": 0,
+    "idx": 12,
+    "pid": 2140258,
+    "sql_first_line": "SELECT count(*) FROM align_posts"
+  },
+  {
+    "round": 0,
+    "idx": 12,
+    "pid": 2140258,
+    "sql_first_line": "SELECT count(*) FROM align_edges"
+  },
+  {
+    "round": 0,
+    "idx": 12,
+    "pid": 2140258,
+    "sql_first_line": "SELECT count(*) FROM align_ids"
+  },
+  {
+    "round": 0,
+    "idx": 12,
+    "pid": 2140258,
+    "sql_first_line": "ROLLBACK"
+  },
+  {
+    "round": 1,
+    "idx": 1,
+    "pid": 2145447,
+    "sql_first_line": "BEGIN"
+  },
+  {
+    "round": 1,
+    "idx": 1,
+    "pid": 2145447,
+    "sql_first_line": "COPY (SELECT key,value::text,expires_at FROM kv_state WHERE key='schema_fingerprint') TO STDOUT"
+  }
+]

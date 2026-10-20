@@ -1,0 +1,993 @@
+{
+  "global": {
+    "log_output": "FILE",
+    "general_log": 0,
+    "mysql_version": "5.7.25",
+    "performance_schema": 1
+  },
+  "statement_instruments": [
+    {
+      "name": "statement/sql/select",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/create_table",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/create_index",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/alter_table",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/update",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/insert",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/insert_select",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/delete",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/truncate",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/drop_table",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/drop_index",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_databases",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_tables",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_fields",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_keys",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_variables",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_status",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_engine_logs",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_engine_status",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_engine_mutex",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_processlist",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_master_status",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_slave_status",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_grants",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_create_table",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_charsets",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_collations",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_create_db",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_table_status",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_triggers",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/load",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/set_option",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/lock_tables",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/unlock_tables",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/grant",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/change_db",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/create_db",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/drop_db",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/alter_db",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/repair",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/replace",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/replace_select",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/create_udf",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/drop_function",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/revoke",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/optimize",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/check",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/assign_to_keycache",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/preload_keys",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/flush",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/kill",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/analyze",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/rollback",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/rollback_to_savepoint",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/commit",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/savepoint",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/release_savepoint",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/slave_start",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/slave_stop",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/group_replication_start",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/group_replication_stop",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/begin",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/change_master",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/change_repl_filter",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/rename_table",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/reset",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/purge",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/purge_before_date",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_binlogs",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_open_tables",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/ha_open",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/ha_close",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/ha_read",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_slave_hosts",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/delete_multi",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/update_multi",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_binlog_events",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/do",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_warnings",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/empty_query",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_errors",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_storage_engines",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_privileges",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/help",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/create_user",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/drop_user",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/rename_user",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/revoke_all",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/checksum",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/create_procedure",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/create_function",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/call_procedure",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/drop_procedure",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/alter_procedure",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/alter_function",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_create_proc",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_create_func",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_procedure_status",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_function_status",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/prepare_sql",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/execute_sql",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/dealloc_sql",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/create_view",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/drop_view",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/create_trigger",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/drop_trigger",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/xa_start",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/xa_end",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/xa_prepare",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/xa_commit",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/xa_rollback",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/xa_recover",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_procedure_code",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_function_code",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/alter_tablespace",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/install_plugin",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/uninstall_plugin",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/binlog",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_plugins",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/create_server",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/drop_server",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/alter_server",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/create_event",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/alter_event",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/drop_event",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_create_event",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_events",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_create_trigger",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/alter_db_upgrade",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_profile",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_profiles",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/signal",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/resignal",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_relaylog_events",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/get_diagnostics",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/alter_user",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/explain_other",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/show_create_user",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/shutdown",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/alter_instance",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sql/error",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sp/stmt",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sp/set",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sp/set_trigger_field",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sp/jump",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sp/jump_if_not",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sp/freturn",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sp/hpush_jump",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sp/hpop",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sp/hreturn",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sp/cpush",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sp/cpop",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sp/copen",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sp/cclose",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sp/cfetch",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sp/error",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/sp/set_case_expr",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/scheduler/event",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Sleep",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Quit",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Init DB",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Field List",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Create DB",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Drop DB",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Refresh",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Shutdown",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Statistics",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Processlist",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Connect",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Kill",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Debug",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Ping",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Time",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Delayed insert",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Change user",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Binlog Dump",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Table Dump",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Connect Out",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Register Slave",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Prepare",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Execute",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Long Data",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Close stmt",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Reset stmt",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Set option",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Fetch",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Daemon",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Binlog Dump GTID",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Reset Connection",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/com/Error",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/abstract/Query",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/abstract/new_packet",
+      "timed": "YES",
+      "enabled": "YES"
+    },
+    {
+      "name": "statement/abstract/relay_log",
+      "timed": "YES",
+      "enabled": "YES"
+    }
+  ],
+  "consumers": [
+    {
+      "name": "events_statements_current",
+      "enabled": "YES"
+    },
+    {
+      "name": "events_statements_history_long",
+      "enabled": "NO"
+    },
+    {
+      "name": "global_instrumentation",
+      "enabled": "YES"
+    },
+    {
+      "name": "thread_instrumentation",
+      "enabled": "YES"
+    }
+  ]
+}

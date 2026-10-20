@@ -1,0 +1,10 @@
+{"name": "no_auth", "flags": ["auth"], "exit": 0, "seconds": null, "gate_pass": true, "requests": 21, "cold20_statements": 278772, "warm_repeat0_statements": 24}
+{"name": "no_auth_acl_schema_hydration", "flags": ["auth", "acl", "schema", "hydration"], "exit": 1, "seconds": 2.9368195550050586, "gate_pass": false, "requests": 2, "cold20_statements": 3375, "warm_repeat0_statements": 3355}
+Traceback (most recent call last):
+  File "/home/baichuan/jaseci/reproduction/webridge/alignment/run_ablations.py", line 38, in <module>
+    if __name__=='__main__':main()
+                            ^^^^^^
+  File "/home/baichuan/jaseci/reproduction/webridge/alignment/run_ablations.py", line 36, in main
+    if not ok:raise RuntimeError('Ablation gate failed:'+name)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Ablation gate failed:no_auth_acl_schema_hydration

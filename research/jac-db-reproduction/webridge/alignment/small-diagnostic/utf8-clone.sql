@@ -1,0 +1,13 @@
+CREATE DATABASE jac_alignment_utf8 CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+CREATE TABLE jac_alignment_utf8.anchors LIKE jac_alignment.anchors;
+ALTER TABLE jac_alignment_utf8.anchors MODIFY id CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL, MODIFY root_id CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin, MODIFY src CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin, MODIFY dst CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+INSERT INTO jac_alignment_utf8.anchors SELECT * FROM jac_alignment.anchors;
+CREATE TABLE jac_alignment_utf8.graph_types LIKE jac_alignment.graph_types;
+INSERT INTO jac_alignment_utf8.graph_types SELECT * FROM jac_alignment.graph_types;
+CREATE TABLE jac_alignment_utf8.identity_users LIKE jac_alignment.identity_users;
+INSERT INTO jac_alignment_utf8.identity_users SELECT * FROM jac_alignment.identity_users;
+CREATE TABLE jac_alignment_utf8.kv_state LIKE jac_alignment.kv_state;
+INSERT INTO jac_alignment_utf8.kv_state SELECT * FROM jac_alignment.kv_state;
+ANALYZE TABLE jac_alignment_utf8.anchors;
+SELECT COUNT(*),SUM(CRC32(CONCAT_WS('|',id,COALESCE(root_id,''),COALESCE(src,''),COALESCE(dst,''),props))) FROM jac_alignment.anchors;
+SELECT COUNT(*),SUM(CRC32(CONCAT_WS('|',id,COALESCE(root_id,''),COALESCE(src,''),COALESCE(dst,''),props))) FROM jac_alignment_utf8.anchors;

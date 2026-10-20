@@ -1,0 +1,13 @@
+# Shared byte-stream proxy audit
+
+Audit source: `../../latency-comparison/proxy.py`, exact collection hash retained in `results/sources.json`.
+
+The proxy forwards each received bytes object unchanged. Client-to-server delivery runs immediately through a separate coroutine. Server-to-client receive timestamps each chunk with `time.monotonic()+delay`; delivery uses a FIFO queue and an independent coroutine. Receipt times are monotonic and the delay is constant within a condition, so delivery deadlines are nondecreasing and FIFO preserves byte order. Each chunk has its own deadline; time already spent waiting behind an earlier chunk is subtracted before sleeping. This implements overlapping response-stream delay while preserving normal request pipelining.
+
+Actual delivery can occur after its deadline because of event-loop scheduling, socket drain/backpressure or CPU contention. SELECT1 calibration therefore measures the resulting connection behavior. For the Jac collection, proxy median RTT before/after is0.119/0.096ms at zero delay,2.202/2.374ms at2ms and10.656/10.479ms at10ms. Direct Unix medians before/after are0.032/0.030ms.
+
+The queue is unbounded in source. Its pending payload in this fixed experiment is bounded above by cumulative server bytes:1562827bytes for either the0ms or2ms condition and1691880bytes for the10ms condition. These totals bound queued bytes, while Python object overhead and socket buffers add memory. The proxy records received bytes and connections; it does not record queue high-water marks or a separately delivered-byte counter. `server_bytes` therefore describes received upstream traffic. All240 application requests and all calibration results passed, and the delayed SQL census preserved both implementations' exact counts.
+
+The connection loop cancels forwarding when either client-to-server EOF or downstream delivery finishes. A client that half-closes its write direction while awaiting remaining responses would trigger cancellation of pending downstream traffic. The measured PostgreSQL clients use persistent connections and receive complete query results before connection termination. Every measured response and the six delayed census responses were checked against the oracle. Shutdown receipts show all three proxies exited normally after application services stopped.
+
+The zero-delay proxy remains part of every matched latency comparison. Its reader/writer scheduling and TCP-to-Unix hop are measured explicitly rather than equated to direct Unix transport. The final source counter receipt is preserved under each `results/delay-*/proxy-stop.json`.
