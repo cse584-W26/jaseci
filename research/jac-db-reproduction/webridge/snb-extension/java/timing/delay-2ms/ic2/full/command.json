@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/java",
+    "-Xmx8g",
+    "-Dorg.slf4j.simpleLogger.defaultLogLevel=error",
+    "-Dexperiment.inputs=/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/snapshots/da8775123df92493afe6a527b7beb8097ff7fc473e89b57a9dc719c3769bfa3a/inputs.json",
+    "-Dexperiment.mysql.url=jdbc:mysql://127.0.0.1:18537/jac_snb_six_20261020?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true",
+    "-Dexperiment.variant=full",
+    "-Dexperiment.delay.ms=2",
+    "-Dalignment.dir=/home/baichuan/jaseci/reproduction/webridge/alignment",
+    "-Dintegration.dir=/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-synthesis-stack128m",
+    "-Dexecution.dir=/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/timing/delay-2ms/ic2/full",
+    "-Dintegration.api=Snb_ic2_full_1c828c5b4c",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/timer-overlay/eccf896c395f5620ef4285a14510e5cab582157f27d9a0b32f98ddb24dc55c83/classes:/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/frontend/6743cd0870ee82bb1a63ed41695afa6427cae1409e334566bea20e70849ebd72/classes:/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/snapshots/da8775123df92493afe6a527b7beb8097ff7fc473e89b57a9dc719c3769bfa3a/classes:/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/classes:/home/baichuan/jaseci/reproduction/webridge/integration/jdbc-string/combined:/home/baichuan/jaseci/reproduction/webridge/integration/sql-frontend/classes:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+    "SnbTiming",
+    "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/timing/delay-2ms/ic2/full/requests/rows.jsonl",
+    "10",
+    "30",
+    "baseline,sp"
+  ],
+  "cpu_affinity": "9,19",
+  "utc": "20261020T223451101364Z",
+  "timeout_s": 300
+}

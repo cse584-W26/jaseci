@@ -1,0 +1,95 @@
+{
+  "is1": {
+    "query": "is1",
+    "idx": 0,
+    "walker": "is1_profile",
+    "original_parameters": {
+      "personId": "30786325583618",
+      "firstName": "Chau"
+    },
+    "body": {
+      "person_jid": "7856cd3b3a915cd08cda63a0a04e4afb"
+    },
+    "expected_canonical_sha256": "7702550c6f8d810961bb66876cd30a346848c7f96dc531937e2e65c7f328847b",
+    "nonempty_from_historical_hash": true,
+    "historical_distance": null
+  },
+  "is2": {
+    "query": "is2",
+    "idx": 0,
+    "walker": "is2_recent_messages",
+    "original_parameters": {
+      "personId": "30786325583618",
+      "firstName": "Chau"
+    },
+    "body": {
+      "person_jid": "7856cd3b3a915cd08cda63a0a04e4afb"
+    },
+    "expected_canonical_sha256": "5e8c6f930b9e447c5a6788b185a05b406b7583fe70af8763897e776bba2161f4",
+    "nonempty_from_historical_hash": true,
+    "historical_distance": null
+  },
+  "is3": {
+    "query": "is3",
+    "idx": 0,
+    "walker": "is3_friends",
+    "original_parameters": {
+      "personId": "30786325583618",
+      "firstName": "Chau"
+    },
+    "body": {
+      "person_jid": "7856cd3b3a915cd08cda63a0a04e4afb"
+    },
+    "expected_canonical_sha256": "0953e40220da08cfde761b686aeb13223fd247ea4b381791ba9301bbfbfb789c",
+    "nonempty_from_historical_hash": true,
+    "historical_distance": null
+  },
+  "ic1": {
+    "query": "ic1",
+    "idx": 0,
+    "walker": "ic1_friends_by_name",
+    "original_parameters": {
+      "personId": "30786325583618",
+      "firstName": "Chau"
+    },
+    "body": {
+      "person_jid": "7856cd3b3a915cd08cda63a0a04e4afb",
+      "first_name": "Chau"
+    },
+    "expected_canonical_sha256": "6d3f687913fd98d85ae724224798b6b7581f2d97cd023023aaaf6945098515b3",
+    "nonempty_from_historical_hash": true,
+    "historical_distance": null
+  },
+  "ic2": {
+    "query": "ic2",
+    "idx": 0,
+    "walker": "ic2_friend_messages",
+    "original_parameters": {
+      "personId": "17592186052613",
+      "maxDate": "1354060800000"
+    },
+    "body": {
+      "person_jid": "bd2c011ccdc253f2b10c69bb686cea74",
+      "max_date": 1354060800000
+    },
+    "expected_canonical_sha256": "83729d4b0690696107624d21858c0a975934dc05aeffc9dc5967b719642c583b",
+    "nonempty_from_historical_hash": true,
+    "historical_distance": null
+  },
+  "ic13": {
+    "query": "ic13",
+    "idx": 0,
+    "walker": "ic13_shortest_path",
+    "original_parameters": {
+      "person1Id": "17592186055119",
+      "person2Id": "8796093025131"
+    },
+    "body": {
+      "person1_jid": "da1ee7ecffa75ede8669f352e955ae85",
+      "person2_jid": "a6f114564b6c50b3acf6cd845d7914c8"
+    },
+    "expected_canonical_sha256": "c702f0e01729f7aeeca59f5e8e606906dcd79c71e9a568f79d2961cdaca4148d",
+    "nonempty_from_historical_hash": true,
+    "historical_distance": 3
+  }
+}

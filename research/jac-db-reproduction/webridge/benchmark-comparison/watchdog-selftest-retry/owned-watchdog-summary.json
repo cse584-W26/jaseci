@@ -1,0 +1,9 @@
+{
+  "timed_out": false,
+  "limit_s": 2.0,
+  "timeout_receipt": null,
+  "command_error": "Traceback (most recent call last):\n  File \"/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/owned_watchdog.py\", line 46, in run\n    try:future.result()\n        ^^^^^^^^^^^^^^^\n  File \"/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/concurrent/futures/_base.py\", line 449, in result\n    return self.__get_result()\n           ^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/concurrent/futures/_base.py\", line 401, in __get_result\n    raise self._exception\n  File \"/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/concurrent/futures/thread.py\", line 59, in run\n    result = self.fn(*self.args, **self.kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/webridge/integration/control.py\", line 113, in command\n    if rc:raise SystemExit(rc)\n          ^^^^^^^^^^^^^^^^^^^^\nSystemExit: 1\n",
+  "final_database_cleanup": {
+    "connection_marker_present": false
+  }
+}

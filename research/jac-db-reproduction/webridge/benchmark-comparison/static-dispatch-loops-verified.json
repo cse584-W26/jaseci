@@ -1,0 +1,103 @@
+{
+  "status": "PASS",
+  "loop_count": 12,
+  "cases": [
+    {
+      "query": "ic1",
+      "variant": "full",
+      "source": "snb-extension/webridge-cases/ic1-full-ce3282a6f587-synthesis-stack128m/generated/sql/Snb_ic1_full_0b60f0090e/graph-SP-Snb_ic1_full_0b60f0090e_sp_1_ver0.sql",
+      "sha256": "9a8a82750206f770ead994edb21ffbb3fe1c8b62cc2e947e306f15e41c5c9d16",
+      "loops": [
+        {
+          "loop": 1,
+          "dispatch_branches": 1,
+          "full_cardinality_guard_evaluations": 2
+        },
+        {
+          "loop": 3,
+          "dispatch_branches": 10,
+          "full_cardinality_guard_evaluations": 110
+        },
+        {
+          "loop": 4,
+          "dispatch_branches": 2750,
+          "full_cardinality_guard_evaluations": 7565250
+        },
+        {
+          "loop": 5,
+          "dispatch_branches": 9009,
+          "full_cardinality_guard_evaluations": 81171090
+        }
+      ],
+      "sum_guard_evaluations": 88736452
+    },
+    {
+      "query": "ic1",
+      "variant": "pruned",
+      "source": "snb-extension/webridge-cases/ic1-pruned-ce3282a6f587-original/generated/sql/Snb_ic1_pruned_efb438631e/graph-SP-Snb_ic1_pruned_efb438631e_sp_1_ver0.sql",
+      "sha256": "79693a5b8bf76f589eb6f98343b7f31bcde926c828a9d58ef415188f1395f3ca",
+      "loops": [
+        {
+          "loop": 1,
+          "dispatch_branches": 10,
+          "full_cardinality_guard_evaluations": 110
+        },
+        {
+          "loop": 2,
+          "dispatch_branches": 2750,
+          "full_cardinality_guard_evaluations": 7565250
+        },
+        {
+          "loop": 3,
+          "dispatch_branches": 9009,
+          "full_cardinality_guard_evaluations": 81171090
+        }
+      ],
+      "sum_guard_evaluations": 88736450
+    },
+    {
+      "query": "ic13",
+      "variant": "full",
+      "source": "snb-extension/webridge-cases/ic13-full-dc37869f9ea2-original/generated/sql/Snb_ic13_full_b4699cb89c/graph-SP-Snb_ic13_full_b4699cb89c_sp_1_ver0.sql",
+      "sha256": "4674b33ab49ad4b74f0049e98b3d1abbb951e5f68d125e4978449edc47ace2fe",
+      "loops": [
+        {
+          "loop": 1,
+          "dispatch_branches": 1,
+          "full_cardinality_guard_evaluations": 2
+        },
+        {
+          "loop": 7,
+          "dispatch_branches": 15,
+          "full_cardinality_guard_evaluations": 240
+        },
+        {
+          "loop": 8,
+          "dispatch_branches": 2202,
+          "full_cardinality_guard_evaluations": 4851006
+        }
+      ],
+      "sum_guard_evaluations": 4851248
+    },
+    {
+      "query": "ic13",
+      "variant": "pruned",
+      "source": "snb-extension/webridge-cases/ic13-pruned-dc37869f9ea2-original/generated/sql/Snb_ic13_pruned_3ff5266f00/graph-SP-Snb_ic13_pruned_3ff5266f00_sp_1_ver0.sql",
+      "sha256": "412732d4248a85e918226df211b79ce86b7a480f30e3fc36065ad823675ea290",
+      "loops": [
+        {
+          "loop": 2,
+          "dispatch_branches": 15,
+          "full_cardinality_guard_evaluations": 240
+        },
+        {
+          "loop": 3,
+          "dispatch_branches": 2202,
+          "full_cardinality_guard_evaluations": 4851006
+        }
+      ],
+      "sum_guard_evaluations": 4851246
+    }
+  ],
+  "scope": "Static generated dispatch at recorded result cardinalities; distinct from measured quiet time and instrumentation counters."
+}

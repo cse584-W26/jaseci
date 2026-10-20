@@ -1,0 +1,46 @@
+{
+  "query": "ic1",
+  "variant": "full",
+  "delay_ms": 10,
+  "attempt": 0,
+  "warmup_completed": false,
+  "protocol": "Fresh JVM and connection; first SP request including callable metadata; no completed SP warmup; 15-second whole-request budget",
+  "result": {
+    "timed_out": true,
+    "limit_s": 15,
+    "timeout_receipt": {
+      "wall_ns": 1792536450011968894,
+      "reason": "active request exceeded measured wall-time limit",
+      "connection_id": 1671,
+      "request_marker": {
+        "start_mono_ns": 1072804959285471,
+        "start_wall_ms": 1792536434873,
+        "phase": "sp",
+        "iteration": 0,
+        "warmup": false,
+        "api": "Snb_ic1_full_0b60f0090e",
+        "watchdog_elapsed_s": 15.088858642578124
+      },
+      "verified_process": {
+        "db": "jac_snb_six_20261020",
+        "id": 1671,
+        "info": "call Snb_ic1_full_0b60f0090e_sp_1_ver0('Chau', '7856cd3b-3a91-5cd0-8cda-63a0a04e4afb')",
+        "time": 0,
+        "state": null,
+        "command": "Query"
+      },
+      "action": "KILL CONNECTION 1671",
+      "returncode": 0,
+      "stderr": ""
+    },
+    "command_error": "Traceback (most recent call last):\n  File \"/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/owned_watchdog.py\", line 46, in run\n    try:future.result()\n        ^^^^^^^^^^^^^^^\n  File \"/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/concurrent/futures/_base.py\", line 456, in result\n    return self.__get_result()\n           ^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/concurrent/futures/_base.py\", line 401, in __get_result\n    raise self._exception\n  File \"/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/concurrent/futures/thread.py\", line 59, in run\n    result = self.fn(*self.args, **self.kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/webridge/integration/control.py\", line 113, in command\n    if rc:raise SystemExit(rc)\n          ^^^^^^^^^^^^^^^^^^^^\nSystemExit: 1\n",
+    "final_database_cleanup": {
+      "wall_ns": 1792536450236984335,
+      "reason": "owned JDBC process ended; final server-session cleanup",
+      "connection_id": 1671,
+      "request_marker": {},
+      "verified_process": null,
+      "action": null
+    }
+  }
+}

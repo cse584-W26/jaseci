@@ -1,0 +1,27 @@
+--- /home/baichuan/jaseci/reproduction/webridge/integration/sql-frontend/src/webridge/wbridge/sql/ast/SQLAstVisitor.java
++++ webridge/wbridge/sql/ast/SQLAstVisitor.java
+@@ -606,6 +606,15 @@
+     return false;
+   }
+ 
++  private java.util.List<String> recordedParameterJavaTypes=java.util.Collections.emptyList();
++  public void setRecordedParameterJavaTypes(java.util.List<String> types){recordedParameterJavaTypes=new java.util.ArrayList<>(types);}
++  private String recordedParameterSqlType(int index){
++    if(index<0||index>=recordedParameterJavaTypes.size())return null;
++    String t=recordedParameterJavaTypes.get(index);if(t==null)return null;
++    if(t.equals("java/lang/String")||t.equals("java.lang.String"))return "VARCHAR(512)";
++    if(t.equals("J"))return "BIGINT";if(t.equals("I")||t.equals("S")||t.equals("B"))return "INT";
++    if(t.equals("Z"))return "BIT(1)";if(t.equals("F"))return "FLOAT";if(t.equals("D"))return "DOUBLE";return null;
++  }
+   private Pair<String,String> parameterType(SQLVariantRefExpr parameter) {
+     for(SQLObject p=parameter.getParent();p!=null;p=p.getParent()) {
+       if(p instanceof SQLCastExpr)return Pair.of(parameter.toString(),normalType(((SQLCastExpr)p).getDataType().toString()));
+@@ -621,6 +630,8 @@
+         return Pair.of(opposite.toString(),inferred);
+       }
+     }
++    String recorded=recordedParameterSqlType(parameter.getIndex());
++    if(recorded!=null)return Pair.of(parameter.toString(),recorded);
+     throw new IllegalArgumentException("Cannot infer positional parameter "+parameter.getIndex());
+   }
+ 

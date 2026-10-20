@@ -1,0 +1,744 @@
+[
+  {
+    "query": "is1",
+    "variant": "full",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original",
+    "sql_path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/generated/sql/Snb_is1_full_d08afc486a/graph-SP-Snb_is1_full_d08afc486a_sp_1_ver0.sql",
+    "sql_sha256": "c1965c942603567b3a5a8cd5e85be29d45211960d6f532d17e05581fad8b6f02",
+    "sql_bytes": 5769,
+    "loops": [
+      {
+        "loop": 1,
+        "start_line": 67,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 2,
+        "start_line": 103,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      }
+    ],
+    "total_full_result_equality_checks": 4,
+    "interpretation": "Independent IF dispatch tests all row indices on every cursor iteration; finite counter increment/exit retained. Counts are generated control tests, not distinct data rows or a latency prediction."
+  },
+  {
+    "query": "is1",
+    "variant": "pruned",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original",
+    "sql_path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/generated/sql/Snb_is1_pruned_7e2ab66c14/graph-SP-Snb_is1_pruned_7e2ab66c14_sp_1_ver0.sql",
+    "sql_sha256": "c22ce832dd910ed35dccbc7f98fde24812a8831c49e7bf5a3e9b15620b7c20aa",
+    "sql_bytes": 2755,
+    "loops": [],
+    "total_full_result_equality_checks": 0,
+    "interpretation": "Independent IF dispatch tests all row indices on every cursor iteration; finite counter increment/exit retained. Counts are generated control tests, not distinct data rows or a latency prediction."
+  },
+  {
+    "query": "is2",
+    "variant": "full",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is2-full-cec57f08b684-original",
+    "sql_path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is2-full-cec57f08b684-original/generated/sql/Snb_is2_full_cff8039ca4/graph-SP-Snb_is2_full_cff8039ca4_sp_1_ver0.sql",
+    "sql_sha256": "7361dfe1c6e03abbdee06f4fe9bd6628534859e07d8ccc7a54fb76d792f0a625",
+    "sql_bytes": 21295,
+    "loops": [
+      {
+        "loop": 1,
+        "start_line": 199,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 5,
+        "start_line": 246,
+        "independent_row_equality_branches": 10,
+        "capture_rows": 10,
+        "explicit_exit_bounds": [
+          10
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 110
+      },
+      {
+        "loop": 14,
+        "start_line": 362,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 15,
+        "start_line": 387,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 16,
+        "start_line": 413,
+        "independent_row_equality_branches": 2,
+        "capture_rows": 2,
+        "explicit_exit_bounds": [
+          2
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 6
+      },
+      {
+        "loop": 17,
+        "start_line": 442,
+        "independent_row_equality_branches": 2,
+        "capture_rows": 2,
+        "explicit_exit_bounds": [
+          2
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 6
+      },
+      {
+        "loop": 18,
+        "start_line": 475,
+        "independent_row_equality_branches": 2,
+        "capture_rows": 2,
+        "explicit_exit_bounds": [
+          2
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 6
+      }
+    ],
+    "total_full_result_equality_checks": 134,
+    "interpretation": "Independent IF dispatch tests all row indices on every cursor iteration; finite counter increment/exit retained. Counts are generated control tests, not distinct data rows or a latency prediction."
+  },
+  {
+    "query": "is2",
+    "variant": "pruned",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is2-pruned-cec57f08b684-original",
+    "sql_path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is2-pruned-cec57f08b684-original/generated/sql/Snb_is2_pruned_cce8eacb71/graph-SP-Snb_is2_pruned_cce8eacb71_sp_1_ver0.sql",
+    "sql_sha256": "d12f839c910fddd6130dee01806ae3811cbd0285360f2d47d072624e844320b6",
+    "sql_bytes": 7312,
+    "loops": [
+      {
+        "loop": 1,
+        "start_line": 90,
+        "independent_row_equality_branches": 10,
+        "capture_rows": 10,
+        "explicit_exit_bounds": [
+          10
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 110
+      },
+      {
+        "loop": 2,
+        "start_line": 142,
+        "independent_row_equality_branches": 2,
+        "capture_rows": 2,
+        "explicit_exit_bounds": [
+          2
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 6
+      }
+    ],
+    "total_full_result_equality_checks": 116,
+    "interpretation": "Independent IF dispatch tests all row indices on every cursor iteration; finite counter increment/exit retained. Counts are generated control tests, not distinct data rows or a latency prediction."
+  },
+  {
+    "query": "is3",
+    "variant": "full",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-43c7876ffb37-case-signed-metadata",
+    "sql_path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-43c7876ffb37-case-signed-metadata/generated/sql/Snb_is3_full_b0b2a6869e/graph-SP-Snb_is3_full_b0b2a6869e_sp_1_ver0.sql",
+    "sql_sha256": "612028586f0756dd41b57c84e9e5f9724fc65e39c98f4cb46361b44e05a2a485",
+    "sql_bytes": 10170,
+    "loops": [
+      {
+        "loop": 1,
+        "start_line": 99,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      }
+    ],
+    "total_full_result_equality_checks": 2,
+    "interpretation": "Independent IF dispatch tests all row indices on every cursor iteration; finite counter increment/exit retained. Counts are generated control tests, not distinct data rows or a latency prediction."
+  },
+  {
+    "query": "is3",
+    "variant": "pruned",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original",
+    "sql_path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/generated/sql/Snb_is3_pruned_fbc4ca1984/graph-SP-Snb_is3_pruned_fbc4ca1984_sp_1_ver0.sql",
+    "sql_sha256": "67d878cb83612dd4cff219ce701227f7c581957cb2d9084b17e4d6b362dd41ec",
+    "sql_bytes": 4510,
+    "loops": [],
+    "total_full_result_equality_checks": 0,
+    "interpretation": "Independent IF dispatch tests all row indices on every cursor iteration; finite counter increment/exit retained. Counts are generated control tests, not distinct data rows or a latency prediction."
+  },
+  {
+    "query": "ic1",
+    "variant": "full",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic1-full-ce3282a6f587-synthesis-stack128m",
+    "sql_path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic1-full-ce3282a6f587-synthesis-stack128m/generated/sql/Snb_ic1_full_0b60f0090e/graph-SP-Snb_ic1_full_0b60f0090e_sp_1_ver0.sql",
+    "sql_sha256": "9a8a82750206f770ead994edb21ffbb3fe1c8b62cc2e947e306f15e41c5c9d16",
+    "sql_bytes": 1917249,
+    "loops": [
+      {
+        "loop": 1,
+        "start_line": 14615,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 3,
+        "start_line": 14645,
+        "independent_row_equality_branches": 10,
+        "capture_rows": 10,
+        "explicit_exit_bounds": [
+          10
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 110
+      },
+      {
+        "loop": 4,
+        "start_line": 14706,
+        "independent_row_equality_branches": 2750,
+        "capture_rows": 2750,
+        "explicit_exit_bounds": [
+          2750
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 7565250
+      },
+      {
+        "loop": 5,
+        "start_line": 25717,
+        "independent_row_equality_branches": 9009,
+        "capture_rows": 9009,
+        "explicit_exit_bounds": [
+          9009
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 81171090
+      }
+    ],
+    "total_full_result_equality_checks": 88736452,
+    "interpretation": "Independent IF dispatch tests all row indices on every cursor iteration; finite counter increment/exit retained. Counts are generated control tests, not distinct data rows or a latency prediction."
+  },
+  {
+    "query": "ic1",
+    "variant": "pruned",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic1-pruned-ce3282a6f587-original",
+    "sql_path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic1-pruned-ce3282a6f587-original/generated/sql/Snb_ic1_pruned_efb438631e/graph-SP-Snb_ic1_pruned_efb438631e_sp_1_ver0.sql",
+    "sql_sha256": "79693a5b8bf76f589eb6f98343b7f31bcde926c828a9d58ef415188f1395f3ca",
+    "sql_bytes": 1913653,
+    "loops": [
+      {
+        "loop": 1,
+        "start_line": 14582,
+        "independent_row_equality_branches": 10,
+        "capture_rows": 10,
+        "explicit_exit_bounds": [
+          10
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 110
+      },
+      {
+        "loop": 2,
+        "start_line": 14642,
+        "independent_row_equality_branches": 2750,
+        "capture_rows": 2750,
+        "explicit_exit_bounds": [
+          2750
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 7565250
+      },
+      {
+        "loop": 3,
+        "start_line": 25653,
+        "independent_row_equality_branches": 9009,
+        "capture_rows": 9009,
+        "explicit_exit_bounds": [
+          9009
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 81171090
+      }
+    ],
+    "total_full_result_equality_checks": 88736450,
+    "interpretation": "Independent IF dispatch tests all row indices on every cursor iteration; finite counter increment/exit retained. Counts are generated control tests, not distinct data rows or a latency prediction."
+  },
+  {
+    "query": "ic2",
+    "variant": "full",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-synthesis-stack128m",
+    "sql_path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-synthesis-stack128m/generated/sql/Snb_ic2_full_1c828c5b4c/graph-SP-Snb_ic2_full_1c828c5b4c_sp_1_ver0.sql",
+    "sql_sha256": "317f3e164e6be42f8348c40841d09c8a7a7585e84b22c5bebe3a17e9a20f9137",
+    "sql_bytes": 76527,
+    "loops": [
+      {
+        "loop": 1,
+        "start_line": 681,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 4,
+        "start_line": 743,
+        "independent_row_equality_branches": 9,
+        "capture_rows": 9,
+        "explicit_exit_bounds": [
+          9
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 90
+      },
+      {
+        "loop": 6,
+        "start_line": 861,
+        "independent_row_equality_branches": 20,
+        "capture_rows": 20,
+        "explicit_exit_bounds": [
+          20
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 420
+      },
+      {
+        "loop": 7,
+        "start_line": 943,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 8,
+        "start_line": 968,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 9,
+        "start_line": 993,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 10,
+        "start_line": 1018,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 11,
+        "start_line": 1043,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 12,
+        "start_line": 1068,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 13,
+        "start_line": 1093,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 14,
+        "start_line": 1118,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 15,
+        "start_line": 1143,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 16,
+        "start_line": 1168,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 17,
+        "start_line": 1193,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 18,
+        "start_line": 1218,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 19,
+        "start_line": 1243,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 20,
+        "start_line": 1268,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 21,
+        "start_line": 1293,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 22,
+        "start_line": 1318,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 23,
+        "start_line": 1343,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 24,
+        "start_line": 1368,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 25,
+        "start_line": 1393,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 26,
+        "start_line": 1418,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 27,
+        "start_line": 1502,
+        "independent_row_equality_branches": 20,
+        "capture_rows": 20,
+        "explicit_exit_bounds": [
+          20
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 420
+      }
+    ],
+    "total_full_result_equality_checks": 972,
+    "interpretation": "Independent IF dispatch tests all row indices on every cursor iteration; finite counter increment/exit retained. Counts are generated control tests, not distinct data rows or a latency prediction."
+  },
+  {
+    "query": "ic2",
+    "variant": "pruned",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-pruned-da8775123df9-original",
+    "sql_path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-pruned-da8775123df9-original/generated/sql/Snb_ic2_pruned_fbf5b8e7ed/graph-SP-Snb_ic2_pruned_fbf5b8e7ed_sp_1_ver0.sql",
+    "sql_sha256": "2c82586326a9807968d4ae66fb793deadb87bccf0f6c4d7805de679716d35917",
+    "sql_bytes": 25368,
+    "loops": [
+      {
+        "loop": 1,
+        "start_line": 249,
+        "independent_row_equality_branches": 9,
+        "capture_rows": 9,
+        "explicit_exit_bounds": [
+          9
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 90
+      },
+      {
+        "loop": 2,
+        "start_line": 350,
+        "independent_row_equality_branches": 20,
+        "capture_rows": 20,
+        "explicit_exit_bounds": [
+          20
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 420
+      }
+    ],
+    "total_full_result_equality_checks": 510,
+    "interpretation": "Independent IF dispatch tests all row indices on every cursor iteration; finite counter increment/exit retained. Counts are generated control tests, not distinct data rows or a latency prediction."
+  },
+  {
+    "query": "ic13",
+    "variant": "full",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic13-full-dc37869f9ea2-original",
+    "sql_path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic13-full-dc37869f9ea2-original/generated/sql/Snb_ic13_full_b4699cb89c/graph-SP-Snb_ic13_full_b4699cb89c_sp_1_ver0.sql",
+    "sql_sha256": "4674b33ab49ad4b74f0049e98b3d1abbb951e5f68d125e4978449edc47ace2fe",
+    "sql_bytes": 529778,
+    "loops": [
+      {
+        "loop": 1,
+        "start_line": 4504,
+        "independent_row_equality_branches": 1,
+        "capture_rows": 1,
+        "explicit_exit_bounds": [
+          1
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 2
+      },
+      {
+        "loop": 7,
+        "start_line": 4558,
+        "independent_row_equality_branches": 15,
+        "capture_rows": 15,
+        "explicit_exit_bounds": [
+          15
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 240
+      },
+      {
+        "loop": 8,
+        "start_line": 4639,
+        "independent_row_equality_branches": 2202,
+        "capture_rows": 2202,
+        "explicit_exit_bounds": [
+          2202
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 4851006
+      }
+    ],
+    "total_full_result_equality_checks": 4851248,
+    "interpretation": "Independent IF dispatch tests all row indices on every cursor iteration; finite counter increment/exit retained. Counts are generated control tests, not distinct data rows or a latency prediction."
+  },
+  {
+    "query": "ic13",
+    "variant": "pruned",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic13-pruned-dc37869f9ea2-original",
+    "sql_path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic13-pruned-dc37869f9ea2-original/generated/sql/Snb_ic13_pruned_3ff5266f00/graph-SP-Snb_ic13_pruned_3ff5266f00_sp_1_ver0.sql",
+    "sql_sha256": "412732d4248a85e918226df211b79ce86b7a480f30e3fc36065ad823675ea290",
+    "sql_bytes": 516945,
+    "loops": [
+      {
+        "loop": 2,
+        "start_line": 4473,
+        "independent_row_equality_branches": 15,
+        "capture_rows": 15,
+        "explicit_exit_bounds": [
+          15
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 240
+      },
+      {
+        "loop": 3,
+        "start_line": 4553,
+        "independent_row_equality_branches": 2202,
+        "capture_rows": 2202,
+        "explicit_exit_bounds": [
+          2202
+        ],
+        "counter_increment_present": true,
+        "leave_present": true,
+        "full_captured_result_equality_checks": 4851006
+      }
+    ],
+    "total_full_result_equality_checks": 4851246,
+    "interpretation": "Independent IF dispatch tests all row indices on every cursor iteration; finite counter increment/exit retained. Counts are generated control tests, not distinct data rows or a latency prediction."
+  }
+]

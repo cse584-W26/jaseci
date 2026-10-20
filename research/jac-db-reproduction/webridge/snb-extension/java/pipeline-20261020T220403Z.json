@@ -1,0 +1,45 @@
+[
+  {
+    "query": "ic2",
+    "variant": "full",
+    "attempt": "synthesis-stack128m",
+    "stages": [
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "synth",
+          "--query",
+          "ic2",
+          "--variant",
+          "full",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/ic2.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "synthesis-stack128m",
+          "--stack",
+          "128m",
+          "--graph",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-original/replay-20261020T220057701710Z/graph.json"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-synthesis-stack128m/synth-20261020T220403907122Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-synthesis-stack128m/synth-20261020T220403907122Z"
+      }
+    ],
+    "reused_original_capture": {
+      "graph": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-original/replay-20261020T220057701710Z/graph.json",
+      "sha256": "b1584417cc7a89e2c91089572e31a61a9f51ec2af336624d83b5295972daadf3",
+      "source_case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-original"
+    },
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-synthesis-stack128m",
+    "status": "failed",
+    "failed_stage": "synth"
+  }
+]

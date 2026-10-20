@@ -1,0 +1,425 @@
+{
+  "profiles": [
+    {
+      "query": "ic13",
+      "request_tag": "request-ic13-0",
+      "sql_count": 14,
+      "frontend_types": {
+        "B": 14,
+        "D": 14,
+        "E": 14,
+        "S": 14
+      },
+      "backend_ready": 14,
+      "backend_pids": [
+        2593625,
+        2593627
+      ],
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 4,
+        "projection.person_fields_acl": 1,
+        "identity.guest_resolution": 2,
+        "closure.endpoint_filter": 1,
+        "closure.frontier_adjacency": 3,
+        "transaction.commit": 1
+      },
+      "operations": [
+        {
+          "pid": 2593627,
+          "execute_ms": 0.018,
+          "statement": "_pg3_1",
+          "sql": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+          "sequence": 1,
+          "category": "transaction.begin"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.011,
+          "statement": "_pg3_2",
+          "sql": "SET LOCAL lock_timeout = '10s'",
+          "sequence": 2,
+          "category": "transaction.setting"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.043,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 3,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.045,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 4,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.037,
+          "statement": "_pg3_12",
+          "sql": "SELECT id, root_id, acl_all, acl_spec, frag, f_person_id::text FROM g_n_person_d2a57d WHERE id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 5,
+          "category": "projection.person_fields_acl"
+        },
+        {
+          "pid": 2593625,
+          "execute_ms": 0.029,
+          "statement": "_pg3_0",
+          "sql": "SELECT doc FROM identity_users WHERE user_id = $1",
+          "sequence": 6,
+          "category": "identity.guest_resolution"
+        },
+        {
+          "pid": 2593625,
+          "execute_ms": 0.051,
+          "statement": "_pg3_1",
+          "sql": "SELECT t.doc FROM identity_users t\n\t        JOIN identity_lookups lk ON t.user_id = lk.user_id\n\t        WHERE lk.value_normalized = $1\n\t          AND COALESCE(t.doc->>'status', 'active') <> 'disabled'",
+          "sequence": 7,
+          "category": "identity.guest_resolution"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.065,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 8,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.056,
+          "statement": "_pg3_13",
+          "sql": "SELECT m.id FROM g_n_person_d2a57d m WHERE (m.f_person_id #>> '{}') = CAST($1 AS text)",
+          "sequence": 9,
+          "category": "closure.endpoint_filter"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.02,
+          "statement": "_pg3_9",
+          "sql": "SELECT DISTINCT nb.dst FROM adj_knows nb WHERE nb.src = ANY(CAST($1 AS uuid[]))",
+          "sequence": 10,
+          "category": "closure.frontier_adjacency"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 1.085,
+          "statement": "_pg3_9",
+          "sql": "SELECT DISTINCT nb.dst FROM adj_knows nb WHERE nb.src = ANY(CAST($1 AS uuid[]))",
+          "sequence": 11,
+          "category": "closure.frontier_adjacency"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 36.813,
+          "statement": "_pg3_9",
+          "sql": "SELECT DISTINCT nb.dst FROM adj_knows nb WHERE nb.src = ANY(CAST($1 AS uuid[]))",
+          "sequence": 12,
+          "category": "closure.frontier_adjacency"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.026,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 13,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.013,
+          "statement": "_pg3_4",
+          "sql": "COMMIT",
+          "sequence": 14,
+          "category": "transaction.commit"
+        }
+      ]
+    },
+    {
+      "query": "ic13",
+      "request_tag": "request-ic13-1",
+      "sql_count": 14,
+      "frontend_types": {
+        "B": 14,
+        "D": 14,
+        "E": 14,
+        "S": 14
+      },
+      "backend_ready": 14,
+      "backend_pids": [
+        2593625,
+        2593627
+      ],
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 4,
+        "projection.person_fields_acl": 1,
+        "identity.guest_resolution": 2,
+        "closure.endpoint_filter": 1,
+        "closure.frontier_adjacency": 3,
+        "transaction.commit": 1
+      },
+      "operations": [
+        {
+          "pid": 2593627,
+          "execute_ms": 0.016,
+          "statement": "_pg3_1",
+          "sql": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+          "sequence": 1,
+          "category": "transaction.begin"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.009,
+          "statement": "_pg3_2",
+          "sql": "SET LOCAL lock_timeout = '10s'",
+          "sequence": 2,
+          "category": "transaction.setting"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.034,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 3,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.04,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 4,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.025,
+          "statement": "_pg3_12",
+          "sql": "SELECT id, root_id, acl_all, acl_spec, frag, f_person_id::text FROM g_n_person_d2a57d WHERE id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 5,
+          "category": "projection.person_fields_acl"
+        },
+        {
+          "pid": 2593625,
+          "execute_ms": 0.016,
+          "statement": "_pg3_0",
+          "sql": "SELECT doc FROM identity_users WHERE user_id = $1",
+          "sequence": 6,
+          "category": "identity.guest_resolution"
+        },
+        {
+          "pid": 2593625,
+          "execute_ms": 0.031,
+          "statement": "_pg3_1",
+          "sql": "SELECT t.doc FROM identity_users t\n\t        JOIN identity_lookups lk ON t.user_id = lk.user_id\n\t        WHERE lk.value_normalized = $1\n\t          AND COALESCE(t.doc->>'status', 'active') <> 'disabled'",
+          "sequence": 7,
+          "category": "identity.guest_resolution"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.043,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 8,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.02,
+          "statement": "_pg3_13",
+          "sql": "SELECT m.id FROM g_n_person_d2a57d m WHERE (m.f_person_id #>> '{}') = CAST($1 AS text)",
+          "sequence": 9,
+          "category": "closure.endpoint_filter"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.041,
+          "statement": "_pg3_9",
+          "sql": "SELECT DISTINCT nb.dst FROM adj_knows nb WHERE nb.src = ANY(CAST($1 AS uuid[]))",
+          "sequence": 10,
+          "category": "closure.frontier_adjacency"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 2.289,
+          "statement": "_pg3_9",
+          "sql": "SELECT DISTINCT nb.dst FROM adj_knows nb WHERE nb.src = ANY(CAST($1 AS uuid[]))",
+          "sequence": 11,
+          "category": "closure.frontier_adjacency"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 178.202,
+          "statement": "_pg3_9",
+          "sql": "SELECT DISTINCT nb.dst FROM adj_knows nb WHERE nb.src = ANY(CAST($1 AS uuid[]))",
+          "sequence": 12,
+          "category": "closure.frontier_adjacency"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.026,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 13,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.015,
+          "statement": "_pg3_4",
+          "sql": "COMMIT",
+          "sequence": 14,
+          "category": "transaction.commit"
+        }
+      ]
+    },
+    {
+      "query": "ic13",
+      "request_tag": "request-ic13-2",
+      "sql_count": 14,
+      "frontend_types": {
+        "B": 14,
+        "D": 14,
+        "E": 14,
+        "S": 14
+      },
+      "backend_ready": 14,
+      "backend_pids": [
+        2593625,
+        2593627
+      ],
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 4,
+        "projection.person_fields_acl": 1,
+        "identity.guest_resolution": 2,
+        "closure.endpoint_filter": 1,
+        "closure.frontier_adjacency": 3,
+        "transaction.commit": 1
+      },
+      "operations": [
+        {
+          "pid": 2593627,
+          "execute_ms": 0.019,
+          "statement": "_pg3_1",
+          "sql": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+          "sequence": 1,
+          "category": "transaction.begin"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.01,
+          "statement": "_pg3_2",
+          "sql": "SET LOCAL lock_timeout = '10s'",
+          "sequence": 2,
+          "category": "transaction.setting"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.03,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 3,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.023,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 4,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.012,
+          "statement": "_pg3_12",
+          "sql": "SELECT id, root_id, acl_all, acl_spec, frag, f_person_id::text FROM g_n_person_d2a57d WHERE id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 5,
+          "category": "projection.person_fields_acl"
+        },
+        {
+          "pid": 2593625,
+          "execute_ms": 0.009,
+          "statement": "_pg3_0",
+          "sql": "SELECT doc FROM identity_users WHERE user_id = $1",
+          "sequence": 6,
+          "category": "identity.guest_resolution"
+        },
+        {
+          "pid": 2593625,
+          "execute_ms": 0.013,
+          "statement": "_pg3_1",
+          "sql": "SELECT t.doc FROM identity_users t\n\t        JOIN identity_lookups lk ON t.user_id = lk.user_id\n\t        WHERE lk.value_normalized = $1\n\t          AND COALESCE(t.doc->>'status', 'active') <> 'disabled'",
+          "sequence": 7,
+          "category": "identity.guest_resolution"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.014,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 8,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.009,
+          "statement": "_pg3_13",
+          "sql": "SELECT m.id FROM g_n_person_d2a57d m WHERE (m.f_person_id #>> '{}') = CAST($1 AS text)",
+          "sequence": 9,
+          "category": "closure.endpoint_filter"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.019,
+          "statement": "_pg3_9",
+          "sql": "SELECT DISTINCT nb.dst FROM adj_knows nb WHERE nb.src = ANY(CAST($1 AS uuid[]))",
+          "sequence": 10,
+          "category": "closure.frontier_adjacency"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 1.032,
+          "statement": "_pg3_9",
+          "sql": "SELECT DISTINCT nb.dst FROM adj_knows nb WHERE nb.src = ANY(CAST($1 AS uuid[]))",
+          "sequence": 11,
+          "category": "closure.frontier_adjacency"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 38.083,
+          "statement": "_pg3_9",
+          "sql": "SELECT DISTINCT nb.dst FROM adj_knows nb WHERE nb.src = ANY(CAST($1 AS uuid[]))",
+          "sequence": 12,
+          "category": "closure.frontier_adjacency"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.023,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 13,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.014,
+          "statement": "_pg3_4",
+          "sql": "COMMIT",
+          "sequence": 14,
+          "category": "transaction.commit"
+        }
+      ]
+    }
+  ],
+  "all_outputs_historical_hash_match": true
+}

@@ -1,0 +1,45 @@
+{
+  "query": "ic1",
+  "started_unix": 1792533958.3450227,
+  "stages": [
+    {
+      "stage": "record",
+      "command": [
+        "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+        "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/webridge.py",
+        "ic1",
+        "record"
+      ],
+      "returncode": 0,
+      "started_unix": 1792533958.345067,
+      "ended_unix": 1792533960.771271
+    },
+    {
+      "stage": "replay",
+      "command": [
+        "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+        "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/webridge.py",
+        "ic1",
+        "replay"
+      ],
+      "returncode": 0,
+      "started_unix": 1792533960.7714849,
+      "ended_unix": 1792533968.3659732
+    },
+    {
+      "stage": "synth",
+      "command": [
+        "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+        "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/webridge.py",
+        "ic1",
+        "synth",
+        "/home/baichuan/jaseci/reproduction/webridge/integration/cases/set-snb-ic1-20261020/replay-20261020T220601248530Z/graph.json"
+      ],
+      "returncode": 1,
+      "started_unix": 1792533968.3736453,
+      "ended_unix": 1792533969.5367043
+    }
+  ],
+  "graph_sha256": "1fdd5b1edcc5beb9a2f0eec77c25c38d1a344c53d6059d7d5e1986e26a94ad50",
+  "status": "failed-synth"
+}

@@ -1,0 +1,70 @@
+{
+  "status": "PASS",
+  "gate_requests": 120,
+  "source_snapshot": "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/gates-20261020T215618Z/SnbSetSql.java",
+  "source_sha256": "1f4b7d781cfe604f753213801f84b7d8a9776938e298365232a49a68909370fe",
+  "cells": [
+    {
+      "query": "is1",
+      "n": 20,
+      "all_actual_hashes_pass": true,
+      "idx0_source_calls": 4,
+      "flags": [],
+      "source_sha256_verified": "1f4b7d781cfe604f753213801f84b7d8a9776938e298365232a49a68909370fe"
+    },
+    {
+      "query": "is2",
+      "n": 20,
+      "all_actual_hashes_pass": true,
+      "idx0_source_calls": 4,
+      "flags": [],
+      "source_sha256_verified": "1f4b7d781cfe604f753213801f84b7d8a9776938e298365232a49a68909370fe"
+    },
+    {
+      "query": "is3",
+      "n": 20,
+      "all_actual_hashes_pass": true,
+      "idx0_source_calls": 4,
+      "flags": [],
+      "source_sha256_verified": "1f4b7d781cfe604f753213801f84b7d8a9776938e298365232a49a68909370fe"
+    },
+    {
+      "query": "ic1",
+      "n": 20,
+      "all_actual_hashes_pass": true,
+      "idx0_source_calls": 7,
+      "flags": [],
+      "source_sha256_verified": "1f4b7d781cfe604f753213801f84b7d8a9776938e298365232a49a68909370fe"
+    },
+    {
+      "query": "ic2",
+      "n": 20,
+      "all_actual_hashes_pass": true,
+      "idx0_source_calls": 5,
+      "flags": [
+        "-Dsnb.branchTopk=true"
+      ],
+      "source_sha256_verified": "1f4b7d781cfe604f753213801f84b7d8a9776938e298365232a49a68909370fe"
+    },
+    {
+      "query": "ic13",
+      "n": 20,
+      "all_actual_hashes_pass": true,
+      "idx0_source_calls": 4,
+      "flags": [
+        "-Dsnb.finiteDepth=true"
+      ],
+      "source_sha256_verified": "1f4b7d781cfe604f753213801f84b7d8a9776938e298365232a49a68909370fe"
+    }
+  ],
+  "IC13_alternative": {
+    "actual_hashes_pass": 20,
+    "algorithm": "Ordered CASE equality then EXISTS walks of lengths1 through6 on the symmetric adjacency relation, returning first successful depth or-1.",
+    "observed_output_lengths": [
+      2,
+      3
+    ],
+    "bounded_source_cap": 6,
+    "source_comparison": "Native walker explicitly bounds Knows traversal at6; Java BFS also caps at6. Selected SQL preserves that finite cap."
+  }
+}

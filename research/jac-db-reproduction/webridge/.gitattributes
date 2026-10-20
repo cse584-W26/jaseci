@@ -8,3 +8,8 @@ paper/netem.txt -whitespace
 *.log -whitespace
 integration/cases/**/generated/sql/** -whitespace
 jac-comparison/roundtrip-profile/results/sql/*.sql -whitespace
+
+# Generated SQL and frozen capture sources retain their recorded hashes.
+*.sql -whitespace
+snb-extension/java/snapshots/** -whitespace
+integration/cases/**/source/** -whitespace

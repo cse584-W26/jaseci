@@ -1,0 +1,10 @@
+--- webridge/SourceCode/webridge-common/basic-components/src/main/java/webridge/wbridge/storedprocedure/transformation/TypeConverter.java
++++ isolated-json-type-compat/TypeConverter.java
+@@ -17,6 +17,7 @@
+     // longtext should be handled separately from normal String type, to resolve MySQL ERROR 1406
+     // (22001): Data too long
+     SQL2JAVA_TYPE_CONVERSION.put("longtext", "longtext");
++    SQL2JAVA_TYPE_CONVERSION.put("json", "longtext");
+     SQL2JAVA_TYPE_CONVERSION.put("mediumtext", "mediumtext");
+     SQL2JAVA_TYPE_CONVERSION.put("text", "String");
+     SQL2JAVA_TYPE_CONVERSION.put("int", "int");

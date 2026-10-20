@@ -1,0 +1,152 @@
+[
+  {
+    "query": "ic2",
+    "variant": "full",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-synthesis-stack128m",
+    "attempt": "validate-unchanged-emitted-artifacts",
+    "formal_synthesis_exit": 1,
+    "formal_failure_manifest": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/pipeline-20261020T220403Z.json",
+    "reused_original_capture": {
+      "graph": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-original/replay-20261020T220057701710Z/graph.json",
+      "sha256": "b1584417cc7a89e2c91089572e31a61a9f51ec2af336624d83b5295972daadf3",
+      "source_case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-original"
+    },
+    "stages": [
+      {
+        "stage": "validate-emitted",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-synthesis-stack128m/validate-emitted-20261020T221846Z",
+        "report": {
+          "deserialization_ok": true,
+          "definition_count": 1,
+          "definition_sha256": "f01368152f41cc4444840c1f65896fb57e22be6c69d239e85a58107f79a96227",
+          "definitions": [
+            {
+              "api": "Snb_ic2_full_1c828c5b4c",
+              "procedure": "Snb_ic2_full_1c828c5b4c_sp_1_ver0",
+              "sql_file": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-synthesis-stack128m/generated/sql/Snb_ic2_full_1c828c5b4c/graph-SP-Snb_ic2_full_1c828c5b4c_sp_1_ver0.sql",
+              "sql_bytes": 76527,
+              "sql_sha256": "317f3e164e6be42f8348c40841d09c8a7a7585e84b22c5bebe3a17e9a20f9137",
+              "serialized_SQL_is_source_declared_transient": true,
+              "serialized_definition_procedure_matches_SQL_file": true,
+              "call_statement": "call Snb_ic2_full_1c828c5b4c_sp_1_ver0(?, ?)"
+            }
+          ]
+        }
+      },
+      {
+        "stage": "install",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-synthesis-stack128m/install-emitted-20261020T221846Z",
+        "source_sql": {
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-synthesis-stack128m/generated/sql/Snb_ic2_full_1c828c5b4c/graph-SP-function.sql": "539589a49a45f3818d312fbf6792a5a45418c11d219a7968d24f17f697d306d0",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-synthesis-stack128m/generated/sql/Snb_ic2_full_1c828c5b4c/graph-SP-Snb_ic2_full_1c828c5b4c_sp_1_ver0.sql": "317f3e164e6be42f8348c40841d09c8a7a7585e84b22c5bebe3a17e9a20f9137"
+        }
+      },
+      {
+        "stage": "optimized",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-synthesis-stack128m/optimized-20261020T221846352773Z",
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-synthesis-stack128m/optimized-20261020T221846352773Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic2-full-da8775123df9-synthesis-stack128m/optimized-20261020T221846352773Z\n",
+        "stderr": "",
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "optimized",
+          "--query",
+          "ic2",
+          "--variant",
+          "full",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/ic2.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--attempt",
+          "synthesis-stack128m",
+          "--stack",
+          "128m",
+          "--repeats",
+          "3"
+        ]
+      }
+    ],
+    "status": "success",
+    "failed_stage": null,
+    "artifact_status": "emitted serialized definition deserialized; serialized runtime definition valid; procedure identity matches installed unchanged original compiler output"
+  },
+  {
+    "query": "ic1",
+    "variant": "full",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic1-full-ce3282a6f587-synthesis-stack128m",
+    "attempt": "validate-unchanged-emitted-artifacts",
+    "formal_synthesis_exit": 1,
+    "formal_failure_manifest": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/pipeline-20261020T221334Z.json",
+    "reused_original_capture": {
+      "graph": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic1-full-ce3282a6f587-original/replay-20261020T220209386252Z/graph.json",
+      "sha256": "6f9d3fa5a5393e943b106f348826b5d7239ac723c6474c47d8d9a6eeeaa17029",
+      "source_case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic1-full-ce3282a6f587-original"
+    },
+    "stages": [
+      {
+        "stage": "validate-emitted",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic1-full-ce3282a6f587-synthesis-stack128m/validate-emitted-20261020T221846Z",
+        "report": {
+          "deserialization_ok": true,
+          "definition_count": 1,
+          "definition_sha256": "cbe5c9f1483cff398dfabb7ae832be12aa81fed2309454508a6d7d80842eda4f",
+          "definitions": [
+            {
+              "api": "Snb_ic1_full_0b60f0090e",
+              "procedure": "Snb_ic1_full_0b60f0090e_sp_1_ver0",
+              "sql_file": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic1-full-ce3282a6f587-synthesis-stack128m/generated/sql/Snb_ic1_full_0b60f0090e/graph-SP-Snb_ic1_full_0b60f0090e_sp_1_ver0.sql",
+              "sql_bytes": 1917249,
+              "sql_sha256": "9a8a82750206f770ead994edb21ffbb3fe1c8b62cc2e947e306f15e41c5c9d16",
+              "serialized_SQL_is_source_declared_transient": true,
+              "serialized_definition_procedure_matches_SQL_file": true,
+              "call_statement": "call Snb_ic1_full_0b60f0090e_sp_1_ver0(?, ?)"
+            }
+          ]
+        }
+      },
+      {
+        "stage": "install",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic1-full-ce3282a6f587-synthesis-stack128m/install-emitted-20261020T221846Z",
+        "source_sql": {
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic1-full-ce3282a6f587-synthesis-stack128m/generated/sql/Snb_ic1_full_0b60f0090e/graph-SP-function.sql": "539589a49a45f3818d312fbf6792a5a45418c11d219a7968d24f17f697d306d0",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic1-full-ce3282a6f587-synthesis-stack128m/generated/sql/Snb_ic1_full_0b60f0090e/graph-SP-Snb_ic1_full_0b60f0090e_sp_1_ver0.sql": "9a8a82750206f770ead994edb21ffbb3fe1c8b62cc2e947e306f15e41c5c9d16"
+        }
+      },
+      {
+        "stage": "optimized",
+        "returncode": 124,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic1-full-ce3282a6f587-synthesis-stack128m/optimized-20261020T221901771054Z",
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic1-full-ce3282a6f587-synthesis-stack128m/optimized-20261020T221901771054Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic1-full-ce3282a6f587-synthesis-stack128m/optimized-20261020T221901771054Z\n",
+        "stderr": "",
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "optimized",
+          "--query",
+          "ic1",
+          "--variant",
+          "full",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/ic1.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--attempt",
+          "synthesis-stack128m",
+          "--stack",
+          "128m",
+          "--repeats",
+          "3"
+        ]
+      }
+    ],
+    "status": "censored",
+    "failed_stage": "optimized",
+    "artifact_status": "emitted serialized definition deserialized; serialized runtime definition valid; procedure identity matches installed unchanged original compiler output"
+  }
+]

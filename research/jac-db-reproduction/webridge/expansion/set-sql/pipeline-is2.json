@@ -1,0 +1,121 @@
+{
+  "query": "is2",
+  "started_unix": 1792533418.5150757,
+  "stages": [
+    {
+      "stage": "record",
+      "command": [
+        "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+        "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/webridge.py",
+        "is2",
+        "record"
+      ],
+      "returncode": 0,
+      "started_unix": 1792533418.5151148,
+      "ended_unix": 1792533420.4112046
+    },
+    {
+      "stage": "replay",
+      "command": [
+        "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+        "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/webridge.py",
+        "is2",
+        "replay"
+      ],
+      "returncode": 0,
+      "started_unix": 1792533420.4113798,
+      "ended_unix": 1792533424.3925683
+    },
+    {
+      "stage": "synth",
+      "command": [
+        "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+        "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/webridge.py",
+        "is2",
+        "synth",
+        "/home/baichuan/jaseci/reproduction/webridge/integration/cases/set-snb-is2-20261020/replay-20261020T215700967565Z/graph.json"
+      ],
+      "returncode": 1,
+      "started_unix": 1792533424.3930652,
+      "ended_unix": 1792533425.5492692
+    }
+  ],
+  "graph_sha256": "f37737fa7380490e9a83d78590ca97a176b80856b4829d3206fef99c2780ce08",
+  "status": "selected-input-pipeline-passed",
+  "initial_status": "failed-synth",
+  "recovery_attempts": [
+    {
+      "stage": "synth",
+      "path": "reproduction/webridge/integration/cases/set-snb-is2-20261020/synth-20261020T215704876417Z",
+      "process_result": {
+        "returncode": 1,
+        "wall_s": 0.6658026420045644,
+        "utc": "20261020T215705543988Z",
+        "stop_reason": null,
+        "limits": {
+          "rss_bytes": 12884901888,
+          "output_bytes": 8589934592
+        },
+        "peak_process_group_rss_bytes": 95154176,
+        "peak_case_output_bytes": 114938
+      }
+    },
+    {
+      "stage": "synth",
+      "path": "reproduction/webridge/integration/cases/set-snb-is2-20261020/synth-20261020T215835817486Z",
+      "process_result": {
+        "returncode": 1,
+        "wall_s": 0.6983908568508923,
+        "utc": "20261020T215836517963Z",
+        "stop_reason": null,
+        "limits": {
+          "rss_bytes": 12884901888,
+          "output_bytes": 8589934592
+        },
+        "peak_process_group_rss_bytes": 110714880,
+        "peak_case_output_bytes": 2075608
+      }
+    },
+    {
+      "stage": "synth",
+      "path": "reproduction/webridge/integration/cases/set-snb-is2-20261020/synth-20261020T215922240673Z",
+      "process_result": {
+        "returncode": 0,
+        "wall_s": 0.9291295979637653,
+        "utc": "20261020T215923171587Z",
+        "stop_reason": null,
+        "limits": {
+          "rss_bytes": 12884901888,
+          "output_bytes": 8589934592
+        },
+        "peak_process_group_rss_bytes": 132984832,
+        "peak_case_output_bytes": 2083787
+      }
+    },
+    {
+      "stage": "install",
+      "path": "reproduction/webridge/integration/cases/set-snb-is2-20261020/install-20261020T220008Z",
+      "process_result": {
+        "returncode": 0,
+        "unchanged_generated_sql": true
+      }
+    },
+    {
+      "stage": "optimized",
+      "path": "reproduction/webridge/integration/cases/set-snb-is2-20261020/optimized-20261020T220009203368Z",
+      "process_result": {
+        "returncode": 0,
+        "wall_s": 0.9043335050810128,
+        "utc": "20261020T220010109480Z",
+        "stop_reason": null,
+        "limits": {
+          "rss_bytes": 12884901888,
+          "output_bytes": 8589934592
+        },
+        "peak_process_group_rss_bytes": 128643072,
+        "peak_case_output_bytes": 2107678
+      }
+    }
+  ],
+  "compatibility_repair": "integration/json-type-compat: JSON to existing LONGTEXT dispatch in TypeConverter and SQLVarType; original failed syntheses retained"
+}

@@ -1,0 +1,377 @@
+{
+  "profiles": [
+    {
+      "query": "is3",
+      "request_tag": "request-is3-0",
+      "sql_count": 12,
+      "frontend_types": {
+        "B": 12,
+        "D": 12,
+        "E": 12,
+        "S": 12
+      },
+      "backend_ready": 12,
+      "backend_pids": [
+        2593625,
+        2593627
+      ],
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 2,
+        "type_registry": 1,
+        "acl.root_permissions": 2,
+        "identity.guest_resolution": 2,
+        "projection.graph_hop_acl": 2,
+        "transaction.commit": 1
+      },
+      "operations": [
+        {
+          "pid": 2593627,
+          "execute_ms": 0.013,
+          "statement": "_pg3_1",
+          "sql": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+          "sequence": 1,
+          "category": "transaction.begin"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.006,
+          "statement": "_pg3_2",
+          "sql": "SET LOCAL lock_timeout = '10s'",
+          "sequence": 2,
+          "category": "transaction.setting"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.021,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 3,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.016,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 4,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.008,
+          "statement": "_pg3_6",
+          "sql": "SELECT type_name FROM graph_types WHERE ancestor = $1",
+          "sequence": 5,
+          "category": "type_registry"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.022,
+          "statement": "_pg3_5",
+          "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+          "sequence": 6,
+          "category": "acl.root_permissions"
+        },
+        {
+          "pid": 2593625,
+          "execute_ms": 0.009,
+          "statement": "_pg3_0",
+          "sql": "SELECT doc FROM identity_users WHERE user_id = $1",
+          "sequence": 7,
+          "category": "identity.guest_resolution"
+        },
+        {
+          "pid": 2593625,
+          "execute_ms": 0.015,
+          "statement": "_pg3_1",
+          "sql": "SELECT t.doc FROM identity_users t\n\t        JOIN identity_lookups lk ON t.user_id = lk.user_id\n\t        WHERE lk.value_normalized = $1\n\t          AND COALESCE(t.doc->>'status', 'active') <> 'disabled'",
+          "sequence": 8,
+          "category": "identity.guest_resolution"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.139,
+          "statement": "_pg3_7",
+          "sql": "SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_firstname::text, n1.f_lastname::text, n1.f_person_id::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN g_n_person_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($6 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($8 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id",
+          "sequence": 9,
+          "category": "projection.graph_hop_acl"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.019,
+          "statement": "_pg3_5",
+          "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+          "sequence": 10,
+          "category": "acl.root_permissions"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.153,
+          "statement": "_pg3_8",
+          "sql": "SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_firstname::text, n1.f_lastname::text, n1.f_person_id::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $2 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $3 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN g_n_person_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($6 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($8 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id",
+          "sequence": 11,
+          "category": "projection.graph_hop_acl"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.011,
+          "statement": "_pg3_4",
+          "sql": "COMMIT",
+          "sequence": 12,
+          "category": "transaction.commit"
+        }
+      ]
+    },
+    {
+      "query": "is3",
+      "request_tag": "request-is3-1",
+      "sql_count": 12,
+      "frontend_types": {
+        "B": 12,
+        "D": 12,
+        "E": 12,
+        "S": 12
+      },
+      "backend_ready": 12,
+      "backend_pids": [
+        2593625,
+        2593627
+      ],
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 2,
+        "type_registry": 1,
+        "acl.root_permissions": 2,
+        "identity.guest_resolution": 2,
+        "projection.graph_hop_acl": 2,
+        "transaction.commit": 1
+      },
+      "operations": [
+        {
+          "pid": 2593627,
+          "execute_ms": 0.011,
+          "statement": "_pg3_1",
+          "sql": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+          "sequence": 1,
+          "category": "transaction.begin"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.005,
+          "statement": "_pg3_2",
+          "sql": "SET LOCAL lock_timeout = '10s'",
+          "sequence": 2,
+          "category": "transaction.setting"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.022,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 3,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.014,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 4,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.008,
+          "statement": "_pg3_6",
+          "sql": "SELECT type_name FROM graph_types WHERE ancestor = $1",
+          "sequence": 5,
+          "category": "type_registry"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.028,
+          "statement": "_pg3_5",
+          "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+          "sequence": 6,
+          "category": "acl.root_permissions"
+        },
+        {
+          "pid": 2593625,
+          "execute_ms": 0.009,
+          "statement": "_pg3_0",
+          "sql": "SELECT doc FROM identity_users WHERE user_id = $1",
+          "sequence": 7,
+          "category": "identity.guest_resolution"
+        },
+        {
+          "pid": 2593625,
+          "execute_ms": 0.014,
+          "statement": "_pg3_1",
+          "sql": "SELECT t.doc FROM identity_users t\n\t        JOIN identity_lookups lk ON t.user_id = lk.user_id\n\t        WHERE lk.value_normalized = $1\n\t          AND COALESCE(t.doc->>'status', 'active') <> 'disabled'",
+          "sequence": 8,
+          "category": "identity.guest_resolution"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.138,
+          "statement": "_pg3_7",
+          "sql": "SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_firstname::text, n1.f_lastname::text, n1.f_person_id::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN g_n_person_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($6 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($8 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id",
+          "sequence": 9,
+          "category": "projection.graph_hop_acl"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.019,
+          "statement": "_pg3_5",
+          "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+          "sequence": 10,
+          "category": "acl.root_permissions"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.148,
+          "statement": "_pg3_8",
+          "sql": "SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_firstname::text, n1.f_lastname::text, n1.f_person_id::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $2 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $3 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN g_n_person_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($6 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($8 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id",
+          "sequence": 11,
+          "category": "projection.graph_hop_acl"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.011,
+          "statement": "_pg3_4",
+          "sql": "COMMIT",
+          "sequence": 12,
+          "category": "transaction.commit"
+        }
+      ]
+    },
+    {
+      "query": "is3",
+      "request_tag": "request-is3-2",
+      "sql_count": 12,
+      "frontend_types": {
+        "B": 12,
+        "D": 12,
+        "E": 12,
+        "S": 12
+      },
+      "backend_ready": 12,
+      "backend_pids": [
+        2593625,
+        2593627
+      ],
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 2,
+        "type_registry": 1,
+        "acl.root_permissions": 2,
+        "identity.guest_resolution": 2,
+        "projection.graph_hop_acl": 2,
+        "transaction.commit": 1
+      },
+      "operations": [
+        {
+          "pid": 2593627,
+          "execute_ms": 0.012,
+          "statement": "_pg3_1",
+          "sql": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+          "sequence": 1,
+          "category": "transaction.begin"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.005,
+          "statement": "_pg3_2",
+          "sql": "SET LOCAL lock_timeout = '10s'",
+          "sequence": 2,
+          "category": "transaction.setting"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.023,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 3,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.017,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 4,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.009,
+          "statement": "_pg3_6",
+          "sql": "SELECT type_name FROM graph_types WHERE ancestor = $1",
+          "sequence": 5,
+          "category": "type_registry"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.022,
+          "statement": "_pg3_5",
+          "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+          "sequence": 6,
+          "category": "acl.root_permissions"
+        },
+        {
+          "pid": 2593625,
+          "execute_ms": 0.009,
+          "statement": "_pg3_0",
+          "sql": "SELECT doc FROM identity_users WHERE user_id = $1",
+          "sequence": 7,
+          "category": "identity.guest_resolution"
+        },
+        {
+          "pid": 2593625,
+          "execute_ms": 0.013,
+          "statement": "_pg3_1",
+          "sql": "SELECT t.doc FROM identity_users t\n\t        JOIN identity_lookups lk ON t.user_id = lk.user_id\n\t        WHERE lk.value_normalized = $1\n\t          AND COALESCE(t.doc->>'status', 'active') <> 'disabled'",
+          "sequence": 8,
+          "category": "identity.guest_resolution"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.141,
+          "statement": "_pg3_7",
+          "sql": "SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_firstname::text, n1.f_lastname::text, n1.f_person_id::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN g_n_person_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($6 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($8 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id",
+          "sequence": 9,
+          "category": "projection.graph_hop_acl"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.018,
+          "statement": "_pg3_5",
+          "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+          "sequence": 10,
+          "category": "acl.root_permissions"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.151,
+          "statement": "_pg3_8",
+          "sql": "SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_firstname::text, n1.f_lastname::text, n1.f_person_id::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $2 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $3 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN g_n_person_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($6 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($8 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id",
+          "sequence": 11,
+          "category": "projection.graph_hop_acl"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.01,
+          "statement": "_pg3_4",
+          "sql": "COMMIT",
+          "sequence": 12,
+          "category": "transaction.commit"
+        }
+      ]
+    }
+  ],
+  "all_outputs_historical_hash_match": true
+}

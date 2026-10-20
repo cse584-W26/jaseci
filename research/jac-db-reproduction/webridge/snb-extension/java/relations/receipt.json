@@ -1,0 +1,27 @@
+{
+  "command": [
+    "docker",
+    "exec",
+    "-i",
+    "jac-webridge-mysql57",
+    "mysql",
+    "--default-character-set=utf8mb4",
+    "-N",
+    "-uroot",
+    "jac_snb_six_20261020"
+  ],
+  "utc": "2026-10-20T21:38:55.100284+00:00",
+  "sql_sha256": "1d94a1fe30c60c2c7dd243c61041612334159fde3a6ec95c85ec9540b057802d",
+  "returncode": 0,
+  "stdout": "jac_snb_six_20261020.adj_knows\tanalyze\tstatus\tOK\njac_snb_six_20261020.jac_snb_person_mirror\tanalyze\tstatus\tOK\nanchors\t1475843\nknows\t180665\nadjacency\t361330\nperson\t9932\nmissing_reverse\t0\nmissing_endpoint\t0\n",
+  "stderr": "",
+  "source_PostgreSQL_adjacency_schema": {
+    "src": "uuid",
+    "dst": "uuid",
+    "primary_key": [
+      "src",
+      "dst"
+    ]
+  },
+  "adaptation": "UUID text representation and equivalent finite Knows adjacency; Person scalar indexes mirror measured endpoint predicate queries"
+}

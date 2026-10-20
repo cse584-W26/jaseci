@@ -1,0 +1,60 @@
+{
+  "query": "ic1",
+  "started_unix": 1792534099.7012877,
+  "stages": [
+    {
+      "stage": "record",
+      "command": [
+        "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+        "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/webridge.py",
+        "ic1",
+        "record"
+      ],
+      "returncode": 0,
+      "started_unix": 1792534099.7013361,
+      "ended_unix": 1792534101.4945805
+    },
+    {
+      "stage": "replay",
+      "command": [
+        "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+        "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/webridge.py",
+        "ic1",
+        "replay"
+      ],
+      "returncode": 0,
+      "started_unix": 1792534101.494767,
+      "ended_unix": 1792534109.1298134
+    },
+    {
+      "stage": "synth",
+      "command": [
+        "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+        "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/webridge.py",
+        "ic1",
+        "synth",
+        "/home/baichuan/jaseci/reproduction/webridge/integration/cases/set-snb-ic1-nonnull-20261020/replay-20261020T220821983742Z/graph.json"
+      ],
+      "returncode": 0,
+      "started_unix": 1792534109.1375794,
+      "ended_unix": 1792534121.8872397
+    },
+    {
+      "stage": "install",
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "jac-webridge-mysql57",
+        "mysql",
+        "--default-character-set=utf8mb4",
+        "-uroot",
+        "jac_snb_six_20261020"
+      ],
+      "returncode": 0,
+      "generated_sql_unchanged": true
+    }
+  ],
+  "graph_sha256": "352fc270cffb50fcd4c5ac468858d870958e57292743c4c035d2e76f97136a54",
+  "status": "installed-awaiting-guarded-call"
+}

@@ -1,0 +1,3675 @@
+{
+  "status": "incremental",
+  "expected_pairs": 18,
+  "measured_arms": 33,
+  "cells": [
+    {
+      "query": "ic1",
+      "variant": "conventional",
+      "phase": "baseline",
+      "profile_path": "results/ic1/conventional-postquiet-selected",
+      "measured_requests": 3,
+      "actual_cycles": [
+        7,
+        7,
+        7
+      ],
+      "response_frames": [
+        11804,
+        11804,
+        11804
+      ],
+      "response_wire_bytes": [
+        484151,
+        484151,
+        484151
+      ],
+      "command_wire_bytes": [
+        460047,
+        460047,
+        460047
+      ],
+      "result_sets": [
+        4,
+        4,
+        4
+      ],
+      "instrumented_request_ms": [
+        626.85975,
+        626.543325,
+        600.935864
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "closure.frontier_adjacency": 3,
+        "person.filter_or_projection": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "ic1",
+      "variant": "full",
+      "phase": "baseline",
+      "profile_path": "results/ic1/full-postquiet-selected",
+      "measured_requests": 3,
+      "actual_cycles": [
+        13,
+        13,
+        13
+      ],
+      "response_frames": [
+        11876,
+        11876,
+        11876
+      ],
+      "response_wire_bytes": [
+        499082,
+        499082,
+        499082
+      ],
+      "command_wire_bytes": [
+        109226,
+        109226,
+        109226
+      ],
+      "result_sets": [
+        10,
+        10,
+        10
+      ],
+      "instrumented_request_ms": [
+        525.652384,
+        582.922499,
+        435.827443
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 3,
+        "person.filter_or_projection": 1,
+        "closure.frontier_adjacency": 3,
+        "anchor.projection": 1,
+        "identity.lookup": 2,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "ic1",
+      "variant": "pruned",
+      "phase": "baseline",
+      "profile_path": "results/ic1/pruned-postquiet-selected",
+      "measured_requests": 3,
+      "actual_cycles": [
+        8,
+        8,
+        8
+      ],
+      "response_frames": [
+        11827,
+        11827,
+        11827
+      ],
+      "response_wire_bytes": [
+        494591,
+        494591,
+        494591
+      ],
+      "command_wire_bytes": [
+        108389,
+        108389,
+        108389
+      ],
+      "result_sets": [
+        5,
+        5,
+        5
+      ],
+      "instrumented_request_ms": [
+        484.721837,
+        539.040568,
+        517.871694
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "person.filter_or_projection": 1,
+        "closure.frontier_adjacency": 3,
+        "anchor.projection": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "ic13",
+      "variant": "conventional",
+      "phase": "baseline",
+      "profile_path": "results/ic13/conventional-180646",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        7,
+        7,
+        7
+      ],
+      "response_wire_bytes": [
+        87,
+        87,
+        87
+      ],
+      "command_wire_bytes": [
+        1634,
+        1634,
+        1634
+      ],
+      "result_sets": [
+        1,
+        1,
+        1
+      ],
+      "instrumented_request_ms": [
+        11.207332,
+        11.025637,
+        10.927259
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "closure.bounded_case_exists": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "ic13",
+      "variant": "conventional",
+      "phase": "sp",
+      "profile_path": "results/ic13/conventional-180646",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        26,
+        26,
+        26
+      ],
+      "response_wire_bytes": [
+        1198,
+        1198,
+        1198
+      ],
+      "command_wire_bytes": [
+        215,
+        215,
+        215
+      ],
+      "result_sets": [
+        2,
+        2,
+        2
+      ],
+      "instrumented_request_ms": [
+        11.755229,
+        12.068136,
+        14.702734
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "stored_procedure.call": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": {
+        "parent_inclusive_ms": [
+          0.761833,
+          0.920039,
+          0.860523
+        ],
+        "all_event_id_ranges_complete": true,
+        "control_events_observed": true,
+        "control_events_instrumented": true,
+        "instrumentation_scope": [
+          "all_statement_events"
+        ],
+        "business_count_matches_source": true,
+        "nested_event_counts": [
+          36,
+          36,
+          36
+        ],
+        "direct_child_categories": {
+          "business.closure.bounded_case_exists": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.670228,
+              0.793011,
+              0.749447
+            ]
+          },
+          "control.jump_if_not": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.000477,
+              0.001358,
+              0.001111
+            ]
+          },
+          "control.set": {
+            "counts": [
+              33,
+              33,
+              33
+            ],
+            "timer_ms": [
+              0.017538,
+              0.024079,
+              0.021553
+            ]
+          },
+          "return.replay_metadata": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.017282,
+              0.021455,
+              0.020986
+            ]
+          }
+        },
+        "actual_business_statement_or_cursor_counts": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "query": "ic13",
+      "variant": "full",
+      "phase": "baseline",
+      "profile_path": "results/ic13/full-postquiet-selected",
+      "measured_requests": 3,
+      "actual_cycles": [
+        14,
+        14,
+        14
+      ],
+      "response_frames": [
+        11328,
+        11328,
+        11328
+      ],
+      "response_wire_bytes": [
+        468059,
+        468059,
+        468059
+      ],
+      "command_wire_bytes": [
+        87543,
+        87543,
+        87543
+      ],
+      "result_sets": [
+        11,
+        11,
+        11
+      ],
+      "instrumented_request_ms": [
+        489.496525,
+        553.106163,
+        464.066044
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 4,
+        "anchor.projection": 1,
+        "identity.lookup": 2,
+        "person.projection": 1,
+        "closure.frontier_adjacency": 3,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "ic13",
+      "variant": "full",
+      "phase": "sp",
+      "profile_path": "results/ic13/full-postquiet-selected",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        13561,
+        13561,
+        13561
+      ],
+      "response_wire_bytes": [
+        762869,
+        762869,
+        762869
+      ],
+      "command_wire_bytes": [
+        211,
+        211,
+        211
+      ],
+      "result_sets": [
+        12,
+        12,
+        12
+      ],
+      "instrumented_request_ms": [
+        2638.980809,
+        2665.997485,
+        2644.27145
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "stored_procedure.call": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": {
+        "parent_inclusive_ms": [
+          2286.926021,
+          2316.07829,
+          2290.671291
+        ],
+        "all_event_id_ranges_complete": true,
+        "control_events_observed": false,
+        "control_events_instrumented": false,
+        "instrumentation_scope": [
+          "business_stmt_and_cursor_only"
+        ],
+        "business_count_matches_source": true,
+        "nested_event_counts": [
+          15,
+          15,
+          15
+        ],
+        "direct_child_categories": {
+          "business.anchor.projection": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.03226,
+              0.031051,
+              0.031379
+            ]
+          },
+          "business.closure.frontier_adjacency": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              155.082592,
+              157.372009,
+              157.050256
+            ]
+          },
+          "business.cursor.closure.frontier_adjacency": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              2.654321,
+              2.660806,
+              2.623059
+            ]
+          },
+          "business.cursor.hydration.full_anchor": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.106414,
+              0.108904,
+              0.115588
+            ]
+          },
+          "business.hydration.full_anchor": {
+            "counts": [
+              3,
+              3,
+              3
+            ],
+            "timer_ms": [
+              0.21856199999999998,
+              0.220974,
+              0.211928
+            ]
+          },
+          "business.identity.lookup": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.111055,
+              0.110717,
+              0.11049
+            ]
+          },
+          "business.person.projection": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.052987,
+              0.05263,
+              0.052823
+            ]
+          },
+          "return.materialized_rows": {
+            "counts": [
+              3,
+              3,
+              3
+            ],
+            "timer_ms": [
+              3.0562389999999997,
+              3.092293,
+              3.037341
+            ]
+          },
+          "return.replay_metadata": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.892856,
+              0.92023,
+              0.893065
+            ]
+          }
+        },
+        "actual_business_statement_or_cursor_counts": [
+          11,
+          11,
+          11
+        ]
+      }
+    },
+    {
+      "query": "ic13",
+      "variant": "pruned",
+      "phase": "baseline",
+      "profile_path": "results/ic13/pruned-postquiet-selected",
+      "measured_requests": 3,
+      "actual_cycles": [
+        8,
+        8,
+        8
+      ],
+      "response_frames": [
+        11265,
+        11265,
+        11265
+      ],
+      "response_wire_bytes": [
+        462171,
+        462171,
+        462171
+      ],
+      "command_wire_bytes": [
+        86516,
+        86516,
+        86516
+      ],
+      "result_sets": [
+        5,
+        5,
+        5
+      ],
+      "instrumented_request_ms": [
+        515.279799,
+        397.503322,
+        465.417015
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "anchor.projection": 1,
+        "person.projection": 1,
+        "closure.frontier_adjacency": 3,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "ic13",
+      "variant": "pruned",
+      "phase": "sp",
+      "profile_path": "results/ic13/pruned-postquiet-selected",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        13485,
+        13485,
+        13485
+      ],
+      "response_wire_bytes": [
+        752040,
+        752040,
+        752040
+      ],
+      "command_wire_bytes": [
+        213,
+        213,
+        213
+      ],
+      "result_sets": [
+        6,
+        6,
+        6
+      ],
+      "instrumented_request_ms": [
+        2558.273232,
+        2540.234858,
+        2551.402657
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "stored_procedure.call": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": {
+        "parent_inclusive_ms": [
+          2263.496897,
+          2265.885987,
+          2269.542867
+        ],
+        "all_event_id_ranges_complete": true,
+        "control_events_observed": false,
+        "control_events_instrumented": false,
+        "instrumentation_scope": [
+          "business_stmt_and_cursor_only"
+        ],
+        "business_count_matches_source": true,
+        "nested_event_counts": [
+          8,
+          8,
+          8
+        ],
+        "direct_child_categories": {
+          "business.anchor.projection": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.100596,
+              0.10132,
+              0.112212
+            ]
+          },
+          "business.closure.frontier_adjacency": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              155.695422,
+              155.139536,
+              158.627643
+            ]
+          },
+          "business.cursor.closure.frontier_adjacency": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              2.677614,
+              2.6723830000000004,
+              2.691927
+            ]
+          },
+          "business.person.projection": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.064632,
+              0.066622,
+              0.064145
+            ]
+          },
+          "return.materialized_rows": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              3.1665249999999996,
+              3.169415,
+              3.196963
+            ]
+          },
+          "return.replay_metadata": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.888473,
+              0.989639,
+              0.946534
+            ]
+          }
+        },
+        "actual_business_statement_or_cursor_counts": [
+          5,
+          5,
+          5
+        ]
+      }
+    },
+    {
+      "query": "ic2",
+      "variant": "conventional",
+      "phase": "baseline",
+      "profile_path": "results/ic2/conventional-180643",
+      "measured_requests": 3,
+      "actual_cycles": [
+        5,
+        5,
+        5
+      ],
+      "response_frames": [
+        41,
+        41,
+        41
+      ],
+      "response_wire_bytes": [
+        22151,
+        22151,
+        22151
+      ],
+      "command_wire_bytes": [
+        4614,
+        4614,
+        4614
+      ],
+      "result_sets": [
+        2,
+        2,
+        2
+      ],
+      "instrumented_request_ms": [
+        32.773477,
+        37.270356,
+        35.00104
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "closure.frontier_adjacency": 1,
+        "message.topk": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "ic2",
+      "variant": "conventional",
+      "phase": "sp",
+      "profile_path": "results/ic2/conventional-180643",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        85,
+        85,
+        85
+      ],
+      "response_wire_bytes": [
+        25037,
+        25037,
+        25037
+      ],
+      "command_wire_bytes": [
+        190,
+        190,
+        190
+      ],
+      "result_sets": [
+        3,
+        3,
+        3
+      ],
+      "instrumented_request_ms": [
+        26.525983,
+        27.271182,
+        26.111811
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "stored_procedure.call": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": {
+        "parent_inclusive_ms": [
+          13.717726,
+          13.713365,
+          13.536221
+        ],
+        "all_event_id_ranges_complete": true,
+        "control_events_observed": true,
+        "control_events_instrumented": true,
+        "instrumentation_scope": [
+          "all_statement_events"
+        ],
+        "business_count_matches_source": true,
+        "nested_event_counts": [
+          248,
+          248,
+          248
+        ],
+        "direct_child_categories": {
+          "business.cursor.closure.frontier_adjacency": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.092826,
+              0.115377,
+              0.086525
+            ]
+          },
+          "business.message.topk": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              13.220521,
+              13.181095,
+              13.066941
+            ]
+          },
+          "control.cclose": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.001864,
+              0.00231,
+              0.001326
+            ]
+          },
+          "control.cfetch": {
+            "counts": [
+              9,
+              9,
+              9
+            ],
+            "timer_ms": [
+              0.004404,
+              0.003933000000000001,
+              0.0031069999999999995
+            ]
+          },
+          "control.cpop": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.000196,
+              0.000241,
+              0.000192
+            ]
+          },
+          "control.cpush": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.000572,
+              0.001137,
+              0.000428
+            ]
+          },
+          "control.hpop": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.000203,
+              0.000148,
+              0.000186
+            ]
+          },
+          "control.hpush_jump": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.000149,
+              0.000153,
+              0.000103
+            ]
+          },
+          "control.jump": {
+            "counts": [
+              11,
+              11,
+              11
+            ],
+            "timer_ms": [
+              0.0004930000000000001,
+              0.000465,
+              0.000536
+            ]
+          },
+          "control.jump_if_not": {
+            "counts": [
+              112,
+              112,
+              112
+            ],
+            "timer_ms": [
+              0.050211000000000006,
+              0.05050400000000002,
+              0.05009900000000001
+            ]
+          },
+          "control.set": {
+            "counts": [
+              107,
+              107,
+              107
+            ],
+            "timer_ms": [
+              0.07191700000000001,
+              0.074341,
+              0.06876600000000002
+            ]
+          },
+          "return.materialized_rows": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.022331,
+              0.025938,
+              0.022632
+            ]
+          },
+          "return.replay_metadata": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.032185,
+              0.029996,
+              0.029078
+            ]
+          }
+        },
+        "actual_business_statement_or_cursor_counts": [
+          2,
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "query": "ic2",
+      "variant": "full",
+      "phase": "baseline",
+      "profile_path": "results/ic2/full-postquiet-business",
+      "measured_requests": 3,
+      "actual_cycles": [
+        33,
+        33,
+        33
+      ],
+      "response_frames": [
+        453,
+        453,
+        453
+      ],
+      "response_wire_bytes": [
+        58333,
+        58333,
+        58333
+      ],
+      "command_wire_bytes": [
+        16106,
+        16106,
+        16106
+      ],
+      "result_sets": [
+        30,
+        30,
+        30
+      ],
+      "instrumented_request_ms": [
+        115.119774,
+        106.759783,
+        111.92398
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 25,
+        "type_registry": 1,
+        "graph.Knows": 2,
+        "message.topk": 1,
+        "graph.HasCreator": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "ic2",
+      "variant": "full",
+      "phase": "sp",
+      "profile_path": "results/ic2/full-postquiet-business",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        750,
+        750,
+        750
+      ],
+      "response_wire_bytes": [
+        76121,
+        76121,
+        76121
+      ],
+      "command_wire_bytes": [
+        185,
+        185,
+        185
+      ],
+      "result_sets": [
+        31,
+        31,
+        31
+      ],
+      "instrumented_request_ms": [
+        37.214608,
+        43.634055,
+        40.446469
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "stored_procedure.call": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": {
+        "parent_inclusive_ms": [
+          19.175689,
+          19.210757,
+          19.021169
+        ],
+        "all_event_id_ranges_complete": true,
+        "control_events_observed": false,
+        "control_events_instrumented": false,
+        "instrumentation_scope": [
+          "business_stmt_and_cursor_only"
+        ],
+        "business_count_matches_source": true,
+        "nested_event_counts": [
+          55,
+          55,
+          55
+        ],
+        "direct_child_categories": {
+          "business.cursor.graph.HasCreator": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.722618,
+              0.737658,
+              0.705118
+            ]
+          },
+          "business.cursor.graph.Knows": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.392508,
+              0.397866,
+              0.406952
+            ]
+          },
+          "business.cursor.hydration.full_anchor": {
+            "counts": [
+              21,
+              21,
+              21
+            ],
+            "timer_ms": [
+              1.2353129999999999,
+              1.2839269999999998,
+              1.254099
+            ]
+          },
+          "business.cursor.message.topk": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              13.016766,
+              12.897058,
+              12.724133
+            ]
+          },
+          "business.graph.Knows": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.428256,
+              0.433385,
+              0.436952
+            ]
+          },
+          "business.hydration.full_anchor": {
+            "counts": [
+              4,
+              4,
+              4
+            ],
+            "timer_ms": [
+              0.353814,
+              0.380592,
+              0.37620599999999993
+            ]
+          },
+          "business.type_registry": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.042672,
+              0.044804,
+              0.04432
+            ]
+          },
+          "return.materialized_rows": {
+            "counts": [
+              24,
+              24,
+              24
+            ],
+            "timer_ms": [
+              0.4825899999999999,
+              0.4920679999999999,
+              0.4819820000000001
+            ]
+          },
+          "return.replay_metadata": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.109873,
+              0.114902,
+              0.109546
+            ]
+          }
+        },
+        "actual_business_statement_or_cursor_counts": [
+          30,
+          30,
+          30
+        ]
+      }
+    },
+    {
+      "query": "ic2",
+      "variant": "pruned",
+      "phase": "baseline",
+      "profile_path": "results/ic2/pruned-180634",
+      "measured_requests": 3,
+      "actual_cycles": [
+        7,
+        7,
+        7
+      ],
+      "response_frames": [
+        71,
+        71,
+        71
+      ],
+      "response_wire_bytes": [
+        25732,
+        25732,
+        25732
+      ],
+      "command_wire_bytes": [
+        8234,
+        8234,
+        8234
+      ],
+      "result_sets": [
+        4,
+        4,
+        4
+      ],
+      "instrumented_request_ms": [
+        39.367132,
+        36.201101,
+        38.400226
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "graph.Knows": 2,
+        "message.topk": 1,
+        "graph.HasCreator": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "ic2",
+      "variant": "pruned",
+      "phase": "sp",
+      "profile_path": "results/ic2/pruned-180634",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        235,
+        235,
+        235
+      ],
+      "response_wire_bytes": [
+        36137,
+        36137,
+        36137
+      ],
+      "command_wire_bytes": [
+        187,
+        187,
+        187
+      ],
+      "result_sets": [
+        5,
+        5,
+        5
+      ],
+      "instrumented_request_ms": [
+        45.376432,
+        34.240375,
+        34.786468
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "stored_procedure.call": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": {
+        "parent_inclusive_ms": [
+          17.410353,
+          17.497322,
+          17.35222
+        ],
+        "all_event_id_ranges_complete": true,
+        "control_events_observed": true,
+        "control_events_instrumented": true,
+        "instrumentation_scope": [
+          "all_statement_events"
+        ],
+        "business_count_matches_source": true,
+        "nested_event_counts": [
+          1001,
+          1001,
+          1001
+        ],
+        "direct_child_categories": {
+          "business.cursor.graph.Knows": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.586848,
+              0.574527,
+              0.578323
+            ]
+          },
+          "business.cursor.message.topk": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              14.573037,
+              14.622459,
+              14.603901
+            ]
+          },
+          "business.graph.HasCreator": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.450048,
+              0.433756,
+              0.401561
+            ]
+          },
+          "business.graph.Knows": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.511196,
+              0.530204,
+              0.503987
+            ]
+          },
+          "control.cclose": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.018059,
+              0.017783,
+              0.017042
+            ]
+          },
+          "control.cfetch": {
+            "counts": [
+              29,
+              29,
+              29
+            ],
+            "timer_ms": [
+              0.078308,
+              0.07741499999999998,
+              0.07597200000000001
+            ]
+          },
+          "control.cpop": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.0009159999999999999,
+              0.000856,
+              0.000479
+            ]
+          },
+          "control.cpush": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.0009519999999999999,
+              0.0006709999999999999,
+              0.0005499999999999999
+            ]
+          },
+          "control.hpop": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.000583,
+              0.000497,
+              0.000412
+            ]
+          },
+          "control.hpush_jump": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.00047500000000000005,
+              0.00047900000000000004,
+              0.0005690000000000001
+            ]
+          },
+          "control.jump": {
+            "counts": [
+              33,
+              33,
+              33
+            ],
+            "timer_ms": [
+              0.0015689999999999999,
+              0.0015189999999999995,
+              0.0015349999999999997
+            ]
+          },
+          "control.jump_if_not": {
+            "counts": [
+              576,
+              576,
+              576
+            ],
+            "timer_ms": [
+              0.2371860000000001,
+              0.23602600000000007,
+              0.23309200000000013
+            ]
+          },
+          "control.set": {
+            "counts": [
+              346,
+              346,
+              346
+            ],
+            "timer_ms": [
+              0.201817,
+              0.22416799999999998,
+              0.20200400000000004
+            ]
+          },
+          "return.materialized_rows": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.098833,
+              0.09374099999999999,
+              0.08798800000000001
+            ]
+          },
+          "return.replay_metadata": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.042475,
+              0.046132,
+              0.04163
+            ]
+          }
+        },
+        "actual_business_statement_or_cursor_counts": [
+          4,
+          4,
+          4
+        ]
+      }
+    },
+    {
+      "query": "is1",
+      "variant": "conventional",
+      "phase": "baseline",
+      "profile_path": "results/is1/conventional-180638",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        8,
+        8,
+        8
+      ],
+      "response_wire_bytes": [
+        807,
+        807,
+        807
+      ],
+      "command_wire_bytes": [
+        444,
+        444,
+        444
+      ],
+      "result_sets": [
+        1,
+        1,
+        1
+      ],
+      "instrumented_request_ms": [
+        10.295746,
+        10.25387,
+        10.374218
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "graph.IsLocatedIn": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "is1",
+      "variant": "conventional",
+      "phase": "sp",
+      "profile_path": "results/is1/conventional-180638",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        14,
+        14,
+        14
+      ],
+      "response_wire_bytes": [
+        961,
+        961,
+        961
+      ],
+      "command_wire_bytes": [
+        175,
+        175,
+        175
+      ],
+      "result_sets": [
+        2,
+        2,
+        2
+      ],
+      "instrumented_request_ms": [
+        11.782169,
+        10.66349,
+        10.912129
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "stored_procedure.call": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": {
+        "parent_inclusive_ms": [
+          0.278716,
+          0.243945,
+          0.263743
+        ],
+        "all_event_id_ranges_complete": true,
+        "control_events_observed": true,
+        "control_events_instrumented": true,
+        "instrumentation_scope": [
+          "all_statement_events"
+        ],
+        "business_count_matches_source": true,
+        "nested_event_counts": [
+          10,
+          10,
+          10
+        ],
+        "direct_child_categories": {
+          "business.graph.IsLocatedIn": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.199012,
+              0.17505,
+              0.190769
+            ]
+          },
+          "control.jump_if_not": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.000595,
+              0.000677,
+              0.000575
+            ]
+          },
+          "control.set": {
+            "counts": [
+              7,
+              7,
+              7
+            ],
+            "timer_ms": [
+              0.0071449999999999994,
+              0.006595999999999999,
+              0.007141
+            ]
+          },
+          "return.replay_metadata": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.019913,
+              0.017429,
+              0.018883
+            ]
+          }
+        },
+        "actual_business_statement_or_cursor_counts": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "query": "is1",
+      "variant": "full",
+      "phase": "baseline",
+      "profile_path": "results/is1/full-warmfix",
+      "measured_requests": 3,
+      "actual_cycles": [
+        7,
+        7,
+        7
+      ],
+      "response_frames": [
+        50,
+        50,
+        50
+      ],
+      "response_wire_bytes": [
+        4036,
+        4036,
+        4036
+      ],
+      "command_wire_bytes": [
+        1657,
+        1657,
+        1657
+      ],
+      "result_sets": [
+        4,
+        4,
+        4
+      ],
+      "instrumented_request_ms": [
+        22.603534,
+        24.474236,
+        31.667261
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 3,
+        "graph.IsLocatedIn": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "is1",
+      "variant": "full",
+      "phase": "sp",
+      "profile_path": "results/is1/full-warmfix",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        76,
+        76,
+        76
+      ],
+      "response_wire_bytes": [
+        5098,
+        5098,
+        5098
+      ],
+      "command_wire_bytes": [
+        170,
+        170,
+        170
+      ],
+      "result_sets": [
+        5,
+        5,
+        5
+      ],
+      "instrumented_request_ms": [
+        27.96739,
+        20.311575,
+        28.611021
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "stored_procedure.call": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": {
+        "parent_inclusive_ms": [
+          1.181433,
+          1.135624,
+          1.136464
+        ],
+        "all_event_id_ranges_complete": true,
+        "control_events_observed": true,
+        "control_events_instrumented": true,
+        "instrumentation_scope": [
+          "all_statement_events"
+        ],
+        "business_count_matches_source": true,
+        "nested_event_counts": [
+          118,
+          118,
+          118
+        ],
+        "direct_child_categories": {
+          "business.cursor.graph.IsLocatedIn": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.58814,
+              0.571634,
+              0.564661
+            ]
+          },
+          "business.cursor.hydration.full_anchor": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.105968,
+              0.101898,
+              0.105169
+            ]
+          },
+          "business.hydration.full_anchor": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.142266,
+              0.135787,
+              0.135229
+            ]
+          },
+          "control.cclose": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.017015000000000002,
+              0.016326,
+              0.016918
+            ]
+          },
+          "control.cfetch": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.008712000000000001,
+              0.008638999999999999,
+              0.00927
+            ]
+          },
+          "control.cpop": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.00036300000000000004,
+              0.000313,
+              0.000772
+            ]
+          },
+          "control.cpush": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.000638,
+              0.000571,
+              0.000687
+            ]
+          },
+          "control.hpop": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.000349,
+              0.000346,
+              0.000315
+            ]
+          },
+          "control.hpush_jump": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.000377,
+              0.0007469999999999999,
+              0.000939
+            ]
+          },
+          "control.jump": {
+            "counts": [
+              6,
+              6,
+              6
+            ],
+            "timer_ms": [
+              0.00027,
+              0.00026199999999999997,
+              0.00032
+            ]
+          },
+          "control.jump_if_not": {
+            "counts": [
+              16,
+              16,
+              16
+            ],
+            "timer_ms": [
+              0.018323999999999997,
+              0.018058,
+              0.017559
+            ]
+          },
+          "control.set": {
+            "counts": [
+              77,
+              77,
+              77
+            ],
+            "timer_ms": [
+              0.05615599999999998,
+              0.0564,
+              0.05468299999999998
+            ]
+          },
+          "return.materialized_rows": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.044571,
+              0.043653,
+              0.044136999999999996
+            ]
+          },
+          "return.replay_metadata": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.017941,
+              0.017769,
+              0.018272
+            ]
+          }
+        },
+        "actual_business_statement_or_cursor_counts": [
+          4,
+          4,
+          4
+        ]
+      }
+    },
+    {
+      "query": "is1",
+      "variant": "pruned",
+      "phase": "baseline",
+      "profile_path": "results/is1/pruned-180324",
+      "measured_requests": 3,
+      "actual_cycles": [
+        5,
+        5,
+        5
+      ],
+      "response_frames": [
+        13,
+        13,
+        13
+      ],
+      "response_wire_bytes": [
+        708,
+        708,
+        708
+      ],
+      "command_wire_bytes": [
+        1229,
+        1229,
+        1229
+      ],
+      "result_sets": [
+        2,
+        2,
+        2
+      ],
+      "instrumented_request_ms": [
+        22.211503,
+        15.530518,
+        20.634367
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "anchor.projection": 1,
+        "graph.IsLocatedIn": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "is1",
+      "variant": "pruned",
+      "phase": "sp",
+      "profile_path": "results/is1/pruned-180324",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        33,
+        33,
+        33
+      ],
+      "response_wire_bytes": [
+        1581,
+        1581,
+        1581
+      ],
+      "command_wire_bytes": [
+        172,
+        172,
+        172
+      ],
+      "result_sets": [
+        3,
+        3,
+        3
+      ],
+      "instrumented_request_ms": [
+        12.137385,
+        12.257423,
+        12.407385
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "stored_procedure.call": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": {
+        "parent_inclusive_ms": [
+          0.752871,
+          1.079235,
+          0.82132
+        ],
+        "all_event_id_ranges_complete": true,
+        "control_events_observed": true,
+        "control_events_instrumented": true,
+        "instrumentation_scope": [
+          "all_statement_events"
+        ],
+        "business_count_matches_source": true,
+        "nested_event_counts": [
+          43,
+          43,
+          43
+        ],
+        "direct_child_categories": {
+          "business.anchor.projection": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.083876,
+              0.092083,
+              0.102421
+            ]
+          },
+          "business.graph.IsLocatedIn": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.554195,
+              0.842762,
+              0.587074
+            ]
+          },
+          "control.jump_if_not": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.0010700000000000002,
+              0.001459,
+              0.0018219999999999998
+            ]
+          },
+          "control.set": {
+            "counts": [
+              38,
+              38,
+              38
+            ],
+            "timer_ms": [
+              0.025167999999999996,
+              0.030729999999999997,
+              0.029103000000000004
+            ]
+          },
+          "return.replay_metadata": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.018534,
+              0.023835,
+              0.018718
+            ]
+          }
+        },
+        "actual_business_statement_or_cursor_counts": [
+          2,
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "query": "is2",
+      "variant": "conventional",
+      "phase": "baseline",
+      "profile_path": "results/is2/conventional-180640",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        21,
+        21,
+        21
+      ],
+      "response_wire_bytes": [
+        21543,
+        21543,
+        21543
+      ],
+      "command_wire_bytes": [
+        462,
+        462,
+        462
+      ],
+      "result_sets": [
+        1,
+        1,
+        1
+      ],
+      "instrumented_request_ms": [
+        11.268191,
+        10.828629,
+        10.953047
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "graph.ReplyOf": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "is2",
+      "variant": "conventional",
+      "phase": "sp",
+      "profile_path": "results/is2/conventional-180640",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        27,
+        27,
+        27
+      ],
+      "response_wire_bytes": [
+        21695,
+        21695,
+        21695
+      ],
+      "command_wire_bytes": [
+        175,
+        175,
+        175
+      ],
+      "result_sets": [
+        2,
+        2,
+        2
+      ],
+      "instrumented_request_ms": [
+        13.279538,
+        12.423659,
+        11.788266
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "stored_procedure.call": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": {
+        "parent_inclusive_ms": [
+          0.38028,
+          0.487143,
+          0.438875
+        ],
+        "all_event_id_ranges_complete": true,
+        "control_events_observed": true,
+        "control_events_instrumented": true,
+        "instrumentation_scope": [
+          "all_statement_events"
+        ],
+        "business_count_matches_source": true,
+        "nested_event_counts": [
+          10,
+          10,
+          10
+        ],
+        "direct_child_categories": {
+          "business.graph.ReplyOf": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.321718,
+              0.405319,
+              0.369203
+            ]
+          },
+          "control.jump_if_not": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.000655,
+              0.000755,
+              0.000804
+            ]
+          },
+          "control.set": {
+            "counts": [
+              7,
+              7,
+              7
+            ],
+            "timer_ms": [
+              0.006581,
+              0.009601,
+              0.0071140000000000005
+            ]
+          },
+          "return.replay_metadata": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.013352,
+              0.014104,
+              0.013433
+            ]
+          }
+        },
+        "actual_business_statement_or_cursor_counts": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "query": "is2",
+      "variant": "full",
+      "phase": "baseline",
+      "profile_path": "results/is2/full-180326",
+      "measured_requests": 3,
+      "actual_cycles": [
+        24,
+        24,
+        24
+      ],
+      "response_frames": [
+        254,
+        254,
+        254
+      ],
+      "response_wire_bytes": [
+        25217,
+        25217,
+        25217
+      ],
+      "command_wire_bytes": [
+        4760,
+        4760,
+        4760
+      ],
+      "result_sets": [
+        21,
+        21,
+        21
+      ],
+      "instrumented_request_ms": [
+        66.09979,
+        65.989648,
+        68.921929
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 15,
+        "anchor.projection": 1,
+        "identity.lookup": 2,
+        "message.topk": 1,
+        "graph.ReplyOf": 1,
+        "graph.HasCreator": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "is2",
+      "variant": "full",
+      "phase": "sp",
+      "profile_path": "results/is2/full-180326",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        333,
+        333,
+        333
+      ],
+      "response_wire_bytes": [
+        29801,
+        29801,
+        29801
+      ],
+      "command_wire_bytes": [
+        170,
+        170,
+        170
+      ],
+      "result_sets": [
+        22,
+        22,
+        22
+      ],
+      "instrumented_request_ms": [
+        22.415946,
+        24.531125,
+        22.806351
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "stored_procedure.call": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": {
+        "parent_inclusive_ms": [
+          2.362503,
+          2.423089,
+          2.469234
+        ],
+        "all_event_id_ranges_complete": true,
+        "control_events_observed": true,
+        "control_events_instrumented": true,
+        "instrumentation_scope": [
+          "all_statement_events"
+        ],
+        "business_count_matches_source": true,
+        "nested_event_counts": [
+          635,
+          635,
+          635
+        ],
+        "direct_child_categories": {
+          "business.cursor.anchor.projection": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.087266,
+              0.093362,
+              0.095562
+            ]
+          },
+          "business.cursor.graph.HasCreator": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.211045,
+              0.217145,
+              0.227429
+            ]
+          },
+          "business.cursor.graph.ReplyOf": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.052594,
+              0.061037,
+              0.052444
+            ]
+          },
+          "business.cursor.hydration.full_anchor": {
+            "counts": [
+              3,
+              3,
+              3
+            ],
+            "timer_ms": [
+              0.194104,
+              0.199899,
+              0.198762
+            ]
+          },
+          "business.cursor.message.topk": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.185303,
+              0.188724,
+              0.189298
+            ]
+          },
+          "business.hydration.full_anchor": {
+            "counts": [
+              12,
+              12,
+              12
+            ],
+            "timer_ms": [
+              0.464817,
+              0.4710829999999999,
+              0.49497399999999997
+            ]
+          },
+          "business.identity.lookup": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.11940400000000001,
+              0.11552199999999999,
+              0.12148500000000001
+            ]
+          },
+          "control.cclose": {
+            "counts": [
+              7,
+              7,
+              7
+            ],
+            "timer_ms": [
+              0.04805699999999999,
+              0.049146999999999996,
+              0.049602
+            ]
+          },
+          "control.cfetch": {
+            "counts": [
+              19,
+              19,
+              19
+            ],
+            "timer_ms": [
+              0.029269999999999997,
+              0.03206899999999999,
+              0.033414000000000006
+            ]
+          },
+          "control.cpop": {
+            "counts": [
+              7,
+              7,
+              7
+            ],
+            "timer_ms": [
+              0.000979,
+              0.001046,
+              0.0009910000000000001
+            ]
+          },
+          "control.cpush": {
+            "counts": [
+              7,
+              7,
+              7
+            ],
+            "timer_ms": [
+              0.00289,
+              0.002989,
+              0.002624
+            ]
+          },
+          "control.hpop": {
+            "counts": [
+              7,
+              7,
+              7
+            ],
+            "timer_ms": [
+              0.0008619999999999999,
+              0.0009,
+              0.0009680000000000001
+            ]
+          },
+          "control.hpush_jump": {
+            "counts": [
+              7,
+              7,
+              7
+            ],
+            "timer_ms": [
+              0.001538,
+              0.006914999999999999,
+              0.002088
+            ]
+          },
+          "control.jump": {
+            "counts": [
+              42,
+              42,
+              42
+            ],
+            "timer_ms": [
+              0.0017190000000000003,
+              0.0017790000000000002,
+              0.002009
+            ]
+          },
+          "control.jump_if_not": {
+            "counts": [
+              216,
+              216,
+              216
+            ],
+            "timer_ms": [
+              0.14047300000000001,
+              0.13138999999999998,
+              0.13927599999999996
+            ]
+          },
+          "control.set": {
+            "counts": [
+              294,
+              294,
+              294
+            ],
+            "timer_ms": [
+              0.1935820000000001,
+              0.20250300000000004,
+              0.21081099999999975
+            ]
+          },
+          "return.materialized_rows": {
+            "counts": [
+              7,
+              7,
+              7
+            ],
+            "timer_ms": [
+              0.13561099999999998,
+              0.137595,
+              0.135763
+            ]
+          },
+          "return.replay_metadata": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.028827,
+              0.030208,
+              0.030646
+            ]
+          }
+        },
+        "actual_business_statement_or_cursor_counts": [
+          21,
+          21,
+          21
+        ]
+      }
+    },
+    {
+      "query": "is2",
+      "variant": "pruned",
+      "phase": "baseline",
+      "profile_path": "results/is2/pruned-180330",
+      "measured_requests": 3,
+      "actual_cycles": [
+        7,
+        7,
+        7
+      ],
+      "response_frames": [
+        35,
+        35,
+        35
+      ],
+      "response_wire_bytes": [
+        8890,
+        8890,
+        8890
+      ],
+      "command_wire_bytes": [
+        1334,
+        1334,
+        1334
+      ],
+      "result_sets": [
+        4,
+        4,
+        4
+      ],
+      "instrumented_request_ms": [
+        20.110343,
+        19.614054,
+        18.873499
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "anchor.projection": 1,
+        "message.topk": 1,
+        "graph.ReplyOf": 1,
+        "graph.HasCreator": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "is2",
+      "variant": "pruned",
+      "phase": "sp",
+      "profile_path": "results/is2/pruned-180330",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        76,
+        76,
+        76
+      ],
+      "response_wire_bytes": [
+        11416,
+        11416,
+        11416
+      ],
+      "command_wire_bytes": [
+        172,
+        172,
+        172
+      ],
+      "result_sets": [
+        5,
+        5,
+        5
+      ],
+      "instrumented_request_ms": [
+        14.05146,
+        13.666288,
+        14.717085
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "stored_procedure.call": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": {
+        "parent_inclusive_ms": [
+          1.155111,
+          1.134264,
+          1.285851
+        ],
+        "all_event_id_ranges_complete": true,
+        "control_events_observed": true,
+        "control_events_instrumented": true,
+        "instrumentation_scope": [
+          "all_statement_events"
+        ],
+        "business_count_matches_source": true,
+        "nested_event_counts": [
+          293,
+          293,
+          293
+        ],
+        "direct_child_categories": {
+          "business.anchor.projection": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.096876,
+              0.100214,
+              0.130595
+            ]
+          },
+          "business.cursor.graph.ReplyOf": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.091053,
+              0.094314,
+              0.093163
+            ]
+          },
+          "business.cursor.message.topk": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.353657,
+              0.356639,
+              0.39542
+            ]
+          },
+          "business.graph.HasCreator": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.148569,
+              0.143184,
+              0.154956
+            ]
+          },
+          "control.cclose": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.022054999999999998,
+              0.018424,
+              0.019084999999999998
+            ]
+          },
+          "control.cfetch": {
+            "counts": [
+              12,
+              12,
+              12
+            ],
+            "timer_ms": [
+              0.023391,
+              0.019639000000000004,
+              0.021557000000000003
+            ]
+          },
+          "control.cpop": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.00030900000000000003,
+              0.000289,
+              0.000304
+            ]
+          },
+          "control.cpush": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.000997,
+              0.001057,
+              0.001306
+            ]
+          },
+          "control.hpop": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.000249,
+              0.00025,
+              0.00025
+            ]
+          },
+          "control.hpush_jump": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.00041799999999999997,
+              0.000355,
+              0.000427
+            ]
+          },
+          "control.jump": {
+            "counts": [
+              16,
+              16,
+              16
+            ],
+            "timer_ms": [
+              0.000693,
+              0.000683,
+              0.000656
+            ]
+          },
+          "control.jump_if_not": {
+            "counts": [
+              148,
+              148,
+              148
+            ],
+            "timer_ms": [
+              0.07628200000000003,
+              0.070371,
+              0.07243800000000002
+            ]
+          },
+          "control.set": {
+            "counts": [
+              100,
+              100,
+              100
+            ],
+            "timer_ms": [
+              0.065117,
+              0.060397,
+              0.08097
+            ]
+          },
+          "return.materialized_rows": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.051018,
+              0.050988,
+              0.06061
+            ]
+          },
+          "return.replay_metadata": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.017344,
+              0.015723,
+              0.016495
+            ]
+          }
+        },
+        "actual_business_statement_or_cursor_counts": [
+          4,
+          4,
+          4
+        ]
+      }
+    },
+    {
+      "query": "is3",
+      "variant": "conventional",
+      "phase": "baseline",
+      "profile_path": "results/is3/conventional-180642",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        18,
+        18,
+        18
+      ],
+      "response_wire_bytes": [
+        833,
+        833,
+        833
+      ],
+      "command_wire_bytes": [
+        734,
+        734,
+        734
+      ],
+      "result_sets": [
+        1,
+        1,
+        1
+      ],
+      "instrumented_request_ms": [
+        11.238185,
+        11.072246,
+        11.206108
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "graph.Knows": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "is3",
+      "variant": "conventional",
+      "phase": "sp",
+      "profile_path": "results/is3/conventional-180642",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        25,
+        25,
+        25
+      ],
+      "response_wire_bytes": [
+        1064,
+        1064,
+        1064
+      ],
+      "command_wire_bytes": [
+        175,
+        175,
+        175
+      ],
+      "result_sets": [
+        2,
+        2,
+        2
+      ],
+      "instrumented_request_ms": [
+        12.263689,
+        13.728105,
+        20.98111
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "stored_procedure.call": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": {
+        "parent_inclusive_ms": [
+          0.863347,
+          1.11125,
+          0.771694
+        ],
+        "all_event_id_ranges_complete": true,
+        "control_events_observed": true,
+        "control_events_instrumented": true,
+        "instrumentation_scope": [
+          "all_statement_events"
+        ],
+        "business_count_matches_source": true,
+        "nested_event_counts": [
+          12,
+          12,
+          12
+        ],
+        "direct_child_categories": {
+          "business.graph.Knows": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.795149,
+              1.01916,
+              0.701489
+            ]
+          },
+          "control.jump_if_not": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.000559,
+              0.000697,
+              0.000604
+            ]
+          },
+          "control.set": {
+            "counts": [
+              9,
+              9,
+              9
+            ],
+            "timer_ms": [
+              0.009261,
+              0.010354,
+              0.008898
+            ]
+          },
+          "return.replay_metadata": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.015953,
+              0.023338,
+              0.015039
+            ]
+          }
+        },
+        "actual_business_statement_or_cursor_counts": [
+          1,
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "query": "is3",
+      "variant": "full",
+      "phase": "baseline",
+      "profile_path": "results/is3/full-180332",
+      "measured_requests": 3,
+      "actual_cycles": [
+        12,
+        12,
+        12
+      ],
+      "response_frames": [
+        76,
+        76,
+        76
+      ],
+      "response_wire_bytes": [
+        10625,
+        10625,
+        10625
+      ],
+      "command_wire_bytes": [
+        4296,
+        4296,
+        4296
+      ],
+      "result_sets": [
+        9,
+        9,
+        9
+      ],
+      "instrumented_request_ms": [
+        37.412531,
+        32.724245,
+        33.042083
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 2,
+        "type_registry": 1,
+        "acl.root_permissions": 2,
+        "identity.lookup": 2,
+        "graph.Knows": 2,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "is3",
+      "variant": "full",
+      "phase": "sp",
+      "profile_path": "results/is3/full-180332",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        127,
+        127,
+        127
+      ],
+      "response_wire_bytes": [
+        12995,
+        12995,
+        12995
+      ],
+      "command_wire_bytes": [
+        170,
+        170,
+        170
+      ],
+      "result_sets": [
+        10,
+        10,
+        10
+      ],
+      "instrumented_request_ms": [
+        20.447839,
+        14.725111,
+        28.011338
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "stored_procedure.call": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": {
+        "parent_inclusive_ms": [
+          1.9853,
+          2.024783,
+          2.298824
+        ],
+        "all_event_id_ranges_complete": true,
+        "control_events_observed": true,
+        "control_events_instrumented": true,
+        "instrumentation_scope": [
+          "all_statement_events"
+        ],
+        "business_count_matches_source": true,
+        "nested_event_counts": [
+          173,
+          173,
+          173
+        ],
+        "direct_child_categories": {
+          "business.acl.root_permissions": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.247182,
+              0.247089,
+              0.280291
+            ]
+          },
+          "business.cursor.hydration.full_anchor": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.100875,
+              0.098711,
+              0.115806
+            ]
+          },
+          "business.graph.Knows": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              1.013967,
+              1.0553080000000001,
+              1.17032
+            ]
+          },
+          "business.hydration.full_anchor": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.086568,
+              0.075011,
+              0.092337
+            ]
+          },
+          "business.identity.lookup": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.109458,
+              0.12237599999999998,
+              0.127709
+            ]
+          },
+          "business.type_registry": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.041546,
+              0.04072,
+              0.047242
+            ]
+          },
+          "control.cclose": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.014945,
+              0.015198,
+              0.015584
+            ]
+          },
+          "control.cfetch": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.006815,
+              0.006379,
+              0.007562
+            ]
+          },
+          "control.cpop": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.000185,
+              0.000177,
+              0.00029
+            ]
+          },
+          "control.cpush": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.000377,
+              0.000247,
+              0.000457
+            ]
+          },
+          "control.hpop": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.000174,
+              0.000149,
+              0.000251
+            ]
+          },
+          "control.hpush_jump": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.000153,
+              0.000256,
+              0.000354
+            ]
+          },
+          "control.jump": {
+            "counts": [
+              4,
+              4,
+              4
+            ],
+            "timer_ms": [
+              0.00018800000000000002,
+              0.000156,
+              0.00023399999999999997
+            ]
+          },
+          "control.jump_if_not": {
+            "counts": [
+              16,
+              16,
+              16
+            ],
+            "timer_ms": [
+              0.015834,
+              0.014573000000000003,
+              0.019296
+            ]
+          },
+          "control.set": {
+            "counts": [
+              136,
+              136,
+              136
+            ],
+            "timer_ms": [
+              0.096076,
+              0.09599000000000003,
+              0.11294399999999996
+            ]
+          },
+          "return.materialized_rows": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.022299,
+              0.021616,
+              0.026112
+            ]
+          },
+          "return.replay_metadata": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.027918,
+              0.028716,
+              0.033687
+            ]
+          }
+        },
+        "actual_business_statement_or_cursor_counts": [
+          9,
+          9,
+          9
+        ]
+      }
+    },
+    {
+      "query": "is3",
+      "variant": "pruned",
+      "phase": "baseline",
+      "profile_path": "results/is3/pruned-180335",
+      "measured_requests": 3,
+      "actual_cycles": [
+        5,
+        5,
+        5
+      ],
+      "response_frames": [
+        23,
+        23,
+        23
+      ],
+      "response_wire_bytes": [
+        3656,
+        3656,
+        3656
+      ],
+      "command_wire_bytes": [
+        2123,
+        2123,
+        2123
+      ],
+      "result_sets": [
+        2,
+        2,
+        2
+      ],
+      "instrumented_request_ms": [
+        14.976461,
+        14.797956,
+        16.184212
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "graph.Knows": 2,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": null
+    },
+    {
+      "query": "is3",
+      "variant": "pruned",
+      "phase": "sp",
+      "profile_path": "results/is3/pruned-180335",
+      "measured_requests": 3,
+      "actual_cycles": [
+        4,
+        4,
+        4
+      ],
+      "response_frames": [
+        55,
+        55,
+        55
+      ],
+      "response_wire_bytes": [
+        5091,
+        5091,
+        5091
+      ],
+      "command_wire_bytes": [
+        172,
+        172,
+        172
+      ],
+      "result_sets": [
+        3,
+        3,
+        3
+      ],
+      "instrumented_request_ms": [
+        13.538382,
+        14.412607,
+        14.608443
+      ],
+      "wire_categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "stored_procedure.call": 1,
+        "transaction.commit": 1
+      },
+      "sequential_complete_delivery_verified": true,
+      "actual_output_hash_verified": true,
+      "P_S_CALL": {
+        "parent_inclusive_ms": [
+          1.493478,
+          1.601011,
+          1.522265
+        ],
+        "all_event_id_ranges_complete": true,
+        "control_events_observed": true,
+        "control_events_instrumented": true,
+        "instrumentation_scope": [
+          "all_statement_events"
+        ],
+        "business_count_matches_source": true,
+        "nested_event_counts": [
+          67,
+          67,
+          67
+        ],
+        "direct_child_categories": {
+          "business.graph.Knows": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              1.305359,
+              1.401945,
+              1.325352
+            ]
+          },
+          "control.jump_if_not": {
+            "counts": [
+              2,
+              2,
+              2
+            ],
+            "timer_ms": [
+              0.001377,
+              0.0015170000000000001,
+              0.001328
+            ]
+          },
+          "control.set": {
+            "counts": [
+              62,
+              62,
+              62
+            ],
+            "timer_ms": [
+              0.04575100000000001,
+              0.044509999999999994,
+              0.047272999999999996
+            ]
+          },
+          "return.replay_metadata": {
+            "counts": [
+              1,
+              1,
+              1
+            ],
+            "timer_ms": [
+              0.022885,
+              0.024731,
+              0.024829
+            ]
+          }
+        },
+        "actual_business_statement_or_cursor_counts": [
+          2,
+          2,
+          2
+        ]
+      }
+    }
+  ],
+  "preserved_failed_attempts": [
+    {
+      "path": "results/is1/full/run/process-result.json",
+      "returncode": 1,
+      "stop_reason": null
+    },
+    {
+      "path": "results/ic2/full-180337/run/process-result.json",
+      "returncode": 1,
+      "stop_reason": null
+    },
+    {
+      "path": "results/ic2/full-180631/run/process-result.json",
+      "returncode": 1,
+      "stop_reason": null
+    },
+    {
+      "path": "results/ic2/full-postquiet/run/process-result.json",
+      "returncode": 1,
+      "stop_reason": null
+    },
+    {
+      "path": "results/is1/conventional-180343/analysis.stderr",
+      "failure_stage": "protocol_or_P_S_analysis",
+      "details": "home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/mysql-profile/analyze.py\", line 45, in analyze\n    assert callidx<len(calls),(d,callidx,len(calls));parent=calls[callidx];callidx+=1;inside=[e for e in pfs if parent['event']<e['event']<=parent['end_event']];missing=sorted(set(range(parent['event']+1,parent['end_event']+1))-{e['event']for e in inside});direct=[e for e in inside if e['nest']==parent['event']];counts=collections.Counter(pfs_category(e)for e in direct);timers=collections.defaultdict(float)\n           ^^^^^^^^^^^^^^^^^^\nAssertionError: (PosixPath('/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/mysql-profile/results/is1/conventional-180343'), 1, 1)\n"
+    },
+    {
+      "path": "results/ic2/full-postquiet-selected/analysis.stderr",
+      "failure_stage": "protocol_or_P_S_analysis",
+      "details": "                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/mysql-profile/analyze.py\", line 47, in analyze\n    assert callidx<len(calls),(d,callidx,len(calls));parent=calls[callidx];callidx+=1;inside=[e for e in pfs if parent['event']<e['event']<=parent['end_event']];missing=sorted(set(range(parent['event']+1,parent['end_event']+1))-{e['event']for e in inside});direct=[e for e in inside if e['nest']==parent['event']];associations=[];overrides={}\n           ^^^^^^^^^^^^^^^^^^\nAssertionError: (PosixPath('/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/mysql-profile/results/ic2/full-postquiet-selected'), 10, 10)\n"
+    },
+    {
+      "path": "results/ic2/pruned-180340/analysis.stderr",
+      "failure_stage": "protocol_or_P_S_analysis",
+      "details": "ile \"/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/mysql-profile/analyze.py\", line 45, in analyze\n    assert callidx<len(calls),(d,callidx,len(calls));parent=calls[callidx];callidx+=1;inside=[e for e in pfs if parent['event']<e['event']<=parent['end_event']];missing=sorted(set(range(parent['event']+1,parent['end_event']+1))-{e['event']for e in inside});direct=[e for e in inside if e['nest']==parent['event']];counts=collections.Counter(pfs_category(e)for e in direct);timers=collections.defaultdict(float)\n           ^^^^^^^^^^^^^^^^^^\nAssertionError: (PosixPath('/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/mysql-profile/results/ic2/pruned-180340'), 0, 0)\n"
+    },
+    {
+      "path": "results/is3/conventional-180346/analysis.stderr",
+      "failure_stage": "protocol_or_P_S_analysis",
+      "details": "home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/mysql-profile/analyze.py\", line 45, in analyze\n    assert callidx<len(calls),(d,callidx,len(calls));parent=calls[callidx];callidx+=1;inside=[e for e in pfs if parent['event']<e['event']<=parent['end_event']];missing=sorted(set(range(parent['event']+1,parent['end_event']+1))-{e['event']for e in inside});direct=[e for e in inside if e['nest']==parent['event']];counts=collections.Counter(pfs_category(e)for e in direct);timers=collections.defaultdict(float)\n           ^^^^^^^^^^^^^^^^^^\nAssertionError: (PosixPath('/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/mysql-profile/results/is3/conventional-180346'), 0, 0)\n"
+    },
+    {
+      "path": "results/is2/conventional-180344/analysis.stderr",
+      "failure_stage": "protocol_or_P_S_analysis",
+      "details": "home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/mysql-profile/analyze.py\", line 45, in analyze\n    assert callidx<len(calls),(d,callidx,len(calls));parent=calls[callidx];callidx+=1;inside=[e for e in pfs if parent['event']<e['event']<=parent['end_event']];missing=sorted(set(range(parent['event']+1,parent['end_event']+1))-{e['event']for e in inside});direct=[e for e in inside if e['nest']==parent['event']];counts=collections.Counter(pfs_category(e)for e in direct);timers=collections.defaultdict(float)\n           ^^^^^^^^^^^^^^^^^^\nAssertionError: (PosixPath('/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/mysql-profile/results/is2/conventional-180344'), 1, 1)\n"
+    }
+  ],
+  "P_S_timing_scope": "Parent CALL duration is inclusive. Direct-child business reads, cursor opens, result materialization and control events are reported separately.",
+  "profile_delay_ms": 2
+}

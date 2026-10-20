@@ -1,0 +1,23 @@
+{
+  "argv": [
+    "/home/baichuan/jaseci/reproduction/webridge/boot-jdk8/bin/java",
+    "-Xmx8g",
+    "-Xss20m",
+    "-Dsnb.query=ic1",
+    "-Dsnb.url=jdbc:mysql://127.0.0.1:55337/jac_snb_six_20261020?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true",
+    "-Dintegration.dir=/home/baichuan/jaseci/reproduction/webridge/integration/cases/set-snb-ic1-20261020",
+    "-Dexecution.dir=/home/baichuan/jaseci/reproduction/webridge/integration/cases/set-snb-ic1-20261020/synth-20261020T220608859918Z",
+    "-Dalignment.dir=/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/runtime-data/ic1",
+    "-Daligned.source=/home/baichuan/jaseci/reproduction/webridge/integration/cases/set-snb-ic1-20261020/source/SnbSetSql.java",
+    "-Dintegration.scope=cold",
+    "-Dintegration.api=AlignedIc5_cold_57ff252224b7",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/integration/cases/set-snb-ic1-20261020/source/classes:/home/baichuan/jaseci/reproduction/webridge/integration/recorded-bind-types/classes:/home/baichuan/jaseci/reproduction/webridge/integration/json-type-compat/classes:/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/classes:/home/baichuan/jaseci/reproduction/webridge/integration/jdbc-string/combined:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+    "SetWeBridge",
+    "synth",
+    "/home/baichuan/jaseci/reproduction/webridge/integration/cases/set-snb-ic1-20261020/replay-20261020T220601248530Z/graph.json"
+  ],
+  "cpu_affinity": "9,19",
+  "utc": "20261020T220608861645Z",
+  "timeout_s": 300
+}

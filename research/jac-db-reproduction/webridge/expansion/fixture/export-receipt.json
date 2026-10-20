@@ -1,0 +1,148 @@
+{
+  "source_database": "jac_snb_bench_pg_fbdb3a2c",
+  "source_app_sha256": "60aa325001594bf900a8ebcfa24dd1d36fa0f00d0fd3fc9589a781f37f9a32a7",
+  "scope": "AllPerson+allKnows; complete authored messages for IS2 persons and IC2 friends; complete ReplyOf ancestor paths; IS1 location relations; endpoint and owner-root closure",
+  "steps": [
+    {
+      "name": "parameters",
+      "sql": "CREATE TEMP TABLE seed_people(id uuid, role text)",
+      "rows": -1,
+      "seconds": 0.002901532920077443
+    },
+    {
+      "name": "all_person",
+      "sql": "CREATE TEMP TABLE selected_ids(id uuid PRIMARY KEY)",
+      "rows": -1,
+      "seconds": 0.0008282880298793316
+    },
+    {
+      "name": "persons",
+      "sql": "INSERT INTO selected_ids SELECT id FROM anchors WHERE kind='NodeAnchor' AND arch_type='Person'",
+      "rows": 9932,
+      "seconds": 0.015473629115149379
+    },
+    {
+      "name": "all_knows",
+      "sql": "INSERT INTO selected_ids SELECT id FROM anchors WHERE kind='EdgeAnchor' AND arch_type='Knows' ON CONFLICT DO NOTHING",
+      "rows": 180665,
+      "seconds": 0.6212065478321165
+    },
+    {
+      "name": "authors",
+      "sql": "CREATE TEMP TABLE authors AS SELECT id FROM seed_people WHERE role='is2' UNION SELECT CASE WHEN e.src=p.id THEN e.dst ELSE e.src END FROM seed_people p JOIN anchors e ON e.kind='EdgeAnchor' AND e.arch_type='Knows' AND(e.src=p.id OR e.dst=p.id) WHERE p.role='ic2'",
+      "rows": 188,
+      "seconds": 0.012755703879520297
+    },
+    {
+      "name": "author_index",
+      "sql": "CREATE UNIQUE INDEX ON authors(id)",
+      "rows": -1,
+      "seconds": 0.00034835701808333397
+    },
+    {
+      "name": "messages",
+      "sql": "CREATE TEMP TABLE messages AS SELECT DISTINCT e.src AS id FROM authors a JOIN anchors e ON e.dst=a.id AND e.kind='EdgeAnchor' AND e.arch_type='HasCreator' JOIN anchors m ON m.id=e.src AND m.kind='NodeAnchor' AND m.arch_type IN('Post','Comment')",
+      "rows": 284200,
+      "seconds": 9.576474957168102
+    },
+    {
+      "name": "msg_index",
+      "sql": "CREATE UNIQUE INDEX ON messages(id)",
+      "rows": -1,
+      "seconds": 0.05301689309999347
+    },
+    {
+      "name": "reply_chain",
+      "sql": "CREATE TEMP TABLE reply_nodes AS WITH RECURSIVE chain(id) AS(SELECT id FROM messages UNION SELECT e.dst FROM chain c JOIN anchors e ON e.src=c.id AND e.kind='EdgeAnchor' AND e.arch_type='ReplyOf') SELECT id FROM chain",
+      "rows": 474074,
+      "seconds": 21.99715742794797
+    },
+    {
+      "name": "reply_index",
+      "sql": "CREATE UNIQUE INDEX ON reply_nodes(id)",
+      "rows": -1,
+      "seconds": 0.1318773168604821
+    },
+    {
+      "name": "reply_nodes_insert",
+      "sql": "INSERT INTO selected_ids SELECT id FROM reply_nodes ON CONFLICT DO NOTHING",
+      "rows": 474074,
+      "seconds": 1.9733868569601327
+    },
+    {
+      "name": "reply_edges",
+      "sql": "INSERT INTO selected_ids SELECT e.id FROM reply_nodes n JOIN anchors e ON e.src=n.id AND e.kind='EdgeAnchor' AND e.arch_type IN('HasCreator','ReplyOf') ON CONFLICT DO NOTHING",
+      "rows": 811097,
+      "seconds": 9.786961524980143
+    },
+    {
+      "name": "locations",
+      "sql": "INSERT INTO selected_ids SELECT e.id FROM seed_people p JOIN anchors e ON e.src=p.id AND e.kind='EdgeAnchor' AND e.arch_type='IsLocatedIn' ON CONFLICT DO NOTHING",
+      "rows": 38,
+      "seconds": 0.006150443106889725
+    },
+    {
+      "name": "endpoints",
+      "sql": "INSERT INTO selected_ids SELECT a.src FROM anchors a JOIN selected_ids s ON s.id=a.id WHERE a.src IS NOT NULL UNION SELECT a.dst FROM anchors a JOIN selected_ids s ON s.id=a.id WHERE a.dst IS NOT NULL ON CONFLICT DO NOTHING",
+      "rows": 36,
+      "seconds": 10.273010076023638
+    }
+  ],
+  "types": [
+    [
+      "EdgeAnchor",
+      "HasCreator",
+      474074
+    ],
+    [
+      "EdgeAnchor",
+      "IsLocatedIn",
+      38
+    ],
+    [
+      "EdgeAnchor",
+      "Knows",
+      180665
+    ],
+    [
+      "EdgeAnchor",
+      "ReplyOf",
+      337023
+    ],
+    [
+      "NodeAnchor",
+      "Comment",
+      337023
+    ],
+    [
+      "NodeAnchor",
+      "Person",
+      9932
+    ],
+    [
+      "NodeAnchor",
+      "Place",
+      36
+    ],
+    [
+      "NodeAnchor",
+      "Post",
+      137051
+    ],
+    [
+      "NodeAnchor",
+      "Root",
+      1
+    ]
+  ],
+  "anchors": {
+    "bytes": 958582648,
+    "rows": 1475843,
+    "sha256": "8fa10d558c9dc15368f464db4207e3b43492fba7942be69b71e863dc0ea128d7"
+  },
+  "graph_types": {
+    "bytes": 216,
+    "rows": 13,
+    "sha256": "dbc6732e6803f031e3adb3aaeb2b3967b534e0512a63d3e287ed1f10881820df"
+  }
+}

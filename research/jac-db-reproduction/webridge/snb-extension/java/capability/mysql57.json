@@ -1,0 +1,56 @@
+[
+  {
+    "name": "version",
+    "sql": "SELECT VERSION()",
+    "command": [
+      "docker",
+      "exec",
+      "jac-webridge-mysql57",
+      "mysql",
+      "-N",
+      "-uroot",
+      "-e",
+      "SELECT VERSION()"
+    ],
+    "utc": "2026-10-20T21:34:27.139907+00:00",
+    "returncode": 0,
+    "stdout": "5.7.44\n",
+    "stderr": ""
+  },
+  {
+    "name": "recursive-cte",
+    "sql": "WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM x WHERE n<2) SELECT * FROM x",
+    "command": [
+      "docker",
+      "exec",
+      "jac-webridge-mysql57",
+      "mysql",
+      "-N",
+      "-uroot",
+      "-e",
+      "WITH RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM x WHERE n<2) SELECT * FROM x"
+    ],
+    "utc": "2026-10-20T21:34:27.193715+00:00",
+    "returncode": 1,
+    "stdout": "",
+    "stderr": "ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'RECURSIVE x(n) AS (SELECT 1 UNION ALL SELECT n+1 FROM x WHERE n<2) SELECT * FROM' at line 1\n"
+  },
+  {
+    "name": "lateral",
+    "sql": "SELECT t.n,u.m FROM (SELECT 1 AS n) t CROSS JOIN LATERAL (SELECT t.n AS m) u",
+    "command": [
+      "docker",
+      "exec",
+      "jac-webridge-mysql57",
+      "mysql",
+      "-N",
+      "-uroot",
+      "-e",
+      "SELECT t.n,u.m FROM (SELECT 1 AS n) t CROSS JOIN LATERAL (SELECT t.n AS m) u"
+    ],
+    "utc": "2026-10-20T21:34:27.229136+00:00",
+    "returncode": 1,
+    "stdout": "",
+    "stderr": "ERROR 1064 (42000) at line 1: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(SELECT t.n AS m) u' at line 1\n"
+  }
+]

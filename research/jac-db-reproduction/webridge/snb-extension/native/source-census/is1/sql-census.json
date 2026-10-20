@@ -1,0 +1,245 @@
+{
+  "profiles": [
+    {
+      "query": "is1",
+      "request_tag": "request-is1-0",
+      "sql_count": 7,
+      "frontend_types": {
+        "B": 7,
+        "D": 7,
+        "E": 7,
+        "S": 7
+      },
+      "backend_ready": 7,
+      "backend_pids": [
+        2593627
+      ],
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 3,
+        "traversal.generic": 1,
+        "transaction.commit": 1
+      },
+      "operations": [
+        {
+          "pid": 2593627,
+          "execute_ms": 0.011,
+          "statement": "_pg3_1",
+          "sql": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+          "sequence": 1,
+          "category": "transaction.begin"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.006,
+          "statement": "_pg3_2",
+          "sql": "SET LOCAL lock_timeout = '10s'",
+          "sequence": 2,
+          "category": "transaction.setting"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.024,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 3,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.02,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 4,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.124,
+          "statement": "_pg3_3",
+          "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)) ORDER BY f0.ord, e1.seq, e1.id",
+          "sequence": 5,
+          "category": "traversal.generic"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.018,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 6,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.013,
+          "statement": "_pg3_4",
+          "sql": "COMMIT",
+          "sequence": 7,
+          "category": "transaction.commit"
+        }
+      ]
+    },
+    {
+      "query": "is1",
+      "request_tag": "request-is1-1",
+      "sql_count": 7,
+      "frontend_types": {
+        "B": 7,
+        "D": 7,
+        "E": 7,
+        "S": 7
+      },
+      "backend_ready": 7,
+      "backend_pids": [
+        2593627
+      ],
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 3,
+        "traversal.generic": 1,
+        "transaction.commit": 1
+      },
+      "operations": [
+        {
+          "pid": 2593627,
+          "execute_ms": 0.01,
+          "statement": "_pg3_1",
+          "sql": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+          "sequence": 1,
+          "category": "transaction.begin"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.005,
+          "statement": "_pg3_2",
+          "sql": "SET LOCAL lock_timeout = '10s'",
+          "sequence": 2,
+          "category": "transaction.setting"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.023,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 3,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.017,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 4,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.139,
+          "statement": "_pg3_3",
+          "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)) ORDER BY f0.ord, e1.seq, e1.id",
+          "sequence": 5,
+          "category": "traversal.generic"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.014,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 6,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.01,
+          "statement": "_pg3_4",
+          "sql": "COMMIT",
+          "sequence": 7,
+          "category": "transaction.commit"
+        }
+      ]
+    },
+    {
+      "query": "is1",
+      "request_tag": "request-is1-2",
+      "sql_count": 7,
+      "frontend_types": {
+        "B": 7,
+        "D": 7,
+        "E": 7,
+        "S": 7
+      },
+      "backend_ready": 7,
+      "backend_pids": [
+        2593627
+      ],
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 3,
+        "traversal.generic": 1,
+        "transaction.commit": 1
+      },
+      "operations": [
+        {
+          "pid": 2593627,
+          "execute_ms": 0.014,
+          "statement": "_pg3_1",
+          "sql": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+          "sequence": 1,
+          "category": "transaction.begin"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.008,
+          "statement": "_pg3_2",
+          "sql": "SET LOCAL lock_timeout = '10s'",
+          "sequence": 2,
+          "category": "transaction.setting"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.03,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 3,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.026,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 4,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.124,
+          "statement": "_pg3_3",
+          "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)) ORDER BY f0.ord, e1.seq, e1.id",
+          "sequence": 5,
+          "category": "traversal.generic"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.014,
+          "statement": "_pg3_0",
+          "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+          "sequence": 6,
+          "category": "hydration.full_anchor"
+        },
+        {
+          "pid": 2593627,
+          "execute_ms": 0.015,
+          "statement": "_pg3_4",
+          "sql": "COMMIT",
+          "sequence": 7,
+          "category": "transaction.commit"
+        }
+      ]
+    }
+  ],
+  "all_outputs_historical_hash_match": true
+}

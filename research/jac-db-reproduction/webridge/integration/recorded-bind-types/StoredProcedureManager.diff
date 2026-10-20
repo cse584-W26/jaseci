@@ -1,0 +1,13 @@
+--- /home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/src/webridge/wbridge/storedprocedure/StoredProcedureManager.java
++++ webridge/wbridge/storedprocedure/StoredProcedureManager.java
+@@ -783,6 +783,10 @@
+       SymbolicSQLTemplate symbolicSQLTemplate;
+       if (!isTxnControl) {
+         final SQLAstVisitor visitor = new SQLAstVisitor(SQLUtils.formatMySql(concreteSQL));
++        java.util.List<String> recordedJavaTypes = new java.util.ArrayList<>();
++        for(int parameterIndex=0;parameterIndex<parameterExprsJSON.size();parameterIndex++)
++          recordedJavaTypes.add(parameterExprsJSON.getJSONObject(parameterIndex).getString("_java_type"));
++        visitor.setRecordedParameterJavaTypes(recordedJavaTypes);
+         SqlVisitorUtils.populateVisitorWithSchemaInfo(visitor, SPConfig.getConfig().getString(
+                 Constants.SCHEMA_DEF_FILE_KEY, DEFAULT_SCHEMA_PATH
+         ));

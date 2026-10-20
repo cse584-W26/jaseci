@@ -1,0 +1,11 @@
+# Remaining-six SNB query-complete fixture
+
+`export.py` exports a union closure for the original first 20 substitution inputs of IS1, IS2, IS3, IC1, IC2 and IC13. The declared source is the original native PostgreSQL graph `jac_snb_bench_pg_fbdb3a2c`. The source transaction creates connection-local temporary tables; source graph records remain unchanged.
+
+The closure contains every Person and Knows edge, preserving every bounded BFS path for IC1 and IC13. It also contains every Post/Comment authored by an IS2 input person or an IC2 input person's direct friend, all ReplyOf ancestors, each retained message/ancestor's HasCreator edges, IS1 IsLocatedIn edges, all edge endpoints and transitive owner roots. Original UUIDs, sequence and JSON properties are retained. The six-query fixture is separate from the previous IC5 fixture.
+
+The pinned export is 1,475,843 anchors, 958,582,648 bytes; SHA256 is 8fa10d558c9dc15368f464db4207e3b43492fba7942be69b71e863dc0ea128d7. Exact original parameters and type/step counts are in `export-receipt.json` and `data/parameters.json`. All20 canonical expected hashes per query are declared in `../../snb-extension/inputs-all 20.json`; query gates establish output equivalence rather than treating missing relations as empty answers.
+
+`load_pg.py` builds `jac_webridge_matched_six_20261020` from the frozen source DDL and authentication metadata used by the earlier matched fixture, with derived tables initially empty. Column 11 of the export is original physical xmin; it is omitted from the 13 logical business fields. Sorted PostgreSQL COPY hashes, endpoint/root checks and ANALYZE are recorded in `pg-load-receipt.json`. Runtime-specific derived mirrors are provisioned separately after baseline capture.
+
+`load_mysql.py` creates only `jac_snb_six_20261020` in the dedicated MySQL5.7 fixture container. LOAD DATA converts PostgreSQL boolean t/f explicitly, preserves UTF8, verifies JSON and endpoint/root integrity, analyzes the target and removes only temporary container copies. `VerifyMysql.java` streams the ordered source export and target SELECT to compare every one of the 13 business fields for every row; its receipt records identical canonical field hashes.

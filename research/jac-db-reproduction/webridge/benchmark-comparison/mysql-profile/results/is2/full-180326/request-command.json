@@ -1,0 +1,20 @@
+[
+  "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/java",
+  "-Xmx8g",
+  "-Dorg.slf4j.simpleLogger.defaultLogLevel=error",
+  "-Dexperiment.inputs=/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/snapshots/cec57f08b684814ccccbdade38f3f6d9875395e28464dc3431dc1845dc27fb61/inputs.json",
+  "-Dexperiment.mysql.url=jdbc:mysql://127.0.0.1:18547/jac_snb_six_20261020?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true",
+  "-Dexperiment.variant=full",
+  "-Dexperiment.delay.ms=2",
+  "-Dalignment.dir=/home/baichuan/jaseci/reproduction/webridge/alignment",
+  "-Dintegration.dir=/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is2-full-cec57f08b684-original",
+  "-Dexecution.dir=/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/mysql-profile/results/is2/full-180326/run",
+  "-Dintegration.api=Snb_is2_full_cff8039ca4",
+  "-cp",
+  "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/timer-overlay/9dc3a26b28b396edeadb912755b9fe8a015aad5595e6b0adb063dbb4cc05710a/classes:/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/frontend/6743cd0870ee82bb1a63ed41695afa6427cae1409e334566bea20e70849ebd72/classes:/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/snapshots/cec57f08b684814ccccbdade38f3f6d9875395e28464dc3431dc1845dc27fb61/classes:/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/classes:/home/baichuan/jaseci/reproduction/webridge/integration/jdbc-string/combined:/home/baichuan/jaseci/reproduction/webridge/integration/sql-frontend/classes:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+  "SnbTiming",
+  "/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/mysql-profile/results/is2/full-180326/run/requests/rows.jsonl",
+  "10",
+  "3",
+  "baseline,sp"
+]

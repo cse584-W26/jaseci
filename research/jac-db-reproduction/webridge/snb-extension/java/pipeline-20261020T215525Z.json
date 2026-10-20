@@ -1,0 +1,86 @@
+[
+  {
+    "query": "is3",
+    "variant": "full",
+    "attempt": "named-case-projections",
+    "stages": [
+      {
+        "stage": "record",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "record",
+          "--query",
+          "is3",
+          "--variant",
+          "full",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is3.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "named-case-projections"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-d56401fa26ab-named-case-projections/record-20261020T215525187251Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-d56401fa26ab-named-case-projections/record-20261020T215525187251Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-d56401fa26ab-named-case-projections/record-20261020T215525187251Z"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "replay",
+          "--query",
+          "is3",
+          "--variant",
+          "full",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is3.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "named-case-projections"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-d56401fa26ab-named-case-projections/replay-20261020T215526000829Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-d56401fa26ab-named-case-projections/replay-20261020T215526000829Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-d56401fa26ab-named-case-projections/replay-20261020T215526000829Z"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "synth",
+          "--query",
+          "is3",
+          "--variant",
+          "full",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is3.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "named-case-projections",
+          "--graph",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-d56401fa26ab-named-case-projections/replay-20261020T215526000829Z/graph.json"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-d56401fa26ab-named-case-projections/synth-20261020T215528516853Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-d56401fa26ab-named-case-projections/synth-20261020T215528516853Z"
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-d56401fa26ab-named-case-projections",
+    "status": "failed",
+    "failed_stage": "synth"
+  }
+]

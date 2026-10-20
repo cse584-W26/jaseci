@@ -1,0 +1,86 @@
+[
+  {
+    "query": "is3",
+    "variant": "full",
+    "attempt": "json-path-argument-metadata",
+    "stages": [
+      {
+        "stage": "record",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "record",
+          "--query",
+          "is3",
+          "--variant",
+          "full",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is3.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "json-path-argument-metadata"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-f40584288c3e-json-path-argument-metadata/record-20261020T215804222752Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-f40584288c3e-json-path-argument-metadata/record-20261020T215804222752Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-f40584288c3e-json-path-argument-metadata/record-20261020T215804222752Z"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "replay",
+          "--query",
+          "is3",
+          "--variant",
+          "full",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is3.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "json-path-argument-metadata"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-f40584288c3e-json-path-argument-metadata/replay-20261020T215805017774Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-f40584288c3e-json-path-argument-metadata/replay-20261020T215805017774Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-f40584288c3e-json-path-argument-metadata/replay-20261020T215805017774Z"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "synth",
+          "--query",
+          "is3",
+          "--variant",
+          "full",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is3.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "json-path-argument-metadata",
+          "--graph",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-f40584288c3e-json-path-argument-metadata/replay-20261020T215805017774Z/graph.json"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-f40584288c3e-json-path-argument-metadata/synth-20261020T215807619065Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-f40584288c3e-json-path-argument-metadata/synth-20261020T215807619065Z"
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-f40584288c3e-json-path-argument-metadata",
+    "status": "failed",
+    "failed_stage": "synth"
+  }
+]

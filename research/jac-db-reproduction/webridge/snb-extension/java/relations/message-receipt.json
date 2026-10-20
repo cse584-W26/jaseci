@@ -1,0 +1,73 @@
+{
+  "utc": "2026-10-20T21:43:46.743709+00:00",
+  "calls": [
+    {
+      "sql": "CREATE TABLE IF NOT EXISTS jac_snb_message_mirror(id CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,arch_type VARCHAR(20) NOT NULL,props LONGTEXT CHARACTER SET utf8mb4 NOT NULL,creator_id CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,creation_date BIGINT,tie_id BIGINT,parent_id CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,root_of_replyof CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,PRIMARY KEY(id),KEY creator_topk(creator_id,arch_type,creation_date,tie_id)) ENGINE=InnoDB;\nINSERT IGNORE INTO jac_snb_message_mirror SELECT n.id,n.arch_type,n.props,hc.dst,CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props,'$.archetype.creationDate')) AS SIGNED),CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props,IF(n.arch_type='Post','$.archetype.post_id','$.archetype.comment_id'))) AS SIGNED),NULL,IF(n.arch_type='Post',n.id,NULL) FROM anchors n LEFT JOIN anchors hc ON hc.src=n.id AND hc.kind='EdgeAnchor' AND hc.arch_type='HasCreator' WHERE n.kind='NodeAnchor' AND n.arch_type IN('Post','Comment');\nUPDATE jac_snb_message_mirror m JOIN anchors e ON e.src=m.id AND e.kind='EdgeAnchor' AND e.arch_type='ReplyOf' SET m.parent_id=e.dst WHERE m.arch_type='Comment';\nSELECT 'creator_cardinality_violations',COUNT(*) FROM (SELECT hc.src FROM anchors hc WHERE hc.kind='EdgeAnchor' AND hc.arch_type='HasCreator' GROUP BY hc.src HAVING COUNT(*)>1) v;\nSELECT 'reply_cardinality_violations',COUNT(*) FROM (SELECT e.src FROM anchors e WHERE e.kind='EdgeAnchor' AND e.arch_type='ReplyOf' GROUP BY e.src HAVING COUNT(*)>1) v;\n",
+      "returncode": 0,
+      "stdout": "creator_cardinality_violations\t0\nreply_cardinality_violations\t0\n",
+      "stderr": ""
+    },
+    {
+      "sql": "UPDATE jac_snb_message_mirror c JOIN jac_snb_message_mirror p ON p.id=c.parent_id SET c.root_of_replyof=p.root_of_replyof WHERE c.root_of_replyof IS NULL AND p.root_of_replyof IS NOT NULL; SELECT ROW_COUNT();",
+      "returncode": 0,
+      "stdout": "183420\n",
+      "stderr": ""
+    },
+    {
+      "sql": "UPDATE jac_snb_message_mirror c JOIN jac_snb_message_mirror p ON p.id=c.parent_id SET c.root_of_replyof=p.root_of_replyof WHERE c.root_of_replyof IS NULL AND p.root_of_replyof IS NOT NULL; SELECT ROW_COUNT();",
+      "returncode": 0,
+      "stdout": "106373\n",
+      "stderr": ""
+    },
+    {
+      "sql": "UPDATE jac_snb_message_mirror c JOIN jac_snb_message_mirror p ON p.id=c.parent_id SET c.root_of_replyof=p.root_of_replyof WHERE c.root_of_replyof IS NULL AND p.root_of_replyof IS NOT NULL; SELECT ROW_COUNT();",
+      "returncode": 0,
+      "stdout": "37243\n",
+      "stderr": ""
+    },
+    {
+      "sql": "UPDATE jac_snb_message_mirror c JOIN jac_snb_message_mirror p ON p.id=c.parent_id SET c.root_of_replyof=p.root_of_replyof WHERE c.root_of_replyof IS NULL AND p.root_of_replyof IS NOT NULL; SELECT ROW_COUNT();",
+      "returncode": 0,
+      "stdout": "8485\n",
+      "stderr": ""
+    },
+    {
+      "sql": "UPDATE jac_snb_message_mirror c JOIN jac_snb_message_mirror p ON p.id=c.parent_id SET c.root_of_replyof=p.root_of_replyof WHERE c.root_of_replyof IS NULL AND p.root_of_replyof IS NOT NULL; SELECT ROW_COUNT();",
+      "returncode": 0,
+      "stdout": "1337\n",
+      "stderr": ""
+    },
+    {
+      "sql": "UPDATE jac_snb_message_mirror c JOIN jac_snb_message_mirror p ON p.id=c.parent_id SET c.root_of_replyof=p.root_of_replyof WHERE c.root_of_replyof IS NULL AND p.root_of_replyof IS NOT NULL; SELECT ROW_COUNT();",
+      "returncode": 0,
+      "stdout": "150\n",
+      "stderr": ""
+    },
+    {
+      "sql": "UPDATE jac_snb_message_mirror c JOIN jac_snb_message_mirror p ON p.id=c.parent_id SET c.root_of_replyof=p.root_of_replyof WHERE c.root_of_replyof IS NULL AND p.root_of_replyof IS NOT NULL; SELECT ROW_COUNT();",
+      "returncode": 0,
+      "stdout": "14\n",
+      "stderr": ""
+    },
+    {
+      "sql": "UPDATE jac_snb_message_mirror c JOIN jac_snb_message_mirror p ON p.id=c.parent_id SET c.root_of_replyof=p.root_of_replyof WHERE c.root_of_replyof IS NULL AND p.root_of_replyof IS NOT NULL; SELECT ROW_COUNT();",
+      "returncode": 0,
+      "stdout": "1\n",
+      "stderr": ""
+    },
+    {
+      "sql": "UPDATE jac_snb_message_mirror c JOIN jac_snb_message_mirror p ON p.id=c.parent_id SET c.root_of_replyof=p.root_of_replyof WHERE c.root_of_replyof IS NULL AND p.root_of_replyof IS NOT NULL; SELECT ROW_COUNT();",
+      "returncode": 0,
+      "stdout": "0\n",
+      "stderr": ""
+    },
+    {
+      "sql": "ANALYZE TABLE jac_snb_message_mirror; SELECT arch_type,COUNT(*),SUM(root_of_replyof IS NOT NULL),SUM(creator_id IS NOT NULL) FROM jac_snb_message_mirror GROUP BY arch_type;",
+      "returncode": 0,
+      "stdout": "jac_snb_six_20261020.jac_snb_message_mirror\tanalyze\tstatus\tOK\nComment\t337023\t337023\t337023\nPost\t137051\t137051\t137051\n",
+      "stderr": ""
+    }
+  ],
+  "read_only_fixture_equivalent": "Stored endpoint and reply-root columns; build excluded from request timing",
+  "canonical_data_retained": true
+}

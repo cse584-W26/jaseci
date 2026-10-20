@@ -1,0 +1,19 @@
+[
+  "/usr/bin/time",
+  "-v",
+  "-o",
+  "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/gates-20261020T215214582065Z/ic2/full/resource-usage.txt",
+  "taskset",
+  "-c",
+  "9,19",
+  "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/java",
+  "-Xmx2g",
+  "-Dsnb.warmup=true",
+  "-Dalignment.dir=/home/baichuan/jaseci/reproduction/webridge/alignment",
+  "-Dexperiment.mysql.url=jdbc:mysql://127.0.0.1:55337/jac_snb_six_20261020?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true",
+  "-cp",
+  "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/classes:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+  "SnbAccess",
+  "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/ic2.json",
+  "1"
+]

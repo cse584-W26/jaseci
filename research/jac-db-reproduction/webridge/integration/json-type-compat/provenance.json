@@ -1,0 +1,12 @@
+{
+  "source": "webridge/SourceCode/webridge-common/basic-components/src/main/java/webridge/wbridge/storedprocedure/transformation/TypeConverter.java",
+  "source_sha256": "9a9e2cc61495c44af09115929da6de5e51b92cf1e7c26cfaa68f3ee00009692e",
+  "overlay_sha256": "2729e15bf9b4704f31988d455f054d9cea7de1189ed03589b106d7f086bfef75",
+  "reason": "Actual IS2 synthesis failed on native JSON column; JDBC reference consumes JSON text, map to existing longtext category to preserve full payload width",
+  "algorithm_unchanged": true,
+  "additional_mapping": {
+    "source": "SQLVarType.of",
+    "JSON": "existing LONGTEXT enum",
+    "reason": "second actual synthesis failure not expected type: JSON after TypeConverter repair"
+  }
+}

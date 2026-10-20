@@ -1,0 +1,14 @@
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:0 -> 0
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:175 -> 175
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:478 -> 478
+java.lang.IllegalArgumentException: Cannot infer SQL expression type: JSON_TYPE(JSON_EXTRACT(a.props, CONCAT('$.access.roots.anchors."', ?, '"')))
+	at webridge.wbridge.sql.ast.SQLAstVisitor.expressionType(SQLAstVisitor.java:587)
+	at webridge.wbridge.sql.ast.SQLAstVisitor.parameterType(SQLAstVisitor.java:613)
+	at webridge.wbridge.sql.ast.SQLAstVisitor.endVisit(SQLAstVisitor.java:488)
+	at com.alibaba.druid.sql.ast.statement.SQLSelectStatement.accept0(SQLSelectStatement.java:67)
+	at com.alibaba.druid.sql.ast.SQLObjectImpl.accept(SQLObjectImpl.java:40)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.parseFromRecordedJSON(StoredProcedureManager.java:789)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.generateStoredProcedure(StoredProcedureManager.java:930)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.run(StoredProcedureManager.java:921)
+	at SnbWeBridge.execute(SnbWeBridge.java:26)
+	at SnbWeBridge.main(SnbWeBridge.java:58)

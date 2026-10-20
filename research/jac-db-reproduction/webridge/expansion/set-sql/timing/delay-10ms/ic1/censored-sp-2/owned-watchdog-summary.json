@@ -1,0 +1,44 @@
+{
+  "timed_out": true,
+  "limit_s": 15,
+  "timeout_receipt": {
+    "wall_ns": 1792535275898550498,
+    "reason": "active request exceeded measured wall-time limit",
+    "connection_id": 1437,
+    "request_marker": {
+      "phase": "sp",
+      "iteration": 0,
+      "start_wall_ms": 1792535260760,
+      "watchdog_elapsed_s": 15.09173291015625
+    },
+    "verified_process": {
+      "db": "jac_snb_six_20261020",
+      "id": 1437,
+      "info": "call AlignedIc5_cold_1386750b2fe3_sp_1_ver0('Chau', '7856cd3b-3a91-5cd0-8cda-63a0a04e4afb')",
+      "time": 15,
+      "state": "System lock",
+      "command": "Query"
+    },
+    "action": "KILL CONNECTION 1437",
+    "returncode": 0,
+    "stderr": ""
+  },
+  "command_error": "Traceback (most recent call last):\n  File \"/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/owned_watchdog.py\", line 46, in run\n    try:future.result()\n        ^^^^^^^^^^^^^^^\n  File \"/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/concurrent/futures/_base.py\", line 456, in result\n    return self.__get_result()\n           ^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/concurrent/futures/_base.py\", line 401, in __get_result\n    raise self._exception\n  File \"/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/concurrent/futures/thread.py\", line 59, in run\n    result = self.fn(*self.args, **self.kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/webridge/integration/control.py\", line 113, in command\n    if rc:raise SystemExit(rc)\n          ^^^^^^^^^^^^^^^^^^^^\nSystemExit: 1\n",
+  "final_database_cleanup": {
+    "wall_ns": 1792535276120414215,
+    "reason": "owned JDBC process ended; final server-session cleanup",
+    "connection_id": 1437,
+    "request_marker": {},
+    "verified_process": {
+      "db": "jac_snb_six_20261020",
+      "id": 1437,
+      "info": "call AlignedIc5_cold_1386750b2fe3_sp_1_ver0('Chau', '7856cd3b-3a91-5cd0-8cda-63a0a04e4afb')",
+      "time": 16,
+      "state": "System lock",
+      "command": "Killed"
+    },
+    "action": "KILL CONNECTION 1437",
+    "returncode": 0,
+    "stderr": ""
+  }
+}

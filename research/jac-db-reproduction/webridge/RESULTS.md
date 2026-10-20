@@ -1,3 +1,7 @@
+# Seven-query comparison
+
+The [integrated English PDF](benchmark-comparison/jac-webridge-snb-comparison.pdf), [six-query extension report](benchmark-comparison/REPORT.md) and [machine-readable matrix](benchmark-comparison/results.json) cover the colleague's seven SNB queries across the eight configurations. The following sections retain the IC5 cohorts and original-paper reproduction.
+
 # WeBridge reproduction and Jac baseline alignment
 
 ## Complete eight-configuration comparison and measured SQL combination
@@ -20,7 +24,7 @@ A new Java baseline expresses IC5 using one set-oriented SQL query. It passes al
 | WeBridge pruned | 25.62 | 33.70 | 69.23 | 4 |
 | Java set-oriented SQL | 9.57 | 18.63 | 56.89 | 4 |
 
-Times are medians in milliseconds. All settings use the same proxy path; actual persistent SELECT1 RTT is calibrated separately for each database. Jac uses PostgreSQL and its runtime-derived structures; Java/WeBridge uses MySQL. See [the full latency report](latency-comparison/REPORT.md), [verified data](latency-comparison/comparison.json) and [PDF chart](latency-comparison/comparison.pdf).
+Times are medians in milliseconds. All settings use the same proxy path; actual persistent SELECT1 RTT is calibrated separately for each database. Jac uses PostgreSQL and its runtime-derived structures; Java/WeBridge uses MySQL. See [the full latency report](latency-comparison/REPORT.md), [verified data](latency-comparison/comparison.json) and [integrated PDF](benchmark-comparison/jac-webridge-snb-comparison.pdf).
 
 ## Native Jac comparison on matched graph data
 
@@ -143,4 +147,4 @@ Each phase has ten warmup requests and thirty measured requests in the same JVM,
 
 The separate instrumented census observes full baseline server-statement time of 22.09–22.15 ms and optimized time of 24.03–24.11 ms. Pruned server times are approximately 21.4–22.1 ms in both arms. Inclusive CALL time is kept separate from nested statement times. During uninstrumented full requests, Handler key/next/random-next counts are 222/1443/771 for Java and 227/1443/825 for WeBridge; Pruned counts are 193/1443/771 and 194/1443/797. Retained traversal reads and extra stored-program/result materialization explain why fewer client commands provide little benefit at local RTT. Added delay makes the reduced command count valuable while server execution remains of similar duration.
 
-`integration/timing/independent_verify.py` independently validates all 480 measured and 160 warmup requests, recomputes every reported median from raw samples, checks generated-procedure activation and exact received-command counts, and writes the standalone English `comparison.pdf`. Raw command lines, input/source hashes, CPU samples, network setup/restoration and the instrumented census are retained under `integration/timing/`, `integration/census/` and `integration/small-final-cleanup/`.
+`integration/timing/independent_verify.py` independently validates all 480 measured and 160 warmup requests, recomputes every reported median from raw samples, checks generated-procedure activation and exact received-command counts, and supplies the underlying measurements for the integrated English PDF. Raw command lines, input/source hashes, CPU samples, network setup/restoration and the instrumented census are retained under `integration/timing/`, `integration/census/` and `integration/small-final-cleanup/`.

@@ -1,0 +1,10 @@
+--- webridge/SourceCode/webridge-common/basic-components/src/main/java/webridge/wbridge/sql/types/SQLVarType.java
++++ isolated-json-type-compat/SQLVarType.java
+@@ -24,6 +24,7 @@
+   TIMESTAMP;
+ 
+   public static SQLVarType of(String tp) {
++    if (tp.equalsIgnoreCase("JSON")) return SQLVarType.LONGTEXT;
+     if (tp.toLowerCase().startsWith("char(")) {
+       // TODO: support fixed length characters
+       return SQLVarType.VARCHAR;

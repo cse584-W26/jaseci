@@ -1,0 +1,72 @@
+{
+  "query": "is3",
+  "started_unix": 1792533610.1389835,
+  "stages": [
+    {
+      "stage": "record",
+      "command": [
+        "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+        "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/webridge.py",
+        "is3",
+        "record"
+      ],
+      "returncode": 0,
+      "started_unix": 1792533610.1390216,
+      "ended_unix": 1792533611.4699564
+    },
+    {
+      "stage": "replay",
+      "command": [
+        "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+        "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/webridge.py",
+        "is3",
+        "replay"
+      ],
+      "returncode": 0,
+      "started_unix": 1792533611.4701145,
+      "ended_unix": 1792533614.010465
+    },
+    {
+      "stage": "synth",
+      "command": [
+        "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+        "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/webridge.py",
+        "is3",
+        "synth",
+        "/home/baichuan/jaseci/reproduction/webridge/integration/cases/set-snb-is3-20261020/replay-20261020T220011984124Z/graph.json"
+      ],
+      "returncode": 0,
+      "started_unix": 1792533614.0109584,
+      "ended_unix": 1792533615.4586704
+    },
+    {
+      "stage": "install",
+      "command": [
+        "docker",
+        "exec",
+        "-i",
+        "jac-webridge-mysql57",
+        "mysql",
+        "--default-character-set=utf8mb4",
+        "-uroot",
+        "jac_snb_six_20261020"
+      ],
+      "returncode": 0,
+      "generated_sql_unchanged": true
+    },
+    {
+      "stage": "optimized",
+      "command": [
+        "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+        "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/webridge.py",
+        "is3",
+        "optimized"
+      ],
+      "returncode": 0,
+      "started_unix": 1792533615.5095882,
+      "ended_unix": 1792533616.9158113
+    }
+  ],
+  "graph_sha256": "4c270fb08f18b292b52b67acd82f6097bb1c272d2e50f08fcf4a3f9221c39ef0",
+  "status": "selected-input-pipeline-passed"
+}

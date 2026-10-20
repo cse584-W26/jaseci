@@ -1,0 +1,9 @@
+java.lang.IllegalArgumentException: Cannot infer positional parameter 0
+	at webridge.wbridge.sql.ast.SQLAstVisitor.parameterType(SQLAstVisitor.java:624)
+	at webridge.wbridge.sql.ast.SQLAstVisitor.endVisit(SQLAstVisitor.java:488)
+	at com.alibaba.druid.sql.ast.statement.SQLSelectStatement.accept0(SQLSelectStatement.java:67)
+	at com.alibaba.druid.sql.ast.SQLObjectImpl.accept(SQLObjectImpl.java:40)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.parseFromRecordedJSON(StoredProcedureManager.java:789)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.generateStoredProcedure(StoredProcedureManager.java:930)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.run(StoredProcedureManager.java:921)
+	at SetWeBridge.main(SetWeBridge.java:7)

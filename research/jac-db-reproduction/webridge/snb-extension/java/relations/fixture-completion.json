@@ -1,0 +1,38 @@
+{
+  "utc": "2026-10-20T21:40:53.057478+00:00",
+  "calls": [
+    {
+      "sql": "SHOW CREATE TABLE anchors;",
+      "returncode": 0,
+      "stdout": "anchors\tCREATE TABLE `anchors` (\\n  `id` char(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,\\n  `kind` varchar(32) COLLATE utf8mb4_bin NOT NULL,\\n  `arch_type` varchar(100) COLLATE utf8mb4_bin NOT NULL,\\n  `arch_module` varchar(200) COLLATE utf8mb4_bin NOT NULL,\\n  `fingerprint` varchar(200) COLLATE utf8mb4_bin NOT NULL,\\n  `root_id` char(36) CHARACTER SET ascii DEFAULT NULL,\\n  `src` char(36) CHARACTER SET ascii DEFAULT NULL,\\n  `dst` char(36) CHARACTER SET ascii DEFAULT NULL,\\n  `undirected` tinyint(1) NOT NULL,\\n  `props` longtext CHARACTER SET utf8mb4 NOT NULL,\\n  `row_version` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL,\\n  `seq` bigint(20) NOT NULL,\\n  `src_type` varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,\\n  `dst_type` varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,\\n  PRIMARY KEY (`id`),\\n  KEY `source_type` (`src`,`arch_type`),\\n  KEY `target_type` (`dst`,`arch_type`),\\n  KEY `kind_type` (`kind`,`arch_type`),\\n  KEY `owner_root` (`root_id`)\\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin\n",
+      "stderr": ""
+    },
+    {
+      "sql": "ALTER TABLE anchors MODIFY id CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL, MODIFY root_id CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin, MODIFY src CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin, MODIFY dst CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "sql": "CREATE TABLE IF NOT EXISTS identity_lookups(value_normalized VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,user_id VARCHAR(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,PRIMARY KEY(value_normalized),KEY user_id_idx(user_id)) ENGINE=InnoDB;",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "sql": "INSERT IGNORE INTO identity_lookups VALUES ('admin','c3678765-08e0-4bc7-9955-6f6f1c48d6c2'),('__guest__','09fc8b73-4a61-4b70-8845-f6532bec7926'),('__system__','1ed2f993-41c7-40f9-bce7-22ac53623966'),('snb_svc','77ef1e57-4ce2-47c4-8616-451db58ce558');",
+      "returncode": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "sql": "SHOW CREATE TABLE anchors;SELECT * FROM identity_lookups ORDER BY value_normalized;ANALYZE TABLE anchors;",
+      "returncode": 0,
+      "stdout": "anchors\tCREATE TABLE `anchors` (\\n  `id` char(36) COLLATE utf8mb4_bin NOT NULL,\\n  `kind` varchar(32) COLLATE utf8mb4_bin NOT NULL,\\n  `arch_type` varchar(100) COLLATE utf8mb4_bin NOT NULL,\\n  `arch_module` varchar(200) COLLATE utf8mb4_bin NOT NULL,\\n  `fingerprint` varchar(200) COLLATE utf8mb4_bin NOT NULL,\\n  `root_id` char(36) COLLATE utf8mb4_bin DEFAULT NULL,\\n  `src` char(36) COLLATE utf8mb4_bin DEFAULT NULL,\\n  `dst` char(36) COLLATE utf8mb4_bin DEFAULT NULL,\\n  `undirected` tinyint(1) NOT NULL,\\n  `props` longtext CHARACTER SET utf8mb4 NOT NULL,\\n  `row_version` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL,\\n  `seq` bigint(20) NOT NULL,\\n  `src_type` varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,\\n  `dst_type` varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,\\n  PRIMARY KEY (`id`),\\n  KEY `source_type` (`src`,`arch_type`),\\n  KEY `target_type` (`dst`,`arch_type`),\\n  KEY `kind_type` (`kind`,`arch_type`),\\n  KEY `owner_root` (`root_id`)\\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin\n__guest__\t09fc8b73-4a61-4b70-8845-f6532bec7926\n__system__\t1ed2f993-41c7-40f9-bce7-22ac53623966\nadmin\tc3678765-08e0-4bc7-9955-6f6f1c48d6c2\nsnb_svc\t77ef1e57-4ce2-47c4-8616-451db58ce558\njac_snb_six_20261020.anchors\tanalyze\tstatus\tOK\n",
+      "stderr": ""
+    }
+  ],
+  "lookup_source": "/home/baichuan/jaseci/reproduction/webridge/jac-comparison/fixture/identity_lookups.tsv",
+  "lookup_sha256": "815739cc7e0603203ed3fab8eff73b8f08cf84ef0c44188c01affcc78724e26b",
+  "adaptation": "All clients and SPs share same UTF8 UUID columns; preserves original UUID values"
+}

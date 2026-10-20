@@ -1,0 +1,1 @@
+["SELECT p.props,CAST(JSON_UNQUOTE(JSON_EXTRACT(n.props,'$.archetype.place_id')) AS SIGNED) FROM anchors p LEFT JOIN anchors e ON e.src=p.id AND e.kind='EdgeAnchor' AND e.arch_type='IsLocatedIn' LEFT JOIN anchors n ON n.id=e.dst AND n.kind='NodeAnchor' AND n.arch_type='Place' WHERE p.id=? ORDER BY e.seq,e.id LIMIT 1"]

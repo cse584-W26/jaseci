@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-10-20T21:07:32.951127+00:00",
+  "updated_utc": "2026-10-20T23:05:01.524749+00:00",
   "task": "Actual WeBridge comparison and original-paper reproduction",
   "user_baseline_steps": [
     "Fully reproduce Jac benchmark behavior and per-input server SQL counts",
@@ -145,5 +145,28 @@
     "pdf": "roundtrip-comparison/jac-webridge-measured-comparison.pdf",
     "verification": "roundtrip-comparison/eight-arm-verification.json",
     "all_services_proxies_stopped": true
+  },
+  "snb_extension": {
+    "state": "Complete: six additional queries and prior IC5 comparison",
+    "queries": [
+      "is1",
+      "is2",
+      "is3",
+      "ic1",
+      "ic2",
+      "ic13"
+    ],
+    "configurations": 8,
+    "latency_cells": 144,
+    "postwarm_medians": 135,
+    "primary_censored_cells": 9,
+    "primary_censored_attempts": 27,
+    "completed_quiet_requests": 5400,
+    "java_protocol_arms": 33,
+    "native_protocol_requests": 72,
+    "report": "benchmark-comparison/REPORT.md",
+    "pdf": "benchmark-comparison/jac-webridge-snb-comparison.pdf",
+    "verified": "benchmark-comparison/combined-java-timing-verified.json",
+    "censor_protocol": "Fresh first-SP requests, strict owned-session absence verified before each subsequent primary attempt"
   }
 }

@@ -1,0 +1,309 @@
+{
+  "skip_mirrors": false,
+  "from_step": 0,
+  "source": "/home/baichuan/jaseci/jac-db/jac",
+  "source_commit": "1b906639bccdb170806428dc26841ff74284b555",
+  "python": "3.14.6 (main, Jun 11 2026, 04:03:53) [Clang 22.1.3 ]",
+  "database": "jac_webridge_matched_six_20261020",
+  "socket": "/tmp/jacpg-d6275e76eb",
+  "plan": [
+    {
+      "method": "ensure_mirror",
+      "class": "Person"
+    },
+    {
+      "method": "ensure_mirror",
+      "class": "Forum"
+    },
+    {
+      "method": "ensure_mirror",
+      "class": "Post"
+    },
+    {
+      "method": "ensure_mirror",
+      "class": "Comment"
+    },
+    {
+      "method": "ensure_mirror_endpoint",
+      "class": "Post",
+      "edge": "HasCreator",
+      "order_field": "creationDate",
+      "outbound": true
+    },
+    {
+      "method": "ensure_mirror_endpoint",
+      "class": "Comment",
+      "edge": "HasCreator",
+      "order_field": "creationDate",
+      "outbound": true
+    },
+    {
+      "method": "ensure_root_column",
+      "class": "Comment",
+      "edge": "ReplyOf",
+      "root": "Post"
+    },
+    {
+      "method": "ensure_mirror_order_index",
+      "class": "Person",
+      "field": "firstName",
+      "equality": true
+    },
+    {
+      "method": "ensure_adjacency_table",
+      "edge": "Knows",
+      "node": "Person"
+    },
+    {
+      "method": "ensure_adjacency_index",
+      "edge": "Knows",
+      "node": "Person"
+    },
+    {
+      "method": "ensure_adjacency_index",
+      "edge": "HasCreator",
+      "node": "Person"
+    },
+    {
+      "method": "ensure_adjacency_index",
+      "edge": "ContainerOf",
+      "node": "Post"
+    }
+  ],
+  "results": [
+    {
+      "step": {
+        "method": "ensure_mirror",
+        "class": "Person"
+      },
+      "attempt": 1,
+      "result": true,
+      "elapsed_ms": 1963.987594936043,
+      "mirror_info": {
+        "table": "g_n_person_d2a57d",
+        "cols": {
+          "person_id": "f_person_id",
+          "firstName": "f_firstname",
+          "lastName": "f_lastname",
+          "gender": "f_gender",
+          "birthday": "f_birthday",
+          "creationDate": "f_creationdate",
+          "locationIP": "f_locationip",
+          "browserUsed": "f_browserused"
+        }
+      }
+    },
+    {
+      "step": {
+        "method": "ensure_mirror",
+        "class": "Forum"
+      },
+      "attempt": 1,
+      "result": true,
+      "elapsed_ms": 10.904435068368912,
+      "mirror_info": {
+        "table": "g_n_forum_d2a57d",
+        "cols": {
+          "forum_id": "f_forum_id",
+          "title": "f_title",
+          "creationDate": "f_creationdate"
+        }
+      }
+    },
+    {
+      "step": {
+        "method": "ensure_mirror",
+        "class": "Post"
+      },
+      "attempt": 1,
+      "result": true,
+      "elapsed_ms": 3508.847770979628,
+      "mirror_info": {
+        "table": "g_n_post_d2a57d",
+        "cols": {
+          "post_id": "f_post_id",
+          "imageFile": "f_imagefile",
+          "creationDate": "f_creationdate",
+          "locationIP": "f_locationip",
+          "browserUsed": "f_browserused",
+          "language": "f_language",
+          "content": "f_content",
+          "length": "f_length"
+        }
+      }
+    },
+    {
+      "step": {
+        "method": "ensure_mirror",
+        "class": "Comment"
+      },
+      "attempt": 1,
+      "result": true,
+      "elapsed_ms": 7454.705571057275,
+      "mirror_info": {
+        "table": "g_n_comment_d2a57d",
+        "cols": {
+          "comment_id": "f_comment_id",
+          "creationDate": "f_creationdate",
+          "locationIP": "f_locationip",
+          "browserUsed": "f_browserused",
+          "content": "f_content",
+          "length": "f_length"
+        }
+      }
+    },
+    {
+      "step": {
+        "method": "ensure_mirror_endpoint",
+        "class": "Post",
+        "edge": "HasCreator",
+        "order_field": "creationDate",
+        "outbound": true
+      },
+      "attempt": 1,
+      "result": "dst_endpoint_hascreator",
+      "elapsed_ms": 546.5861281845719,
+      "mirror_info": {
+        "table": "g_n_post_d2a57d",
+        "cols": {
+          "post_id": "f_post_id",
+          "imageFile": "f_imagefile",
+          "creationDate": "f_creationdate",
+          "locationIP": "f_locationip",
+          "browserUsed": "f_browserused",
+          "language": "f_language",
+          "content": "f_content",
+          "length": "f_length"
+        }
+      }
+    },
+    {
+      "step": {
+        "method": "ensure_mirror_endpoint",
+        "class": "Comment",
+        "edge": "HasCreator",
+        "order_field": "creationDate",
+        "outbound": true
+      },
+      "attempt": 1,
+      "result": "dst_endpoint_hascreator",
+      "elapsed_ms": 1454.195975093171,
+      "mirror_info": {
+        "table": "g_n_comment_d2a57d",
+        "cols": {
+          "comment_id": "f_comment_id",
+          "creationDate": "f_creationdate",
+          "locationIP": "f_locationip",
+          "browserUsed": "f_browserused",
+          "content": "f_content",
+          "length": "f_length"
+        }
+      }
+    },
+    {
+      "step": {
+        "method": "ensure_root_column",
+        "class": "Comment",
+        "edge": "ReplyOf",
+        "root": "Post"
+      },
+      "attempt": 1,
+      "result": "root_of_replyof",
+      "elapsed_ms": 621.0238381754607,
+      "mirror_info": {
+        "table": "g_n_comment_d2a57d",
+        "cols": {
+          "comment_id": "f_comment_id",
+          "creationDate": "f_creationdate",
+          "locationIP": "f_locationip",
+          "browserUsed": "f_browserused",
+          "content": "f_content",
+          "length": "f_length"
+        }
+      }
+    },
+    {
+      "step": {
+        "method": "ensure_mirror_order_index",
+        "class": "Person",
+        "field": "firstName",
+        "equality": true
+      },
+      "attempt": 1,
+      "result": true,
+      "elapsed_ms": 101.34456516243517,
+      "mirror_info": {
+        "table": "g_n_person_d2a57d",
+        "cols": {
+          "person_id": "f_person_id",
+          "firstName": "f_firstname",
+          "lastName": "f_lastname",
+          "gender": "f_gender",
+          "birthday": "f_birthday",
+          "creationDate": "f_creationdate",
+          "locationIP": "f_locationip",
+          "browserUsed": "f_browserused"
+        }
+      }
+    },
+    {
+      "step": {
+        "method": "ensure_adjacency_table",
+        "edge": "Knows",
+        "node": "Person"
+      },
+      "attempt": 1,
+      "result": "adj_knows",
+      "elapsed_ms": 2349.799729185179
+    },
+    {
+      "step": {
+        "method": "ensure_adjacency_index",
+        "edge": "Knows",
+        "node": "Person"
+      },
+      "attempt": 1,
+      "result": true,
+      "elapsed_ms": 2.9179949779063463
+    },
+    {
+      "step": {
+        "method": "ensure_adjacency_index",
+        "edge": "HasCreator",
+        "node": "Person"
+      },
+      "attempt": 1,
+      "result": true,
+      "elapsed_ms": 1.8868888728320599
+    },
+    {
+      "step": {
+        "method": "ensure_adjacency_index",
+        "edge": "ContainerOf",
+        "node": "Post"
+      },
+      "attempt": 1,
+      "result": true,
+      "elapsed_ms": 1.7540480475872755
+    }
+  ],
+  "loaded_jaclang": "/home/baichuan/jaseci/jac-db/jac/jaclang/__init__.py",
+  "loaded_classes": {
+    "Person": {
+      "module": "app",
+      "name": "Person"
+    },
+    "Forum": {
+      "module": "app",
+      "name": "Forum"
+    },
+    "Post": {
+      "module": "app",
+      "name": "Post"
+    },
+    "Comment": {
+      "module": "app",
+      "name": "Comment"
+    }
+  }
+}

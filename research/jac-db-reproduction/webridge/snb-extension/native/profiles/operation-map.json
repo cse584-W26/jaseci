@@ -1,0 +1,634 @@
+[
+  {
+    "query": "is1",
+    "variants": {
+      "baseline": {
+        "actual_flight_counts_by_delay": {
+          "0": [
+            7,
+            7,
+            7
+          ],
+          "2": [
+            7,
+            7,
+            7
+          ]
+        },
+        "categories": {
+          "traversal.generic": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.commit": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.begin": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.setting": {
+            "min": 1,
+            "max": 1
+          },
+          "hydration.full_anchor": {
+            "min": 3,
+            "max": 3
+          }
+        },
+        "certified_requests": 6,
+        "all_SQL_matches": true,
+        "all_next_command_after_prior_ready": true
+      },
+      "final": {
+        "actual_flight_counts_by_delay": {
+          "0": [
+            7,
+            7,
+            7
+          ],
+          "2": [
+            7,
+            7,
+            7
+          ]
+        },
+        "categories": {
+          "traversal.generic": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.commit": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.begin": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.setting": {
+            "min": 1,
+            "max": 1
+          },
+          "hydration.full_anchor": {
+            "min": 3,
+            "max": 3
+          }
+        },
+        "certified_requests": 6,
+        "all_SQL_matches": true,
+        "all_next_command_after_prior_ready": true
+      }
+    },
+    "representative_ordinary_SQL_sequence_identical_between_variants": true
+  },
+  {
+    "query": "is2",
+    "variants": {
+      "baseline": {
+        "actual_flight_counts_by_delay": {
+          "0": [
+            24,
+            24,
+            24
+          ],
+          "2": [
+            24,
+            24,
+            24
+          ]
+        },
+        "categories": {
+          "reply_root.promoted_column": {
+            "min": 1,
+            "max": 1
+          },
+          "projection.person_fields_acl": {
+            "min": 1,
+            "max": 1
+          },
+          "traversal.generic": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.commit": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.begin": {
+            "min": 1,
+            "max": 1
+          },
+          "identity.guest_resolution": {
+            "min": 2,
+            "max": 2
+          },
+          "transaction.setting": {
+            "min": 1,
+            "max": 1
+          },
+          "hydration.full_anchor": {
+            "min": 15,
+            "max": 15
+          },
+          "topk.lateral": {
+            "min": 1,
+            "max": 1
+          }
+        },
+        "certified_requests": 6,
+        "all_SQL_matches": true,
+        "all_next_command_after_prior_ready": true
+      },
+      "final": {
+        "actual_flight_counts_by_delay": {
+          "0": [
+            24,
+            24,
+            24
+          ],
+          "2": [
+            24,
+            24,
+            24
+          ]
+        },
+        "categories": {
+          "reply_root.promoted_column": {
+            "min": 1,
+            "max": 1
+          },
+          "projection.person_fields_acl": {
+            "min": 1,
+            "max": 1
+          },
+          "traversal.generic": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.commit": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.begin": {
+            "min": 1,
+            "max": 1
+          },
+          "identity.guest_resolution": {
+            "min": 2,
+            "max": 2
+          },
+          "transaction.setting": {
+            "min": 1,
+            "max": 1
+          },
+          "hydration.full_anchor": {
+            "min": 15,
+            "max": 15
+          },
+          "topk.lateral": {
+            "min": 1,
+            "max": 1
+          }
+        },
+        "certified_requests": 6,
+        "all_SQL_matches": true,
+        "all_next_command_after_prior_ready": true
+      }
+    },
+    "representative_ordinary_SQL_sequence_identical_between_variants": true
+  },
+  {
+    "query": "is3",
+    "variants": {
+      "baseline": {
+        "actual_flight_counts_by_delay": {
+          "0": [
+            12,
+            12,
+            12
+          ],
+          "2": [
+            12,
+            12,
+            12
+          ]
+        },
+        "categories": {
+          "acl.root_permissions": {
+            "min": 2,
+            "max": 2
+          },
+          "type_registry": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.commit": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.begin": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.setting": {
+            "min": 1,
+            "max": 1
+          },
+          "identity.guest_resolution": {
+            "min": 2,
+            "max": 2
+          },
+          "hydration.full_anchor": {
+            "min": 2,
+            "max": 2
+          },
+          "projection.graph_hop_acl": {
+            "min": 2,
+            "max": 2
+          }
+        },
+        "certified_requests": 6,
+        "all_SQL_matches": true,
+        "all_next_command_after_prior_ready": true
+      },
+      "final": {
+        "actual_flight_counts_by_delay": {
+          "0": [
+            12,
+            12,
+            12
+          ],
+          "2": [
+            12,
+            12,
+            12
+          ]
+        },
+        "categories": {
+          "acl.root_permissions": {
+            "min": 2,
+            "max": 2
+          },
+          "type_registry": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.commit": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.begin": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.setting": {
+            "min": 1,
+            "max": 1
+          },
+          "identity.guest_resolution": {
+            "min": 2,
+            "max": 2
+          },
+          "hydration.full_anchor": {
+            "min": 2,
+            "max": 2
+          },
+          "projection.graph_hop_acl": {
+            "min": 2,
+            "max": 2
+          }
+        },
+        "certified_requests": 6,
+        "all_SQL_matches": true,
+        "all_next_command_after_prior_ready": true
+      }
+    },
+    "representative_ordinary_SQL_sequence_identical_between_variants": true
+  },
+  {
+    "query": "ic1",
+    "variants": {
+      "baseline": {
+        "actual_flight_counts_by_delay": {
+          "0": [
+            13,
+            13,
+            13
+          ],
+          "2": [
+            13,
+            13,
+            13
+          ]
+        },
+        "categories": {
+          "projection.person_fields_acl": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.commit": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.begin": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.setting": {
+            "min": 1,
+            "max": 1
+          },
+          "closure.endpoint_filter": {
+            "min": 1,
+            "max": 1
+          },
+          "closure.frontier_adjacency": {
+            "min": 3,
+            "max": 3
+          },
+          "identity.guest_resolution": {
+            "min": 2,
+            "max": 2
+          },
+          "hydration.full_anchor": {
+            "min": 3,
+            "max": 3
+          }
+        },
+        "certified_requests": 6,
+        "all_SQL_matches": true,
+        "all_next_command_after_prior_ready": true
+      },
+      "final": {
+        "actual_flight_counts_by_delay": {
+          "0": [
+            13,
+            13,
+            13
+          ],
+          "2": [
+            13,
+            13,
+            13
+          ]
+        },
+        "categories": {
+          "projection.person_fields_acl": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.commit": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.begin": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.setting": {
+            "min": 1,
+            "max": 1
+          },
+          "closure.endpoint_filter": {
+            "min": 1,
+            "max": 1
+          },
+          "closure.frontier_adjacency": {
+            "min": 3,
+            "max": 3
+          },
+          "identity.guest_resolution": {
+            "min": 2,
+            "max": 2
+          },
+          "hydration.full_anchor": {
+            "min": 3,
+            "max": 3
+          }
+        },
+        "certified_requests": 6,
+        "all_SQL_matches": true,
+        "all_next_command_after_prior_ready": true
+      }
+    },
+    "representative_ordinary_SQL_sequence_identical_between_variants": true
+  },
+  {
+    "query": "ic2",
+    "variants": {
+      "baseline": {
+        "actual_flight_counts_by_delay": {
+          "0": [
+            33,
+            33,
+            33
+          ],
+          "2": [
+            33,
+            33,
+            33
+          ]
+        },
+        "categories": {
+          "type_registry": {
+            "min": 1,
+            "max": 1
+          },
+          "traversal.generic": {
+            "min": 3,
+            "max": 3
+          },
+          "transaction.commit": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.begin": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.setting": {
+            "min": 1,
+            "max": 1
+          },
+          "hydration.full_anchor": {
+            "min": 25,
+            "max": 25
+          },
+          "topk.lateral": {
+            "min": 1,
+            "max": 1
+          }
+        },
+        "certified_requests": 6,
+        "all_SQL_matches": true,
+        "all_next_command_after_prior_ready": true
+      },
+      "final": {
+        "actual_flight_counts_by_delay": {
+          "0": [
+            33,
+            33,
+            33
+          ],
+          "2": [
+            33,
+            33,
+            33
+          ]
+        },
+        "categories": {
+          "type_registry": {
+            "min": 1,
+            "max": 1
+          },
+          "traversal.generic": {
+            "min": 3,
+            "max": 3
+          },
+          "transaction.commit": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.begin": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.setting": {
+            "min": 1,
+            "max": 1
+          },
+          "hydration.full_anchor": {
+            "min": 25,
+            "max": 25
+          },
+          "topk.lateral": {
+            "min": 1,
+            "max": 1
+          }
+        },
+        "certified_requests": 6,
+        "all_SQL_matches": true,
+        "all_next_command_after_prior_ready": true
+      }
+    },
+    "representative_ordinary_SQL_sequence_identical_between_variants": true
+  },
+  {
+    "query": "ic13",
+    "variants": {
+      "baseline": {
+        "actual_flight_counts_by_delay": {
+          "0": [
+            14,
+            14,
+            14
+          ],
+          "2": [
+            14,
+            15,
+            14
+          ]
+        },
+        "categories": {
+          "projection.person_fields_acl": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.commit": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.begin": {
+            "min": 1,
+            "max": 1
+          },
+          "identity.guest_resolution": {
+            "min": 2,
+            "max": 2
+          },
+          "transaction.setting": {
+            "min": 1,
+            "max": 1
+          },
+          "closure.endpoint_filter": {
+            "min": 1,
+            "max": 1
+          },
+          "closure.frontier_adjacency": {
+            "min": 3,
+            "max": 3
+          },
+          "schema.ttl_guard": {
+            "min": 0,
+            "max": 1
+          },
+          "hydration.full_anchor": {
+            "min": 4,
+            "max": 4
+          }
+        },
+        "certified_requests": 6,
+        "all_SQL_matches": true,
+        "all_next_command_after_prior_ready": true
+      },
+      "final": {
+        "actual_flight_counts_by_delay": {
+          "0": [
+            14,
+            14,
+            14
+          ],
+          "2": [
+            15,
+            14,
+            14
+          ]
+        },
+        "categories": {
+          "projection.person_fields_acl": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.commit": {
+            "min": 1,
+            "max": 1
+          },
+          "transaction.begin": {
+            "min": 1,
+            "max": 1
+          },
+          "identity.guest_resolution": {
+            "min": 2,
+            "max": 2
+          },
+          "transaction.setting": {
+            "min": 1,
+            "max": 1
+          },
+          "closure.endpoint_filter": {
+            "min": 1,
+            "max": 1
+          },
+          "closure.frontier_adjacency": {
+            "min": 3,
+            "max": 3
+          },
+          "schema.ttl_guard": {
+            "min": 0,
+            "max": 1
+          },
+          "hydration.full_anchor": {
+            "min": 4,
+            "max": 4
+          }
+        },
+        "certified_requests": 6,
+        "all_SQL_matches": true,
+        "all_next_command_after_prior_ready": true
+      }
+    },
+    "representative_ordinary_SQL_sequence_identical_between_variants": true
+  }
+]

@@ -1,0 +1,30 @@
+[main] ERROR webridge.wbridge.storedprocedure.utils.SPUtils - unable to initialize hikari proxy connection class, proxy connection seems not using HikariProxyConnection
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing stored procedure:Snb_ic2_full_67dc69f14f_sp_1_ver0
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: PROCEDURE jac_snb_six_20261020.Snb_ic2_full_67dc69f14f_sp_1_ver0 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.invokeSP(SPInvokeManager.java:618)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteQuery(SPInvokeManager.java:159)
+	at com.mysql.jdbc.PreparedStatement.executeQuery(PreparedStatement.java:1926)
+	at SnbAccess$Session.load(SnbAccess.java:49)
+	at SnbAccess$Session.get(SnbAccess.java:54)
+	at SnbAccess.request(SnbAccess.java:101)
+	at SnbTiming.timing(SnbTiming.java:10)
+	at SnbTiming.main(SnbTiming.java:4)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Rollback read-write ongoing transactions in Snb_ic2_full_67dc69f14f_sp_1_ver0
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Invocation failure] Invoke sp failed, fallback to normal execution:Snb_ic2_full_67dc69f14f, com.mysql.jdbc.JDBC42PreparedStatement@3d34d211: SELECT a.id,a.kind,a.arch_type,a.arch_module,a.fingerprint,a.root_id,a.src,a.dst,a.undirected,a.props,a.row_version FROM anchors a WHERE a.id IN ('4bc418b3-c394-41ee-93fd-4a13a6c852a8')
+java.lang.IllegalStateException: Original SP not fully active: calls=1 questions=36 start=true end=false
+	at SnbTiming.timing(SnbTiming.java:10)
+	at SnbTiming.main(SnbTiming.java:4)

@@ -1,0 +1,32 @@
+{
+  "is1": {
+    "native": "Jac emits three full-anchor loads and one location traversal, alongside three transaction commands. The original/final sequence is identical.",
+    "webridge": "Compare the actual generated CALL against the full and pruned direct sequences; the nested operation map records retained table operations.",
+    "set": "Conventional SQL combines the Person/location projection with a LEFT JOIN in one business query. Full object hydration remains separate in Jac."
+  },
+  "is2": {
+    "native": "Jac already uses explicit jtopk and jroot_many builtins: lateral topK and promoted reply roots. Fifteen full-anchor loads, author projection/traversal and guest resolution remain.",
+    "webridge": "The Java port preserves the ordinary native sequence. Its MySQL topK adaptation uses finite per-origin branches because MySQL 5.7 lacks LATERAL.",
+    "set": "One conventional query joins the message mirror, reply-root message and both authors, orders by date/ID, and limits to ten. All twenty historical outputs pass."
+  },
+  "is3": {
+    "native": "Jac already projects friend fields in two directional Knows queries. Root/Person loads, type discovery, root permissions and guest resolution remain separate.",
+    "webridge": "Actual full capture required column aliases and scalar JSON/type metadata compatibility fixes. Each attempt and the selected source snapshot are retained.",
+    "set": "Conventional SQL combines both incident-edge directions and Person projection in one UNION ALL query. It returns the same twenty historical results."
+  },
+  "ic1": {
+    "native": "Jac performs three adjacency-frontier expansions, endpoint filtering and a Person projection. Three anchor loads and two guest lookups remain separate. The final sequence matches the original.",
+    "webridge": "This case measures synthesis over an actual frontier-based graph traversal. Capture and synthesis outcomes are recorded at their executed stages.",
+    "set": "The measured conventional reference retains frontier BFS. A finite-depth UNION alternative passed twenty outputs but had a higher diagnostic median, so BFS was selected."
+  },
+  "ic2": {
+    "native": "Jac already requests topK explicitly. Twenty-five full-anchor loads, two Knows traversals, a HasCreator traversal and a type probe remain separate.",
+    "webridge": "Full Java retains the observed object-loading sequence; the declared pruned form removes Jac-specific loading while preserving the query output.",
+    "set": "Conventional SQL first selects friends, then unions bounded per-author/type top-20 candidates and applies global top-20. Both candidate and selected outputs were measured against all twenty historical hashes."
+  },
+  "ic13": {
+    "native": "Actual execution uses indexed adjacency-frontier BFS. Three frontiers reach the selected endpoint; a periodic schema guard can add one cycle.",
+    "webridge": "Full/pruned generated BFS procedures contain about 4.85 million row-index checks at the captured cursor sizes. Their actual quiet latencies and observed table operations are reported separately.",
+    "set": "The conventional alternative uses ordered CASE/EXISTS for lengths zero through six, matching the benchmark cap. All twenty outputs pass; its diagnostic median was lower than the BFS candidate."
+  }
+}

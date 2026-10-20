@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/mysql-profile/analyze.py", line 54, in <module>
+    p=argparse.ArgumentParser();p.add_argument('directory',type=pathlib.Path);a=p.parse_args();x=analyze(a.directory.resolve());print(x['status'],x['measured_requests'],x['all_measured_CALL_event_ranges_complete'])
+                                                                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/mysql-profile/analyze.py", line 45, in analyze
+    assert callidx<len(calls),(d,callidx,len(calls));parent=calls[callidx];callidx+=1;inside=[e for e in pfs if parent['event']<e['event']<=parent['end_event']];missing=sorted(set(range(parent['event']+1,parent['end_event']+1))-{e['event']for e in inside});direct=[e for e in inside if e['nest']==parent['event']];counts=collections.Counter(pfs_category(e)for e in direct);timers=collections.defaultdict(float)
+           ^^^^^^^^^^^^^^^^^^
+AssertionError: (PosixPath('/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/mysql-profile/results/ic2/pruned-180340'), 0, 0)

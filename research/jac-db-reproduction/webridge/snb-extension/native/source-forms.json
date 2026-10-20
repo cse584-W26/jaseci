@@ -1,0 +1,46 @@
+{
+  "workload": "reproduction/benchmark/snb/jaseci-pg/app.jac",
+  "baseline_commit": "c12ba889d484d7fcdfb3780ac98d416d1e13ec8b",
+  "final_commit": "32c5d1dbb9507571235783e78e35b1022cacc4e4",
+  "queries": {
+    "is1": {
+      "line": 80,
+      "programmer_operation": "Ordinary outgoing IsLocatedIn graph hop; read Person and Place properties",
+      "c12_actual": "Generic traversal command followed by full Place hydration"
+    },
+    "is3": {
+      "line": 223,
+      "programmer_operation": "Explicit outgoing-plus-incoming Knows hops; sort returned friend fields",
+      "c12_actual": "Two graph-hop SQL commands project required Person fields and ACL metadata"
+    },
+    "ic1": {
+      "line": 279,
+      "programmer_operation": "Variable-length bidirectional Knows hop bounded at3, endpoint firstName predicate; sort and slice20",
+      "c12_actual": "Endpoint filter on Person mirror, three adjacency frontier queries, selected-field projection"
+    },
+    "ic13": {
+      "line": 581,
+      "programmer_operation": "Variable-length bidirectional Knows hop bounded at6, endpoint person_id predicate; use first matching distance",
+      "c12_actual": "Endpoint filter on Person mirror; representative input terminates after three adjacency frontier queries"
+    },
+    "is2": {
+      "line": 115,
+      "programmer_operation": "Explicit jtopk over inbound HasCreator and explicit jroot_many over ReplyOf",
+      "c12_actual": "Lateral topK SQL, promoted ReplyOf root column, batched author graph hop; full object hydration remains"
+    },
+    "ic2": {
+      "line": 316,
+      "programmer_operation": "Outgoing-plus-incoming friend hops then explicit jtopk over inbound HasCreator",
+      "c12_actual": "Lateral topK SQL, separate friend and author hops; full object hydration remains"
+    }
+  },
+  "baseline_runtime_anchors": {
+    "closure_refs": "reproduction/runtime/baseline-source/jac/jaclang/jac0core/impl/runtime.impl.jac:852",
+    "adjacency_frontier": "reproduction/runtime/baseline-source/jac/jaclang/jac0core/impl/runtime.impl.jac:818",
+    "get_topk_inbound": "reproduction/runtime/baseline-source/jac/jaclang/jac0core/impl/runtime.impl.jac:1011",
+    "get_roots": "reproduction/runtime/baseline-source/jac/jaclang/jac0core/impl/runtime.impl.jac:1190"
+  },
+  "final_checkout_commit": "1b906639bccdb170806428dc26841ff74284b555",
+  "final_runtime_subtree": "eb141dc089e0623cd66b7eef2529a3facdff221d",
+  "original_final_runtime_subtree": "eb141dc089e0623cd66b7eef2529a3facdff221d"
+}

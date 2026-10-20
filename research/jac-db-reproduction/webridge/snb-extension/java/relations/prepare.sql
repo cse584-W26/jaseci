@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS adj_knows(src CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,dst CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,PRIMARY KEY(src,dst)) ENGINE=InnoDB;
+INSERT IGNORE INTO adj_knows SELECT src,dst FROM anchors WHERE kind='EdgeAnchor' AND arch_type='Knows';
+INSERT IGNORE INTO adj_knows SELECT dst,src FROM anchors WHERE kind='EdgeAnchor' AND arch_type='Knows';
+CREATE TABLE IF NOT EXISTS jac_snb_person_mirror(id CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,root_id CHAR(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,props JSON NOT NULL,person_id BIGINT,first_name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,last_name VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,PRIMARY KEY(id),KEY first_name_idx(first_name),KEY person_id_idx(person_id)) ENGINE=InnoDB;
+INSERT IGNORE INTO jac_snb_person_mirror SELECT id,root_id,props,CAST(JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.person_id')) AS SIGNED),JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.firstName')),JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.lastName')) FROM anchors WHERE kind='NodeAnchor' AND arch_type='Person';
+ANALYZE TABLE adj_knows,jac_snb_person_mirror;
+SELECT 'anchors',COUNT(*) FROM anchors;
+SELECT 'knows',COUNT(*) FROM anchors WHERE kind='EdgeAnchor' AND arch_type='Knows';
+SELECT 'adjacency',COUNT(*) FROM adj_knows;
+SELECT 'person',COUNT(*) FROM jac_snb_person_mirror;
+SELECT 'missing_reverse',COUNT(*) FROM adj_knows a LEFT JOIN adj_knows b ON b.src=a.dst AND b.dst=a.src WHERE b.src IS NULL;
+SELECT 'missing_endpoint',COUNT(*) FROM adj_knows a LEFT JOIN jac_snb_person_mirror s ON s.id=a.src LEFT JOIN jac_snb_person_mirror d ON d.id=a.dst WHERE s.id IS NULL OR d.id IS NULL;

@@ -1,0 +1,153 @@
+{
+  "status": "PASS",
+  "source_loops": [
+    {
+      "loop": 1,
+      "recorded_row_bound": 10,
+      "contiguous_guard_indices": [
+        0,
+        9
+      ],
+      "counter_initial": 0,
+      "counter_increment": 1,
+      "unconditional_exit_at_counter": 10,
+      "max_dispatch_iterations": 11,
+      "equality_guard_checks_at_full_recorded_cardinality": 110,
+      "finite_counter_exit_verified": true
+    },
+    {
+      "loop": 2,
+      "recorded_row_bound": 2750,
+      "contiguous_guard_indices": [
+        0,
+        2749
+      ],
+      "counter_initial": 0,
+      "counter_increment": 1,
+      "unconditional_exit_at_counter": 2750,
+      "max_dispatch_iterations": 2751,
+      "equality_guard_checks_at_full_recorded_cardinality": 7565250,
+      "finite_counter_exit_verified": true
+    },
+    {
+      "loop": 3,
+      "recorded_row_bound": 9009,
+      "contiguous_guard_indices": [
+        0,
+        9008
+      ],
+      "counter_initial": 0,
+      "counter_increment": 1,
+      "unconditional_exit_at_counter": 9009,
+      "max_dispatch_iterations": 9010,
+      "equality_guard_checks_at_full_recorded_cardinality": 81171090,
+      "finite_counter_exit_verified": true
+    }
+  ],
+  "source_guard_formula": {
+    "expression": "10*11 + 2750*2751 + 9009*9010",
+    "equality_checks_at_full_recorded_cardinality": 88736450,
+    "scope": "Static generated dispatch work at recorded cursor sizes; actual P_S counters are reported separately."
+  },
+  "completed_pruned_IC1": {
+    "iteration": 0,
+    "canonical_result_sha256": "6d3f687913fd98d85ae724224798b6b7581f2d97cd023023aaaf6945098515b3",
+    "historical_result_sha256": "6d3f687913fd98d85ae724224798b6b7581f2d97cd023023aaaf6945098515b3",
+    "actual_result_hash_pass": true,
+    "full_request_ms": 129882.585907,
+    "CALLs_in_request": 1,
+    "request_scope": "warm",
+    "instrumentation": "statement/sp instrumentation enabled; completed diagnostic request, separate from quiet headline measurements"
+  },
+  "server_P_S_completed_CALL": {
+    "count": 1,
+    "sum_timer_picoseconds": 129395898033000,
+    "inclusive_seconds": 129.395898033,
+    "scope": "One completed CALL; other event counters in this snapshot include subsequent interrupted work."
+  },
+  "cumulative_conditional_jump_snapshot": {
+    "count": 92926583,
+    "sum_timer_picoseconds": 75154543054000,
+    "scope": "Snapshot includes completed first CALL and part of the next CALL; not an isolated first-call count."
+  },
+  "watchdog_final_selftest": {
+    "status": "PASS",
+    "request_limit_s": 2,
+    "timeout_observed_s": 2.036748046875,
+    "owned_server_connection_killed": true,
+    "server_absent_after": true,
+    "process_group_empty": true
+  },
+  "instrumentation_OFF_15s_control": {
+    "variant": "pruned IC1 original generated procedure",
+    "timeout_observed_s": 15.05080224609375,
+    "owned_server_connection_killed": true,
+    "server_absent_after": true,
+    "measurement_role": "One bounded warmup request; zero requested measured samples; right-censored at15s.",
+    "statement_sp_instruments_disabled_verified": 16,
+    "direct_database_endpoint": true,
+    "scope": "Instrumentation-OFF lower-bound evidence, separate from129.883s completed instrumented diagnostic and formal quiet medians."
+  },
+  "raw_files": [
+    {
+      "path": "snb-extension/webridge-cases/ic1-pruned-ce3282a6f587-original/generated/sql/Snb_ic1_pruned_efb438631e/graph-SP-Snb_ic1_pruned_efb438631e_sp_1_ver0.sql",
+      "bytes": 1913653,
+      "sha256": "79693a5b8bf76f589eb6f98343b7f31bcde926c828a9d58ef415188f1395f3ca"
+    },
+    {
+      "path": "snb-extension/webridge-cases/ic1-pruned-ce3282a6f587-original/optimized-20261020T220324437932Z/stdout.log",
+      "bytes": 3018,
+      "sha256": "b96590a6c90cab74eea9008cc7598008bebe59f499c54f72d9fc93b5300a5057"
+    },
+    {
+      "path": "snb-extension/java/runaway-ic1/kill-receipt.json",
+      "bytes": 67605,
+      "sha256": "1294d3a2e0b5a4ff3c5738faae8bbadf1e5884fcf20685ed2ca55d02c3102691"
+    },
+    {
+      "path": "benchmark-comparison/watchdog-selftest-final/owned-watchdog-summary.json",
+      "bytes": 1835,
+      "sha256": "e24c671adb90d4574cc9e0ac377a0a5671c32e5c0293ef7071b8f24c2a145693"
+    },
+    {
+      "path": "benchmark-comparison/watchdog-selftest-final/connection-id.json",
+      "bytes": 22,
+      "sha256": "bc2350c04100ce6d87d7d30ff6bd40767e22f0c395094c6365f1ab6b0fa190dd"
+    },
+    {
+      "path": "benchmark-comparison/watchdog-selftest-final/process-result.json",
+      "bytes": 195,
+      "sha256": "46b7186ec489206817afa1614623a347e8fd45946ef3ce90acf64780ed45c55b"
+    },
+    {
+      "path": "benchmark-comparison/watchdog-selftest-final/final-group-cleanup.json",
+      "bytes": 70,
+      "sha256": "0181053fd6d7594b73a6f7c2c40d9d8ade724bb71b372df421935eaa077dfbaf"
+    },
+    {
+      "path": "snb-extension/java/quiet-ic1-control/owned-watchdog-summary.json",
+      "bytes": 1982,
+      "sha256": "3ffe3a247982dce370e26426bcdc0a58d2d9415725a91e378f5f301bc4d74b1c"
+    },
+    {
+      "path": "snb-extension/java/quiet-ic1-control/control-result.json",
+      "bytes": 2282,
+      "sha256": "4c932661a18add2eeda56088ee00e13c14144de325ba5680b87e389d806ce01f"
+    },
+    {
+      "path": "snb-extension/java/quiet-ic1-control/final-group-cleanup.json",
+      "bytes": 70,
+      "sha256": "0181053fd6d7594b73a6f7c2c40d9d8ade724bb71b372df421935eaa077dfbaf"
+    },
+    {
+      "path": "snb-extension/java/quiet-instrumentation/before.json",
+      "bytes": 82543,
+      "sha256": "1f4e5590b73d781810d3c74830c44956c5470757918c0a8a3502a27bbc026fa0"
+    },
+    {
+      "path": "snb-extension/java/quiet-instrumentation/after-disable.json",
+      "bytes": 82511,
+      "sha256": "0d3fefe1e8812ce3dc2fa8092c4916b055285953acece38f578a142fd5a84c87"
+    }
+  ]
+}

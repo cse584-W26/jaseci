@@ -1,0 +1,105 @@
+{
+  "query": "ic13",
+  "started_unix": 1792533687.9091568,
+  "stages": [
+    {
+      "stage": "record",
+      "command": [
+        "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+        "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/webridge.py",
+        "ic13",
+        "record"
+      ],
+      "returncode": 0,
+      "started_unix": 1792533687.9091978,
+      "ended_unix": 1792533689.5025163
+    },
+    {
+      "stage": "replay",
+      "command": [
+        "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+        "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/webridge.py",
+        "ic13",
+        "replay"
+      ],
+      "returncode": 0,
+      "started_unix": 1792533689.502701,
+      "ended_unix": 1792533693.998491
+    },
+    {
+      "stage": "synth",
+      "command": [
+        "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+        "/home/baichuan/jaseci/reproduction/webridge/expansion/set-sql/webridge.py",
+        "ic13",
+        "synth",
+        "/home/baichuan/jaseci/reproduction/webridge/integration/cases/set-snb-ic13-20261020/replay-20261020T220130016016Z/graph.json"
+      ],
+      "returncode": 1,
+      "started_unix": 1792533693.9989936,
+      "ended_unix": 1792533695.4368613
+    }
+  ],
+  "graph_sha256": "ff96f7cfd051ae1856c22968caf73e63e9cffeaef14a578cc348754b12a17c7f",
+  "status": "selected-input-pipeline-passed",
+  "initial_status": "failed-synth",
+  "recovery_attempts": [
+    {
+      "stage": "synth",
+      "path": "reproduction/webridge/integration/cases/set-snb-ic13-20261020/synth-20261020T220134527017Z",
+      "process_result": {
+        "returncode": 1,
+        "wall_s": 0.9017308689653873,
+        "utc": "20261020T220135430581Z",
+        "stop_reason": null,
+        "limits": {
+          "rss_bytes": 12884901888,
+          "output_bytes": 8589934592
+        },
+        "peak_process_group_rss_bytes": 112062464,
+        "peak_case_output_bytes": 96903
+      }
+    },
+    {
+      "stage": "synth",
+      "path": "reproduction/webridge/integration/cases/set-snb-ic13-20261020/synth-20261020T220407126795Z",
+      "process_result": {
+        "returncode": 0,
+        "wall_s": 2.0211536730639637,
+        "utc": "20261020T220409149759Z",
+        "stop_reason": null,
+        "limits": {
+          "rss_bytes": 12884901888,
+          "output_bytes": 8589934592
+        },
+        "peak_process_group_rss_bytes": 163213312,
+        "peak_case_output_bytes": 3240884
+      }
+    },
+    {
+      "stage": "install",
+      "path": "reproduction/webridge/integration/cases/set-snb-ic13-20261020/install-20261020T220432Z",
+      "process_result": {
+        "returncode": 0,
+        "unchanged_generated_sql": true
+      }
+    },
+    {
+      "stage": "optimized",
+      "path": "reproduction/webridge/integration/cases/set-snb-ic13-20261020/optimized-20261020T220432895338Z",
+      "process_result": {
+        "returncode": 0,
+        "wall_s": 1.536778429057449,
+        "utc": "20261020T220434433993Z",
+        "stop_reason": null,
+        "limits": {
+          "rss_bytes": 12884901888,
+          "output_bytes": 8589934592
+        },
+        "peak_process_group_rss_bytes": 132448256,
+        "peak_case_output_bytes": 3280210
+      }
+    }
+  ],
+  "compatibility_repair": "recorded-bind-types: forward explicit graph JVM String type facts into otherwise ambiguous positional-parameter metadata; immutable graph and SQL unchanged"
+}

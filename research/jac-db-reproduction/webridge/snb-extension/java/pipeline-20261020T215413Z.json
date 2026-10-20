@@ -1,0 +1,470 @@
+[
+  {
+    "query": "is1",
+    "variant": "full",
+    "attempt": "original",
+    "stages": [
+      {
+        "stage": "record",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "record",
+          "--query",
+          "is1",
+          "--variant",
+          "full",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is1.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "original"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/record-20261020T215413058702Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/record-20261020T215413058702Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/record-20261020T215413058702Z"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "replay",
+          "--query",
+          "is1",
+          "--variant",
+          "full",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is1.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "original"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/replay-20261020T215413854677Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/replay-20261020T215413854677Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/replay-20261020T215413854677Z"
+      },
+      {
+        "stage": "synth",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "synth",
+          "--query",
+          "is1",
+          "--variant",
+          "full",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is1.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "original",
+          "--graph",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/replay-20261020T215413854677Z/graph.json"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/synth-20261020T215416089016Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/synth-20261020T215416089016Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/synth-20261020T215416089016Z"
+      },
+      {
+        "stage": "install",
+        "returncode": 0,
+        "command": [
+          "docker",
+          "exec",
+          "-i",
+          "jac-webridge-mysql57",
+          "mysql",
+          "--default-character-set=utf8mb4",
+          "-uroot",
+          "jac_snb_six_20261020"
+        ],
+        "source_sql": {
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/generated/sql/Snb_is1_full_d08afc486a/graph-SP-function.sql": "539589a49a45f3818d312fbf6792a5a45418c11d219a7968d24f17f697d306d0",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/generated/sql/Snb_is1_full_d08afc486a/graph-SP-Snb_is1_full_d08afc486a_sp_1_ver0.sql": "c1965c942603567b3a5a8cd5e85be29d45211960d6f532d17e05581fad8b6f02"
+        },
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/install"
+      },
+      {
+        "stage": "optimized",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "optimized",
+          "--query",
+          "is1",
+          "--variant",
+          "full",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is1.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "original",
+          "--repeats",
+          "3"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/optimized-20261020T215417429202Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/optimized-20261020T215417429202Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original/optimized-20261020T215417429202Z"
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original",
+    "status": "success"
+  },
+  {
+    "query": "is1",
+    "variant": "pruned",
+    "attempt": "original",
+    "stages": [
+      {
+        "stage": "record",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "record",
+          "--query",
+          "is1",
+          "--variant",
+          "pruned",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is1.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "original"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/record-20261020T215418701774Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/record-20261020T215418701774Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/record-20261020T215418701774Z"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "replay",
+          "--query",
+          "is1",
+          "--variant",
+          "pruned",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is1.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "original"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/replay-20261020T215419865174Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/replay-20261020T215419865174Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/replay-20261020T215419865174Z"
+      },
+      {
+        "stage": "synth",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "synth",
+          "--query",
+          "is1",
+          "--variant",
+          "pruned",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is1.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "original",
+          "--graph",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/replay-20261020T215419865174Z/graph.json"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/synth-20261020T215422334537Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/synth-20261020T215422334537Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/synth-20261020T215422334537Z"
+      },
+      {
+        "stage": "install",
+        "returncode": 0,
+        "command": [
+          "docker",
+          "exec",
+          "-i",
+          "jac-webridge-mysql57",
+          "mysql",
+          "--default-character-set=utf8mb4",
+          "-uroot",
+          "jac_snb_six_20261020"
+        ],
+        "source_sql": {
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/generated/sql/Snb_is1_pruned_7e2ab66c14/graph-SP-function.sql": "539589a49a45f3818d312fbf6792a5a45418c11d219a7968d24f17f697d306d0",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/generated/sql/Snb_is1_pruned_7e2ab66c14/graph-SP-Snb_is1_pruned_7e2ab66c14_sp_1_ver0.sql": "c22ce832dd910ed35dccbc7f98fde24812a8831c49e7bf5a3e9b15620b7c20aa"
+        },
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/install"
+      },
+      {
+        "stage": "optimized",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "optimized",
+          "--query",
+          "is1",
+          "--variant",
+          "pruned",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is1.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "original",
+          "--repeats",
+          "3"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/optimized-20261020T215423435745Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/optimized-20261020T215423435745Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original/optimized-20261020T215423435745Z"
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-pruned-263e6da75466-original",
+    "status": "success"
+  },
+  {
+    "query": "is3",
+    "variant": "full",
+    "attempt": "original",
+    "stages": [
+      {
+        "stage": "record",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "record",
+          "--query",
+          "is3",
+          "--variant",
+          "full",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is3.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "original"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-e3bfd4c40156-original/record-20261020T215424354735Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-e3bfd4c40156-original/record-20261020T215424354735Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-e3bfd4c40156-original/record-20261020T215424354735Z"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "replay",
+          "--query",
+          "is3",
+          "--variant",
+          "full",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is3.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "original"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-e3bfd4c40156-original/replay-20261020T215425170531Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-e3bfd4c40156-original/replay-20261020T215425170531Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-e3bfd4c40156-original/replay-20261020T215425170531Z"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "synth",
+          "--query",
+          "is3",
+          "--variant",
+          "full",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is3.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "original",
+          "--graph",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-e3bfd4c40156-original/replay-20261020T215425170531Z/graph.json"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-e3bfd4c40156-original/synth-20261020T215427912542Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-e3bfd4c40156-original/synth-20261020T215427912542Z"
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-full-e3bfd4c40156-original",
+    "status": "failed",
+    "failed_stage": "synth"
+  },
+  {
+    "query": "is3",
+    "variant": "pruned",
+    "attempt": "original",
+    "stages": [
+      {
+        "stage": "record",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "record",
+          "--query",
+          "is3",
+          "--variant",
+          "pruned",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is3.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "original"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/record-20261020T215428718610Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/record-20261020T215428718610Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/record-20261020T215428718610Z"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "replay",
+          "--query",
+          "is3",
+          "--variant",
+          "pruned",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is3.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "original"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/replay-20261020T215429531940Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/replay-20261020T215429531940Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/replay-20261020T215429531940Z"
+      },
+      {
+        "stage": "synth",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "synth",
+          "--query",
+          "is3",
+          "--variant",
+          "pruned",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is3.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "original",
+          "--graph",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/replay-20261020T215429531940Z/graph.json"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/synth-20261020T215431878045Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/synth-20261020T215431878045Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/synth-20261020T215431878045Z"
+      },
+      {
+        "stage": "install",
+        "returncode": 0,
+        "command": [
+          "docker",
+          "exec",
+          "-i",
+          "jac-webridge-mysql57",
+          "mysql",
+          "--default-character-set=utf8mb4",
+          "-uroot",
+          "jac_snb_six_20261020"
+        ],
+        "source_sql": {
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/generated/sql/Snb_is3_pruned_fbc4ca1984/graph-SP-function.sql": "539589a49a45f3818d312fbf6792a5a45418c11d219a7968d24f17f697d306d0",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/generated/sql/Snb_is3_pruned_fbc4ca1984/graph-SP-Snb_is3_pruned_fbc4ca1984_sp_1_ver0.sql": "67d878cb83612dd4cff219ce701227f7c581957cb2d9084b17e4d6b362dd41ec"
+        },
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/install"
+      },
+      {
+        "stage": "optimized",
+        "returncode": 0,
+        "command": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/control.py",
+          "optimized",
+          "--query",
+          "is3",
+          "--variant",
+          "pruned",
+          "--inputs",
+          "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/inputs/is3.json",
+          "--schema",
+          "/home/baichuan/jaseci/reproduction/webridge/expansion/fixture/compiler-schema.sql",
+          "--database",
+          "jac_snb_six_20261020",
+          "--attempt",
+          "original",
+          "--repeats",
+          "3"
+        ],
+        "stdout": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/optimized-20261020T215433122815Z\n/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/optimized-20261020T215433122815Z\n",
+        "stderr": "",
+        "path": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original/optimized-20261020T215433122815Z"
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is3-pruned-e3bfd4c40156-original",
+    "status": "success"
+  }
+]

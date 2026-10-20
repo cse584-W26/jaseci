@@ -1,0 +1,31 @@
+--- 
++++ 
+@@ -318,7 +318,7 @@
+         retValNameTypeMap.add(Pair.of(alias, "int"));
+       } else {
+         SQLDataType dataType = subItems.get(0).getValueExpr().computeDataType();
+-        retValNameTypeMap.add(Pair.of(alias, dataType.toString()));
++        retValNameTypeMap.add(Pair.of(alias, normalType(dataType.toString())));
+       }
+ 
+       retValNameAliasMap.add(Pair.of(alias, alias));
+@@ -580,7 +580,7 @@
+     if (expr instanceof SQLCastExpr) return normalType(((SQLCastExpr)expr).getDataType().toString());
+     if (expr instanceof SQLMethodInvokeExpr) {
+       String method=((SQLMethodInvokeExpr)expr).getMethodName();
+-      if (method.equalsIgnoreCase("JSON_UNQUOTE") || method.equalsIgnoreCase("JSON_EXTRACT")) return "LONGTEXT";
++      if (method.equalsIgnoreCase("JSON_UNQUOTE") || method.equalsIgnoreCase("JSON_EXTRACT") || method.equalsIgnoreCase("JSON_TYPE") || method.equalsIgnoreCase("CONCAT")) return "LONGTEXT";
+     }
+     SQLDataType type=expr.computeDataType();
+     if(type!=null)return normalType(type.toString());
+@@ -608,6 +608,10 @@
+ 
+   private Pair<String,String> parameterType(SQLVariantRefExpr parameter) {
+     for(SQLObject p=parameter.getParent();p!=null;p=p.getParent()) {
++      if(p instanceof SQLMethodInvokeExpr) {
++        String method=((SQLMethodInvokeExpr)p).getMethodName();
++        if(method.equalsIgnoreCase("CONCAT") || method.equalsIgnoreCase("JSON_EXTRACT") || method.equalsIgnoreCase("JSON_UNQUOTE"))return Pair.of(parameter.toString(),"LONGTEXT");
++      }
+       if(p instanceof SQLCastExpr)return Pair.of(parameter.toString(),normalType(((SQLCastExpr)p).getDataType().toString()));
+       if(p instanceof SQLLimit)return Pair.of(parameter.toString(),"BIGINT");
+       if(p instanceof SQLInListExpr)return Pair.of(((SQLInListExpr)p).getExpr().toString(),expressionType(((SQLInListExpr)p).getExpr(),scope(p)));

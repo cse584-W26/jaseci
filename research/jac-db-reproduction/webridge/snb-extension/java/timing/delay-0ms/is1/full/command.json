@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/java",
+    "-Xmx8g",
+    "-Dorg.slf4j.simpleLogger.defaultLogLevel=error",
+    "-Dexperiment.inputs=/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/snapshots/263e6da75466e7aa70b986f7551be93c7698262db3aa1e0beb92ee22f1245dde/inputs.json",
+    "-Dexperiment.mysql.url=jdbc:mysql://127.0.0.1:18537/jac_snb_six_20261020?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true",
+    "-Dexperiment.variant=full",
+    "-Dexperiment.delay.ms=0",
+    "-Dalignment.dir=/home/baichuan/jaseci/reproduction/webridge/alignment",
+    "-Dintegration.dir=/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/is1-full-263e6da75466-original",
+    "-Dexecution.dir=/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/timing/delay-0ms/is1/full",
+    "-Dintegration.api=Snb_is1_full_d08afc486a",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/timer-overlay/eccf896c395f5620ef4285a14510e5cab582157f27d9a0b32f98ddb24dc55c83/classes:/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/snapshots/263e6da75466e7aa70b986f7551be93c7698262db3aa1e0beb92ee22f1245dde/classes:/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/classes:/home/baichuan/jaseci/reproduction/webridge/integration/jdbc-string/combined:/home/baichuan/jaseci/reproduction/webridge/integration/sql-frontend/classes:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+    "SnbTiming",
+    "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/timing/delay-0ms/is1/full/requests/rows.jsonl",
+    "10",
+    "30",
+    "baseline,sp"
+  ],
+  "cpu_affinity": "9,19",
+  "utc": "20261020T223020748365Z",
+  "timeout_s": 300
+}

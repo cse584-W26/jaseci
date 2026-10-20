@@ -2,7 +2,7 @@
 
 Reproduce the colleague's database experiments on clarity3, starting 2026-10-19. Copied applications, isolated services, datasets and raw evidence live here.
 
-**WeBridge / conventional Java SQL comparison:** [eight-configuration experiments](webridge/roundtrip-comparison/REPORT.md), [English PDF](webridge/roundtrip-comparison/jac-webridge-measured-comparison.pdf), [archive guide](webridge/ARCHIVE.md).
+**Jac / WeBridge comparison:** [seven existing SNB workloads across eight configurations](webridge/benchmark-comparison/REPORT.md), [English PDF](webridge/benchmark-comparison/jac-webridge-snb-comparison.pdf), [verified matrix](webridge/benchmark-comparison/results.json), [archive guide](webridge/ARCHIVE.md).
 
 **Main report:** [REPORT.md](REPORT.md). **Stage status:** [scripts/STATUS.md](scripts/STATUS.md).
 

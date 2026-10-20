@@ -1,0 +1,30 @@
+{
+  "argv": [
+    "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/java",
+    "-Xmx8g",
+    "-Dorg.slf4j.simpleLogger.defaultLogLevel=error",
+    "-Dpruned.auth=true",
+    "-Dpruned.acl=true",
+    "-Dpruned.schema=true",
+    "-Dpruned.hydration=true",
+    "-Dexperiment.inputs=/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/snapshots/ce3282a6f587ae1b9f3cfc2c2ad707a0ded647d4c6d0154e14f12606a4b7f55a/inputs.json",
+    "-Dexperiment.mysql.url=jdbc:mysql://127.0.0.1:18537/jac_snb_six_20261020?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true",
+    "-Dexperiment.variant=pruned",
+    "-Dexperiment.delay.ms=10",
+    "-Dalignment.dir=/home/baichuan/jaseci/reproduction/webridge/alignment",
+    "-Dintegration.dir=/home/baichuan/jaseci/reproduction/webridge/snb-extension/webridge-cases/ic1-pruned-ce3282a6f587-original",
+    "-Dexecution.dir=/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/timing/censored/delay-10ms/pruned/attempt-0",
+    "-Dintegration.api=Snb_ic1_pruned_efb438631e",
+    "-Dexperiment.allow.first.sp.metadata=true",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/timer-overlay/eccf896c395f5620ef4285a14510e5cab582157f27d9a0b32f98ddb24dc55c83/classes:/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/frontend/6743cd0870ee82bb1a63ed41695afa6427cae1409e334566bea20e70849ebd72/classes:/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/snapshots/ce3282a6f587ae1b9f3cfc2c2ad707a0ded647d4c6d0154e14f12606a4b7f55a/classes:/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/classes:/home/baichuan/jaseci/reproduction/webridge/integration/jdbc-string/combined:/home/baichuan/jaseci/reproduction/webridge/integration/sql-frontend/classes:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+    "SnbTiming",
+    "/home/baichuan/jaseci/reproduction/webridge/snb-extension/java/timing/censored/delay-10ms/pruned/attempt-0/requests/rows.jsonl",
+    "0",
+    "1",
+    "sp"
+  ],
+  "cpu_affinity": "9,19",
+  "utc": "20261020T224802258921Z",
+  "timeout_s": 45
+}

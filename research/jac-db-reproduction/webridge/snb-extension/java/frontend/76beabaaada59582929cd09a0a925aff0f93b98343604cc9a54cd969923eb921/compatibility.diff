@@ -1,0 +1,11 @@
+--- 
++++ 
+@@ -580,7 +580,7 @@
+     if (expr instanceof SQLCastExpr) return normalType(((SQLCastExpr)expr).getDataType().toString());
+     if (expr instanceof SQLMethodInvokeExpr) {
+       String method=((SQLMethodInvokeExpr)expr).getMethodName();
+-      if (method.equalsIgnoreCase("JSON_UNQUOTE") || method.equalsIgnoreCase("JSON_EXTRACT")) return "LONGTEXT";
++      if (method.equalsIgnoreCase("JSON_UNQUOTE") || method.equalsIgnoreCase("JSON_EXTRACT") || method.equalsIgnoreCase("JSON_TYPE") || method.equalsIgnoreCase("CONCAT")) return "LONGTEXT";
+     }
+     SQLDataType type=expr.computeDataType();
+     if(type!=null)return normalType(type.toString());
