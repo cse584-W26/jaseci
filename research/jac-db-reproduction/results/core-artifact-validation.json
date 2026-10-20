@@ -1,0 +1,105 @@
+{
+  "mode": "offline artifacts only",
+  "ic5": {
+    "baseline": {
+      "census_requests": 20,
+      "sql_total": 278769,
+      "structural_sql": 0,
+      "latency_requests": 40,
+      "parity": true,
+      "app_sha256": "60aa325001594bf900a8ebcfa24dd1d36fa0f00d0fd3fc9589a781f37f9a32a7"
+    },
+    "final": {
+      "census_requests": 20,
+      "sql_total": 432,
+      "structural_sql": 0,
+      "latency_requests": 60,
+      "parity": true,
+      "app_sha256": "60aa325001594bf900a8ebcfa24dd1d36fa0f00d0fd3fc9589a781f37f9a32a7"
+    }
+  },
+  "snb": {
+    "jac": {
+      "base": "results/snb-canonical/jac/snb_jaseci-pg",
+      "warm": 140,
+      "timed": 2550,
+      "historical_hash_matches": 140,
+      "errors": 0
+    },
+    "postgres": {
+      "base": "results/locked/snb-canonical/postgres/snb_postgres",
+      "warm": 140,
+      "timed": 2550,
+      "historical_hash_matches": 140,
+      "errors": 0
+    },
+    "sqlalchemy": {
+      "base": "results/locked/snb-canonical/sqlalchemy/snb_sqlalchemy",
+      "warm": 140,
+      "timed": 2550,
+      "historical_hash_matches": 140,
+      "errors": 0
+    },
+    "neo4j": {
+      "base": "results/locked/snb-canonical/neo4j/snb_neo4j",
+      "warm": 140,
+      "timed": 2550,
+      "historical_hash_matches": 140,
+      "errors": 0
+    }
+  },
+  "tpcc": {
+    "jaseci-pg": {
+      "base": "results/tpcc-jac/tpcc_jaseci-pg",
+      "warm": 100,
+      "timed": 800,
+      "plan_sha256": "769147b46ac2a157a378e061089b7f8e043d5f261c361aebbe9ce9a196cf8501",
+      "all_seven_oracles": true,
+      "final_counts": {
+        "orders": 30487,
+        "order_line": 305500,
+        "new_order": 9487,
+        "history": 30406,
+        "next_o_sum": 30497,
+        "w_ytd": 1362049.8600000006,
+        "consistency_bad": 0
+      },
+      "errors": 0
+    },
+    "postgres": {
+      "base": "results/locked/tpcc-postgres/tpcc_postgres",
+      "warm": 100,
+      "timed": 800,
+      "plan_sha256": "769147b46ac2a157a378e061089b7f8e043d5f261c361aebbe9ce9a196cf8501",
+      "all_seven_oracles": true,
+      "final_counts": {
+        "orders": 30487,
+        "order_line": 305500,
+        "new_order": 9487,
+        "history": 30406,
+        "next_o_sum": 30497,
+        "w_ytd": 1362049.86,
+        "consistency_bad": 0
+      },
+      "errors": 0
+    },
+    "sqlalchemy": {
+      "base": "results/locked/tpcc-sqlalchemy/tpcc_sqlalchemy",
+      "warm": 100,
+      "timed": 800,
+      "plan_sha256": "769147b46ac2a157a378e061089b7f8e043d5f261c361aebbe9ce9a196cf8501",
+      "all_seven_oracles": true,
+      "final_counts": {
+        "orders": 30487,
+        "order_line": 305500,
+        "new_order": 9487,
+        "history": 30406,
+        "next_o_sum": 30497,
+        "w_ytd": 1362049.86,
+        "consistency_bad": 0
+      },
+      "errors": 0
+    }
+  },
+  "all_checks_passed": true
+}

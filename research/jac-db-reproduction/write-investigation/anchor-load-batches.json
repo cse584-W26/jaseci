@@ -1,0 +1,104 @@
+{
+  "like": [
+    {
+      "requested_ids": 1,
+      "execute_ms": 0.02,
+      "query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+      "parameters": {
+        "1": "{00000000-0000-0000-0000-000000000000}"
+      }
+    },
+    {
+      "requested_ids": 1,
+      "execute_ms": 0.014,
+      "query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+      "parameters": {
+        "1": "{a6aa67a9-a09f-4b90-87d2-b404400d176d}"
+      }
+    },
+    {
+      "requested_ids": 1,
+      "execute_ms": 0.011,
+      "query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+      "parameters": {
+        "1": "{be88871d-b7c9-4cef-b134-df8946207f84}"
+      }
+    },
+    {
+      "requested_ids": 1,
+      "execute_ms": 0.014,
+      "query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+      "parameters": {
+        "1": "{102e8cbd-7728-4c44-b83c-ef6c177dacb3}"
+      }
+    }
+  ],
+  "follow": [
+    {
+      "requested_ids": 1,
+      "execute_ms": 0.02,
+      "query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+      "parameters": {
+        "1": "{00000000-0000-0000-0000-000000000000}"
+      }
+    },
+    {
+      "requested_ids": 1,
+      "execute_ms": 0.018,
+      "query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+      "parameters": {
+        "1": "{a6aa67a9-a09f-4b90-87d2-b404400d176d}"
+      }
+    },
+    {
+      "requested_ids": 1,
+      "execute_ms": 0.011,
+      "query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+      "parameters": {
+        "1": "{be88871d-b7c9-4cef-b134-df8946207f84}"
+      }
+    },
+    {
+      "requested_ids": 1,
+      "execute_ms": 0.012,
+      "query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+      "parameters": {
+        "1": "{00ebd928-497c-46a9-b2b8-aa127ee0438f}"
+      }
+    },
+    {
+      "requested_ids": 1,
+      "execute_ms": 0.013,
+      "query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+      "parameters": {
+        "1": "{b5942335-828d-45fc-98b5-4edd0e4754db}"
+      }
+    }
+  ],
+  "create_tweet": [
+    {
+      "requested_ids": 1,
+      "execute_ms": 0.019,
+      "query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+      "parameters": {
+        "1": "{00000000-0000-0000-0000-000000000000}"
+      }
+    },
+    {
+      "requested_ids": 1,
+      "execute_ms": 0.013,
+      "query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+      "parameters": {
+        "1": "{a6aa67a9-a09f-4b90-87d2-b404400d176d}"
+      }
+    },
+    {
+      "requested_ids": 1,
+      "execute_ms": 0.034,
+      "query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+      "parameters": {
+        "1": "{be88871d-b7c9-4cef-b134-df8946207f84}"
+      }
+    }
+  ]
+}

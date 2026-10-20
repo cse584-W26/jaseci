@@ -1,0 +1,3520 @@
+{
+  "1-jaseci/create_tweet": {
+    "folder": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet",
+    "request_windows": 100,
+    "total_executions": 900,
+    "executions_per_request": 9,
+    "categories": {
+      "transaction_begin": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.33300000000000024,
+        "execute_ms": 0.3910000000000003,
+        "request_count": 100,
+        "sample_query": "BEGIN ISOLATION LEVEL SERIALIZABLE",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.007240000000000005
+      },
+      "transaction_configuration": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.3090000000000002,
+        "execute_ms": 0.32300000000000023,
+        "request_count": 100,
+        "sample_query": "SET LOCAL lock_timeout = '10s'",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.006320000000000004
+      },
+      "anchor_load_or_acl": {
+        "executions": 300,
+        "parse_ms": 0.0,
+        "bind_ms": 14.285,
+        "execute_ms": 4.10599999999999,
+        "request_count": 100,
+        "sample_query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint, a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+        "executions_per_request": 3.0,
+        "protocol_ms_per_request": 0.1839099999999999
+      },
+      "graph_traversal": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 32.007,
+        "execute_ms": 3.004999999999998,
+        "request_count": 100,
+        "sample_query": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $4 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) ORDER BY f0.ord, e1.seq, e1.id",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.35011999999999993
+      },
+      "anchor_upsert": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 3.411999999999999,
+        "execute_ms": 9.813000000000002,
+        "request_count": 100,
+        "sample_query": "INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, format_version, updated_at, src_type, dst_type) SELECT id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, $1, now(), src_type, dst_type FROM unnest( CAST($2 AS uuid[]), CAST($3 AS text[]), CAST($4 AS text[]), CAST($5 AS text[]), CAST($6 AS text[]), CAST($7 AS uuid[]), CAST($8 AS uuid[]), CAST($9 AS uuid[]), CAST($10 AS boolean[]), CAST($11 AS jsonb[]), CAST($12 AS text[]), CAST($13 AS text[]) ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, src_type, dst_type) ON CONFLICT (id) DO UPDATE SET kind = EXCLUDED.kind, arch_type = EXCLUDED.arch_type, arch_module = EXCLUDED.arch_module, fingerprint = EXCLUDED.fingerprint, root_id = EXCLUDED.root_id, src = EXCLUDED.src, dst = EXCLUDED.dst, undirected = EXCLUDED.undirected, props = EXCLUDED.props, format_version = EXCLUDED.format_version, updated_at = now(), -- an edge re-saved while its endpoints are unpopulated stubs -- carries NULL types; keep whatever was recorded earlier src_type = COALESCE(EXCLUDED.src_type, anchors.src_type), dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.13225
+      },
+      "type_registry_write": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.6680000000000005,
+        "execute_ms": 1.914999999999998,
+        "request_count": 100,
+        "sample_query": "INSERT INTO graph_types (type_name, ancestor) SELECT * FROM unnest(CAST($1 AS text[]), CAST($2 AS text[])) ON CONFLICT DO NOTHING",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.025829999999999985
+      },
+      "explicit_commit": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.2620000000000002,
+        "execute_ms": 141.84600000000003,
+        "request_count": 100,
+        "sample_query": "COMMIT",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 1.4210800000000003
+      }
+    },
+    "fingerprints": {
+      "547004d6c33e887b6fe478e1d23004ef14c3fa1c8c4756ec52aea4a3933e7fb0": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.33300000000000024,
+        "execute_ms": 0.3910000000000003,
+        "query": "BEGIN ISOLATION LEVEL SERIALIZABLE",
+        "category": "transaction_begin"
+      },
+      "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.3090000000000002,
+        "execute_ms": 0.32300000000000023,
+        "query": "SET LOCAL lock_timeout = '10s'",
+        "category": "transaction_configuration"
+      },
+      "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a": {
+        "executions": 300,
+        "parse_ms": 0.0,
+        "bind_ms": 14.285,
+        "execute_ms": 4.10599999999999,
+        "query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint, a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+        "category": "anchor_load_or_acl"
+      },
+      "bfcfd7b4fe33d76450f35d82fae711e9bb08b57ce71459416544d5a962362cb9": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 32.007,
+        "execute_ms": 3.004999999999998,
+        "query": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $4 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) ORDER BY f0.ord, e1.seq, e1.id",
+        "category": "graph_traversal"
+      },
+      "4855fb2ba01bec28652be8fcd457edce7f0706d9763468e4ce252655168f07ab": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 3.411999999999999,
+        "execute_ms": 9.813000000000002,
+        "query": "INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, format_version, updated_at, src_type, dst_type) SELECT id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, $1, now(), src_type, dst_type FROM unnest( CAST($2 AS uuid[]), CAST($3 AS text[]), CAST($4 AS text[]), CAST($5 AS text[]), CAST($6 AS text[]), CAST($7 AS uuid[]), CAST($8 AS uuid[]), CAST($9 AS uuid[]), CAST($10 AS boolean[]), CAST($11 AS jsonb[]), CAST($12 AS text[]), CAST($13 AS text[]) ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, src_type, dst_type) ON CONFLICT (id) DO UPDATE SET kind = EXCLUDED.kind, arch_type = EXCLUDED.arch_type, arch_module = EXCLUDED.arch_module, fingerprint = EXCLUDED.fingerprint, root_id = EXCLUDED.root_id, src = EXCLUDED.src, dst = EXCLUDED.dst, undirected = EXCLUDED.undirected, props = EXCLUDED.props, format_version = EXCLUDED.format_version, updated_at = now(), -- an edge re-saved while its endpoints are unpopulated stubs -- carries NULL types; keep whatever was recorded earlier src_type = COALESCE(EXCLUDED.src_type, anchors.src_type), dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)",
+        "category": "anchor_upsert"
+      },
+      "6f4a7467eb89bf738701ebeee6ca214957a36fc4863dd0e48d8fb3cf949a6d18": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.6680000000000005,
+        "execute_ms": 1.914999999999998,
+        "query": "INSERT INTO graph_types (type_name, ancestor) SELECT * FROM unnest(CAST($1 AS text[]), CAST($2 AS text[])) ON CONFLICT DO NOTHING",
+        "category": "type_registry_write"
+      },
+      "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.2620000000000002,
+        "execute_ms": 141.84600000000003,
+        "query": "COMMIT",
+        "category": "explicit_commit"
+      }
+    },
+    "windows": [
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-000.log",
+        "executions": 9,
+        "protocol_ms": 2.27
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-001.log",
+        "executions": 9,
+        "protocol_ms": 2.157
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-002.log",
+        "executions": 9,
+        "protocol_ms": 2.28
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-003.log",
+        "executions": 9,
+        "protocol_ms": 2.204
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-004.log",
+        "executions": 9,
+        "protocol_ms": 2.257
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-005.log",
+        "executions": 9,
+        "protocol_ms": 1.9649999999999999
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-006.log",
+        "executions": 9,
+        "protocol_ms": 2.511
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-007.log",
+        "executions": 9,
+        "protocol_ms": 2.4410000000000003
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-008.log",
+        "executions": 9,
+        "protocol_ms": 2.2479999999999998
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-009.log",
+        "executions": 9,
+        "protocol_ms": 2.3
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-010.log",
+        "executions": 9,
+        "protocol_ms": 2.209
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-011.log",
+        "executions": 9,
+        "protocol_ms": 2.4
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-012.log",
+        "executions": 9,
+        "protocol_ms": 1.64
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-013.log",
+        "executions": 9,
+        "protocol_ms": 2.111
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-014.log",
+        "executions": 9,
+        "protocol_ms": 1.907
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-015.log",
+        "executions": 9,
+        "protocol_ms": 2.338
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-016.log",
+        "executions": 9,
+        "protocol_ms": 2.2800000000000002
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-017.log",
+        "executions": 9,
+        "protocol_ms": 2.078
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-018.log",
+        "executions": 9,
+        "protocol_ms": 2.543
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-019.log",
+        "executions": 9,
+        "protocol_ms": 2.201
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-020.log",
+        "executions": 9,
+        "protocol_ms": 1.627
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-021.log",
+        "executions": 9,
+        "protocol_ms": 2.284
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-022.log",
+        "executions": 9,
+        "protocol_ms": 2.566
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-023.log",
+        "executions": 9,
+        "protocol_ms": 1.946
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-024.log",
+        "executions": 9,
+        "protocol_ms": 2.162
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-025.log",
+        "executions": 9,
+        "protocol_ms": 1.6560000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-026.log",
+        "executions": 9,
+        "protocol_ms": 1.973
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-027.log",
+        "executions": 9,
+        "protocol_ms": 1.9809999999999999
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-028.log",
+        "executions": 9,
+        "protocol_ms": 2.405
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-029.log",
+        "executions": 9,
+        "protocol_ms": 2.132
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-030.log",
+        "executions": 9,
+        "protocol_ms": 2.362
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-031.log",
+        "executions": 9,
+        "protocol_ms": 2.089
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-032.log",
+        "executions": 9,
+        "protocol_ms": 1.799
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-033.log",
+        "executions": 9,
+        "protocol_ms": 2.161
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-034.log",
+        "executions": 9,
+        "protocol_ms": 2.077
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-035.log",
+        "executions": 9,
+        "protocol_ms": 1.937
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-036.log",
+        "executions": 9,
+        "protocol_ms": 1.941
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-037.log",
+        "executions": 9,
+        "protocol_ms": 2.149
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-038.log",
+        "executions": 9,
+        "protocol_ms": 2.472
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-039.log",
+        "executions": 9,
+        "protocol_ms": 2.182
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-040.log",
+        "executions": 9,
+        "protocol_ms": 2.3240000000000003
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-041.log",
+        "executions": 9,
+        "protocol_ms": 2.03
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-042.log",
+        "executions": 9,
+        "protocol_ms": 1.965
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-043.log",
+        "executions": 9,
+        "protocol_ms": 2.039
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-044.log",
+        "executions": 9,
+        "protocol_ms": 2.6310000000000002
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-045.log",
+        "executions": 9,
+        "protocol_ms": 1.675
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-046.log",
+        "executions": 9,
+        "protocol_ms": 2.373
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-047.log",
+        "executions": 9,
+        "protocol_ms": 1.952
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-048.log",
+        "executions": 9,
+        "protocol_ms": 1.854
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-049.log",
+        "executions": 9,
+        "protocol_ms": 2.072
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-050.log",
+        "executions": 9,
+        "protocol_ms": 2.6510000000000002
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-051.log",
+        "executions": 9,
+        "protocol_ms": 2.11
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-052.log",
+        "executions": 9,
+        "protocol_ms": 1.7349999999999999
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-053.log",
+        "executions": 9,
+        "protocol_ms": 1.906
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-054.log",
+        "executions": 9,
+        "protocol_ms": 2.285
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-055.log",
+        "executions": 9,
+        "protocol_ms": 2.485
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-056.log",
+        "executions": 9,
+        "protocol_ms": 2.189
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-057.log",
+        "executions": 9,
+        "protocol_ms": 1.9080000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-058.log",
+        "executions": 9,
+        "protocol_ms": 1.9120000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-059.log",
+        "executions": 9,
+        "protocol_ms": 2.0989999999999998
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-060.log",
+        "executions": 9,
+        "protocol_ms": 2.136
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-061.log",
+        "executions": 9,
+        "protocol_ms": 1.806
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-062.log",
+        "executions": 9,
+        "protocol_ms": 2.0709999999999997
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-063.log",
+        "executions": 9,
+        "protocol_ms": 1.883
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-064.log",
+        "executions": 9,
+        "protocol_ms": 2.093
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-065.log",
+        "executions": 9,
+        "protocol_ms": 2.8209999999999997
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-066.log",
+        "executions": 9,
+        "protocol_ms": 2.094
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-067.log",
+        "executions": 9,
+        "protocol_ms": 1.987
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-068.log",
+        "executions": 9,
+        "protocol_ms": 2.27
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-069.log",
+        "executions": 9,
+        "protocol_ms": 1.857
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-070.log",
+        "executions": 9,
+        "protocol_ms": 1.9089999999999998
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-071.log",
+        "executions": 9,
+        "protocol_ms": 2.101
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-072.log",
+        "executions": 9,
+        "protocol_ms": 1.9769999999999999
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-073.log",
+        "executions": 9,
+        "protocol_ms": 1.9849999999999999
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-074.log",
+        "executions": 9,
+        "protocol_ms": 1.893
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-075.log",
+        "executions": 9,
+        "protocol_ms": 2.017
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-076.log",
+        "executions": 9,
+        "protocol_ms": 2.354
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-077.log",
+        "executions": 9,
+        "protocol_ms": 1.6300000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-078.log",
+        "executions": 9,
+        "protocol_ms": 2.0180000000000002
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-079.log",
+        "executions": 9,
+        "protocol_ms": 2.005
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-080.log",
+        "executions": 9,
+        "protocol_ms": 2.674
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-081.log",
+        "executions": 9,
+        "protocol_ms": 2.1990000000000003
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-082.log",
+        "executions": 9,
+        "protocol_ms": 2.269
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-083.log",
+        "executions": 9,
+        "protocol_ms": 2.276
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-084.log",
+        "executions": 9,
+        "protocol_ms": 2.207
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-085.log",
+        "executions": 9,
+        "protocol_ms": 2.258
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-086.log",
+        "executions": 9,
+        "protocol_ms": 2.628
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-087.log",
+        "executions": 9,
+        "protocol_ms": 1.7449999999999999
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-088.log",
+        "executions": 9,
+        "protocol_ms": 2.098
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-089.log",
+        "executions": 9,
+        "protocol_ms": 1.894
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-090.log",
+        "executions": 9,
+        "protocol_ms": 2.04
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-091.log",
+        "executions": 9,
+        "protocol_ms": 1.639
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-092.log",
+        "executions": 9,
+        "protocol_ms": 2.038
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-093.log",
+        "executions": 9,
+        "protocol_ms": 2.497
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-094.log",
+        "executions": 9,
+        "protocol_ms": 2.266
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-095.log",
+        "executions": 9,
+        "protocol_ms": 2.289
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-096.log",
+        "executions": 9,
+        "protocol_ms": 2.1639999999999997
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-097.log",
+        "executions": 9,
+        "protocol_ms": 1.974
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-098.log",
+        "executions": 9,
+        "protocol_ms": 1.972
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-099.log",
+        "executions": 9,
+        "protocol_ms": 2.205
+      }
+    ],
+    "interpretation": "Complete multiline SQL reconstructed from raw logs. Parse/bind/execute server durations; explicit COMMIT events only. Implicit autocommit completion is not separately timed. Trigger work is included in parent statements and is not a separate SQL event. Repeated query counts measure commands, not network packets."
+  },
+  "1-jaseci/follow": {
+    "folder": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow",
+    "request_windows": 100,
+    "total_executions": 1200,
+    "executions_per_request": 12,
+    "categories": {
+      "transaction_begin": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.3050000000000002,
+        "execute_ms": 0.3910000000000003,
+        "request_count": 100,
+        "sample_query": "BEGIN ISOLATION LEVEL SERIALIZABLE",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.006960000000000005
+      },
+      "transaction_configuration": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.23500000000000018,
+        "execute_ms": 0.2980000000000002,
+        "request_count": 100,
+        "sample_query": "SET LOCAL lock_timeout = '10s'",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.005330000000000004
+      },
+      "anchor_load_or_acl": {
+        "executions": 500,
+        "parse_ms": 0.0,
+        "bind_ms": 21.330999999999996,
+        "execute_ms": 6.268999999999977,
+        "request_count": 100,
+        "sample_query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint, a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+        "executions_per_request": 5.0,
+        "protocol_ms_per_request": 0.27599999999999975
+      },
+      "graph_traversal": {
+        "executions": 200,
+        "parse_ms": 0.0,
+        "bind_ms": 65.617,
+        "execute_ms": 18.95999999999998,
+        "request_count": 100,
+        "sample_query": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $4 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) ORDER BY f0.ord, e1.seq, e1.id",
+        "executions_per_request": 2.0,
+        "protocol_ms_per_request": 0.8457699999999998
+      },
+      "anchor_upsert": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 2.603999999999997,
+        "execute_ms": 7.591999999999999,
+        "request_count": 100,
+        "sample_query": "INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, format_version, updated_at, src_type, dst_type) SELECT id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, $1, now(), src_type, dst_type FROM unnest( CAST($2 AS uuid[]), CAST($3 AS text[]), CAST($4 AS text[]), CAST($5 AS text[]), CAST($6 AS text[]), CAST($7 AS uuid[]), CAST($8 AS uuid[]), CAST($9 AS uuid[]), CAST($10 AS boolean[]), CAST($11 AS jsonb[]), CAST($12 AS text[]), CAST($13 AS text[]) ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, src_type, dst_type) ON CONFLICT (id) DO UPDATE SET kind = EXCLUDED.kind, arch_type = EXCLUDED.arch_type, arch_module = EXCLUDED.arch_module, fingerprint = EXCLUDED.fingerprint, root_id = EXCLUDED.root_id, src = EXCLUDED.src, dst = EXCLUDED.dst, undirected = EXCLUDED.undirected, props = EXCLUDED.props, format_version = EXCLUDED.format_version, updated_at = now(), -- an edge re-saved while its endpoints are unpopulated stubs -- carries NULL types; keep whatever was recorded earlier src_type = COALESCE(EXCLUDED.src_type, anchors.src_type), dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.10195999999999997
+      },
+      "type_registry_write": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.5930000000000004,
+        "execute_ms": 1.6149999999999998,
+        "request_count": 100,
+        "sample_query": "INSERT INTO graph_types (type_name, ancestor) SELECT * FROM unnest(CAST($1 AS text[]), CAST($2 AS text[])) ON CONFLICT DO NOTHING",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.022080000000000002
+      },
+      "explicit_commit": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.23200000000000018,
+        "execute_ms": 137.758,
+        "request_count": 100,
+        "sample_query": "COMMIT",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 1.3799000000000001
+      }
+    },
+    "fingerprints": {
+      "547004d6c33e887b6fe478e1d23004ef14c3fa1c8c4756ec52aea4a3933e7fb0": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.3050000000000002,
+        "execute_ms": 0.3910000000000003,
+        "query": "BEGIN ISOLATION LEVEL SERIALIZABLE",
+        "category": "transaction_begin"
+      },
+      "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.23500000000000018,
+        "execute_ms": 0.2980000000000002,
+        "query": "SET LOCAL lock_timeout = '10s'",
+        "category": "transaction_configuration"
+      },
+      "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a": {
+        "executions": 500,
+        "parse_ms": 0.0,
+        "bind_ms": 21.330999999999996,
+        "execute_ms": 6.268999999999977,
+        "query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint, a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+        "category": "anchor_load_or_acl"
+      },
+      "bfcfd7b4fe33d76450f35d82fae711e9bb08b57ce71459416544d5a962362cb9": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 31.48,
+        "execute_ms": 2.8759999999999972,
+        "query": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $4 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) ORDER BY f0.ord, e1.seq, e1.id",
+        "category": "graph_traversal"
+      },
+      "f2a0f5808bb79659e9c9aee7b4f744bac171dddf192192b438086ec15132581b": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 34.137,
+        "execute_ms": 16.08399999999999,
+        "query": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)) AND n1.id = ANY(CAST($6 AS uuid[])) ORDER BY f0.ord, e1.seq, e1.id",
+        "category": "graph_traversal"
+      },
+      "4855fb2ba01bec28652be8fcd457edce7f0706d9763468e4ce252655168f07ab": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 2.603999999999997,
+        "execute_ms": 7.591999999999999,
+        "query": "INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, format_version, updated_at, src_type, dst_type) SELECT id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, $1, now(), src_type, dst_type FROM unnest( CAST($2 AS uuid[]), CAST($3 AS text[]), CAST($4 AS text[]), CAST($5 AS text[]), CAST($6 AS text[]), CAST($7 AS uuid[]), CAST($8 AS uuid[]), CAST($9 AS uuid[]), CAST($10 AS boolean[]), CAST($11 AS jsonb[]), CAST($12 AS text[]), CAST($13 AS text[]) ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, src_type, dst_type) ON CONFLICT (id) DO UPDATE SET kind = EXCLUDED.kind, arch_type = EXCLUDED.arch_type, arch_module = EXCLUDED.arch_module, fingerprint = EXCLUDED.fingerprint, root_id = EXCLUDED.root_id, src = EXCLUDED.src, dst = EXCLUDED.dst, undirected = EXCLUDED.undirected, props = EXCLUDED.props, format_version = EXCLUDED.format_version, updated_at = now(), -- an edge re-saved while its endpoints are unpopulated stubs -- carries NULL types; keep whatever was recorded earlier src_type = COALESCE(EXCLUDED.src_type, anchors.src_type), dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)",
+        "category": "anchor_upsert"
+      },
+      "6f4a7467eb89bf738701ebeee6ca214957a36fc4863dd0e48d8fb3cf949a6d18": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.5930000000000004,
+        "execute_ms": 1.6149999999999998,
+        "query": "INSERT INTO graph_types (type_name, ancestor) SELECT * FROM unnest(CAST($1 AS text[]), CAST($2 AS text[])) ON CONFLICT DO NOTHING",
+        "category": "type_registry_write"
+      },
+      "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.23200000000000018,
+        "execute_ms": 137.758,
+        "query": "COMMIT",
+        "category": "explicit_commit"
+      }
+    },
+    "windows": [
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-000.log",
+        "executions": 12,
+        "protocol_ms": 2.849
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-001.log",
+        "executions": 12,
+        "protocol_ms": 2.671
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-002.log",
+        "executions": 12,
+        "protocol_ms": 2.813
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-003.log",
+        "executions": 12,
+        "protocol_ms": 2.398
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-004.log",
+        "executions": 12,
+        "protocol_ms": 2.284
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-005.log",
+        "executions": 12,
+        "protocol_ms": 2.626
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-006.log",
+        "executions": 12,
+        "protocol_ms": 2.482
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-007.log",
+        "executions": 12,
+        "protocol_ms": 2.455
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-008.log",
+        "executions": 12,
+        "protocol_ms": 2.905
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-009.log",
+        "executions": 12,
+        "protocol_ms": 2.254
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-010.log",
+        "executions": 12,
+        "protocol_ms": 2.851
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-011.log",
+        "executions": 12,
+        "protocol_ms": 3.386
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-012.log",
+        "executions": 12,
+        "protocol_ms": 2.671
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-013.log",
+        "executions": 12,
+        "protocol_ms": 2.914
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-014.log",
+        "executions": 12,
+        "protocol_ms": 2.7809999999999997
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-015.log",
+        "executions": 12,
+        "protocol_ms": 2.603
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-016.log",
+        "executions": 12,
+        "protocol_ms": 2.356
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-017.log",
+        "executions": 12,
+        "protocol_ms": 3.0380000000000003
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-018.log",
+        "executions": 12,
+        "protocol_ms": 2.834
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-019.log",
+        "executions": 12,
+        "protocol_ms": 2.165
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-020.log",
+        "executions": 12,
+        "protocol_ms": 2.424
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-021.log",
+        "executions": 12,
+        "protocol_ms": 2.67
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-022.log",
+        "executions": 12,
+        "protocol_ms": 2.4939999999999998
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-023.log",
+        "executions": 12,
+        "protocol_ms": 2.129
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-024.log",
+        "executions": 12,
+        "protocol_ms": 2.618
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-025.log",
+        "executions": 12,
+        "protocol_ms": 2.284
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-026.log",
+        "executions": 12,
+        "protocol_ms": 2.572
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-027.log",
+        "executions": 12,
+        "protocol_ms": 2.626
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-028.log",
+        "executions": 12,
+        "protocol_ms": 2.676
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-029.log",
+        "executions": 12,
+        "protocol_ms": 2.814
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-030.log",
+        "executions": 12,
+        "protocol_ms": 3.003
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-031.log",
+        "executions": 12,
+        "protocol_ms": 2.372
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-032.log",
+        "executions": 12,
+        "protocol_ms": 2.866
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-033.log",
+        "executions": 12,
+        "protocol_ms": 2.559
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-034.log",
+        "executions": 12,
+        "protocol_ms": 3.017
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-035.log",
+        "executions": 12,
+        "protocol_ms": 2.6
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-036.log",
+        "executions": 12,
+        "protocol_ms": 2.553
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-037.log",
+        "executions": 12,
+        "protocol_ms": 2.145
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-038.log",
+        "executions": 12,
+        "protocol_ms": 3.074
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-039.log",
+        "executions": 12,
+        "protocol_ms": 2.462
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-040.log",
+        "executions": 12,
+        "protocol_ms": 2.838
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-041.log",
+        "executions": 12,
+        "protocol_ms": 2.62
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-042.log",
+        "executions": 12,
+        "protocol_ms": 2.649
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-043.log",
+        "executions": 12,
+        "protocol_ms": 2.2720000000000002
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-044.log",
+        "executions": 12,
+        "protocol_ms": 2.457
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-045.log",
+        "executions": 12,
+        "protocol_ms": 2.45
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-046.log",
+        "executions": 12,
+        "protocol_ms": 2.583
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-047.log",
+        "executions": 12,
+        "protocol_ms": 2.443
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-048.log",
+        "executions": 12,
+        "protocol_ms": 2.501
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-049.log",
+        "executions": 12,
+        "protocol_ms": 2.1430000000000002
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-050.log",
+        "executions": 12,
+        "protocol_ms": 2.624
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-051.log",
+        "executions": 12,
+        "protocol_ms": 2.414
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-052.log",
+        "executions": 12,
+        "protocol_ms": 2.947
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-053.log",
+        "executions": 12,
+        "protocol_ms": 2.435
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-054.log",
+        "executions": 12,
+        "protocol_ms": 2.425
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-055.log",
+        "executions": 12,
+        "protocol_ms": 2.614
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-056.log",
+        "executions": 12,
+        "protocol_ms": 2.43
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-057.log",
+        "executions": 12,
+        "protocol_ms": 2.452
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-058.log",
+        "executions": 12,
+        "protocol_ms": 2.976
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-059.log",
+        "executions": 12,
+        "protocol_ms": 2.8249999999999997
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-060.log",
+        "executions": 12,
+        "protocol_ms": 2.489
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-061.log",
+        "executions": 12,
+        "protocol_ms": 2.502
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-062.log",
+        "executions": 12,
+        "protocol_ms": 3.202
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-063.log",
+        "executions": 12,
+        "protocol_ms": 2.2070000000000003
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-064.log",
+        "executions": 12,
+        "protocol_ms": 2.256
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-065.log",
+        "executions": 12,
+        "protocol_ms": 2.5300000000000002
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-066.log",
+        "executions": 12,
+        "protocol_ms": 2.6270000000000002
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-067.log",
+        "executions": 12,
+        "protocol_ms": 2.814
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-068.log",
+        "executions": 12,
+        "protocol_ms": 2.818
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-069.log",
+        "executions": 12,
+        "protocol_ms": 2.894
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-070.log",
+        "executions": 12,
+        "protocol_ms": 2.363
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-071.log",
+        "executions": 12,
+        "protocol_ms": 2.746
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-072.log",
+        "executions": 12,
+        "protocol_ms": 2.679
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-073.log",
+        "executions": 12,
+        "protocol_ms": 2.5010000000000003
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-074.log",
+        "executions": 12,
+        "protocol_ms": 2.716
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-075.log",
+        "executions": 12,
+        "protocol_ms": 2.88
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-076.log",
+        "executions": 12,
+        "protocol_ms": 2.226
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-077.log",
+        "executions": 12,
+        "protocol_ms": 2.5700000000000003
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-078.log",
+        "executions": 12,
+        "protocol_ms": 2.724
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-079.log",
+        "executions": 12,
+        "protocol_ms": 2.666
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-080.log",
+        "executions": 12,
+        "protocol_ms": 3.199
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-081.log",
+        "executions": 12,
+        "protocol_ms": 2.78
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-082.log",
+        "executions": 12,
+        "protocol_ms": 2.625
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-083.log",
+        "executions": 12,
+        "protocol_ms": 2.561
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-084.log",
+        "executions": 12,
+        "protocol_ms": 2.723
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-085.log",
+        "executions": 12,
+        "protocol_ms": 2.649
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-086.log",
+        "executions": 12,
+        "protocol_ms": 2.529
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-087.log",
+        "executions": 12,
+        "protocol_ms": 2.708
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-088.log",
+        "executions": 12,
+        "protocol_ms": 2.643
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-089.log",
+        "executions": 12,
+        "protocol_ms": 2.718
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-090.log",
+        "executions": 12,
+        "protocol_ms": 2.665
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-091.log",
+        "executions": 12,
+        "protocol_ms": 3.072
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-092.log",
+        "executions": 12,
+        "protocol_ms": 2.895
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-093.log",
+        "executions": 12,
+        "protocol_ms": 2.787
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-094.log",
+        "executions": 12,
+        "protocol_ms": 2.239
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-095.log",
+        "executions": 12,
+        "protocol_ms": 3.031
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-096.log",
+        "executions": 12,
+        "protocol_ms": 2.673
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-097.log",
+        "executions": 12,
+        "protocol_ms": 2.8520000000000003
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-098.log",
+        "executions": 12,
+        "protocol_ms": 2.934
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/postgres-099.log",
+        "executions": 12,
+        "protocol_ms": 2.715
+      }
+    ],
+    "interpretation": "Complete multiline SQL reconstructed from raw logs. Parse/bind/execute server durations; explicit COMMIT events only. Implicit autocommit completion is not separately timed. Trigger work is included in parent statements and is not a separate SQL event. Repeated query counts measure commands, not network packets."
+  },
+  "1-jaseci/like": {
+    "folder": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like",
+    "request_windows": 100,
+    "total_executions": 1096,
+    "executions_per_request": 10.96,
+    "categories": {
+      "transaction_begin": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.45500000000000035,
+        "execute_ms": 0.5060000000000003,
+        "request_count": 100,
+        "sample_query": "BEGIN ISOLATION LEVEL SERIALIZABLE",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.009610000000000007
+      },
+      "transaction_configuration": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.3860000000000003,
+        "execute_ms": 0.4010000000000003,
+        "request_count": 100,
+        "sample_query": "SET LOCAL lock_timeout = '10s'",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.007870000000000005
+      },
+      "anchor_load_or_acl": {
+        "executions": 496,
+        "parse_ms": 0.0,
+        "bind_ms": 27.466999999999977,
+        "execute_ms": 8.550999999999988,
+        "request_count": 100,
+        "sample_query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint, a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+        "executions_per_request": 4.96,
+        "protocol_ms_per_request": 0.36017999999999967
+      },
+      "graph_traversal": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 39.06300000000002,
+        "execute_ms": 3.7809999999999997,
+        "request_count": 100,
+        "sample_query": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $4 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) ORDER BY f0.ord, e1.seq, e1.id",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.42844000000000015
+      },
+      "anchor_upsert": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 3.034,
+        "execute_ms": 8.644000000000002,
+        "request_count": 100,
+        "sample_query": "INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, format_version, updated_at, src_type, dst_type) SELECT id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, $1, now(), src_type, dst_type FROM unnest( CAST($2 AS uuid[]), CAST($3 AS text[]), CAST($4 AS text[]), CAST($5 AS text[]), CAST($6 AS text[]), CAST($7 AS uuid[]), CAST($8 AS uuid[]), CAST($9 AS uuid[]), CAST($10 AS boolean[]), CAST($11 AS jsonb[]), CAST($12 AS text[]), CAST($13 AS text[]) ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, src_type, dst_type) ON CONFLICT (id) DO UPDATE SET kind = EXCLUDED.kind, arch_type = EXCLUDED.arch_type, arch_module = EXCLUDED.arch_module, fingerprint = EXCLUDED.fingerprint, root_id = EXCLUDED.root_id, src = EXCLUDED.src, dst = EXCLUDED.dst, undirected = EXCLUDED.undirected, props = EXCLUDED.props, format_version = EXCLUDED.format_version, updated_at = now(), -- an edge re-saved while its endpoints are unpopulated stubs -- carries NULL types; keep whatever was recorded earlier src_type = COALESCE(EXCLUDED.src_type, anchors.src_type), dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.11678000000000001
+      },
+      "type_registry_write": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.7530000000000004,
+        "execute_ms": 2.054,
+        "request_count": 100,
+        "sample_query": "INSERT INTO graph_types (type_name, ancestor) SELECT * FROM unnest(CAST($1 AS text[]), CAST($2 AS text[])) ON CONFLICT DO NOTHING",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.028070000000000005
+      },
+      "explicit_commit": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.3010000000000002,
+        "execute_ms": 498.86300000000006,
+        "request_count": 100,
+        "sample_query": "COMMIT",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 4.99164
+      }
+    },
+    "fingerprints": {
+      "547004d6c33e887b6fe478e1d23004ef14c3fa1c8c4756ec52aea4a3933e7fb0": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.45500000000000035,
+        "execute_ms": 0.5060000000000003,
+        "query": "BEGIN ISOLATION LEVEL SERIALIZABLE",
+        "category": "transaction_begin"
+      },
+      "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.3860000000000003,
+        "execute_ms": 0.4010000000000003,
+        "query": "SET LOCAL lock_timeout = '10s'",
+        "category": "transaction_configuration"
+      },
+      "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a": {
+        "executions": 496,
+        "parse_ms": 0.0,
+        "bind_ms": 27.466999999999977,
+        "execute_ms": 8.550999999999988,
+        "query": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint, a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+        "category": "anchor_load_or_acl"
+      },
+      "bfcfd7b4fe33d76450f35d82fae711e9bb08b57ce71459416544d5a962362cb9": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 39.06300000000002,
+        "execute_ms": 3.7809999999999997,
+        "query": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $4 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) ORDER BY f0.ord, e1.seq, e1.id",
+        "category": "graph_traversal"
+      },
+      "4855fb2ba01bec28652be8fcd457edce7f0706d9763468e4ce252655168f07ab": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 3.034,
+        "execute_ms": 8.644000000000002,
+        "query": "INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, format_version, updated_at, src_type, dst_type) SELECT id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, $1, now(), src_type, dst_type FROM unnest( CAST($2 AS uuid[]), CAST($3 AS text[]), CAST($4 AS text[]), CAST($5 AS text[]), CAST($6 AS text[]), CAST($7 AS uuid[]), CAST($8 AS uuid[]), CAST($9 AS uuid[]), CAST($10 AS boolean[]), CAST($11 AS jsonb[]), CAST($12 AS text[]), CAST($13 AS text[]) ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id, src, dst, undirected, props, src_type, dst_type) ON CONFLICT (id) DO UPDATE SET kind = EXCLUDED.kind, arch_type = EXCLUDED.arch_type, arch_module = EXCLUDED.arch_module, fingerprint = EXCLUDED.fingerprint, root_id = EXCLUDED.root_id, src = EXCLUDED.src, dst = EXCLUDED.dst, undirected = EXCLUDED.undirected, props = EXCLUDED.props, format_version = EXCLUDED.format_version, updated_at = now(), -- an edge re-saved while its endpoints are unpopulated stubs -- carries NULL types; keep whatever was recorded earlier src_type = COALESCE(EXCLUDED.src_type, anchors.src_type), dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)",
+        "category": "anchor_upsert"
+      },
+      "6f4a7467eb89bf738701ebeee6ca214957a36fc4863dd0e48d8fb3cf949a6d18": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.7530000000000004,
+        "execute_ms": 2.054,
+        "query": "INSERT INTO graph_types (type_name, ancestor) SELECT * FROM unnest(CAST($1 AS text[]), CAST($2 AS text[])) ON CONFLICT DO NOTHING",
+        "category": "type_registry_write"
+      },
+      "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.3010000000000002,
+        "execute_ms": 498.86300000000006,
+        "query": "COMMIT",
+        "category": "explicit_commit"
+      }
+    },
+    "windows": [
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-000.log",
+        "executions": 10,
+        "protocol_ms": 1.965
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-001.log",
+        "executions": 11,
+        "protocol_ms": 1.912
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-002.log",
+        "executions": 11,
+        "protocol_ms": 2.011
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-003.log",
+        "executions": 11,
+        "protocol_ms": 2.277
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-004.log",
+        "executions": 11,
+        "protocol_ms": 1.98
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-005.log",
+        "executions": 11,
+        "protocol_ms": 2.015
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-006.log",
+        "executions": 11,
+        "protocol_ms": 2.553
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-007.log",
+        "executions": 11,
+        "protocol_ms": 2.059
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-008.log",
+        "executions": 11,
+        "protocol_ms": 2.1
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-009.log",
+        "executions": 11,
+        "protocol_ms": 2.004
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-010.log",
+        "executions": 11,
+        "protocol_ms": 1.985
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-011.log",
+        "executions": 11,
+        "protocol_ms": 2.585
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-012.log",
+        "executions": 11,
+        "protocol_ms": 1.9149999999999998
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-013.log",
+        "executions": 11,
+        "protocol_ms": 1.879
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-014.log",
+        "executions": 11,
+        "protocol_ms": 2.306
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-015.log",
+        "executions": 11,
+        "protocol_ms": 2.1060000000000003
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-016.log",
+        "executions": 11,
+        "protocol_ms": 1.866
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-017.log",
+        "executions": 11,
+        "protocol_ms": 1.819
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-018.log",
+        "executions": 11,
+        "protocol_ms": 1.952
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-019.log",
+        "executions": 11,
+        "protocol_ms": 2.66
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-020.log",
+        "executions": 11,
+        "protocol_ms": 1.9080000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-021.log",
+        "executions": 11,
+        "protocol_ms": 1.913
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-022.log",
+        "executions": 11,
+        "protocol_ms": 2.415
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-023.log",
+        "executions": 11,
+        "protocol_ms": 2.22
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-024.log",
+        "executions": 11,
+        "protocol_ms": 1.9100000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-025.log",
+        "executions": 11,
+        "protocol_ms": 1.793
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-026.log",
+        "executions": 11,
+        "protocol_ms": 1.883
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-027.log",
+        "executions": 11,
+        "protocol_ms": 1.792
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-028.log",
+        "executions": 11,
+        "protocol_ms": 1.921
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-029.log",
+        "executions": 11,
+        "protocol_ms": 1.9189999999999998
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-030.log",
+        "executions": 11,
+        "protocol_ms": 2.427
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-031.log",
+        "executions": 11,
+        "protocol_ms": 1.926
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-032.log",
+        "executions": 11,
+        "protocol_ms": 2.168
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-033.log",
+        "executions": 11,
+        "protocol_ms": 1.6340000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-034.log",
+        "executions": 11,
+        "protocol_ms": 2.257
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-035.log",
+        "executions": 11,
+        "protocol_ms": 2.185
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-036.log",
+        "executions": 11,
+        "protocol_ms": 2.0940000000000003
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-037.log",
+        "executions": 11,
+        "protocol_ms": 2.195
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-038.log",
+        "executions": 11,
+        "protocol_ms": 2.168
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-039.log",
+        "executions": 11,
+        "protocol_ms": 1.9140000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-040.log",
+        "executions": 11,
+        "protocol_ms": 2.1
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-041.log",
+        "executions": 11,
+        "protocol_ms": 2.048
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-042.log",
+        "executions": 11,
+        "protocol_ms": 1.919
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-043.log",
+        "executions": 11,
+        "protocol_ms": 2.09
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-044.log",
+        "executions": 11,
+        "protocol_ms": 1.6360000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-045.log",
+        "executions": 11,
+        "protocol_ms": 2.0740000000000003
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-046.log",
+        "executions": 11,
+        "protocol_ms": 1.921
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-047.log",
+        "executions": 11,
+        "protocol_ms": 2.188
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-048.log",
+        "executions": 11,
+        "protocol_ms": 2.116
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-049.log",
+        "executions": 11,
+        "protocol_ms": 2.005
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-050.log",
+        "executions": 11,
+        "protocol_ms": 2.167
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-051.log",
+        "executions": 11,
+        "protocol_ms": 2.317
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-052.log",
+        "executions": 11,
+        "protocol_ms": 2.089
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-053.log",
+        "executions": 11,
+        "protocol_ms": 1.8459999999999999
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-054.log",
+        "executions": 11,
+        "protocol_ms": 2.148
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-055.log",
+        "executions": 11,
+        "protocol_ms": 2.1839999999999997
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-056.log",
+        "executions": 11,
+        "protocol_ms": 1.987
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-057.log",
+        "executions": 11,
+        "protocol_ms": 2.001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-058.log",
+        "executions": 11,
+        "protocol_ms": 1.722
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-059.log",
+        "executions": 11,
+        "protocol_ms": 1.673
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-060.log",
+        "executions": 11,
+        "protocol_ms": 2.4459999999999997
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-061.log",
+        "executions": 11,
+        "protocol_ms": 1.849
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-062.log",
+        "executions": 11,
+        "protocol_ms": 1.975
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-063.log",
+        "executions": 11,
+        "protocol_ms": 2.149
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-064.log",
+        "executions": 11,
+        "protocol_ms": 2.173
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-065.log",
+        "executions": 10,
+        "protocol_ms": 2.047
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-066.log",
+        "executions": 10,
+        "protocol_ms": 1.614
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-067.log",
+        "executions": 10,
+        "protocol_ms": 1.669
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-068.log",
+        "executions": 11,
+        "protocol_ms": 1.974
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-069.log",
+        "executions": 11,
+        "protocol_ms": 1.7570000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-070.log",
+        "executions": 11,
+        "protocol_ms": 6.5889999999999995
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-071.log",
+        "executions": 11,
+        "protocol_ms": 10.572
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-072.log",
+        "executions": 11,
+        "protocol_ms": 6.452
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-073.log",
+        "executions": 11,
+        "protocol_ms": 15.885
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-074.log",
+        "executions": 11,
+        "protocol_ms": 14.293
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-075.log",
+        "executions": 11,
+        "protocol_ms": 12.933
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-076.log",
+        "executions": 11,
+        "protocol_ms": 16.516
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-077.log",
+        "executions": 11,
+        "protocol_ms": 16.198
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-078.log",
+        "executions": 11,
+        "protocol_ms": 14.012
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-079.log",
+        "executions": 11,
+        "protocol_ms": 19.227
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-080.log",
+        "executions": 11,
+        "protocol_ms": 17.288
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-081.log",
+        "executions": 11,
+        "protocol_ms": 17.317999999999998
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-082.log",
+        "executions": 11,
+        "protocol_ms": 13.904
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-083.log",
+        "executions": 11,
+        "protocol_ms": 9.551
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-084.log",
+        "executions": 11,
+        "protocol_ms": 17.492
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-085.log",
+        "executions": 11,
+        "protocol_ms": 12.555
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-086.log",
+        "executions": 11,
+        "protocol_ms": 14.283
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-087.log",
+        "executions": 11,
+        "protocol_ms": 11.986
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-088.log",
+        "executions": 11,
+        "protocol_ms": 15.249
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-089.log",
+        "executions": 11,
+        "protocol_ms": 10.741000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-090.log",
+        "executions": 11,
+        "protocol_ms": 18.004
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-091.log",
+        "executions": 11,
+        "protocol_ms": 16.287
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-092.log",
+        "executions": 11,
+        "protocol_ms": 12.022
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-093.log",
+        "executions": 11,
+        "protocol_ms": 18.830000000000002
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-094.log",
+        "executions": 11,
+        "protocol_ms": 17.495
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-095.log",
+        "executions": 11,
+        "protocol_ms": 16.87
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-096.log",
+        "executions": 11,
+        "protocol_ms": 18.855
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-097.log",
+        "executions": 11,
+        "protocol_ms": 27.772
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-098.log",
+        "executions": 11,
+        "protocol_ms": 12.376999999999999
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/postgres-099.log",
+        "executions": 11,
+        "protocol_ms": 20.228
+      }
+    ],
+    "interpretation": "Complete multiline SQL reconstructed from raw logs. Parse/bind/execute server durations; explicit COMMIT events only. Implicit autocommit completion is not separately timed. Trigger work is included in parent statements and is not a separate SQL event. Repeated query counts measure commands, not network packets."
+  },
+  "1-postgres/create_tweet": {
+    "folder": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet",
+    "request_windows": 100,
+    "total_executions": 100,
+    "executions_per_request": 1,
+    "categories": {
+      "relational_dml": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.8000000000000005,
+        "execute_ms": 5.1099999999999985,
+        "request_count": 100,
+        "sample_query": "INSERT INTO tweets (seed_id, author_id, content) SELECT $1, p.id, $2 FROM profiles p WHERE p.id = $3 RETURNING id, created_at, (SELECT username FROM profiles WHERE id = author_id)",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.05909999999999999
+      }
+    },
+    "fingerprints": {
+      "3260abe114d0b529bbcf9d36c81b98a12cde2aac91d501924bc2075755817b01": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.8000000000000005,
+        "execute_ms": 5.1099999999999985,
+        "query": "INSERT INTO tweets (seed_id, author_id, content) SELECT $1, p.id, $2 FROM profiles p WHERE p.id = $3 RETURNING id, created_at, (SELECT username FROM profiles WHERE id = author_id)",
+        "category": "relational_dml"
+      }
+    },
+    "windows": [
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-000.log",
+        "executions": 1,
+        "protocol_ms": 0.109
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-001.log",
+        "executions": 1,
+        "protocol_ms": 0.07
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-002.log",
+        "executions": 1,
+        "protocol_ms": 0.066
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-003.log",
+        "executions": 1,
+        "protocol_ms": 0.07100000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-004.log",
+        "executions": 1,
+        "protocol_ms": 0.07200000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-005.log",
+        "executions": 1,
+        "protocol_ms": 0.068
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-006.log",
+        "executions": 1,
+        "protocol_ms": 0.061
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-007.log",
+        "executions": 1,
+        "protocol_ms": 0.059
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-008.log",
+        "executions": 1,
+        "protocol_ms": 0.057999999999999996
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-009.log",
+        "executions": 1,
+        "protocol_ms": 0.06
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-010.log",
+        "executions": 1,
+        "protocol_ms": 0.058
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-011.log",
+        "executions": 1,
+        "protocol_ms": 0.07200000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-012.log",
+        "executions": 1,
+        "protocol_ms": 0.057
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-013.log",
+        "executions": 1,
+        "protocol_ms": 0.054
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-014.log",
+        "executions": 1,
+        "protocol_ms": 0.049
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-015.log",
+        "executions": 1,
+        "protocol_ms": 0.054
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-016.log",
+        "executions": 1,
+        "protocol_ms": 0.051
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-017.log",
+        "executions": 1,
+        "protocol_ms": 0.11399999999999999
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-018.log",
+        "executions": 1,
+        "protocol_ms": 0.06
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-019.log",
+        "executions": 1,
+        "protocol_ms": 0.051
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-020.log",
+        "executions": 1,
+        "protocol_ms": 0.061
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-021.log",
+        "executions": 1,
+        "protocol_ms": 0.06
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-022.log",
+        "executions": 1,
+        "protocol_ms": 0.063
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-023.log",
+        "executions": 1,
+        "protocol_ms": 0.067
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-024.log",
+        "executions": 1,
+        "protocol_ms": 0.057
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-025.log",
+        "executions": 1,
+        "protocol_ms": 0.054
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-026.log",
+        "executions": 1,
+        "protocol_ms": 0.05
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-027.log",
+        "executions": 1,
+        "protocol_ms": 0.055
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-028.log",
+        "executions": 1,
+        "protocol_ms": 0.07
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-029.log",
+        "executions": 1,
+        "protocol_ms": 0.051
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-030.log",
+        "executions": 1,
+        "protocol_ms": 0.051
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-031.log",
+        "executions": 1,
+        "protocol_ms": 0.049
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-032.log",
+        "executions": 1,
+        "protocol_ms": 0.129
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-033.log",
+        "executions": 1,
+        "protocol_ms": 0.058
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-034.log",
+        "executions": 1,
+        "protocol_ms": 0.061
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-035.log",
+        "executions": 1,
+        "protocol_ms": 0.057
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-036.log",
+        "executions": 1,
+        "protocol_ms": 0.058
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-037.log",
+        "executions": 1,
+        "protocol_ms": 0.053
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-038.log",
+        "executions": 1,
+        "protocol_ms": 0.049
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-039.log",
+        "executions": 1,
+        "protocol_ms": 0.053
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-040.log",
+        "executions": 1,
+        "protocol_ms": 0.059
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-041.log",
+        "executions": 1,
+        "protocol_ms": 0.053
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-042.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-043.log",
+        "executions": 1,
+        "protocol_ms": 0.067
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-044.log",
+        "executions": 1,
+        "protocol_ms": 0.049
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-045.log",
+        "executions": 1,
+        "protocol_ms": 0.055
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-046.log",
+        "executions": 1,
+        "protocol_ms": 0.059
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-047.log",
+        "executions": 1,
+        "protocol_ms": 0.10500000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-048.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-049.log",
+        "executions": 1,
+        "protocol_ms": 0.051
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-050.log",
+        "executions": 1,
+        "protocol_ms": 0.049
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-051.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-052.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-053.log",
+        "executions": 1,
+        "protocol_ms": 0.057999999999999996
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-054.log",
+        "executions": 1,
+        "protocol_ms": 0.048999999999999995
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-055.log",
+        "executions": 1,
+        "protocol_ms": 0.057
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-056.log",
+        "executions": 1,
+        "protocol_ms": 0.048
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-057.log",
+        "executions": 1,
+        "protocol_ms": 0.048999999999999995
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-058.log",
+        "executions": 1,
+        "protocol_ms": 0.051
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-059.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-060.log",
+        "executions": 1,
+        "protocol_ms": 0.118
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-061.log",
+        "executions": 1,
+        "protocol_ms": 0.053
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-062.log",
+        "executions": 1,
+        "protocol_ms": 0.049
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-063.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-064.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-065.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-066.log",
+        "executions": 1,
+        "protocol_ms": 0.049999999999999996
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-067.log",
+        "executions": 1,
+        "protocol_ms": 0.048
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-068.log",
+        "executions": 1,
+        "protocol_ms": 0.047
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-069.log",
+        "executions": 1,
+        "protocol_ms": 0.069
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-070.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-071.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-072.log",
+        "executions": 1,
+        "protocol_ms": 0.053
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-073.log",
+        "executions": 1,
+        "protocol_ms": 0.051
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-074.log",
+        "executions": 1,
+        "protocol_ms": 0.095
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-075.log",
+        "executions": 1,
+        "protocol_ms": 0.053
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-076.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-077.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-078.log",
+        "executions": 1,
+        "protocol_ms": 0.098
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-079.log",
+        "executions": 1,
+        "protocol_ms": 0.049
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-080.log",
+        "executions": 1,
+        "protocol_ms": 0.045
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-081.log",
+        "executions": 1,
+        "protocol_ms": 0.06
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-082.log",
+        "executions": 1,
+        "protocol_ms": 0.053
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-083.log",
+        "executions": 1,
+        "protocol_ms": 0.055
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-084.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-085.log",
+        "executions": 1,
+        "protocol_ms": 0.049
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-086.log",
+        "executions": 1,
+        "protocol_ms": 0.047
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-087.log",
+        "executions": 1,
+        "protocol_ms": 0.10800000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-088.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-089.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-090.log",
+        "executions": 1,
+        "protocol_ms": 0.049999999999999996
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-091.log",
+        "executions": 1,
+        "protocol_ms": 0.046
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-092.log",
+        "executions": 1,
+        "protocol_ms": 0.044
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-093.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-094.log",
+        "executions": 1,
+        "protocol_ms": 0.053
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-095.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-096.log",
+        "executions": 1,
+        "protocol_ms": 0.053
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-097.log",
+        "executions": 1,
+        "protocol_ms": 0.049999999999999996
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-098.log",
+        "executions": 1,
+        "protocol_ms": 0.045
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-099.log",
+        "executions": 1,
+        "protocol_ms": 0.056
+      }
+    ],
+    "interpretation": "Complete multiline SQL reconstructed from raw logs. Parse/bind/execute server durations; explicit COMMIT events only. Implicit autocommit completion is not separately timed. Trigger work is included in parent statements and is not a separate SQL event. Repeated query counts measure commands, not network packets."
+  },
+  "1-postgres/follow": {
+    "folder": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow",
+    "request_windows": 100,
+    "total_executions": 100,
+    "executions_per_request": 1,
+    "categories": {
+      "relational_dml": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.5480000000000004,
+        "execute_ms": 4.744000000000001,
+        "request_count": 100,
+        "sample_query": "INSERT INTO follows (follower_id, followee_id) VALUES ($1, $2) ON CONFLICT DO NOTHING",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.05292000000000001
+      }
+    },
+    "fingerprints": {
+      "589a8563856df5a9dfc3737b8a587b50bb6af61c7a057cf30ec8cb1dc44b21b5": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.5480000000000004,
+        "execute_ms": 4.744000000000001,
+        "query": "INSERT INTO follows (follower_id, followee_id) VALUES ($1, $2) ON CONFLICT DO NOTHING",
+        "category": "relational_dml"
+      }
+    },
+    "windows": [
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-000.log",
+        "executions": 1,
+        "protocol_ms": 0.094
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-001.log",
+        "executions": 1,
+        "protocol_ms": 0.059
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-002.log",
+        "executions": 1,
+        "protocol_ms": 0.053
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-003.log",
+        "executions": 1,
+        "protocol_ms": 0.064
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-004.log",
+        "executions": 1,
+        "protocol_ms": 0.058
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-005.log",
+        "executions": 1,
+        "protocol_ms": 0.064
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-006.log",
+        "executions": 1,
+        "protocol_ms": 0.047
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-007.log",
+        "executions": 1,
+        "protocol_ms": 0.046
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-008.log",
+        "executions": 1,
+        "protocol_ms": 0.046
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-009.log",
+        "executions": 1,
+        "protocol_ms": 0.053
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-010.log",
+        "executions": 1,
+        "protocol_ms": 0.053
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-011.log",
+        "executions": 1,
+        "protocol_ms": 0.03900000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-012.log",
+        "executions": 1,
+        "protocol_ms": 0.056
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-013.log",
+        "executions": 1,
+        "protocol_ms": 0.046
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-014.log",
+        "executions": 1,
+        "protocol_ms": 0.052
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-015.log",
+        "executions": 1,
+        "protocol_ms": 0.047999999999999994
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-016.log",
+        "executions": 1,
+        "protocol_ms": 0.048999999999999995
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-017.log",
+        "executions": 1,
+        "protocol_ms": 0.047
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-018.log",
+        "executions": 1,
+        "protocol_ms": 0.046
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-019.log",
+        "executions": 1,
+        "protocol_ms": 0.051
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-020.log",
+        "executions": 1,
+        "protocol_ms": 0.059
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-021.log",
+        "executions": 1,
+        "protocol_ms": 0.049999999999999996
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-022.log",
+        "executions": 1,
+        "protocol_ms": 0.051
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-023.log",
+        "executions": 1,
+        "protocol_ms": 0.049999999999999996
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-024.log",
+        "executions": 1,
+        "protocol_ms": 0.047999999999999994
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-025.log",
+        "executions": 1,
+        "protocol_ms": 0.051
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-026.log",
+        "executions": 1,
+        "protocol_ms": 0.048
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-027.log",
+        "executions": 1,
+        "protocol_ms": 0.054
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-028.log",
+        "executions": 1,
+        "protocol_ms": 0.048999999999999995
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-029.log",
+        "executions": 1,
+        "protocol_ms": 0.048999999999999995
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-030.log",
+        "executions": 1,
+        "protocol_ms": 0.048999999999999995
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-031.log",
+        "executions": 1,
+        "protocol_ms": 0.047
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-032.log",
+        "executions": 1,
+        "protocol_ms": 0.046
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-033.log",
+        "executions": 1,
+        "protocol_ms": 0.047
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-034.log",
+        "executions": 1,
+        "protocol_ms": 0.046
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-035.log",
+        "executions": 1,
+        "protocol_ms": 0.063
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-036.log",
+        "executions": 1,
+        "protocol_ms": 0.047
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-037.log",
+        "executions": 1,
+        "protocol_ms": 0.045
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-038.log",
+        "executions": 1,
+        "protocol_ms": 0.045
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-039.log",
+        "executions": 1,
+        "protocol_ms": 0.045
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-040.log",
+        "executions": 1,
+        "protocol_ms": 0.047
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-041.log",
+        "executions": 1,
+        "protocol_ms": 0.045
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-042.log",
+        "executions": 1,
+        "protocol_ms": 0.047
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-043.log",
+        "executions": 1,
+        "protocol_ms": 0.048999999999999995
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-044.log",
+        "executions": 1,
+        "protocol_ms": 0.049999999999999996
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-045.log",
+        "executions": 1,
+        "protocol_ms": 0.054
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-046.log",
+        "executions": 1,
+        "protocol_ms": 0.055
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-047.log",
+        "executions": 1,
+        "protocol_ms": 0.067
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-048.log",
+        "executions": 1,
+        "protocol_ms": 0.06
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-049.log",
+        "executions": 1,
+        "protocol_ms": 0.069
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-050.log",
+        "executions": 1,
+        "protocol_ms": 0.065
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-051.log",
+        "executions": 1,
+        "protocol_ms": 0.06
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-052.log",
+        "executions": 1,
+        "protocol_ms": 0.066
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-053.log",
+        "executions": 1,
+        "protocol_ms": 0.06
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-054.log",
+        "executions": 1,
+        "protocol_ms": 0.06
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-055.log",
+        "executions": 1,
+        "protocol_ms": 0.065
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-056.log",
+        "executions": 1,
+        "protocol_ms": 0.057999999999999996
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-057.log",
+        "executions": 1,
+        "protocol_ms": 0.047
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-058.log",
+        "executions": 1,
+        "protocol_ms": 0.049
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-059.log",
+        "executions": 1,
+        "protocol_ms": 0.047
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-060.log",
+        "executions": 1,
+        "protocol_ms": 0.045
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-061.log",
+        "executions": 1,
+        "protocol_ms": 0.046
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-062.log",
+        "executions": 1,
+        "protocol_ms": 0.06
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-063.log",
+        "executions": 1,
+        "protocol_ms": 0.053
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-064.log",
+        "executions": 1,
+        "protocol_ms": 0.045
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-065.log",
+        "executions": 1,
+        "protocol_ms": 0.043
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-066.log",
+        "executions": 1,
+        "protocol_ms": 0.052000000000000005
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-067.log",
+        "executions": 1,
+        "protocol_ms": 0.044
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-068.log",
+        "executions": 1,
+        "protocol_ms": 0.044
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-069.log",
+        "executions": 1,
+        "protocol_ms": 0.054
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-070.log",
+        "executions": 1,
+        "protocol_ms": 0.054
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-071.log",
+        "executions": 1,
+        "protocol_ms": 0.046
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-072.log",
+        "executions": 1,
+        "protocol_ms": 0.051
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-073.log",
+        "executions": 1,
+        "protocol_ms": 0.107
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-074.log",
+        "executions": 1,
+        "protocol_ms": 0.054
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-075.log",
+        "executions": 1,
+        "protocol_ms": 0.057999999999999996
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-076.log",
+        "executions": 1,
+        "protocol_ms": 0.055999999999999994
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-077.log",
+        "executions": 1,
+        "protocol_ms": 0.049
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-078.log",
+        "executions": 1,
+        "protocol_ms": 0.055999999999999994
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-079.log",
+        "executions": 1,
+        "protocol_ms": 0.047
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-080.log",
+        "executions": 1,
+        "protocol_ms": 0.075
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-081.log",
+        "executions": 1,
+        "protocol_ms": 0.064
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-082.log",
+        "executions": 1,
+        "protocol_ms": 0.068
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-083.log",
+        "executions": 1,
+        "protocol_ms": 0.068
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-084.log",
+        "executions": 1,
+        "protocol_ms": 0.07100000000000001
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-085.log",
+        "executions": 1,
+        "protocol_ms": 0.07
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-086.log",
+        "executions": 1,
+        "protocol_ms": 0.045
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-087.log",
+        "executions": 1,
+        "protocol_ms": 0.044
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-088.log",
+        "executions": 1,
+        "protocol_ms": 0.045
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-089.log",
+        "executions": 1,
+        "protocol_ms": 0.044
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-090.log",
+        "executions": 1,
+        "protocol_ms": 0.044
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-091.log",
+        "executions": 1,
+        "protocol_ms": 0.044
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-092.log",
+        "executions": 1,
+        "protocol_ms": 0.044
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-093.log",
+        "executions": 1,
+        "protocol_ms": 0.041999999999999996
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-094.log",
+        "executions": 1,
+        "protocol_ms": 0.044
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-095.log",
+        "executions": 1,
+        "protocol_ms": 0.047
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-096.log",
+        "executions": 1,
+        "protocol_ms": 0.045
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-097.log",
+        "executions": 1,
+        "protocol_ms": 0.046
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-098.log",
+        "executions": 1,
+        "protocol_ms": 0.051
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-099.log",
+        "executions": 1,
+        "protocol_ms": 0.047
+      }
+    ],
+    "interpretation": "Complete multiline SQL reconstructed from raw logs. Parse/bind/execute server durations; explicit COMMIT events only. Implicit autocommit completion is not separately timed. Trigger work is included in parent statements and is not a separate SQL event. Repeated query counts measure commands, not network packets."
+  },
+  "1-postgres/like": {
+    "folder": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like",
+    "request_windows": 100,
+    "total_executions": 100,
+    "executions_per_request": 1,
+    "categories": {
+      "relational_dml": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.6400000000000005,
+        "execute_ms": 3.4539999999999984,
+        "request_count": 100,
+        "sample_query": "UPDATE tweets t SET likes = array_append(t.likes, p.username) FROM profiles p WHERE t.id = $1 AND p.id = $2 AND NOT (p.username = ANY(t.likes)) RETURNING cardinality(t.likes)",
+        "executions_per_request": 1.0,
+        "protocol_ms_per_request": 0.04093999999999998
+      }
+    },
+    "fingerprints": {
+      "1055c163772250d805324eaf9acaf8ff6acb976a76932987dec583b8209380c0": {
+        "executions": 100,
+        "parse_ms": 0.0,
+        "bind_ms": 0.6400000000000005,
+        "execute_ms": 3.4539999999999984,
+        "query": "UPDATE tweets t SET likes = array_append(t.likes, p.username) FROM profiles p WHERE t.id = $1 AND p.id = $2 AND NOT (p.username = ANY(t.likes)) RETURNING cardinality(t.likes)",
+        "category": "relational_dml"
+      }
+    },
+    "windows": [
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-000.log",
+        "executions": 1,
+        "protocol_ms": 0.097
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-001.log",
+        "executions": 1,
+        "protocol_ms": 0.059
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-002.log",
+        "executions": 1,
+        "protocol_ms": 0.058
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-003.log",
+        "executions": 1,
+        "protocol_ms": 0.061
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-004.log",
+        "executions": 1,
+        "protocol_ms": 0.045
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-005.log",
+        "executions": 1,
+        "protocol_ms": 0.059000000000000004
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-006.log",
+        "executions": 1,
+        "protocol_ms": 0.037
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-007.log",
+        "executions": 1,
+        "protocol_ms": 0.04
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-008.log",
+        "executions": 1,
+        "protocol_ms": 0.04
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-009.log",
+        "executions": 1,
+        "protocol_ms": 0.038
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-010.log",
+        "executions": 1,
+        "protocol_ms": 0.040999999999999995
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-011.log",
+        "executions": 1,
+        "protocol_ms": 0.04
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-012.log",
+        "executions": 1,
+        "protocol_ms": 0.032
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-013.log",
+        "executions": 1,
+        "protocol_ms": 0.039
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-014.log",
+        "executions": 1,
+        "protocol_ms": 0.041
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-015.log",
+        "executions": 1,
+        "protocol_ms": 0.036
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-016.log",
+        "executions": 1,
+        "protocol_ms": 0.038
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-017.log",
+        "executions": 1,
+        "protocol_ms": 0.039
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-018.log",
+        "executions": 1,
+        "protocol_ms": 0.031
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-019.log",
+        "executions": 1,
+        "protocol_ms": 0.038
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-020.log",
+        "executions": 1,
+        "protocol_ms": 0.049
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-021.log",
+        "executions": 1,
+        "protocol_ms": 0.036
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-022.log",
+        "executions": 1,
+        "protocol_ms": 0.037
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-023.log",
+        "executions": 1,
+        "protocol_ms": 0.044
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-024.log",
+        "executions": 1,
+        "protocol_ms": 0.034999999999999996
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-025.log",
+        "executions": 1,
+        "protocol_ms": 0.04
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-026.log",
+        "executions": 1,
+        "protocol_ms": 0.04
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-027.log",
+        "executions": 1,
+        "protocol_ms": 0.038
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-028.log",
+        "executions": 1,
+        "protocol_ms": 0.033
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-029.log",
+        "executions": 1,
+        "protocol_ms": 0.041999999999999996
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-030.log",
+        "executions": 1,
+        "protocol_ms": 0.034
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-031.log",
+        "executions": 1,
+        "protocol_ms": 0.043000000000000003
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-032.log",
+        "executions": 1,
+        "protocol_ms": 0.04
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-033.log",
+        "executions": 1,
+        "protocol_ms": 0.034
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-034.log",
+        "executions": 1,
+        "protocol_ms": 0.034
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-035.log",
+        "executions": 1,
+        "protocol_ms": 0.044
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-036.log",
+        "executions": 1,
+        "protocol_ms": 0.035
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-037.log",
+        "executions": 1,
+        "protocol_ms": 0.041
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-038.log",
+        "executions": 1,
+        "protocol_ms": 0.04
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-039.log",
+        "executions": 1,
+        "protocol_ms": 0.034
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-040.log",
+        "executions": 1,
+        "protocol_ms": 0.047
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-041.log",
+        "executions": 1,
+        "protocol_ms": 0.041
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-042.log",
+        "executions": 1,
+        "protocol_ms": 0.032
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-043.log",
+        "executions": 1,
+        "protocol_ms": 0.039
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-044.log",
+        "executions": 1,
+        "protocol_ms": 0.039
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-045.log",
+        "executions": 1,
+        "protocol_ms": 0.036
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-046.log",
+        "executions": 1,
+        "protocol_ms": 0.036
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-047.log",
+        "executions": 1,
+        "protocol_ms": 0.048
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-048.log",
+        "executions": 1,
+        "protocol_ms": 0.042
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-049.log",
+        "executions": 1,
+        "protocol_ms": 0.049999999999999996
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-050.log",
+        "executions": 1,
+        "protocol_ms": 0.04
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-051.log",
+        "executions": 1,
+        "protocol_ms": 0.037
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-052.log",
+        "executions": 1,
+        "protocol_ms": 0.038
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-053.log",
+        "executions": 1,
+        "protocol_ms": 0.039
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-054.log",
+        "executions": 1,
+        "protocol_ms": 0.034
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-055.log",
+        "executions": 1,
+        "protocol_ms": 0.044
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-056.log",
+        "executions": 1,
+        "protocol_ms": 0.039
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-057.log",
+        "executions": 1,
+        "protocol_ms": 0.037
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-058.log",
+        "executions": 1,
+        "protocol_ms": 0.04
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-059.log",
+        "executions": 1,
+        "protocol_ms": 0.044
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-060.log",
+        "executions": 1,
+        "protocol_ms": 0.041
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-061.log",
+        "executions": 1,
+        "protocol_ms": 0.04
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-062.log",
+        "executions": 1,
+        "protocol_ms": 0.036
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-063.log",
+        "executions": 1,
+        "protocol_ms": 0.041
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-064.log",
+        "executions": 1,
+        "protocol_ms": 0.044
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-065.log",
+        "executions": 1,
+        "protocol_ms": 0.039
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-066.log",
+        "executions": 1,
+        "protocol_ms": 0.040999999999999995
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-067.log",
+        "executions": 1,
+        "protocol_ms": 0.043
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-068.log",
+        "executions": 1,
+        "protocol_ms": 0.039
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-069.log",
+        "executions": 1,
+        "protocol_ms": 0.04
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-070.log",
+        "executions": 1,
+        "protocol_ms": 0.041
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-071.log",
+        "executions": 1,
+        "protocol_ms": 0.042
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-072.log",
+        "executions": 1,
+        "protocol_ms": 0.046
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-073.log",
+        "executions": 1,
+        "protocol_ms": 0.051000000000000004
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-074.log",
+        "executions": 1,
+        "protocol_ms": 0.046
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-075.log",
+        "executions": 1,
+        "protocol_ms": 0.041999999999999996
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-076.log",
+        "executions": 1,
+        "protocol_ms": 0.038
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-077.log",
+        "executions": 1,
+        "protocol_ms": 0.043
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-078.log",
+        "executions": 1,
+        "protocol_ms": 0.034
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-079.log",
+        "executions": 1,
+        "protocol_ms": 0.048
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-080.log",
+        "executions": 1,
+        "protocol_ms": 0.043
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-081.log",
+        "executions": 1,
+        "protocol_ms": 0.033
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-082.log",
+        "executions": 1,
+        "protocol_ms": 0.034
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-083.log",
+        "executions": 1,
+        "protocol_ms": 0.033
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-084.log",
+        "executions": 1,
+        "protocol_ms": 0.033
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-085.log",
+        "executions": 1,
+        "protocol_ms": 0.048999999999999995
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-086.log",
+        "executions": 1,
+        "protocol_ms": 0.041999999999999996
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-087.log",
+        "executions": 1,
+        "protocol_ms": 0.043
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-088.log",
+        "executions": 1,
+        "protocol_ms": 0.039
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-089.log",
+        "executions": 1,
+        "protocol_ms": 0.038
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-090.log",
+        "executions": 1,
+        "protocol_ms": 0.032
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-091.log",
+        "executions": 1,
+        "protocol_ms": 0.04
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-092.log",
+        "executions": 1,
+        "protocol_ms": 0.046
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-093.log",
+        "executions": 1,
+        "protocol_ms": 0.034
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-094.log",
+        "executions": 1,
+        "protocol_ms": 0.037
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-095.log",
+        "executions": 1,
+        "protocol_ms": 0.032
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-096.log",
+        "executions": 1,
+        "protocol_ms": 0.034
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-097.log",
+        "executions": 1,
+        "protocol_ms": 0.046
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-098.log",
+        "executions": 1,
+        "protocol_ms": 0.054
+      },
+      {
+        "path": "reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-099.log",
+        "executions": 1,
+        "protocol_ms": 0.033
+      }
+    ],
+    "interpretation": "Complete multiline SQL reconstructed from raw logs. Parse/bind/execute server durations; explicit COMMIT events only. Implicit autocommit completion is not separately timed. Trigger work is included in parent statements and is not a separate SQL event. Repeated query counts measure commands, not network packets."
+  }
+}

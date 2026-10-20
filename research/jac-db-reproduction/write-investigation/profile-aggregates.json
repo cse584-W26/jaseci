@@ -1,0 +1,621 @@
+{
+  "cells": 12,
+  "profiled_requests": 1200,
+  "all_offline_checks_passed": true,
+  "percentile_scope": "Diagnostic medians use statistics.median, as original profiler; baseline500sample percentiles use the distinct original run.stats order-statistic rule.",
+  "interpretation": "stage includes headers/CPU sampling with SQL duration logging off; duration adds SQL logging. Profilers use100warm+100calls and reset each operation, distinct from baseline110warm500timed shared-state cohorts. Differences do not isolate instrumentation overhead alone. Protocol counts are executed SQL events, not network packet counts.",
+  "rows": [
+    {
+      "mode": "stage",
+      "arm": "postgres",
+      "operation": "like",
+      "n": 100,
+      "source": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212507Z-stage/1-postgres/like/summary.json",
+      "server_median_ms": 1.4695,
+      "server_mean_ms": 1.49133,
+      "client_median_ms": 2.063876483589411,
+      "paired_residual_median_ms": 0.5832710473388434,
+      "app_cpu_total_ms": 30.0,
+      "backend_cpu_total_ms": 0.0,
+      "cpu_tick_ms": 10,
+      "protocol_observed": false,
+      "stages": {
+        "auth": {
+          "n": 100,
+          "mean": 0.02974,
+          "median": 0.029,
+          "sum": 2.974
+        },
+        "db": {
+          "n": 100,
+          "mean": 1.48417,
+          "median": 1.462,
+          "sum": 148.417
+        },
+        "build": {
+          "n": 0
+        },
+        "commit": {
+          "n": 100,
+          "mean": 0.0,
+          "median": 0.0,
+          "sum": 0.0
+        }
+      }
+    },
+    {
+      "mode": "stage",
+      "arm": "postgres",
+      "operation": "follow",
+      "n": 100,
+      "source": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212507Z-stage/1-postgres/follow/summary.json",
+      "server_median_ms": 1.403,
+      "server_mean_ms": 1.37632,
+      "client_median_ms": 2.006570517551154,
+      "paired_residual_median_ms": 0.6100910228975118,
+      "app_cpu_total_ms": 40.0,
+      "backend_cpu_total_ms": 0.0,
+      "cpu_tick_ms": 10,
+      "protocol_observed": false,
+      "stages": {
+        "auth": {
+          "n": 100,
+          "mean": 0.029840000000000002,
+          "median": 0.029,
+          "sum": 2.984
+        },
+        "db": {
+          "n": 100,
+          "mean": 1.36916,
+          "median": 1.3955,
+          "sum": 136.916
+        },
+        "build": {
+          "n": 0
+        },
+        "commit": {
+          "n": 100,
+          "mean": 0.0,
+          "median": 0.0,
+          "sum": 0.0
+        }
+      }
+    },
+    {
+      "mode": "stage",
+      "arm": "postgres",
+      "operation": "create_tweet",
+      "n": 100,
+      "source": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212507Z-stage/1-postgres/create_tweet/summary.json",
+      "server_median_ms": 1.4295,
+      "server_mean_ms": 1.43054,
+      "client_median_ms": 2.0397629705257714,
+      "paired_residual_median_ms": 0.6026079765558243,
+      "app_cpu_total_ms": 40.0,
+      "backend_cpu_total_ms": 10.0,
+      "cpu_tick_ms": 10,
+      "protocol_observed": false,
+      "stages": {
+        "auth": {
+          "n": 100,
+          "mean": 0.029330000000000002,
+          "median": 0.028,
+          "sum": 2.9330000000000003
+        },
+        "db": {
+          "n": 100,
+          "mean": 1.41628,
+          "median": 1.4155,
+          "sum": 141.62800000000001
+        },
+        "build": {
+          "n": 100,
+          "mean": 0.00643,
+          "median": 0.006,
+          "sum": 0.643
+        },
+        "commit": {
+          "n": 100,
+          "mean": 0.0,
+          "median": 0.0,
+          "sum": 0.0
+        }
+      }
+    },
+    {
+      "mode": "stage",
+      "arm": "jaseci",
+      "operation": "like",
+      "n": 100,
+      "source": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212507Z-stage/1-jaseci/like/summary.json",
+      "server_median_ms": 3.1985,
+      "server_mean_ms": 3.21414,
+      "client_median_ms": 4.727806546725333,
+      "paired_residual_median_ms": 1.4667824609577655,
+      "app_cpu_total_ms": 190.0,
+      "backend_cpu_total_ms": 90.0,
+      "cpu_tick_ms": 10,
+      "protocol_observed": false,
+      "stages": {
+        "dispatch": {
+          "n": 100,
+          "mean": 0.85211,
+          "median": 0.7975000000000001,
+          "sum": 85.211
+        },
+        "auth": {
+          "n": 100,
+          "mean": 0.10215,
+          "median": 0.105,
+          "sum": 10.215
+        },
+        "prep": {
+          "n": 100,
+          "mean": 0.12178,
+          "median": 0.124,
+          "sum": 12.178
+        },
+        "db": {
+          "n": 100,
+          "mean": 0.87731,
+          "median": 0.878,
+          "sum": 87.731
+        },
+        "build": {
+          "n": 100,
+          "mean": 0.32733,
+          "median": 0.3265,
+          "sum": 32.733
+        },
+        "commit": {
+          "n": 100,
+          "mean": 1.7865,
+          "median": 1.788,
+          "sum": 178.65
+        },
+        "ser": {
+          "n": 100,
+          "mean": 0.00693,
+          "median": 0.007,
+          "sum": 0.6930000000000001
+        }
+      }
+    },
+    {
+      "mode": "stage",
+      "arm": "jaseci",
+      "operation": "follow",
+      "n": 100,
+      "source": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212507Z-stage/1-jaseci/follow/summary.json",
+      "server_median_ms": 3.8295,
+      "server_mean_ms": 3.8484599999999998,
+      "client_median_ms": 5.454510974232107,
+      "paired_residual_median_ms": 1.5398120187595485,
+      "app_cpu_total_ms": 220.0,
+      "backend_cpu_total_ms": 130.0,
+      "cpu_tick_ms": 10,
+      "protocol_observed": false,
+      "stages": {
+        "dispatch": {
+          "n": 100,
+          "mean": 0.86471,
+          "median": 0.836,
+          "sum": 86.471
+        },
+        "auth": {
+          "n": 100,
+          "mean": 0.10217999999999999,
+          "median": 0.102,
+          "sum": 10.218
+        },
+        "prep": {
+          "n": 100,
+          "mean": 0.13337,
+          "median": 0.1205,
+          "sum": 13.337
+        },
+        "db": {
+          "n": 100,
+          "mean": 1.35916,
+          "median": 1.3265,
+          "sum": 135.916
+        },
+        "build": {
+          "n": 100,
+          "mean": 0.41838000000000003,
+          "median": 0.413,
+          "sum": 41.838
+        },
+        "commit": {
+          "n": 100,
+          "mean": 1.83621,
+          "median": 1.851,
+          "sum": 183.621
+        },
+        "ser": {
+          "n": 100,
+          "mean": 0.00713,
+          "median": 0.007,
+          "sum": 0.713
+        }
+      }
+    },
+    {
+      "mode": "stage",
+      "arm": "jaseci",
+      "operation": "create_tweet",
+      "n": 100,
+      "source": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212507Z-stage/1-jaseci/create_tweet/summary.json",
+      "server_median_ms": 2.946,
+      "server_mean_ms": 2.97974,
+      "client_median_ms": 4.5273369760252535,
+      "paired_residual_median_ms": 1.5250549830645324,
+      "app_cpu_total_ms": 180.0,
+      "backend_cpu_total_ms": 80.0,
+      "cpu_tick_ms": 10,
+      "protocol_observed": false,
+      "stages": {
+        "dispatch": {
+          "n": 100,
+          "mean": 0.84522,
+          "median": 0.8174999999999999,
+          "sum": 84.522
+        },
+        "auth": {
+          "n": 100,
+          "mean": 0.10461,
+          "median": 0.109,
+          "sum": 10.461
+        },
+        "prep": {
+          "n": 100,
+          "mean": 0.11994,
+          "median": 0.127,
+          "sum": 11.994
+        },
+        "db": {
+          "n": 100,
+          "mean": 0.57587,
+          "median": 0.59,
+          "sum": 57.586999999999996
+        },
+        "build": {
+          "n": 100,
+          "mean": 0.28425,
+          "median": 0.278,
+          "sum": 28.425
+        },
+        "commit": {
+          "n": 100,
+          "mean": 1.90431,
+          "median": 1.8904999999999998,
+          "sum": 190.431
+        },
+        "ser": {
+          "n": 100,
+          "mean": 0.015179999999999999,
+          "median": 0.015,
+          "sum": 1.518
+        }
+      }
+    },
+    {
+      "mode": "duration",
+      "arm": "postgres",
+      "operation": "like",
+      "n": 100,
+      "source": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/summary.json",
+      "server_median_ms": 1.392,
+      "server_mean_ms": 1.38811,
+      "client_median_ms": 2.0208494970574975,
+      "paired_residual_median_ms": 0.6224064988419413,
+      "app_cpu_total_ms": 40.0,
+      "backend_cpu_total_ms": 0.0,
+      "cpu_tick_ms": 10,
+      "protocol_observed": true,
+      "stages": {
+        "auth": {
+          "n": 100,
+          "mean": 0.0296,
+          "median": 0.029,
+          "sum": 2.96
+        },
+        "db": {
+          "n": 100,
+          "mean": 1.38089,
+          "median": 1.3845,
+          "sum": 138.089
+        },
+        "build": {
+          "n": 0
+        },
+        "commit": {
+          "n": 100,
+          "mean": 0.0,
+          "median": 0.0,
+          "sum": 0.0
+        }
+      },
+      "protocol_mean_ms": 0.04094,
+      "protocol_median_ms": 0.04,
+      "execute_events_mean": 1,
+      "explicit_commit_median_ms": 0.0
+    },
+    {
+      "mode": "duration",
+      "arm": "postgres",
+      "operation": "follow",
+      "n": 100,
+      "source": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/summary.json",
+      "server_median_ms": 1.4620000000000002,
+      "server_mean_ms": 1.45119,
+      "client_median_ms": 2.094616007525474,
+      "paired_residual_median_ms": 0.6001975442506373,
+      "app_cpu_total_ms": 40.0,
+      "backend_cpu_total_ms": 0.0,
+      "cpu_tick_ms": 10,
+      "protocol_observed": true,
+      "stages": {
+        "auth": {
+          "n": 100,
+          "mean": 0.03016,
+          "median": 0.029,
+          "sum": 3.016
+        },
+        "db": {
+          "n": 100,
+          "mean": 1.4435499999999999,
+          "median": 1.455,
+          "sum": 144.355
+        },
+        "build": {
+          "n": 0
+        },
+        "commit": {
+          "n": 100,
+          "mean": 0.0,
+          "median": 0.0,
+          "sum": 0.0
+        }
+      },
+      "protocol_mean_ms": 0.05292,
+      "protocol_median_ms": 0.049,
+      "execute_events_mean": 1,
+      "explicit_commit_median_ms": 0.0
+    },
+    {
+      "mode": "duration",
+      "arm": "postgres",
+      "operation": "create_tweet",
+      "n": 100,
+      "source": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/summary.json",
+      "server_median_ms": 1.4129999999999998,
+      "server_mean_ms": 1.42697,
+      "client_median_ms": 2.027556940447539,
+      "paired_residual_median_ms": 0.6063970407061279,
+      "app_cpu_total_ms": 30.0,
+      "backend_cpu_total_ms": 30.0,
+      "cpu_tick_ms": 10,
+      "protocol_observed": true,
+      "stages": {
+        "auth": {
+          "n": 100,
+          "mean": 0.02897,
+          "median": 0.028,
+          "sum": 2.8970000000000002
+        },
+        "db": {
+          "n": 100,
+          "mean": 1.41267,
+          "median": 1.399,
+          "sum": 141.267
+        },
+        "build": {
+          "n": 100,
+          "mean": 0.00623,
+          "median": 0.006,
+          "sum": 0.623
+        },
+        "commit": {
+          "n": 100,
+          "mean": 0.0,
+          "median": 0.0,
+          "sum": 0.0
+        }
+      },
+      "protocol_mean_ms": 0.0591,
+      "protocol_median_ms": 0.053,
+      "execute_events_mean": 1,
+      "explicit_commit_median_ms": 0.0
+    },
+    {
+      "mode": "duration",
+      "arm": "jaseci",
+      "operation": "like",
+      "n": 100,
+      "source": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/like/summary.json",
+      "server_median_ms": 3.2910000000000004,
+      "server_mean_ms": 7.4385,
+      "client_median_ms": 4.990416986402124,
+      "paired_residual_median_ms": 1.6810930134318771,
+      "app_cpu_total_ms": 250.0,
+      "backend_cpu_total_ms": 140.0,
+      "cpu_tick_ms": 10,
+      "protocol_observed": true,
+      "stages": {
+        "dispatch": {
+          "n": 100,
+          "mean": 1.23611,
+          "median": 0.965,
+          "sum": 123.611
+        },
+        "auth": {
+          "n": 100,
+          "mean": 0.13009,
+          "median": 0.109,
+          "sum": 13.009
+        },
+        "prep": {
+          "n": 100,
+          "mean": 0.14534,
+          "median": 0.123,
+          "sum": 14.534
+        },
+        "db": {
+          "n": 100,
+          "mean": 1.13762,
+          "median": 0.8545,
+          "sum": 113.762
+        },
+        "build": {
+          "n": 100,
+          "mean": 0.41698,
+          "median": 0.335,
+          "sum": 41.698
+        },
+        "commit": {
+          "n": 100,
+          "mean": 5.60911,
+          "median": 1.8535,
+          "sum": 560.911
+        },
+        "ser": {
+          "n": 100,
+          "mean": 0.00918,
+          "median": 0.007,
+          "sum": 0.918
+        }
+      },
+      "protocol_mean_ms": 5.94259,
+      "protocol_median_ms": 2.1485,
+      "execute_events_mean": 10.96,
+      "explicit_commit_median_ms": 1.3715000000000002
+    },
+    {
+      "mode": "duration",
+      "arm": "jaseci",
+      "operation": "follow",
+      "n": 100,
+      "source": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/follow/summary.json",
+      "server_median_ms": 4.187,
+      "server_mean_ms": 4.1677,
+      "client_median_ms": 5.898894451092929,
+      "paired_residual_median_ms": 1.7018204388543965,
+      "app_cpu_total_ms": 230.0,
+      "backend_cpu_total_ms": 170.0,
+      "cpu_tick_ms": 10,
+      "protocol_observed": true,
+      "stages": {
+        "dispatch": {
+          "n": 100,
+          "mean": 0.97597,
+          "median": 0.9355,
+          "sum": 97.597
+        },
+        "auth": {
+          "n": 100,
+          "mean": 0.11196,
+          "median": 0.108,
+          "sum": 11.196
+        },
+        "prep": {
+          "n": 100,
+          "mean": 0.13971,
+          "median": 0.126,
+          "sum": 13.971
+        },
+        "db": {
+          "n": 100,
+          "mean": 1.55649,
+          "median": 1.5415,
+          "sum": 155.649
+        },
+        "build": {
+          "n": 100,
+          "mean": 0.42551,
+          "median": 0.4265,
+          "sum": 42.551
+        },
+        "commit": {
+          "n": 100,
+          "mean": 1.93438,
+          "median": 1.9169999999999998,
+          "sum": 193.438
+        },
+        "ser": {
+          "n": 100,
+          "mean": 0.00641,
+          "median": 0.006,
+          "sum": 0.641
+        }
+      },
+      "protocol_mean_ms": 2.638,
+      "protocol_median_ms": 2.6265,
+      "execute_events_mean": 12,
+      "explicit_commit_median_ms": 1.3824999999999998
+    },
+    {
+      "mode": "duration",
+      "arm": "jaseci",
+      "operation": "create_tweet",
+      "n": 100,
+      "source": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/summary.json",
+      "server_median_ms": 3.2345,
+      "server_mean_ms": 3.25755,
+      "client_median_ms": 4.987056541722268,
+      "paired_residual_median_ms": 1.7049084863960742,
+      "app_cpu_total_ms": 200.0,
+      "backend_cpu_total_ms": 100.0,
+      "cpu_tick_ms": 10,
+      "protocol_observed": true,
+      "stages": {
+        "dispatch": {
+          "n": 100,
+          "mean": 1.01478,
+          "median": 1.0034999999999998,
+          "sum": 101.478
+        },
+        "auth": {
+          "n": 100,
+          "mean": 0.10188,
+          "median": 0.098,
+          "sum": 10.188
+        },
+        "prep": {
+          "n": 100,
+          "mean": 0.11225,
+          "median": 0.1065,
+          "sum": 11.225
+        },
+        "db": {
+          "n": 100,
+          "mean": 0.65718,
+          "median": 0.6515,
+          "sum": 65.718
+        },
+        "build": {
+          "n": 100,
+          "mean": 0.28242,
+          "median": 0.273,
+          "sum": 28.242
+        },
+        "commit": {
+          "n": 100,
+          "mean": 2.11236,
+          "median": 2.0895,
+          "sum": 211.236
+        },
+        "ser": {
+          "n": 100,
+          "mean": 0.01474,
+          "median": 0.015,
+          "sum": 1.474
+        }
+      },
+      "protocol_mean_ms": 2.12675,
+      "protocol_median_ms": 2.1055,
+      "execute_events_mean": 9,
+      "explicit_commit_median_ms": 1.408
+    }
+  ]
+}

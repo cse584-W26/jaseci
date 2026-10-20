@@ -1,0 +1,15 @@
+[
+  {
+    "source_log": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/create_tweet/postgres-000.log",
+    "logged_execute_ms": 0.088,
+    "statement_name": "_pg3_2",
+    "query": "INSERT INTO tweets (seed_id, author_id, content)\n\t            SELECT $1, p.id, $2\n\t            FROM profiles p WHERE p.id = $3\n\t            RETURNING id, created_at,\n\t                (SELECT username FROM profiles WHERE id = author_id)",
+    "query_sha256": "5726fddd9ba385d252c684b8bb318044a5b5a307145c292b7fafffc3e4823596",
+    "parameters": {
+      "1": "w2_0",
+      "2": "write bench tweet 0 #bench",
+      "3": "1"
+    },
+    "prepared_parameter_types": "{text,text,bigint}"
+  }
+]

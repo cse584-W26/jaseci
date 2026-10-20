@@ -1,0 +1,33 @@
+{
+  "database": "repro_w2_explain_20261019t212747z_postgres",
+  "source_log": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-000.log",
+  "method": "Each captured statement separately in a fresh transaction, followed by ROLLBACK. Seed state prepared by runner. EXPLAIN ANALYZE performs real DML and trigger work; rollback preserves logical data but still generates WAL and can change physical pages/statistics. Commit is excluded.",
+  "repeats": 3,
+  "settings": [
+    [
+      "fsync",
+      "on"
+    ],
+    [
+      "jit",
+      "on"
+    ],
+    [
+      "plan_cache_mode",
+      "auto"
+    ],
+    [
+      "server_version",
+      "16.9 (Debian 16.9-1.pgdg120+1)"
+    ],
+    [
+      "synchronous_commit",
+      "on"
+    ],
+    [
+      "track_io_timing",
+      "off"
+    ]
+  ],
+  "triggers": []
+}

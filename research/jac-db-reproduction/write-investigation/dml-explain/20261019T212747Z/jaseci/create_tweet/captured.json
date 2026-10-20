@@ -1,0 +1,37 @@
+[
+  {
+    "source_log": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-000.log",
+    "logged_execute_ms": 0.151,
+    "statement_name": "_pg3_4",
+    "query": "INSERT INTO anchors\n\t            (id, kind, arch_type, arch_module, fingerprint, root_id,\n\t             src, dst, undirected, props, format_version, updated_at,\n\t             src_type, dst_type)\n\t        SELECT id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, $1, now(),\n\t               src_type, dst_type\n\t        FROM unnest(\n\t            CAST($2 AS uuid[]), CAST($3 AS text[]),\n\t            CAST($4 AS text[]), CAST($5 AS text[]),\n\t            CAST($6 AS text[]), CAST($7 AS uuid[]),\n\t            CAST($8 AS uuid[]), CAST($9 AS uuid[]),\n\t            CAST($10 AS boolean[]), CAST($11 AS jsonb[]),\n\t            CAST($12 AS text[]), CAST($13 AS text[])\n\t        ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, src_type, dst_type)\n\t        ON CONFLICT (id) DO UPDATE SET\n\t            kind = EXCLUDED.kind,\n\t            arch_type = EXCLUDED.arch_type,\n\t            arch_module = EXCLUDED.arch_module,\n\t            fingerprint = EXCLUDED.fingerprint,\n\t            root_id = EXCLUDED.root_id,\n\t            src = EXCLUDED.src,\n\t            dst = EXCLUDED.dst,\n\t            undirected = EXCLUDED.undirected,\n\t            props = EXCLUDED.props,\n\t            format_version = EXCLUDED.format_version,\n\t            updated_at = now(),\n\t            -- an edge re-saved while its endpoints are unpopulated stubs\n\t            -- carries NULL types; keep whatever was recorded earlier\n\t            src_type = COALESCE(EXCLUDED.src_type, anchors.src_type),\n\t            dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)",
+    "query_sha256": "bee14cef2c160cf2e5da039eafa18b7a40d5c44a47def34d6dde41f16e03ec96",
+    "parameters": {
+      "1": "1",
+      "2": "{5898da42-04ba-44a2-8a5f-c154af89b518,b38dc910-6d50-4f7c-bf9b-6dd1b4ea3229}",
+      "3": "{EdgeAnchor,NodeAnchor}",
+      "4": "{Post,Tweet}",
+      "5": "{app,app}",
+      "6": "{0257ab8108739b8f,552e15e3e79578ff}",
+      "7": "{a6aa67a9-a09f-4b90-87d2-b404400d176d,a6aa67a9-a09f-4b90-87d2-b404400d176d}",
+      "8": "{be88871d-b7c9-4cef-b134-df8946207f84,NULL}",
+      "9": "{b38dc910-6d50-4f7c-bf9b-6dd1b4ea3229,NULL}",
+      "10": "{f,f}",
+      "11": "{\"{\\\"id\\\": \\\"5898da42-04ba-44a2-8a5f-c154af89b518\\\", \\\"root\\\": \\\"a6aa67a9-a09f-4b90-87d2-b404400d176d\\\", \\\"access\\\": {\\\"all\\\": -1, \\\"roots\\\": {\\\"anchors\\\": {}}}, \\\"source\\\": \\\"be88871d-b7c9-4cef-b134-df8946207f84\\\", \\\"target\\\": \\\"b38dc910-6d50-4f7c-bf9b-6dd1b4ea3229\\\", \\\"__type__\\\": \\\"EdgeAnchor\\\", \\\"archetype\\\": {\\\"__type__\\\": \\\"Post\\\", \\\"__module__\\\": \\\"app\\\"}, \\\"__module__\\\": \\\"jaclang.jac0core.archetype\\\", \\\"persistent\\\": true, \\\"is_undirected\\\": false}\",\"{\\\"id\\\": \\\"b38dc910-6d50-4f7c-bf9b-6dd1b4ea3229\\\", \\\"root\\\": \\\"a6aa67a9-a09f-4b90-87d2-b404400d176d\\\", \\\"access\\\": {\\\"all\\\": 2, \\\"roots\\\": {\\\"anchors\\\": {}}}, \\\"version\\\": 0, \\\"__type__\\\": \\\"NodeAnchor\\\", \\\"archetype\\\": {\\\"likes\\\": [], \\\"content\\\": \\\"write bench tweet 0 #bench\\\", \\\"seed_id\\\": \\\"w2_0\\\", \\\"__type__\\\": \\\"Tweet\\\", \\\"comments\\\": [], \\\"__module__\\\": \\\"app\\\", \\\"created_at\\\": \\\"2026-10-19T21:25:45.777728Z\\\", \\\"author_username\\\": \\\"t20_sim_user_0\\\"}, \\\"__module__\\\": \\\"jaclang.jac0core.archetype\\\", \\\"persistent\\\": true}\"}",
+      "12": "{Profile,NULL}",
+      "13": "{Tweet,NULL}"
+    },
+    "prepared_parameter_types": "{integer,uuid[],text[],text[],text[],text[],uuid[],uuid[],uuid[],boolean[],jsonb[],text[],text[]}"
+  },
+  {
+    "source_log": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212529Z-duration/1-jaseci/create_tweet/postgres-000.log",
+    "logged_execute_ms": 0.019,
+    "statement_name": "_pg3_5",
+    "query": "INSERT INTO graph_types (type_name, ancestor)\n\t            SELECT * FROM unnest(CAST($1 AS text[]), CAST($2 AS text[]))\n\t            ON CONFLICT DO NOTHING",
+    "query_sha256": "c18cc855c60c23d3d92ebc2222adb896568d083e9de62c538168664aa0a23784",
+    "parameters": {
+      "1": "{Post,Tweet}",
+      "2": "{Post,Tweet}"
+    },
+    "prepared_parameter_types": "{text[],text[]}"
+  }
+]

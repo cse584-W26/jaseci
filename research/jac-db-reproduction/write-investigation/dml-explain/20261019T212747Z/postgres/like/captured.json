@@ -1,0 +1,14 @@
+[
+  {
+    "source_log": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/like/postgres-000.log",
+    "logged_execute_ms": 0.075,
+    "statement_name": "_pg3_0",
+    "query": "UPDATE tweets t\n\t            SET likes = array_append(t.likes, p.username)\n\t            FROM profiles p\n\t            WHERE t.id = $1 AND p.id = $2\n\t              AND NOT (p.username = ANY(t.likes))\n\t            RETURNING cardinality(t.likes)",
+    "query_sha256": "1f3bef0130b9cf4fbe63f996fec65f24aa7d6f067fb9271e77636b7a8740c97b",
+    "parameters": {
+      "1": "2",
+      "2": "1"
+    },
+    "prepared_parameter_types": "{bigint,bigint}"
+  }
+]

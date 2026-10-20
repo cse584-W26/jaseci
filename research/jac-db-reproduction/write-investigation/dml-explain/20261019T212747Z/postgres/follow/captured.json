@@ -1,0 +1,14 @@
+[
+  {
+    "source_log": "/home/baichuan/jaseci/reproduction/results/littlex-w2/20261019T212529Z-duration/1-postgres/follow/postgres-000.log",
+    "logged_execute_ms": 0.08,
+    "statement_name": "_pg3_1",
+    "query": "INSERT INTO follows (follower_id, followee_id)\n\t            VALUES ($1, $2)\n\t            ON CONFLICT DO NOTHING",
+    "query_sha256": "8d2ea36ad6ec36fee4f264c76888a0939ca363b3f2d6852086305a9ec7e69f4a",
+    "parameters": {
+      "1": "1",
+      "2": "12"
+    },
+    "prepared_parameter_types": "{bigint,bigint}"
+  }
+]

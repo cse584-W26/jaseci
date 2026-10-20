@@ -1,0 +1,145 @@
+{
+  "arm": "jaseci-pg",
+  "queries": {
+    "is1": {
+      "expected_n": 750,
+      "actual_n": 750,
+      "client": {
+        "n": 750,
+        "mean_ms": 2.4512026666666666,
+        "median_ms": 2.4065000000000003,
+        "upper_middle_ms": 2.407,
+        "p95_nearest_rank_ms": 2.696
+      },
+      "server": {
+        "n": 750,
+        "mean_ms": 1.5447906666666666,
+        "median_ms": 1.5045,
+        "upper_middle_ms": 1.505,
+        "p95_nearest_rank_ms": 1.756
+      }
+    },
+    "is2": {
+      "expected_n": 750,
+      "actual_n": 750,
+      "client": {
+        "n": 750,
+        "mean_ms": 4.74652,
+        "median_ms": 4.858499999999999,
+        "upper_middle_ms": 4.859,
+        "p95_nearest_rank_ms": 5.546
+      },
+      "server": {
+        "n": 750,
+        "mean_ms": 3.788381333333333,
+        "median_ms": 3.909,
+        "upper_middle_ms": 3.909,
+        "p95_nearest_rank_ms": 4.561
+      }
+    },
+    "is3": {
+      "expected_n": 750,
+      "actual_n": 750,
+      "client": {
+        "n": 750,
+        "mean_ms": 3.5738386666666666,
+        "median_ms": 3.504,
+        "upper_middle_ms": 3.505,
+        "p95_nearest_rank_ms": 4.019
+      },
+      "server": {
+        "n": 750,
+        "mean_ms": 2.6388986666666665,
+        "median_ms": 2.5575,
+        "upper_middle_ms": 2.559,
+        "p95_nearest_rank_ms": 3.006
+      }
+    },
+    "ic1": {
+      "expected_n": 75,
+      "actual_n": 75,
+      "client": {
+        "n": 75,
+        "mean_ms": 13.237893333333334,
+        "median_ms": 5.319,
+        "upper_middle_ms": 5.319,
+        "p95_nearest_rank_ms": 38.115
+      },
+      "server": {
+        "n": 75,
+        "mean_ms": 12.228426666666667,
+        "median_ms": 4.308,
+        "upper_middle_ms": 4.308,
+        "p95_nearest_rank_ms": 37.141
+      }
+    },
+    "ic2": {
+      "expected_n": 75,
+      "actual_n": 75,
+      "client": {
+        "n": 75,
+        "mean_ms": 9.55624,
+        "median_ms": 9.842,
+        "upper_middle_ms": 9.842,
+        "p95_nearest_rank_ms": 11.227
+      },
+      "server": {
+        "n": 75,
+        "mean_ms": 8.497853333333333,
+        "median_ms": 8.779,
+        "upper_middle_ms": 8.779,
+        "p95_nearest_rank_ms": 10.174
+      }
+    },
+    "ic5": {
+      "expected_n": 75,
+      "actual_n": 75,
+      "client": {
+        "n": 75,
+        "mean_ms": 111.77886666666667,
+        "median_ms": 109.032,
+        "upper_middle_ms": 109.032,
+        "p95_nearest_rank_ms": 185.217
+      },
+      "server": {
+        "n": 75,
+        "mean_ms": 110.20853333333334,
+        "median_ms": 107.597,
+        "upper_middle_ms": 107.597,
+        "p95_nearest_rank_ms": 183.407
+      }
+    },
+    "ic13": {
+      "expected_n": 75,
+      "actual_n": 75,
+      "client": {
+        "n": 75,
+        "mean_ms": 29.17872,
+        "median_ms": 34.653,
+        "upper_middle_ms": 34.653,
+        "p95_nearest_rank_ms": 37.326
+      },
+      "server": {
+        "n": 75,
+        "mean_ms": 28.07809333333333,
+        "median_ms": 33.532,
+        "upper_middle_ms": 33.532,
+        "p95_nearest_rank_ms": 36.288
+      }
+    }
+  },
+  "warm_n": 140,
+  "timed_n": 2550,
+  "errors": [],
+  "historical_reference": "/home/baichuan/jaseci/DBHarness/session0904/run/data/snb/postgres/snb_postgres.hashes.json",
+  "historical_reference_sha256": "d73163c4b818813319958414fba387a7b4057a65029fc9ff8b9a2029b045d63f",
+  "historical_hash_matches": 140,
+  "historical_hash_expected": 140,
+  "hash_missing": [],
+  "hash_extra": [],
+  "hash_mismatches": [],
+  "percentile_definition": "p95 uses nearest rank: sorted[ceil(0.95*n)-1]. Upper-middle uses sorted[n//2]; conventional median averages two middle values when n is even.",
+  "hash_scope": "Original run_snb hashes warm rep0 responses; timed responses retain the original runner behavior.",
+  "passed": true,
+  "runner_exit_status": 0
+}

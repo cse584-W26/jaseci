@@ -1,0 +1,77 @@
+{
+  "database": "jac_tpcc_bench_pg_7a18c172",
+  "counts": {
+    "orders": 30000,
+    "order_line": 300754,
+    "new_order": 9000,
+    "history": 30000,
+    "next_o_sum": 30010,
+    "w_ytd": 300000,
+    "consistency_bad": 0
+  },
+  "seed_elapsed_seconds": 456,
+  "historical_comparison": {
+    "control": {
+      "path": "DBHarness/session0904/run/data/tpcc/control/tpcc_jaseci-pg.meta.json",
+      "counts_after": {
+        "orders": 30487,
+        "order_line": 305500,
+        "new_order": 9487,
+        "history": 30406,
+        "next_o_sum": 30497,
+        "w_ytd": 1362049.8600000006,
+        "consistency_bad": 0
+      }
+    },
+    "best": {
+      "path": "DBHarness/session0904/run/data/tpcc/best/tpcc_jaseci-pg.meta.json",
+      "counts_after": {
+        "orders": 30487,
+        "order_line": 305500,
+        "new_order": 9487,
+        "history": 30406,
+        "next_o_sum": 30497,
+        "w_ytd": 1362049.8600000006,
+        "consistency_bad": 0
+      }
+    },
+    "postgres": {
+      "path": "DBHarness/session0904/run/data/tpcc/postgres/tpcc_postgres.meta.json",
+      "counts_after": {
+        "orders": 30487,
+        "order_line": 305500,
+        "new_order": 9487,
+        "history": 30406,
+        "next_o_sum": 30497,
+        "w_ytd": 1362049.86,
+        "consistency_bad": 0
+      }
+    },
+    "sqlalchemy": {
+      "path": "DBHarness/session0904/run/data/tpcc/sqlalchemy/tpcc_sqlalchemy.meta.json",
+      "counts_after": {
+        "orders": 30487,
+        "order_line": 305500,
+        "new_order": 9487,
+        "history": 30406,
+        "next_o_sum": 30497,
+        "w_ytd": 1362049.86,
+        "consistency_bad": 0
+      }
+    }
+  },
+  "anchor_type_counts": {
+    "Customer": 30000,
+    "District": 10,
+    "GenericEdge": 560765,
+    "History": 30000,
+    "Item": 100000,
+    "Of": 100000,
+    "Order": 30000,
+    "OrderLine": 300754,
+    "Placed": 30000,
+    "Root": 5,
+    "Stock": 100000,
+    "Warehouse": 1
+  }
+}

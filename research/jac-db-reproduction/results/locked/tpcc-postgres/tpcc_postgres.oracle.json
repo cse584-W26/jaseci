@@ -1,0 +1,47 @@
+{
+  "arm": "postgres",
+  "warmup": 100,
+  "timed": 800,
+  "plan_seed": 4242,
+  "plan_sha256": "769147b46ac2a157a378e061089b7f8e043d5f261c361aebbe9ce9a196cf8501",
+  "before": {
+    "orders": 30000,
+    "order_line": 300754,
+    "new_order": 9000,
+    "history": 30000,
+    "next_o_sum": 30010,
+    "w_ytd": 300000.0,
+    "consistency_bad": 0
+  },
+  "after": {
+    "orders": 30487,
+    "order_line": 305500,
+    "new_order": 9487,
+    "history": 30406,
+    "next_o_sum": 30497,
+    "w_ytd": 1362049.86,
+    "consistency_bad": 0
+  },
+  "deltas": {
+    "orders": 487,
+    "order_line": 4746,
+    "new_order": 487,
+    "history": 406,
+    "next_o_sum": 487
+  },
+  "w_ytd_delta": 1062049.86,
+  "w_ytd_expected": 1062049.86,
+  "ok_new_order": 487,
+  "ok_payment": 406,
+  "rolled_back": 7,
+  "oracle": {
+    "orders": true,
+    "order_line": true,
+    "new_order_rows": true,
+    "history": true,
+    "next_o_sum": true,
+    "w_ytd": true,
+    "consistency": true
+  },
+  "oracle_all_ok": true
+}

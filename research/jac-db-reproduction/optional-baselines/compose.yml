@@ -1,0 +1,16 @@
+services:
+  neo4j:
+    image: neo4j:5
+    container_name: jac-db-repro-snb-neo4j
+    environment:
+      NEO4J_AUTH: neo4j/snbpassword
+    ports:
+      - "127.0.0.1:17474:7474"
+      - "127.0.0.1:17687:7687"
+    volumes:
+      - snb_neo4j_data:/data
+    cpuset: "4-5"
+    mem_limit: 3g
+volumes:
+  snb_neo4j_data:
+    name: jac-db-repro-snb-neo4j-data
