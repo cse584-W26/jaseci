@@ -1,0 +1,1 @@
+SELECT type_name FROM graph_types WHERE ancestor = $1

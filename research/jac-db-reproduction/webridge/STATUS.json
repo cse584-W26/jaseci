@@ -1,5 +1,5 @@
 {
-  "updated_utc": "2026-10-20T20:43:41.651865+00:00",
+  "updated_utc": "2026-10-20T21:07:32.951127+00:00",
   "task": "Actual WeBridge comparison and original-paper reproduction",
   "user_baseline_steps": [
     "Fully reproduce Jac benchmark behavior and per-input server SQL counts",
@@ -128,5 +128,22 @@
     "timing_requests_verified": 840,
     "idiomatic_java_original_plus_small_correctness_inputs": 21,
     "all_proxies_stopped": true
+  },
+  "eight_configuration_experiments": {
+    "state": "passed",
+    "performance_configurations": 8,
+    "delay_conditions_ms": [
+      0,
+      2,
+      10
+    ],
+    "main_verified_requests": 960,
+    "additional_reverse_order_requests": 240,
+    "measured_protocol_profiles": 30,
+    "actual_set_oriented_webridge_original_parameter_gates": 20,
+    "report": "roundtrip-comparison/REPORT.md",
+    "pdf": "roundtrip-comparison/jac-webridge-measured-comparison.pdf",
+    "verification": "roundtrip-comparison/eight-arm-verification.json",
+    "all_services_proxies_stopped": true
   }
 }

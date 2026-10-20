@@ -1,0 +1,19 @@
+[
+  {
+    "group": "Preserved transaction, root/person/friends/forum hydration and Knows",
+    "baseline_sql": 10,
+    "final_sql": 10
+  },
+  {
+    "group": "Membership queries including new type probes",
+    "baseline_sql": 10,
+    "final_sql": 3,
+    "detail": "10perfriendHasMember ->1frontierquery+2typeprobes"
+  },
+  {
+    "group": "Post/creator counting, including post/creator hydration",
+    "baseline_sql": 18,
+    "final_sql": 1,
+    "detail": "1ContainerOf+15HasCreator+2hydration ->1groupedcount/order/topK query"
+  }
+]

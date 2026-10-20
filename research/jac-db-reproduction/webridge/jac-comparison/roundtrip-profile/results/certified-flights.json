@@ -1,0 +1,166 @@
+{
+  "all_pass": true,
+  "rows": [
+    {
+      "delay_ms": 0,
+      "variant": "baseline",
+      "flights_per_request": [
+        38,
+        38,
+        38
+      ],
+      "frontend_frames_per_request": [
+        152,
+        152,
+        152
+      ],
+      "backend_frames_per_request": [
+        222,
+        222,
+        222
+      ],
+      "frontend_chunks_per_request": [
+        38,
+        38,
+        38
+      ],
+      "backend_chunks_per_request": [
+        39,
+        39,
+        39
+      ],
+      "flight_span_median_ms": 0.759802,
+      "flight_span_sum_ms_by_request": [
+        27.52281,
+        32.908403,
+        33.337557
+      ],
+      "instrumented_server_ms": [
+        41.554,
+        51.857,
+        47.892
+      ]
+    },
+    {
+      "delay_ms": 0,
+      "variant": "final",
+      "flights_per_request": [
+        14,
+        14,
+        14
+      ],
+      "frontend_frames_per_request": [
+        56,
+        56,
+        56
+      ],
+      "backend_frames_per_request": [
+        83,
+        83,
+        83
+      ],
+      "frontend_chunks_per_request": [
+        14,
+        14,
+        14
+      ],
+      "backend_chunks_per_request": [
+        14,
+        14,
+        14
+      ],
+      "flight_span_median_ms": 1.0135999999999998,
+      "flight_span_sum_ms_by_request": [
+        8.825283,
+        35.695232,
+        12.671145
+      ],
+      "instrumented_server_ms": [
+        13.808,
+        61.444,
+        24.726
+      ]
+    },
+    {
+      "delay_ms": 2,
+      "variant": "baseline",
+      "flights_per_request": [
+        38,
+        38,
+        38
+      ],
+      "frontend_frames_per_request": [
+        152,
+        152,
+        152
+      ],
+      "backend_frames_per_request": [
+        222,
+        222,
+        222
+      ],
+      "frontend_chunks_per_request": [
+        38,
+        38,
+        38
+      ],
+      "backend_chunks_per_request": [
+        39,
+        39,
+        39
+      ],
+      "flight_span_median_ms": 2.8767905000000003,
+      "flight_span_sum_ms_by_request": [
+        107.206248,
+        106.471138,
+        110.118591
+      ],
+      "instrumented_server_ms": [
+        122.622,
+        121.837,
+        126.908
+      ]
+    },
+    {
+      "delay_ms": 2,
+      "variant": "final",
+      "flights_per_request": [
+        14,
+        14,
+        14
+      ],
+      "frontend_frames_per_request": [
+        56,
+        56,
+        56
+      ],
+      "backend_frames_per_request": [
+        83,
+        83,
+        83
+      ],
+      "frontend_chunks_per_request": [
+        14,
+        14,
+        14
+      ],
+      "backend_chunks_per_request": [
+        14,
+        14,
+        14
+      ],
+      "flight_span_median_ms": 2.5044674999999996,
+      "flight_span_sum_ms_by_request": [
+        38.749569,
+        37.102733,
+        37.869656
+      ],
+      "instrumented_server_ms": [
+        44.047,
+        43.182,
+        43.891
+      ]
+    }
+  ],
+  "definition": "Proxy frontend group forwarded -> corresponding backendReady final chunk delivered; includesDBexecution andconfiguredresponse delay; actualqueryresponse measurement, separatefromSELECT1calibration"
+}

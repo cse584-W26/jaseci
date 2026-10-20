@@ -1,0 +1,576 @@
+{
+  "all_pass": true,
+  "profile_requests": 12,
+  "variants": {
+    "baseline": {
+      "sql_executions": 38,
+      "sync_flights": 38,
+      "frontend_messages": {
+        "B": 38,
+        "D": 38,
+        "E": 38,
+        "S": 38
+      },
+      "backend_chunks_each": [
+        39,
+        39,
+        39,
+        39,
+        39,
+        39
+      ],
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydrate.root": 1,
+        "hydrate.input_person": 1,
+        "graph.Knows.out": 1,
+        "hydrate.friends_out7": 1,
+        "graph.Knows.in": 1,
+        "hydrate.friends_in3": 1,
+        "graph.HasMember": 10,
+        "hydrate.forum1": 1,
+        "graph.ContainerOf": 1,
+        "hydrate.posts15": 1,
+        "graph.HasCreator": 15,
+        "hydrate.creator1": 1,
+        "transaction.commit": 1
+      },
+      "operations": [
+        {
+          "sequence": 1,
+          "category": "transaction.begin",
+          "sql_id": "sql-884b307eaf68",
+          "frontend_types": "BDES",
+          "command_tag": "BEGIN"
+        },
+        {
+          "sequence": 2,
+          "category": "transaction.setting",
+          "sql_id": "sql-e7b550770798",
+          "frontend_types": "BDES",
+          "command_tag": "SET"
+        },
+        {
+          "sequence": 3,
+          "category": "hydrate.root",
+          "sql_id": "sql-4e92b5a8eea9",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 4,
+          "category": "hydrate.input_person",
+          "sql_id": "sql-4e92b5a8eea9",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 5,
+          "category": "graph.Knows.out",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 7"
+        },
+        {
+          "sequence": 6,
+          "category": "hydrate.friends_out7",
+          "sql_id": "sql-4e92b5a8eea9",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 7"
+        },
+        {
+          "sequence": 7,
+          "category": "graph.Knows.in",
+          "sql_id": "sql-7d1ffbff8659",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 3"
+        },
+        {
+          "sequence": 8,
+          "category": "hydrate.friends_in3",
+          "sql_id": "sql-4e92b5a8eea9",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 3"
+        },
+        {
+          "sequence": 9,
+          "category": "graph.HasMember",
+          "sql_id": "sql-72e42bf10a07",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 0"
+        },
+        {
+          "sequence": 10,
+          "category": "graph.HasMember",
+          "sql_id": "sql-72e42bf10a07",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 0"
+        },
+        {
+          "sequence": 11,
+          "category": "graph.HasMember",
+          "sql_id": "sql-72e42bf10a07",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 0"
+        },
+        {
+          "sequence": 12,
+          "category": "graph.HasMember",
+          "sql_id": "sql-72e42bf10a07",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 13,
+          "category": "hydrate.forum1",
+          "sql_id": "sql-4e92b5a8eea9",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 14,
+          "category": "graph.HasMember",
+          "sql_id": "sql-72e42bf10a07",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 0"
+        },
+        {
+          "sequence": 15,
+          "category": "graph.HasMember",
+          "sql_id": "sql-72e42bf10a07",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 0"
+        },
+        {
+          "sequence": 16,
+          "category": "graph.HasMember",
+          "sql_id": "sql-72e42bf10a07",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 0"
+        },
+        {
+          "sequence": 17,
+          "category": "graph.HasMember",
+          "sql_id": "sql-72e42bf10a07",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 0"
+        },
+        {
+          "sequence": 18,
+          "category": "graph.HasMember",
+          "sql_id": "sql-72e42bf10a07",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 0"
+        },
+        {
+          "sequence": 19,
+          "category": "graph.HasMember",
+          "sql_id": "sql-72e42bf10a07",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 0"
+        },
+        {
+          "sequence": 20,
+          "category": "graph.ContainerOf",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 15"
+        },
+        {
+          "sequence": 21,
+          "category": "hydrate.posts15",
+          "sql_id": "sql-4e92b5a8eea9",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 15"
+        },
+        {
+          "sequence": 22,
+          "category": "graph.HasCreator",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 23,
+          "category": "hydrate.creator1",
+          "sql_id": "sql-4e92b5a8eea9",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 24,
+          "category": "graph.HasCreator",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 25,
+          "category": "graph.HasCreator",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 26,
+          "category": "graph.HasCreator",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 27,
+          "category": "graph.HasCreator",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 28,
+          "category": "graph.HasCreator",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 29,
+          "category": "graph.HasCreator",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 30,
+          "category": "graph.HasCreator",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 31,
+          "category": "graph.HasCreator",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 32,
+          "category": "graph.HasCreator",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 33,
+          "category": "graph.HasCreator",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 34,
+          "category": "graph.HasCreator",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 35,
+          "category": "graph.HasCreator",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 36,
+          "category": "graph.HasCreator",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 37,
+          "category": "graph.HasCreator",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 38,
+          "category": "transaction.commit",
+          "sql_id": "sql-79663c1d3b43",
+          "frontend_types": "BDES",
+          "command_tag": "COMMIT"
+        }
+      ],
+      "evidence_requests": [
+        {
+          "delay_ms": 0,
+          "request_tag": "request-baseline-0",
+          "backend_pid": 2514233,
+          "server_ms": 41.554
+        },
+        {
+          "delay_ms": 0,
+          "request_tag": "request-baseline-1",
+          "backend_pid": 2514233,
+          "server_ms": 51.857
+        },
+        {
+          "delay_ms": 0,
+          "request_tag": "request-baseline-2",
+          "backend_pid": 2514233,
+          "server_ms": 47.892
+        },
+        {
+          "delay_ms": 2,
+          "request_tag": "request-baseline-0",
+          "backend_pid": 2514902,
+          "server_ms": 122.622
+        },
+        {
+          "delay_ms": 2,
+          "request_tag": "request-baseline-1",
+          "backend_pid": 2514902,
+          "server_ms": 121.837
+        },
+        {
+          "delay_ms": 2,
+          "request_tag": "request-baseline-2",
+          "backend_pid": 2514902,
+          "server_ms": 126.908
+        }
+      ]
+    },
+    "final": {
+      "sql_executions": 14,
+      "sync_flights": 14,
+      "frontend_messages": {
+        "B": 14,
+        "D": 14,
+        "E": 14,
+        "S": 14
+      },
+      "backend_chunks_each": [
+        14,
+        14,
+        14,
+        14,
+        14,
+        14
+      ],
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydrate.root": 1,
+        "hydrate.input_person": 1,
+        "graph.Knows.out": 1,
+        "hydrate.friends_out7": 1,
+        "graph.Knows.in": 1,
+        "hydrate.friends_in3": 1,
+        "type_probe.HasMember": 1,
+        "type_probe.Forum": 1,
+        "graph.HasMember.batch10": 1,
+        "hydrate.forum1": 1,
+        "fused.forum_post_creator_count_order_limit": 1,
+        "transaction.commit": 1
+      },
+      "operations": [
+        {
+          "sequence": 1,
+          "category": "transaction.begin",
+          "sql_id": "sql-884b307eaf68",
+          "frontend_types": "BDES",
+          "command_tag": "BEGIN"
+        },
+        {
+          "sequence": 2,
+          "category": "transaction.setting",
+          "sql_id": "sql-e7b550770798",
+          "frontend_types": "BDES",
+          "command_tag": "SET"
+        },
+        {
+          "sequence": 3,
+          "category": "hydrate.root",
+          "sql_id": "sql-4e92b5a8eea9",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 4,
+          "category": "hydrate.input_person",
+          "sql_id": "sql-4e92b5a8eea9",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 5,
+          "category": "graph.Knows.out",
+          "sql_id": "sql-8c1249f7d4e8",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 7"
+        },
+        {
+          "sequence": 6,
+          "category": "hydrate.friends_out7",
+          "sql_id": "sql-4e92b5a8eea9",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 7"
+        },
+        {
+          "sequence": 7,
+          "category": "graph.Knows.in",
+          "sql_id": "sql-7d1ffbff8659",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 3"
+        },
+        {
+          "sequence": 8,
+          "category": "hydrate.friends_in3",
+          "sql_id": "sql-4e92b5a8eea9",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 3"
+        },
+        {
+          "sequence": 9,
+          "category": "type_probe.HasMember",
+          "sql_id": "sql-6e816500e3df",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 10,
+          "category": "type_probe.Forum",
+          "sql_id": "sql-6e816500e3df",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 11,
+          "category": "graph.HasMember.batch10",
+          "sql_id": "sql-fb170eb0bb7a",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 12,
+          "category": "hydrate.forum1",
+          "sql_id": "sql-4e92b5a8eea9",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 13,
+          "category": "fused.forum_post_creator_count_order_limit",
+          "sql_id": "sql-b14a4ab48d64",
+          "frontend_types": "BDES",
+          "command_tag": "SELECT 1"
+        },
+        {
+          "sequence": 14,
+          "category": "transaction.commit",
+          "sql_id": "sql-79663c1d3b43",
+          "frontend_types": "BDES",
+          "command_tag": "COMMIT"
+        }
+      ],
+      "evidence_requests": [
+        {
+          "delay_ms": 0,
+          "request_tag": "request-final-0",
+          "backend_pid": 2514343,
+          "server_ms": 13.808
+        },
+        {
+          "delay_ms": 0,
+          "request_tag": "request-final-1",
+          "backend_pid": 2514343,
+          "server_ms": 61.444
+        },
+        {
+          "delay_ms": 0,
+          "request_tag": "request-final-2",
+          "backend_pid": 2514343,
+          "server_ms": 24.726
+        },
+        {
+          "delay_ms": 2,
+          "request_tag": "request-final-0",
+          "backend_pid": 2515314,
+          "server_ms": 44.047
+        },
+        {
+          "delay_ms": 2,
+          "request_tag": "request-final-1",
+          "backend_pid": 2515314,
+          "server_ms": 43.182
+        },
+        {
+          "delay_ms": 2,
+          "request_tag": "request-final-2",
+          "backend_pid": 2515314,
+          "server_ms": 43.891
+        }
+      ]
+    }
+  },
+  "source_anchors": {
+    "walker": {
+      "file": "reproduction/benchmark/snb/jaseci-pg/app.jac",
+      "line": 368
+    },
+    "membership_codegen": {
+      "file": "jac-db/jac/jaclang/jac0core/passes/impl/pyast_gen_pass.impl.jac",
+      "line": 3330
+    },
+    "prefetch": {
+      "file": "jac-db/jac/jaclang/runtimelib/impl/query_planner.impl.jac",
+      "line": 1428
+    },
+    "membership_fast_path": {
+      "file": "jac-db/jac/jaclang/runtimelib/impl/query_planner.impl.jac",
+      "line": 1523
+    },
+    "two_type_probe_callsite": {
+      "file": "jac-db/jac/jaclang/runtimelib/impl/query_planner.impl.jac",
+      "line": 1588
+    },
+    "type_probe_sql": {
+      "file": "jac-db/jac/jaclang/runtimelib/impl/store.impl.jac",
+      "line": 2771
+    },
+    "hydration_session": {
+      "file": "jac-db/jac/jaclang/runtimelib/impl/session.impl.jac",
+      "line": 453
+    },
+    "hydration_sql": {
+      "file": "jac-db/jac/jaclang/runtimelib/impl/store.impl.jac",
+      "line": 847
+    },
+    "count_topk_sql": {
+      "file": "jac-db/jac/jaclang/jac0core/impl/runtime.impl.jac",
+      "line": 1284
+    }
+  },
+  "grouped_change": [
+    {
+      "group": "Preserved transaction, root/person/friends/forum hydration and Knows",
+      "baseline_sql": 10,
+      "final_sql": 10
+    },
+    {
+      "group": "Membership queries including new type probes",
+      "baseline_sql": 10,
+      "final_sql": 3,
+      "detail": "10perfriendHasMember ->1frontierquery+2typeprobes"
+    },
+    {
+      "group": "Post/creator counting, including post/creator hydration",
+      "baseline_sql": 18,
+      "final_sql": 1,
+      "detail": "1ContainerOf+15HasCreator+2hydration ->1groupedcount/order/topK query"
+    }
+  ]
+}

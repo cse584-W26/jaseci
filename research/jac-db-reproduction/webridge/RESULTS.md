@@ -1,5 +1,11 @@
 # WeBridge reproduction and Jac baseline alignment
 
+## Complete eight-configuration comparison and measured SQL combination
+
+Both requested experiments now cover all eight configurations, including actual set-oriented Java through WeBridge. The main timing matrix verifies960 responses, with240 additional reverse-order responses. The separate protocol experiment verifies30 measured profiles and maps each emitted query or stored-procedure operation.
+
+Start with the [English PDF](roundtrip-comparison/jac-webridge-measured-comparison.pdf), [complete report](roundtrip-comparison/REPORT.md), and [independently verified matrix](roundtrip-comparison/eight-arm-verification.json). The earlier seven-configuration results below remain an earlier measurement cohort.
+
 ## Conventional Java SQL and complete latency sweep
 
 A new Java baseline expresses IC5 using one set-oriented SQL query. It passes all twenty original inputs and the selected small nonempty input. Seven implementations now have a common 0/2/10 ms response-delay sweep, each with ten warmup and thirty measured requests. All840 request results pass independent verification.
