@@ -1,0 +1,31 @@
+{
+  "tier": "t100",
+  "workload": "W2",
+  "operation": "create_tweet",
+  "method": "reference",
+  "warmup": 110,
+  "measured": 500,
+  "per_operation_counts": {
+    "warmup": {
+      "create_tweet": 110
+    },
+    "measured": {
+      "create_tweet": 500
+    }
+  },
+  "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t100-W2-create_tweet-reference.json",
+  "sha256": "292f250d55a6f4d168e8de6402869f8fb30d8b09af447dc94f198930cbb0b0eb",
+  "reset_scope": "fresh state per cell; TargetPlan survives warmup\u2192measurement; schedule and user indices restart at0",
+  "instrumented": false,
+  "selected_requests": 610,
+  "original_plan_sha256": "292f250d55a6f4d168e8de6402869f8fb30d8b09af447dc94f198930cbb0b0eb",
+  "source_template": "lx_repro_snapshot_t100_470b05360351",
+  "HTTP_routes": {
+    "feed": "load_feed_chain",
+    "feed_page": "load_feed_page",
+    "like": "like_tweet",
+    "follow": "follow_user",
+    "create_tweet": "create_tweet"
+  },
+  "clock_uuid_policy": "Native original HTTP generates UUID and clock values; source oracle verifies exact observed values and canonicalizes only newly generated values across runs"
+}
