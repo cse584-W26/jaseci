@@ -1,0 +1,37 @@
+{
+  "tier": "t200",
+  "workload": "W3",
+  "operation": "15",
+  "method": "latency",
+  "warmup": 110,
+  "measured": 100,
+  "per_operation_counts": {
+    "warmup": {
+      "create_tweet": 12,
+      "feed_page": 93,
+      "like": 4,
+      "follow": 1
+    },
+    "measured": {
+      "create_tweet": 10,
+      "feed_page": 85,
+      "like": 4,
+      "follow": 1
+    }
+  },
+  "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W3-15-latency.json",
+  "sha256": "c33218bb7366c785e6d34750eda89361cabe0cc2385583cc11f4f0faa61120a6",
+  "reset_scope": "fresh state per cell; TargetPlan survives warmup\u2192measurement; schedule and user indices restart at0",
+  "instrumented": true,
+  "selected_requests": 210,
+  "original_plan_sha256": "c33218bb7366c785e6d34750eda89361cabe0cc2385583cc11f4f0faa61120a6",
+  "source_template": "lx_repro_snapshot_t200_fc1ffda7943f",
+  "HTTP_routes": {
+    "feed": "load_feed_chain",
+    "feed_page": "load_feed_page",
+    "like": "like_tweet",
+    "follow": "follow_user",
+    "create_tweet": "create_tweet"
+  },
+  "clock_uuid_policy": "Native original HTTP generates UUID and clock values; source oracle verifies exact observed values and canonicalizes only newly generated values across runs"
+}

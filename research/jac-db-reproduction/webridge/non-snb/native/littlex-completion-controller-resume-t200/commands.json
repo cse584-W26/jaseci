@@ -1,0 +1,150 @@
+[
+  {
+    "label": "quiet reference littlex-reference-t200-retry",
+    "argv": [
+      "/home/baichuan/jaseci/reproduction/runtime/venv314/bin/python",
+      "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/timing_littlex.py",
+      "--method",
+      "reference",
+      "--output",
+      "littlex-reference-t200-retry",
+      "--tiers",
+      "t200",
+      "--delays",
+      "0",
+      "--only",
+      "W1-feed,W2-like,W2-follow,W2-create_tweet"
+    ]
+  },
+  {
+    "label": "verify/export littlex-reference-t200-retry",
+    "argv": [
+      "/home/baichuan/jaseci/reproduction/runtime/venv314/bin/python",
+      "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/finalize_littlex.py",
+      "--input",
+      "littlex-reference-t200-retry",
+      "--chunk-feeds"
+    ]
+  },
+  {
+    "label": "quiet reference littlex-reference-mix0",
+    "argv": [
+      "/home/baichuan/jaseci/reproduction/runtime/venv314/bin/python",
+      "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/timing_littlex.py",
+      "--method",
+      "reference",
+      "--output",
+      "littlex-reference-mix0",
+      "--tiers",
+      "t200",
+      "--delays",
+      "0",
+      "--only",
+      "W3-0"
+    ]
+  },
+  {
+    "label": "verify/export littlex-reference-mix0",
+    "argv": [
+      "/home/baichuan/jaseci/reproduction/runtime/venv314/bin/python",
+      "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/finalize_littlex.py",
+      "--input",
+      "littlex-reference-mix0"
+    ]
+  },
+  {
+    "label": "quiet reference littlex-reference-mix5",
+    "argv": [
+      "/home/baichuan/jaseci/reproduction/runtime/venv314/bin/python",
+      "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/timing_littlex.py",
+      "--method",
+      "reference",
+      "--output",
+      "littlex-reference-mix5",
+      "--tiers",
+      "t200",
+      "--delays",
+      "0",
+      "--only",
+      "W3-5"
+    ]
+  },
+  {
+    "label": "verify/export littlex-reference-mix5",
+    "argv": [
+      "/home/baichuan/jaseci/reproduction/runtime/venv314/bin/python",
+      "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/finalize_littlex.py",
+      "--input",
+      "littlex-reference-mix5"
+    ]
+  },
+  {
+    "label": "quiet reference littlex-reference-mix15",
+    "argv": [
+      "/home/baichuan/jaseci/reproduction/runtime/venv314/bin/python",
+      "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/timing_littlex.py",
+      "--method",
+      "reference",
+      "--output",
+      "littlex-reference-mix15",
+      "--tiers",
+      "t200",
+      "--delays",
+      "0",
+      "--only",
+      "W3-15"
+    ]
+  },
+  {
+    "label": "verify/export littlex-reference-mix15",
+    "argv": [
+      "/home/baichuan/jaseci/reproduction/runtime/venv314/bin/python",
+      "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/finalize_littlex.py",
+      "--input",
+      "littlex-reference-mix15"
+    ]
+  },
+  {
+    "label": "quiet reference littlex-reference-mix30",
+    "argv": [
+      "/home/baichuan/jaseci/reproduction/runtime/venv314/bin/python",
+      "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/timing_littlex.py",
+      "--method",
+      "reference",
+      "--output",
+      "littlex-reference-mix30",
+      "--tiers",
+      "t200",
+      "--delays",
+      "0",
+      "--only",
+      "W3-30"
+    ]
+  },
+  {
+    "label": "verify/export littlex-reference-mix30",
+    "argv": [
+      "/home/baichuan/jaseci/reproduction/runtime/venv314/bin/python",
+      "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/finalize_littlex.py",
+      "--input",
+      "littlex-reference-mix30"
+    ]
+  },
+  {
+    "label": "public trace metadata export",
+    "argv": [
+      "/home/baichuan/jaseci/reproduction/runtime/venv314/bin/python",
+      "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/export_native_traces.py",
+      "--receipt",
+      "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/public-trace-export-lease.json"
+    ]
+  },
+  {
+    "label": "final public inventory",
+    "argv": [
+      "/home/baichuan/jaseci/reproduction/runtime/venv314/bin/python",
+      "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/public_manifest.py",
+      "--strict"
+    ]
+  }
+]

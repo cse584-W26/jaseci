@@ -1,0 +1,1180 @@
+{
+  "scope": "PostgreSQL logged server parse+bind+execute/simple-statement phase durations. Instrumented2ms profiles;40 native arms. No application, HTTP or proxy timing. Phase durations are summed per request across all certified database PIDs.",
+  "request_n": 896,
+  "arms": [
+    {
+      "case_id": "littlex-feed-t100",
+      "tier": "t100",
+      "workload": "W1-feed",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 100.098,
+      "sql_count_distribution": {
+        "18": 2,
+        "19": 1
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 3.415,
+        "execute": 97.159,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 0.312,
+        "read": 99.689,
+        "write": 0.0,
+        "identity": 0.123
+      },
+      "phase_event_counts": {
+        "bind": 54,
+        "execute": 54,
+        "statement": 1
+      }
+    },
+    {
+      "case_id": "littlex-feed-t100",
+      "tier": "t100",
+      "workload": "W1-feed",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 104.156,
+      "sql_count_distribution": {
+        "14": 2,
+        "15": 1
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 4.063,
+        "execute": 101.256,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 0.243,
+        "read": 103.793,
+        "write": 0.0,
+        "identity": 0.092
+      },
+      "phase_event_counts": {
+        "bind": 42,
+        "execute": 42,
+        "statement": 1
+      }
+    },
+    {
+      "case_id": "littlex-create_tweet-t100",
+      "tier": "t100",
+      "workload": "W2-create_tweet",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 5.825,
+      "sql_count_distribution": {
+        "9": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 3.141,
+        "execute": 2.587,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.447,
+        "read": 3.3260000000000005,
+        "write": 1.052,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 27,
+        "execute": 27
+      }
+    },
+    {
+      "case_id": "littlex-create_tweet-t100",
+      "tier": "t100",
+      "workload": "W2-create_tweet",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 2.583,
+      "sql_count_distribution": {
+        "8": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 1.005,
+        "execute": 1.596,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.369,
+        "read": 0.948,
+        "write": 0.30000000000000004,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 24,
+        "execute": 24
+      }
+    },
+    {
+      "case_id": "littlex-follow-t100",
+      "tier": "t100",
+      "workload": "W2-follow",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 2.882,
+      "sql_count_distribution": {
+        "12": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 1.173,
+        "execute": 1.7570000000000001,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.269,
+        "read": 1.5270000000000001,
+        "write": 0.21100000000000002,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 36,
+        "execute": 36
+      }
+    },
+    {
+      "case_id": "littlex-follow-t100",
+      "tier": "t100",
+      "workload": "W2-follow",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 3.3529999999999998,
+      "sql_count_distribution": {
+        "11": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 1.3699999999999999,
+        "execute": 1.983,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.3499999999999999,
+        "read": 1.7559999999999998,
+        "write": 0.24899999999999997,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 33,
+        "execute": 33
+      }
+    },
+    {
+      "case_id": "littlex-like-t100",
+      "tier": "t100",
+      "workload": "W2-like",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 2.903,
+      "sql_count_distribution": {
+        "10": 2,
+        "11": 1
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 1.1639999999999997,
+        "execute": 1.739,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.284,
+        "read": 1.3459999999999996,
+        "write": 0.187,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 31,
+        "execute": 31
+      }
+    },
+    {
+      "case_id": "littlex-like-t100",
+      "tier": "t100",
+      "workload": "W2-like",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 4.514,
+      "sql_count_distribution": {
+        "10": 1,
+        "9": 2
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 2.1910000000000003,
+        "execute": 2.323,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.277,
+        "read": 2.2329999999999997,
+        "write": 1.004,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 28,
+        "execute": 28
+      }
+    },
+    {
+      "case_id": "littlex-feed-t20",
+      "tier": "t20",
+      "workload": "W1-feed",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 19.811,
+      "sql_count_distribution": {
+        "18": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 2.0740000000000003,
+        "execute": 16.904999999999998,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 0.17099999999999999,
+        "read": 19.578,
+        "write": 0.0,
+        "identity": 0.067
+      },
+      "phase_event_counts": {
+        "bind": 54,
+        "execute": 54
+      }
+    },
+    {
+      "case_id": "littlex-feed-t20",
+      "tier": "t20",
+      "workload": "W1-feed",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 22.983999999999998,
+      "sql_count_distribution": {
+        "14": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 2.432,
+        "execute": 19.851999999999997,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 0.15100000000000002,
+        "read": 22.767,
+        "write": 0.0,
+        "identity": 0.15400000000000003
+      },
+      "phase_event_counts": {
+        "bind": 42,
+        "execute": 42
+      }
+    },
+    {
+      "case_id": "littlex-create_tweet-t20",
+      "tier": "t20",
+      "workload": "W2-create_tweet",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 5.931,
+      "sql_count_distribution": {
+        "9": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 3.2440000000000007,
+        "execute": 2.6870000000000003,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.496,
+        "read": 3.463,
+        "write": 0.972,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 27,
+        "execute": 27
+      }
+    },
+    {
+      "case_id": "littlex-create_tweet-t20",
+      "tier": "t20",
+      "workload": "W2-create_tweet",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 1.933,
+      "sql_count_distribution": {
+        "8": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 0.6030000000000001,
+        "execute": 1.374,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.157,
+        "read": 0.617,
+        "write": 0.224,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 24,
+        "execute": 24
+      }
+    },
+    {
+      "case_id": "littlex-follow-t20",
+      "tier": "t20",
+      "workload": "W2-follow",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 3.093,
+      "sql_count_distribution": {
+        "12": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 1.3790000000000002,
+        "execute": 1.681,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.158,
+        "read": 1.689,
+        "write": 0.24600000000000002,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 36,
+        "execute": 36
+      }
+    },
+    {
+      "case_id": "littlex-follow-t20",
+      "tier": "t20",
+      "workload": "W2-follow",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 9.314,
+      "sql_count_distribution": {
+        "11": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 5.9319999999999995,
+        "execute": 3.382,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.429,
+        "read": 7.078,
+        "write": 0.807,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 33,
+        "execute": 33
+      }
+    },
+    {
+      "case_id": "littlex-like-t20",
+      "tier": "t20",
+      "workload": "W2-like",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 3.165,
+      "sql_count_distribution": {
+        "10": 1,
+        "11": 2
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 1.5269999999999997,
+        "execute": 1.638,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.298,
+        "read": 1.6679999999999997,
+        "write": 0.199,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 32,
+        "execute": 32
+      }
+    },
+    {
+      "case_id": "littlex-like-t20",
+      "tier": "t20",
+      "workload": "W2-like",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 5.548,
+      "sql_count_distribution": {
+        "10": 2,
+        "9": 1
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 3.5079999999999996,
+        "execute": 2.04,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.317,
+        "read": 4.076,
+        "write": 0.177,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 29,
+        "execute": 29
+      }
+    },
+    {
+      "case_id": "littlex-feed-t200",
+      "tier": "t200",
+      "workload": "W1-feed",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 218.02200000000002,
+      "sql_count_distribution": {
+        "18": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 2.606,
+        "execute": 213.53500000000003,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 0.7670000000000001,
+        "read": 217.18800000000002,
+        "write": 0.0,
+        "identity": 0.07500000000000001
+      },
+      "phase_event_counts": {
+        "bind": 54,
+        "execute": 54
+      }
+    },
+    {
+      "case_id": "littlex-feed-t200",
+      "tier": "t200",
+      "workload": "W1-feed",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 226.682,
+      "sql_count_distribution": {
+        "14": 2,
+        "15": 1
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 3.99,
+        "execute": 222.855,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 0.5960000000000001,
+        "read": 225.724,
+        "write": 0.0,
+        "identity": 0.093
+      },
+      "phase_event_counts": {
+        "bind": 42,
+        "execute": 42,
+        "statement": 1
+      }
+    },
+    {
+      "case_id": "littlex-create_tweet-t200",
+      "tier": "t200",
+      "workload": "W2-create_tweet",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 2.022,
+      "sql_count_distribution": {
+        "9": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 0.559,
+        "execute": 1.452,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.2489999999999999,
+        "read": 0.5990000000000001,
+        "write": 0.175,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 27,
+        "execute": 27
+      }
+    },
+    {
+      "case_id": "littlex-create_tweet-t200",
+      "tier": "t200",
+      "workload": "W2-create_tweet",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 2.629,
+      "sql_count_distribution": {
+        "8": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 0.977,
+        "execute": 1.652,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.4489999999999998,
+        "read": 0.936,
+        "write": 0.263,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 24,
+        "execute": 24
+      }
+    },
+    {
+      "case_id": "littlex-follow-t200",
+      "tier": "t200",
+      "workload": "W2-follow",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 3.036,
+      "sql_count_distribution": {
+        "12": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 1.104,
+        "execute": 1.932,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.277,
+        "read": 1.5300000000000002,
+        "write": 0.17400000000000002,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 36,
+        "execute": 36
+      }
+    },
+    {
+      "case_id": "littlex-follow-t200",
+      "tier": "t200",
+      "workload": "W2-follow",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 10.323,
+      "sql_count_distribution": {
+        "11": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 6.039000000000001,
+        "execute": 4.284,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.677,
+        "read": 7.672,
+        "write": 0.9620000000000001,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 33,
+        "execute": 33
+      }
+    },
+    {
+      "case_id": "littlex-like-t200",
+      "tier": "t200",
+      "workload": "W2-like",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 2.316,
+      "sql_count_distribution": {
+        "10": 1,
+        "11": 2
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 0.7170000000000002,
+        "execute": 1.6219999999999999,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.352,
+        "read": 0.8200000000000002,
+        "write": 0.17,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 32,
+        "execute": 32
+      }
+    },
+    {
+      "case_id": "littlex-like-t200",
+      "tier": "t200",
+      "workload": "W2-like",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 5.968999999999999,
+      "sql_count_distribution": {
+        "10": 2,
+        "9": 1
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 3.7079999999999997,
+        "execute": 2.4290000000000003,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.3679999999999999,
+        "read": 3.938,
+        "write": 0.748,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 29,
+        "execute": 29
+      }
+    },
+    {
+      "case_id": "littlex-mixed-t200-w0",
+      "tier": "t200",
+      "workload": "W3-0",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 100,
+      "median_db_server_ms": 3.7285,
+      "sql_count_distribution": {
+        "18": 97,
+        "19": 3
+      },
+      "median_phase_ms": {
+        "parse": 0.0,
+        "bind": 1.9364999999999999,
+        "execute": 1.8114999999999999,
+        "statement": 0.0
+      },
+      "median_bucket_ms": {
+        "transaction": 0.17950000000000005,
+        "read": 3.5055000000000005,
+        "write": 0.0,
+        "identity": 0.08600000000000001
+      },
+      "phase_event_counts": {
+        "bind": 1800,
+        "execute": 1800,
+        "statement": 3
+      }
+    },
+    {
+      "case_id": "littlex-mixed-t200-w0",
+      "tier": "t200",
+      "workload": "W3-0",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 100,
+      "median_db_server_ms": 4.268000000000001,
+      "sql_count_distribution": {
+        "14": 97,
+        "15": 3
+      },
+      "median_phase_ms": {
+        "parse": 0.0,
+        "bind": 2.2799999999999994,
+        "execute": 2.0785,
+        "statement": 0.0
+      },
+      "median_bucket_ms": {
+        "transaction": 0.07949999999999999,
+        "read": 4.090999999999999,
+        "write": 0.0,
+        "identity": 0.122
+      },
+      "phase_event_counts": {
+        "bind": 1400,
+        "execute": 1400,
+        "statement": 3
+      }
+    },
+    {
+      "case_id": "littlex-mixed-t200-w15",
+      "tier": "t200",
+      "workload": "W3-15",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 100,
+      "median_db_server_ms": 3.713,
+      "sql_count_distribution": {
+        "11": 4,
+        "12": 1,
+        "18": 82,
+        "19": 3,
+        "9": 10
+      },
+      "median_phase_ms": {
+        "parse": 0.0,
+        "bind": 1.6139999999999999,
+        "execute": 2.1365,
+        "statement": 0.0
+      },
+      "median_bucket_ms": {
+        "transaction": 0.20450000000000002,
+        "read": 3.1609999999999996,
+        "write": 0.0,
+        "identity": 0.073
+      },
+      "phase_event_counts": {
+        "bind": 1676,
+        "execute": 1676,
+        "statement": 3,
+        "parse": 1
+      }
+    },
+    {
+      "case_id": "littlex-mixed-t200-w15",
+      "tier": "t200",
+      "workload": "W3-15",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 100,
+      "median_db_server_ms": 3.5540000000000003,
+      "sql_count_distribution": {
+        "10": 4,
+        "11": 1,
+        "14": 82,
+        "15": 3,
+        "8": 10
+      },
+      "median_phase_ms": {
+        "parse": 0.0,
+        "bind": 1.66,
+        "execute": 1.9759999999999998,
+        "statement": 0.0
+      },
+      "median_bucket_ms": {
+        "transaction": 0.08399999999999999,
+        "read": 3.3194999999999992,
+        "write": 0.0,
+        "identity": 0.079
+      },
+      "phase_event_counts": {
+        "bind": 1321,
+        "execute": 1321,
+        "statement": 3,
+        "parse": 1
+      }
+    },
+    {
+      "case_id": "littlex-mixed-t200-w30",
+      "tier": "t200",
+      "workload": "W3-30",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 100,
+      "median_db_server_ms": 4.09,
+      "sql_count_distribution": {
+        "11": 8,
+        "12": 2,
+        "18": 67,
+        "19": 3,
+        "9": 20
+      },
+      "median_phase_ms": {
+        "parse": 0.0,
+        "bind": 1.7665000000000002,
+        "execute": 2.058,
+        "statement": 0.0
+      },
+      "median_bucket_ms": {
+        "transaction": 0.2415,
+        "read": 2.9019999999999997,
+        "write": 0.0,
+        "identity": 0.0745
+      },
+      "phase_event_counts": {
+        "bind": 1552,
+        "execute": 1552,
+        "statement": 3,
+        "parse": 2
+      }
+    },
+    {
+      "case_id": "littlex-mixed-t200-w30",
+      "tier": "t200",
+      "workload": "W3-30",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 100,
+      "median_db_server_ms": 3.472,
+      "sql_count_distribution": {
+        "10": 8,
+        "11": 2,
+        "14": 68,
+        "15": 2,
+        "8": 20
+      },
+      "median_phase_ms": {
+        "parse": 0.0,
+        "bind": 1.6644999999999999,
+        "execute": 1.9105,
+        "statement": 0.0
+      },
+      "median_bucket_ms": {
+        "transaction": 0.11150000000000002,
+        "read": 3.0620000000000003,
+        "write": 0.0,
+        "identity": 0.064
+      },
+      "phase_event_counts": {
+        "bind": 1242,
+        "execute": 1242,
+        "statement": 2,
+        "parse": 2
+      }
+    },
+    {
+      "case_id": "littlex-mixed-t200-w5",
+      "tier": "t200",
+      "workload": "W3-5",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 100,
+      "median_db_server_ms": 3.923,
+      "sql_count_distribution": {
+        "11": 1,
+        "12": 1,
+        "18": 92,
+        "19": 3,
+        "9": 3
+      },
+      "median_phase_ms": {
+        "parse": 0.0,
+        "bind": 1.8809999999999998,
+        "execute": 2.2554999999999996,
+        "statement": 0.0
+      },
+      "median_bucket_ms": {
+        "transaction": 0.20950000000000002,
+        "read": 3.418499999999999,
+        "write": 0.0,
+        "identity": 0.1465
+      },
+      "phase_event_counts": {
+        "bind": 1760,
+        "execute": 1760,
+        "statement": 3,
+        "parse": 1
+      }
+    },
+    {
+      "case_id": "littlex-mixed-t200-w5",
+      "tier": "t200",
+      "workload": "W3-5",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 100,
+      "median_db_server_ms": 3.9939999999999998,
+      "sql_count_distribution": {
+        "10": 1,
+        "11": 1,
+        "14": 92,
+        "15": 3,
+        "8": 3
+      },
+      "median_phase_ms": {
+        "parse": 0.0,
+        "bind": 1.9855,
+        "execute": 2.091,
+        "statement": 0.0
+      },
+      "median_bucket_ms": {
+        "transaction": 0.0935,
+        "read": 3.468,
+        "write": 0.0,
+        "identity": 0.087
+      },
+      "phase_event_counts": {
+        "bind": 1375,
+        "execute": 1375,
+        "parse": 2,
+        "statement": 3
+      }
+    },
+    {
+      "case_id": "littlex-feed-t50",
+      "tier": "t50",
+      "workload": "W1-feed",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 48.164,
+      "sql_count_distribution": {
+        "18": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 3.316,
+        "execute": 45.401,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 0.20800000000000002,
+        "read": 47.832,
+        "write": 0.0,
+        "identity": 0.124
+      },
+      "phase_event_counts": {
+        "bind": 54,
+        "execute": 54
+      }
+    },
+    {
+      "case_id": "littlex-feed-t50",
+      "tier": "t50",
+      "workload": "W1-feed",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 86.173,
+      "sql_count_distribution": {
+        "14": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 4.88,
+        "execute": 76.82900000000001,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 0.096,
+        "read": 85.787,
+        "write": 0.0,
+        "identity": 0.179
+      },
+      "phase_event_counts": {
+        "bind": 42,
+        "execute": 42
+      }
+    },
+    {
+      "case_id": "littlex-create_tweet-t50",
+      "tier": "t50",
+      "workload": "W2-create_tweet",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 2.415,
+      "sql_count_distribution": {
+        "9": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 0.788,
+        "execute": 1.627,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.319,
+        "read": 0.8200000000000001,
+        "write": 0.258,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 27,
+        "execute": 27
+      }
+    },
+    {
+      "case_id": "littlex-create_tweet-t50",
+      "tier": "t50",
+      "workload": "W2-create_tweet",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 5.806,
+      "sql_count_distribution": {
+        "8": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 3.218,
+        "execute": 2.588,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.498,
+        "read": 3.192,
+        "write": 1.069,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 24,
+        "execute": 24
+      }
+    },
+    {
+      "case_id": "littlex-follow-t50",
+      "tier": "t50",
+      "workload": "W2-follow",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 9.562,
+      "sql_count_distribution": {
+        "12": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 6.012,
+        "execute": 3.55,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.4260000000000002,
+        "read": 7.332999999999998,
+        "write": 0.8,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 36,
+        "execute": 36
+      }
+    },
+    {
+      "case_id": "littlex-follow-t50",
+      "tier": "t50",
+      "workload": "W2-follow",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 5.324,
+      "sql_count_distribution": {
+        "11": 3
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 3.408,
+        "execute": 2.444,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.346,
+        "read": 3.6470000000000002,
+        "write": 0.175,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 33,
+        "execute": 33
+      }
+    },
+    {
+      "case_id": "littlex-like-t50",
+      "tier": "t50",
+      "workload": "W2-like",
+      "arm": "jac_original",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 2.394,
+      "sql_count_distribution": {
+        "10": 1,
+        "11": 2
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 1.0990000000000002,
+        "execute": 1.405,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.091,
+        "read": 1.0919999999999999,
+        "write": 0.232,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 32,
+        "execute": 32
+      }
+    },
+    {
+      "case_id": "littlex-like-t50",
+      "tier": "t50",
+      "workload": "W2-like",
+      "arm": "jac_final",
+      "delay_ms": 2,
+      "n": 3,
+      "median_db_server_ms": 3.3160000000000003,
+      "sql_count_distribution": {
+        "10": 2,
+        "9": 1
+      },
+      "median_phase_ms": {
+        "parse": 0,
+        "bind": 1.318,
+        "execute": 1.998,
+        "statement": 0
+      },
+      "median_bucket_ms": {
+        "transaction": 1.381,
+        "read": 1.4560000000000002,
+        "write": 0.47900000000000004,
+        "identity": 0.0
+      },
+      "phase_event_counts": {
+        "bind": 29,
+        "execute": 29
+      }
+    }
+  ]
+}

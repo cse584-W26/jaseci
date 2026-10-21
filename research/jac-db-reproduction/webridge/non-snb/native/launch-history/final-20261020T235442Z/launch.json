@@ -1,0 +1,50 @@
+{
+  "variant": "final",
+  "database": "jac_non_snb_tpcc_work_20261020",
+  "source": "/home/baichuan/jaseci/jac-db/jac",
+  "source_commit": "c2be23c67e574004262ec9e0f39b6995e19d0c26",
+  "source_files_sha256": {
+    "main.jac": "d496b0ec044ac1e96a0df0a1b2b95f1c5d99dd1c3e5d404da1a1620cb4862df6",
+    "app.jac": "4f3f4c2dfd36b2b3cf0737f16197ceefcbcc0f79f075118170b7a58b9648bb1a",
+    "import_data.jac": "16407793dff4a20fff273b45ffa1d45ab82b297ba5e5ded9018f8fc832791806"
+  },
+  "app": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/final/app",
+  "python": "/home/baichuan/jaseci/reproduction/runtime/venv314/bin/python",
+  "jac_subtree_sha": "eb141dc089e0623cd66b7eef2529a3facdff221d",
+  "reference_runtime_commit": "32c5d1dbb",
+  "reference_jac_subtree_sha": "eb141dc089e0623cd66b7eef2529a3facdff221d",
+  "pid": 2991260,
+  "command": [
+    "taskset",
+    "-c",
+    "9,19",
+    "/home/baichuan/jaseci/reproduction/runtime/venv314/bin/python",
+    "/home/baichuan/jaseci/reproduction/webridge/jac-comparison/connection_shim.py",
+    "start",
+    "main.jac",
+    "-p",
+    "18132",
+    "--no-client"
+  ],
+  "port": 18132,
+  "environment": {
+    "JAC_CACHE_HOME": "/home/baichuan/jaseci/reproduction/dbcache",
+    "JAC_DB_URL": "postgresql://jac@127.0.0.1:18532/jac_non_snb_tpcc_work_20261020",
+    "JAC_PG_VERSION": "18",
+    "JAC_PG_DIST": "/home/baichuan/.cache/jac/pg/dist/linux-amd64-18.6.0",
+    "JAC_API_LEAN_RESPONSE": "1",
+    "JAC_ACCESS_LOG": "0",
+    "JAC_REPORT_ECHO": "0",
+    "JAC_TIMING_HEADERS": "1",
+    "JAC_PG_POOL": "1",
+    "JAC_PG_ENSURE_CACHE": "1",
+    "JAC_PG_DRIVER": "psycopg",
+    "JAC_PROMOTED_PREDICATES": "1",
+    "JAC_CTE_TRAVERSE": "1",
+    "JAC_STICKY_DENY": "1",
+    "JAC_RO_WALKERS": "",
+    "JAC_NO_DEV_SOURCE": "1",
+    "JAC_NO_PRECOMPILE": "1",
+    "JAC_LLVM_SHIM": "/home/baichuan/jaseci/reproduction/runtime/lib/libjacllvm.so"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "scope": "Synthetic application business fields and topology only; identity/credentials/root permissions excluded; full source SQL/protocol retained separately",
+  "fixtures": [
+    {
+      "tier": "t20",
+      "source_13_business_fields_plus_xmin_export_sha256": "21f4a6942ecf9461110fc4ca7c4fb95881ad84467d421148c441938fb5b3b0e0",
+      "public_fixture": "littlex-oracle-fixtures/t20.json.gz",
+      "public_compressed_sha256": "1650a0239f27192514e0da2486e61c0060a9ca587272c7769429d2204ac521d0",
+      "rows": {
+        "profiles": 100,
+        "tweets": 2000,
+        "follows": 5000
+      },
+      "roundtrip_oracle_equal": true
+    },
+    {
+      "tier": "t50",
+      "source_13_business_fields_plus_xmin_export_sha256": "677a71042646e10db1a3d4a5f5cfa1e5aa66bfc7a3b973b3cf76448057c48240",
+      "public_fixture": "littlex-oracle-fixtures/t50.json.gz",
+      "public_compressed_sha256": "72599edbde701e0a8a24f530ba6dbbd05b9b73be6008188e03c0ff0bab1fe2b7",
+      "rows": {
+        "profiles": 100,
+        "tweets": 5000,
+        "follows": 5000
+      },
+      "roundtrip_oracle_equal": true
+    },
+    {
+      "tier": "t100",
+      "source_13_business_fields_plus_xmin_export_sha256": "91ee4822474d68990de531340630d6ac6179279f26d8ad214b1b988a7e3b4ace",
+      "public_fixture": "littlex-oracle-fixtures/t100.json.gz",
+      "public_compressed_sha256": "9f2dc8061a6e09ae8684bb917ba5f0b5b905eb0ad395c1248b31416341f836e6",
+      "rows": {
+        "profiles": 100,
+        "tweets": 10000,
+        "follows": 5000
+      },
+      "roundtrip_oracle_equal": true
+    },
+    {
+      "tier": "t200",
+      "source_13_business_fields_plus_xmin_export_sha256": "a4ed71cb0825faecd71c60831eeaddecb1576da8a3157630f4e0f0b1409bb532",
+      "public_fixture": "littlex-oracle-fixtures/t200.json.gz",
+      "public_compressed_sha256": "9c874aef050633bcee15ed40f0c200406a18e97fc208c3cee4741bd896632243",
+      "rows": {
+        "profiles": 100,
+        "tweets": 20000,
+        "follows": 5000
+      },
+      "roundtrip_oracle_equal": true
+    }
+  ]
+}

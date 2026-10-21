@@ -1,0 +1,125 @@
+{
+  "scope": "Actual t20 LIKE original frozen 10-warm+3-profile schedule. Earlier census uses different actors/targets.",
+  "observations": [
+    {
+      "variant": "baseline",
+      "iteration": 0,
+      "actor_root": "a6aa67a9-a09f-4b90-87d2-b404400d176d",
+      "target_Tweet_root": "a6aa67a9-a09f-4b90-87d2-b404400d176d",
+      "same_owner": true,
+      "actual_SQL_commands": 10,
+      "actual_delivered_response_flights": 10,
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 4,
+        "traversal.generic_1hop": 1,
+        "write.anchor_batch_upsert": 1,
+        "write.type_registry": 1,
+        "transaction.commit": 1
+      }
+    },
+    {
+      "variant": "baseline",
+      "iteration": 1,
+      "actor_root": "4e93ec38-3909-43d5-9e9d-98a3e63045d1",
+      "target_Tweet_root": "79e461e5-bb6b-44f5-b289-5eb12c76985f",
+      "same_owner": false,
+      "actual_SQL_commands": 11,
+      "actual_delivered_response_flights": 11,
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 5,
+        "traversal.generic_1hop": 1,
+        "write.anchor_batch_upsert": 1,
+        "write.type_registry": 1,
+        "transaction.commit": 1
+      }
+    },
+    {
+      "variant": "baseline",
+      "iteration": 2,
+      "actor_root": "98bae35f-c091-447e-ac96-62adbd5e30e7",
+      "target_Tweet_root": "0ce7e38b-2f74-49a3-be9f-2852c8eabac9",
+      "same_owner": false,
+      "actual_SQL_commands": 11,
+      "actual_delivered_response_flights": 11,
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 5,
+        "traversal.generic_1hop": 1,
+        "write.anchor_batch_upsert": 1,
+        "write.type_registry": 1,
+        "transaction.commit": 1
+      }
+    },
+    {
+      "variant": "final",
+      "iteration": 0,
+      "actor_root": "a6aa67a9-a09f-4b90-87d2-b404400d176d",
+      "target_Tweet_root": "a6aa67a9-a09f-4b90-87d2-b404400d176d",
+      "same_owner": true,
+      "actual_SQL_commands": 9,
+      "actual_delivered_response_flights": 9,
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 3,
+        "traversal.generic_1hop": 1,
+        "write.anchor_batch_upsert": 1,
+        "write.type_registry": 1,
+        "transaction.commit": 1
+      }
+    },
+    {
+      "variant": "final",
+      "iteration": 1,
+      "actor_root": "4e93ec38-3909-43d5-9e9d-98a3e63045d1",
+      "target_Tweet_root": "79e461e5-bb6b-44f5-b289-5eb12c76985f",
+      "same_owner": false,
+      "actual_SQL_commands": 10,
+      "actual_delivered_response_flights": 10,
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 4,
+        "traversal.generic_1hop": 1,
+        "write.anchor_batch_upsert": 1,
+        "write.type_registry": 1,
+        "transaction.commit": 1
+      }
+    },
+    {
+      "variant": "final",
+      "iteration": 2,
+      "actor_root": "98bae35f-c091-447e-ac96-62adbd5e30e7",
+      "target_Tweet_root": "0ce7e38b-2f74-49a3-be9f-2852c8eabac9",
+      "same_owner": false,
+      "actual_SQL_commands": 10,
+      "actual_delivered_response_flights": 10,
+      "categories": {
+        "transaction.begin": 1,
+        "transaction.setting": 1,
+        "hydration.full_anchor": 4,
+        "traversal.generic_1hop": 1,
+        "write.anchor_batch_upsert": 1,
+        "write.type_registry": 1,
+        "transaction.commit": 1
+      }
+    }
+  ],
+  "source_branch": {
+    "ad469_path": "jac/jaclang/jac0core/impl/runtime.impl.jac",
+    "owner_fast_path_line": 134,
+    "owner_root_load_line": 146,
+    "same_owner_behavior": "jroot.id == to.root returns WRITE before the owner-root mem.get; nonowner access reaches mem.get(to.root).",
+    "session_cache_path": "jac/jaclang/runtimelib/impl/session.impl.jac",
+    "session_get_lines": [
+      296,
+      306
+    ]
+  },
+  "alignment": "First measured input owns the target Tweet and executes one fewer owner-root hydration. The following two nonowner inputs match the early census counts11/10. Transaction, traversal, flush and type-registry statement counts are unchanged. Java full remains the separately frozen early warm-access port; these observed input-dependent branches are reported without padding."
+}
