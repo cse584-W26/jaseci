@@ -1,0 +1,3293 @@
+{
+  "scope": "0ms primary latency; measured category means and per-request medians; PostgreSQL and MySQL recorded separately",
+  "rows": [
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "feed",
+        "arm": "jac_final",
+        "delay_ms": 0,
+        "tweets_per_user": 20
+      },
+      "n": 30,
+      "median_RTT_ms": 13.1674155,
+      "mean_RTT_ms": 13.207125966666666,
+      "dominant_category": "traversal.2hop.projection_acl",
+      "dominant_mean_ms": 8.754855933333333,
+      "categories": {
+        "acl.root_permissions": {
+          "mean_ms": 1.4506955333333333,
+          "median_ms": 1.4419405000000003,
+          "min_ms": 1.276063,
+          "max_ms": 1.646206,
+          "mean_exchanges": 3,
+          "exchange_distribution": {
+            "3": 30
+          }
+        },
+        "hydration.full_anchor": {
+          "mean_ms": 0.2749823,
+          "median_ms": 0.2875835,
+          "min_ms": 0.19566,
+          "max_ms": 0.349802,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "identity.lookup": {
+          "mean_ms": 0.5436257666666666,
+          "median_ms": 0.579752,
+          "min_ms": 0.27479,
+          "max_ms": 0.751864,
+          "mean_exchanges": 2.6666666666666665,
+          "exchange_distribution": {
+            "2": 10,
+            "3": 20
+          }
+        },
+        "transaction.begin": {
+          "mean_ms": 0.20949926666666666,
+          "median_ms": 0.21300999999999998,
+          "min_ms": 0.141693,
+          "max_ms": 0.249875,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "transaction.commit": {
+          "mean_ms": 0.20989483333333334,
+          "median_ms": 0.2026615,
+          "min_ms": 0.167239,
+          "max_ms": 0.317402,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 0.1712875,
+          "median_ms": 0.19039850000000003,
+          "min_ms": 0.100265,
+          "max_ms": 0.205451,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "traversal.1hop.projection_acl": {
+          "mean_ms": 1.2471754333333334,
+          "median_ms": 1.2334675,
+          "min_ms": 1.0878800000000002,
+          "max_ms": 1.770059,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "traversal.2hop.projection_acl": {
+          "mean_ms": 8.754855933333333,
+          "median_ms": 8.670096000000001,
+          "min_ms": 8.336559,
+          "max_ms": 9.870885,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "type_registry.ancestry": {
+          "mean_ms": 0.3451094,
+          "median_ms": 0.3291615,
+          "min_ms": 0.22173900000000002,
+          "max_ms": 0.512153,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        }
+      },
+      "by_operation": {
+        "feed": {
+          "n": 30,
+          "mean_total_ms": 13.207125966666666,
+          "median_total_ms": 13.1674155,
+          "category_mean_ms": {
+            "acl.root_permissions": 1.4506955333333333,
+            "hydration.full_anchor": 0.2749823,
+            "identity.lookup": 0.5436257666666666,
+            "transaction.begin": 0.20949926666666666,
+            "transaction.commit": 0.20989483333333334,
+            "transaction.setting": 0.1712875,
+            "traversal.1hop.projection_acl": 1.2471754333333334,
+            "traversal.2hop.projection_acl": 8.754855933333333,
+            "type_registry.ancestry": 0.3451094
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "f2c5cb3431ee8dc3",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = $6 OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $6)))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = $7 OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $7)))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END AND CASE WHEN n2.root_id = CAST($8 AS uuid) THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = CAST($9 AS uuid) THEN true WHEN n2.root_id = ANY(CAST($10 AS uuid[])) THEN true WHEN n2.root_id = ANY(CAST($11 AS uuid[])) THEN false ELSE n2.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+          "exchange_n": 30,
+          "mean_ms_per_request": 8.754855933333333,
+          "median_ms_per_exchange": 8.670096000000001,
+          "category": "traversal.2hop.projection_acl"
+        },
+        {
+          "sql_id": "ad12e46311c341d6",
+          "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+          "exchange_n": 90,
+          "mean_ms_per_request": 1.4506955333333333,
+          "median_ms_per_exchange": 0.475187,
+          "category": "acl.root_permissions"
+        },
+        {
+          "sql_id": "2fb13221ae6fe4c3",
+          "sql": "SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN g_n_tweet_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($4 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($6 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id",
+          "exchange_n": 30,
+          "mean_ms_per_request": 0.6830098666666667,
+          "median_ms_per_exchange": 0.6603955,
+          "category": "traversal.1hop.projection_acl"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "feed",
+        "arm": "jac_original",
+        "delay_ms": 0,
+        "tweets_per_user": 20
+      },
+      "n": 30,
+      "median_RTT_ms": 13.6353535,
+      "mean_RTT_ms": 13.6015388,
+      "dominant_category": "traversal.2hop.projection_acl",
+      "dominant_mean_ms": 8.736009733333333,
+      "categories": {
+        "acl.root_permissions": {
+          "mean_ms": 1.3634613333333334,
+          "median_ms": 1.370169,
+          "min_ms": 1.251364,
+          "max_ms": 1.544194,
+          "mean_exchanges": 3,
+          "exchange_distribution": {
+            "3": 30
+          }
+        },
+        "hydration.full_anchor": {
+          "mean_ms": 0.484225,
+          "median_ms": 0.4970205,
+          "min_ms": 0.35559,
+          "max_ms": 0.585021,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "identity.lookup": {
+          "mean_ms": 0.49397606666666666,
+          "median_ms": 0.5234705,
+          "min_ms": 0.267992,
+          "max_ms": 0.69672,
+          "mean_exchanges": 2.6666666666666665,
+          "exchange_distribution": {
+            "2": 10,
+            "3": 20
+          }
+        },
+        "transaction.begin": {
+          "mean_ms": 0.3284532333333333,
+          "median_ms": 0.3284735,
+          "min_ms": 0.223488,
+          "max_ms": 0.409991,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "transaction.commit": {
+          "mean_ms": 0.3831499666666667,
+          "median_ms": 0.3830635,
+          "min_ms": 0.267511,
+          "max_ms": 0.49631800000000004,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 0.29289193333333335,
+          "median_ms": 0.3084525,
+          "min_ms": 0.18998,
+          "max_ms": 0.463086,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "traversal.1hop.projection_acl": {
+          "mean_ms": 1.1940120666666667,
+          "median_ms": 1.1654425,
+          "min_ms": 1.08113,
+          "max_ms": 1.7952970000000001,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "traversal.2hop.projection_acl": {
+          "mean_ms": 8.736009733333333,
+          "median_ms": 8.697619,
+          "min_ms": 8.422112,
+          "max_ms": 9.395494,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "type_registry.ancestry": {
+          "mean_ms": 0.32535946666666665,
+          "median_ms": 0.3403715,
+          "min_ms": 0.22375699999999998,
+          "max_ms": 0.43171899999999996,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        }
+      },
+      "by_operation": {
+        "feed": {
+          "n": 30,
+          "mean_total_ms": 13.6015388,
+          "median_total_ms": 13.6353535,
+          "category_mean_ms": {
+            "acl.root_permissions": 1.3634613333333334,
+            "hydration.full_anchor": 0.484225,
+            "identity.lookup": 0.49397606666666666,
+            "transaction.begin": 0.3284532333333333,
+            "transaction.commit": 0.3831499666666667,
+            "transaction.setting": 0.29289193333333335,
+            "traversal.1hop.projection_acl": 1.1940120666666667,
+            "traversal.2hop.projection_acl": 8.736009733333333,
+            "type_registry.ancestry": 0.32535946666666665
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "f2c5cb3431ee8dc3",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = $6 OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $6)))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = $7 OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $7)))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END AND CASE WHEN n2.root_id = CAST($8 AS uuid) THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = CAST($9 AS uuid) THEN true WHEN n2.root_id = ANY(CAST($10 AS uuid[])) THEN true WHEN n2.root_id = ANY(CAST($11 AS uuid[])) THEN false ELSE n2.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+          "exchange_n": 30,
+          "mean_ms_per_request": 8.736009733333333,
+          "median_ms_per_exchange": 8.697619,
+          "category": "traversal.2hop.projection_acl"
+        },
+        {
+          "sql_id": "ad12e46311c341d6",
+          "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+          "exchange_n": 90,
+          "mean_ms_per_request": 1.3634613333333334,
+          "median_ms_per_exchange": 0.456831,
+          "category": "acl.root_permissions"
+        },
+        {
+          "sql_id": "2fb13221ae6fe4c3",
+          "sql": "SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN g_n_tweet_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($4 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($6 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id",
+          "exchange_n": 30,
+          "mean_ms_per_request": 0.6510948,
+          "median_ms_per_exchange": 0.64374,
+          "category": "traversal.1hop.projection_acl"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "feed",
+        "arm": "jac_final",
+        "delay_ms": 0,
+        "tweets_per_user": 200
+      },
+      "n": 30,
+      "median_RTT_ms": 62.8221285,
+      "mean_RTT_ms": 63.36840526666666,
+      "dominant_category": "traversal.2hop.projection_acl",
+      "dominant_mean_ms": 57.179220533333336,
+      "categories": {
+        "acl.root_permissions": {
+          "mean_ms": 1.4244495333333334,
+          "median_ms": 1.424329,
+          "min_ms": 1.279928,
+          "max_ms": 1.5625639999999998,
+          "mean_exchanges": 3,
+          "exchange_distribution": {
+            "3": 30
+          }
+        },
+        "hydration.full_anchor": {
+          "mean_ms": 0.27383816666666666,
+          "median_ms": 0.260619,
+          "min_ms": 0.198649,
+          "max_ms": 0.534763,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "identity.lookup": {
+          "mean_ms": 0.5933441,
+          "median_ms": 0.6343075,
+          "min_ms": 0.279127,
+          "max_ms": 0.822504,
+          "mean_exchanges": 2.6666666666666665,
+          "exchange_distribution": {
+            "2": 10,
+            "3": 20
+          }
+        },
+        "schema.guard": {
+          "mean_ms": 0.017128833333333333,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 0.31536,
+          "mean_exchanges": 0.06666666666666667,
+          "exchange_distribution": {
+            "0": 28,
+            "1": 2
+          }
+        },
+        "transaction.begin": {
+          "mean_ms": 0.2037327,
+          "median_ms": 0.214579,
+          "min_ms": 0.133198,
+          "max_ms": 0.268342,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "transaction.commit": {
+          "mean_ms": 1.0613129666666667,
+          "median_ms": 1.047151,
+          "min_ms": 0.882194,
+          "max_ms": 1.287167,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 0.17070576666666668,
+          "median_ms": 0.19125999999999999,
+          "min_ms": 0.103469,
+          "max_ms": 0.225863,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "traversal.1hop.projection_acl": {
+          "mean_ms": 2.1113265666666665,
+          "median_ms": 2.0963,
+          "min_ms": 1.9459710000000001,
+          "max_ms": 2.643233,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "traversal.2hop.projection_acl": {
+          "mean_ms": 57.179220533333336,
+          "median_ms": 56.668653500000005,
+          "min_ms": 55.010746,
+          "max_ms": 62.792106,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "type_registry.ancestry": {
+          "mean_ms": 0.3333461,
+          "median_ms": 0.331506,
+          "min_ms": 0.225345,
+          "max_ms": 0.475152,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        }
+      },
+      "by_operation": {
+        "feed": {
+          "n": 30,
+          "mean_total_ms": 63.36840526666666,
+          "median_total_ms": 62.8221285,
+          "category_mean_ms": {
+            "acl.root_permissions": 1.4244495333333334,
+            "hydration.full_anchor": 0.27383816666666666,
+            "identity.lookup": 0.5933441,
+            "schema.guard": 0.017128833333333333,
+            "transaction.begin": 0.2037327,
+            "transaction.commit": 1.0613129666666667,
+            "transaction.setting": 0.17070576666666668,
+            "traversal.1hop.projection_acl": 2.1113265666666665,
+            "traversal.2hop.projection_acl": 57.179220533333336,
+            "type_registry.ancestry": 0.3333461
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "f2c5cb3431ee8dc3",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = $6 OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $6)))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = $7 OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $7)))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END AND CASE WHEN n2.root_id = CAST($8 AS uuid) THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = CAST($9 AS uuid) THEN true WHEN n2.root_id = ANY(CAST($10 AS uuid[])) THEN true WHEN n2.root_id = ANY(CAST($11 AS uuid[])) THEN false ELSE n2.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+          "exchange_n": 30,
+          "mean_ms_per_request": 57.179220533333336,
+          "median_ms_per_exchange": 56.668653500000005,
+          "category": "traversal.2hop.projection_acl"
+        },
+        {
+          "sql_id": "2fb13221ae6fe4c3",
+          "sql": "SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN g_n_tweet_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($4 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($6 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id",
+          "exchange_n": 30,
+          "mean_ms_per_request": 1.5464022,
+          "median_ms_per_exchange": 1.536705,
+          "category": "traversal.1hop.projection_acl"
+        },
+        {
+          "sql_id": "ad12e46311c341d6",
+          "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+          "exchange_n": 90,
+          "mean_ms_per_request": 1.4244495333333334,
+          "median_ms_per_exchange": 0.46735899999999997,
+          "category": "acl.root_permissions"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "feed",
+        "arm": "jac_original",
+        "delay_ms": 0,
+        "tweets_per_user": 200
+      },
+      "n": 30,
+      "median_RTT_ms": 63.7978715,
+      "mean_RTT_ms": 64.2331002,
+      "dominant_category": "traversal.2hop.projection_acl",
+      "dominant_mean_ms": 57.340370633333336,
+      "categories": {
+        "acl.root_permissions": {
+          "mean_ms": 1.4143285666666667,
+          "median_ms": 1.4202694999999999,
+          "min_ms": 1.2779310000000002,
+          "max_ms": 1.552006,
+          "mean_exchanges": 3,
+          "exchange_distribution": {
+            "3": 30
+          }
+        },
+        "hydration.full_anchor": {
+          "mean_ms": 0.5315267,
+          "median_ms": 0.5462735,
+          "min_ms": 0.38074600000000003,
+          "max_ms": 0.609918,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "identity.lookup": {
+          "mean_ms": 0.5129277666666667,
+          "median_ms": 0.55,
+          "min_ms": 0.272309,
+          "max_ms": 0.701774,
+          "mean_exchanges": 2.6666666666666665,
+          "exchange_distribution": {
+            "2": 10,
+            "3": 20
+          }
+        },
+        "schema.guard": {
+          "mean_ms": 0.019385466666666667,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 0.303364,
+          "mean_exchanges": 0.06666666666666667,
+          "exchange_distribution": {
+            "0": 28,
+            "1": 2
+          }
+        },
+        "transaction.begin": {
+          "mean_ms": 0.3825091666666667,
+          "median_ms": 0.395122,
+          "min_ms": 0.23508400000000002,
+          "max_ms": 0.45874400000000004,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "transaction.commit": {
+          "mean_ms": 1.2435975333333333,
+          "median_ms": 1.263627,
+          "min_ms": 1.0730119999999999,
+          "max_ms": 1.359088,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 0.3206681,
+          "median_ms": 0.3285705,
+          "min_ms": 0.194363,
+          "max_ms": 0.400799,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "traversal.1hop.projection_acl": {
+          "mean_ms": 2.1043710333333334,
+          "median_ms": 2.103143,
+          "min_ms": 1.937224,
+          "max_ms": 2.576669,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "traversal.2hop.projection_acl": {
+          "mean_ms": 57.340370633333336,
+          "median_ms": 56.833799,
+          "min_ms": 55.287911,
+          "max_ms": 70.165625,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "type_registry.ancestry": {
+          "mean_ms": 0.3634152333333333,
+          "median_ms": 0.36377,
+          "min_ms": 0.232813,
+          "max_ms": 0.44046,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        }
+      },
+      "by_operation": {
+        "feed": {
+          "n": 30,
+          "mean_total_ms": 64.2331002,
+          "median_total_ms": 63.7978715,
+          "category_mean_ms": {
+            "acl.root_permissions": 1.4143285666666667,
+            "hydration.full_anchor": 0.5315267,
+            "identity.lookup": 0.5129277666666667,
+            "schema.guard": 0.019385466666666667,
+            "transaction.begin": 0.3825091666666667,
+            "transaction.commit": 1.2435975333333333,
+            "transaction.setting": 0.3206681,
+            "traversal.1hop.projection_acl": 2.1043710333333334,
+            "traversal.2hop.projection_acl": 57.340370633333336,
+            "type_registry.ancestry": 0.3634152333333333
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "f2c5cb3431ee8dc3",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = $6 OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $6)))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = $7 OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $7)))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END AND CASE WHEN n2.root_id = CAST($8 AS uuid) THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = CAST($9 AS uuid) THEN true WHEN n2.root_id = ANY(CAST($10 AS uuid[])) THEN true WHEN n2.root_id = ANY(CAST($11 AS uuid[])) THEN false ELSE n2.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+          "exchange_n": 30,
+          "mean_ms_per_request": 57.340370633333336,
+          "median_ms_per_exchange": 56.833799,
+          "category": "traversal.2hop.projection_acl"
+        },
+        {
+          "sql_id": "2fb13221ae6fe4c3",
+          "sql": "SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN g_n_tweet_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($4 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($6 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id",
+          "exchange_n": 30,
+          "mean_ms_per_request": 1.5563377666666667,
+          "median_ms_per_exchange": 1.5492545,
+          "category": "traversal.1hop.projection_acl"
+        },
+        {
+          "sql_id": "ad12e46311c341d6",
+          "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+          "exchange_n": 90,
+          "mean_ms_per_request": 1.4143285666666665,
+          "median_ms_per_exchange": 0.4642395,
+          "category": "acl.root_permissions"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "mixed",
+        "arm": "jac_final",
+        "delay_ms": 0,
+        "tweets_per_user": 200,
+        "write_percent": 15
+      },
+      "n": 100,
+      "median_RTT_ms": 4.541716,
+      "mean_RTT_ms": 4.45728671,
+      "dominant_category": "acl.root_permissions",
+      "dominant_mean_ms": 1.14826122,
+      "categories": {
+        "acl.root_permissions": {
+          "mean_ms": 1.14826122,
+          "median_ms": 1.31457,
+          "min_ms": 0,
+          "max_ms": 1.566549,
+          "mean_exchanges": 2.55,
+          "exchange_distribution": {
+            "0": 15,
+            "3": 85
+          }
+        },
+        "hydration.full_anchor": {
+          "mean_ms": 0.27292018,
+          "median_ms": 0.22834300000000002,
+          "min_ms": 0.160942,
+          "max_ms": 0.8742590000000001,
+          "mean_exchanges": 1.25,
+          "exchange_distribution": {
+            "2": 10,
+            "1": 85,
+            "4": 5
+          }
+        },
+        "identity.lookup": {
+          "mean_ms": 0.27485634,
+          "median_ms": 0.285601,
+          "min_ms": 0,
+          "max_ms": 0.532077,
+          "mean_exchanges": 1.7,
+          "exchange_distribution": {
+            "0": 15,
+            "2": 85
+          }
+        },
+        "transaction.begin": {
+          "mean_ms": 0.17848828,
+          "median_ms": 0.1933155,
+          "min_ms": 0.110767,
+          "max_ms": 0.224061,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 100
+          }
+        },
+        "transaction.commit": {
+          "mean_ms": 0.3291904,
+          "median_ms": 0.141581,
+          "min_ms": 0.107785,
+          "max_ms": 1.766813,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 100
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 0.15936995,
+          "median_ms": 0.15325,
+          "min_ms": 0.101531,
+          "max_ms": 0.208547,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 100
+          }
+        },
+        "traversal.1hop.endpoint_lateral_topk_projection_acl": {
+          "mean_ms": 0.36129665,
+          "median_ms": 0.41244400000000003,
+          "min_ms": 0,
+          "max_ms": 0.520333,
+          "mean_exchanges": 0.85,
+          "exchange_distribution": {
+            "0": 15,
+            "1": 85
+          }
+        },
+        "traversal.1hop.projection_acl.topk": {
+          "mean_ms": 0.47142778,
+          "median_ms": 0.540554,
+          "min_ms": 0,
+          "max_ms": 0.677363,
+          "mean_exchanges": 0.85,
+          "exchange_distribution": {
+            "0": 15,
+            "1": 85
+          }
+        },
+        "traversal.2hop.endpoint_projection_acl.topk": {
+          "mean_ms": 0.83161776,
+          "median_ms": 0.968112,
+          "min_ms": 0,
+          "max_ms": 1.045972,
+          "mean_exchanges": 0.85,
+          "exchange_distribution": {
+            "0": 15,
+            "1": 85
+          }
+        },
+        "traversal.generic_1hop": {
+          "mean_ms": 0.09028301,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 1.546635,
+          "mean_exchanges": 0.16,
+          "exchange_distribution": {
+            "1": 14,
+            "0": 85,
+            "2": 1
+          }
+        },
+        "type_registry.ancestry": {
+          "mean_ms": 0.25142674,
+          "median_ms": 0.2595855,
+          "min_ms": 0,
+          "max_ms": 0.427223,
+          "mean_exchanges": 1.7,
+          "exchange_distribution": {
+            "0": 15,
+            "2": 85
+          }
+        },
+        "write.anchor_batch_upsert": {
+          "mean_ms": 0.06431683,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 0.5149,
+          "mean_exchanges": 0.15,
+          "exchange_distribution": {
+            "1": 15,
+            "0": 85
+          }
+        },
+        "write.type_registry": {
+          "mean_ms": 0.02383157,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 0.221358,
+          "mean_exchanges": 0.15,
+          "exchange_distribution": {
+            "1": 15,
+            "0": 85
+          }
+        }
+      },
+      "by_operation": {
+        "create_tweet": {
+          "n": 10,
+          "mean_total_ms": 3.4174968,
+          "median_total_ms": 3.5246665000000004,
+          "category_mean_ms": {
+            "acl.root_permissions": 0,
+            "hydration.full_anchor": 0.451668,
+            "identity.lookup": 0,
+            "transaction.begin": 0.1875086,
+            "transaction.commit": 1.4292525,
+            "transaction.setting": 0.1718524,
+            "traversal.1hop.endpoint_lateral_topk_projection_acl": 0,
+            "traversal.1hop.projection_acl.topk": 0,
+            "traversal.2hop.endpoint_projection_acl.topk": 0,
+            "traversal.generic_1hop": 0.5410525,
+            "type_registry.ancestry": 0,
+            "write.anchor_batch_upsert": 0.4666452,
+            "write.type_registry": 0.1695176
+          }
+        },
+        "feed_page": {
+          "n": 85,
+          "mean_total_ms": 4.625996,
+          "median_total_ms": 4.65137,
+          "category_mean_ms": {
+            "acl.root_permissions": 1.3508955529411764,
+            "hydration.full_anchor": 0.22177277647058824,
+            "identity.lookup": 0.3233604,
+            "transaction.begin": 0.17723562352941177,
+            "transaction.commit": 0.14169818823529412,
+            "transaction.setting": 0.15718765882352942,
+            "traversal.1hop.endpoint_lateral_topk_projection_acl": 0.4250548823529412,
+            "traversal.1hop.projection_acl.topk": 0.5546209176470588,
+            "traversal.2hop.endpoint_projection_acl.topk": 0.9783738352941177,
+            "traversal.generic_1hop": 0,
+            "type_registry.ancestry": 0.2957961647058824,
+            "write.anchor_batch_upsert": 0,
+            "write.type_registry": 0
+          }
+        },
+        "follow": {
+          "n": 1,
+          "mean_total_ms": 4.7744159999999995,
+          "median_total_ms": 4.7744159999999995,
+          "category_mean_ms": {
+            "acl.root_permissions": 0,
+            "hydration.full_anchor": 0.805343,
+            "identity.lookup": 0,
+            "transaction.begin": 0.205205,
+            "transaction.commit": 1.523005,
+            "transaction.setting": 0.206095,
+            "traversal.1hop.endpoint_lateral_topk_projection_acl": 0,
+            "traversal.1hop.projection_acl.topk": 0,
+            "traversal.2hop.endpoint_projection_acl.topk": 0,
+            "traversal.generic_1hop": 1.546635,
+            "type_registry.ancestry": 0,
+            "write.anchor_batch_upsert": 0.302119,
+            "write.type_registry": 0.186014
+          }
+        },
+        "like": {
+          "n": 4,
+          "mean_total_ms": 3.39240675,
+          "median_total_ms": 3.462727,
+          "category_mean_ms": {
+            "acl.root_permissions": 0,
+            "hydration.full_anchor": 0.77982725,
+            "identity.lookup": 0,
+            "transaction.begin": 0.17587724999999998,
+            "transaction.commit": 1.264791,
+            "transaction.setting": 0.16285625,
+            "traversal.1hop.endpoint_lateral_topk_projection_acl": 0,
+            "traversal.1hop.projection_acl.topk": 0,
+            "traversal.2hop.endpoint_projection_acl.topk": 0,
+            "traversal.generic_1hop": 0.51778525,
+            "type_registry.ancestry": 0,
+            "write.anchor_batch_upsert": 0.365778,
+            "write.type_registry": 0.12549175
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "ad12e46311c341d6",
+          "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+          "exchange_n": 255,
+          "mean_ms_per_request": 1.14826122,
+          "median_ms_per_exchange": 0.442355,
+          "category": "acl.root_permissions"
+        },
+        {
+          "sql_id": "2d401df7ca39fd74",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at::text FROM g_n_tweet_d2a57d n2 WHERE n2.src_endpoint = ANY(ARRAY(SELECT n1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)))) AND CASE WHEN n2.root_id = CAST($6 AS uuid) THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = CAST($7 AS uuid) THEN true WHEN n2.root_id = ANY(CAST($8 AS uuid[])) THEN true WHEN n2.root_id = ANY(CAST($9 AS uuid[])) THEN false ELSE n2.acl_all >= 0 END ORDER BY n2.f_created_at DESC LIMIT $10",
+          "exchange_n": 85,
+          "mean_ms_per_request": 0.83161776,
+          "median_ms_per_exchange": 0.973171,
+          "category": "traversal.2hop.endpoint_projection_acl.topk"
+        },
+        {
+          "sql_id": "8ad9bb82821f8c2f",
+          "sql": "SELECT * FROM (SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text, f0.ord AS _tk1, e1.seq AS _tk2, e1.id AS _tk3 FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN g_n_profile_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($4 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($6 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY n1.f_created_at DESC, f0.ord, e1.seq, e1.id LIMIT $8) _topk ORDER BY _tk1, _tk2, _tk3",
+          "exchange_n": 85,
+          "mean_ms_per_request": 0.47142778,
+          "median_ms_per_exchange": 0.54797,
+          "category": "traversal.1hop.projection_acl.topk"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "mixed",
+        "arm": "jac_original",
+        "delay_ms": 0,
+        "tweets_per_user": 200,
+        "write_percent": 15
+      },
+      "n": 100,
+      "median_RTT_ms": 4.85036,
+      "mean_RTT_ms": 4.7327015,
+      "dominant_category": "acl.root_permissions",
+      "dominant_mean_ms": 1.11839823,
+      "categories": {
+        "acl.root_permissions": {
+          "mean_ms": 1.11839823,
+          "median_ms": 1.3087845,
+          "min_ms": 0,
+          "max_ms": 1.511393,
+          "mean_exchanges": 2.55,
+          "exchange_distribution": {
+            "0": 15,
+            "3": 85
+          }
+        },
+        "hydration.full_anchor": {
+          "mean_ms": 0.35222617,
+          "median_ms": 0.318901,
+          "min_ms": 0.243402,
+          "max_ms": 0.9182269999999999,
+          "mean_exchanges": 2.25,
+          "exchange_distribution": {
+            "3": 10,
+            "2": 85,
+            "5": 5
+          }
+        },
+        "identity.lookup": {
+          "mean_ms": 0.23300255,
+          "median_ms": 0.252633,
+          "min_ms": 0,
+          "max_ms": 0.383096,
+          "mean_exchanges": 1.7,
+          "exchange_distribution": {
+            "0": 15,
+            "2": 85
+          }
+        },
+        "transaction.begin": {
+          "mean_ms": 0.26229057,
+          "median_ms": 0.2656255,
+          "min_ms": 0.135787,
+          "max_ms": 0.37063,
+          "mean_exchanges": 1.85,
+          "exchange_distribution": {
+            "1": 15,
+            "2": 85
+          }
+        },
+        "transaction.commit": {
+          "mean_ms": 0.4584311,
+          "median_ms": 0.254347,
+          "min_ms": 0.205815,
+          "max_ms": 1.987663,
+          "mean_exchanges": 1.85,
+          "exchange_distribution": {
+            "1": 15,
+            "2": 85
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 0.22771736,
+          "median_ms": 0.218633,
+          "min_ms": 0.092033,
+          "max_ms": 0.336888,
+          "mean_exchanges": 1.85,
+          "exchange_distribution": {
+            "1": 15,
+            "2": 85
+          }
+        },
+        "traversal.1hop.endpoint_lateral_topk_projection_acl": {
+          "mean_ms": 0.36927654,
+          "median_ms": 0.433599,
+          "min_ms": 0,
+          "max_ms": 0.506093,
+          "mean_exchanges": 0.85,
+          "exchange_distribution": {
+            "0": 15,
+            "1": 85
+          }
+        },
+        "traversal.1hop.projection_acl.topk": {
+          "mean_ms": 0.46855123,
+          "median_ms": 0.540436,
+          "min_ms": 0,
+          "max_ms": 0.735893,
+          "mean_exchanges": 0.85,
+          "exchange_distribution": {
+            "0": 15,
+            "1": 85
+          }
+        },
+        "traversal.2hop.endpoint_projection_acl.topk": {
+          "mean_ms": 0.83983025,
+          "median_ms": 0.986896,
+          "min_ms": 0,
+          "max_ms": 1.062965,
+          "mean_exchanges": 0.85,
+          "exchange_distribution": {
+            "0": 15,
+            "1": 85
+          }
+        },
+        "traversal.generic_1hop": {
+          "mean_ms": 0.08785006,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 1.609486,
+          "mean_exchanges": 0.16,
+          "exchange_distribution": {
+            "1": 14,
+            "0": 85,
+            "2": 1
+          }
+        },
+        "type_registry.ancestry": {
+          "mean_ms": 0.22658734,
+          "median_ms": 0.2575195,
+          "min_ms": 0,
+          "max_ms": 0.394773,
+          "mean_exchanges": 1.7,
+          "exchange_distribution": {
+            "0": 15,
+            "2": 85
+          }
+        },
+        "write.anchor_batch_upsert": {
+          "mean_ms": 0.06494852,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 0.530499,
+          "mean_exchanges": 0.15,
+          "exchange_distribution": {
+            "1": 15,
+            "0": 85
+          }
+        },
+        "write.type_registry": {
+          "mean_ms": 0.02359158,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 0.208097,
+          "mean_exchanges": 0.15,
+          "exchange_distribution": {
+            "1": 15,
+            "0": 85
+          }
+        }
+      },
+      "by_operation": {
+        "create_tweet": {
+          "n": 10,
+          "mean_total_ms": 3.5726929,
+          "median_total_ms": 3.4905405,
+          "category_mean_ms": {
+            "acl.root_permissions": 0,
+            "hydration.full_anchor": 0.496628,
+            "identity.lookup": 0,
+            "transaction.begin": 0.18966719999999998,
+            "transaction.commit": 1.5867332,
+            "transaction.setting": 0.1596511,
+            "traversal.1hop.endpoint_lateral_topk_projection_acl": 0,
+            "traversal.1hop.projection_acl.topk": 0,
+            "traversal.2hop.endpoint_projection_acl.topk": 0,
+            "traversal.generic_1hop": 0.5125661,
+            "type_registry.ancestry": 0,
+            "write.anchor_batch_upsert": 0.4663353,
+            "write.type_registry": 0.161112
+          }
+        },
+        "feed_page": {
+          "n": 85,
+          "mean_total_ms": 4.9172208470588235,
+          "median_total_ms": 4.8738209999999995,
+          "category_mean_ms": {
+            "acl.root_permissions": 1.3157626235294118,
+            "hydration.full_anchor": 0.31068578823529414,
+            "identity.lookup": 0.27412064705882355,
+            "transaction.begin": 0.27566956470588233,
+            "transaction.commit": 0.2617673294117647,
+            "transaction.setting": 0.23892623529411766,
+            "traversal.1hop.endpoint_lateral_topk_projection_acl": 0.4344429882352941,
+            "traversal.1hop.projection_acl.topk": 0.5512367411764706,
+            "traversal.2hop.endpoint_projection_acl.topk": 0.9880355882352941,
+            "traversal.generic_1hop": 0,
+            "type_registry.ancestry": 0.2665733411764706,
+            "write.anchor_batch_upsert": 0,
+            "write.type_registry": 0
+          }
+        },
+        "follow": {
+          "n": 1,
+          "mean_total_ms": 4.7602,
+          "median_total_ms": 4.7602,
+          "category_mean_ms": {
+            "acl.root_permissions": 0,
+            "hydration.full_anchor": 0.9182269999999999,
+            "identity.lookup": 0,
+            "transaction.begin": 0.192357,
+            "transaction.commit": 1.438985,
+            "transaction.setting": 0.194557,
+            "traversal.1hop.endpoint_lateral_topk_projection_acl": 0,
+            "traversal.1hop.projection_acl.topk": 0,
+            "traversal.2hop.endpoint_projection_acl.topk": 0,
+            "traversal.generic_1hop": 1.609486,
+            "type_registry.ancestry": 0,
+            "write.anchor_batch_upsert": 0.286679,
+            "write.type_registry": 0.119909
+          }
+        },
+        "like": {
+          "n": 4,
+          "mean_total_ms": 3.70481225,
+          "median_total_ms": 3.737926,
+          "category_mean_ms": {
+            "acl.root_permissions": 0,
+            "hydration.full_anchor": 0.7324545,
+            "identity.lookup": 0,
+            "transaction.begin": 0.17702874999999998,
+            "transaction.commit": 1.5716425,
+            "transaction.setting": 0.16798449999999998,
+            "traversal.1hop.endpoint_lateral_topk_projection_acl": 0,
+            "traversal.1hop.projection_acl.topk": 0,
+            "traversal.2hop.endpoint_projection_acl.topk": 0,
+            "traversal.generic_1hop": 0.51246475,
+            "type_registry.ancestry": 0,
+            "write.anchor_batch_upsert": 0.386205,
+            "write.type_registry": 0.15703225
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "ad12e46311c341d6",
+          "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+          "exchange_n": 255,
+          "mean_ms_per_request": 1.11839823,
+          "median_ms_per_exchange": 0.438947,
+          "category": "acl.root_permissions"
+        },
+        {
+          "sql_id": "2d401df7ca39fd74",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at::text FROM g_n_tweet_d2a57d n2 WHERE n2.src_endpoint = ANY(ARRAY(SELECT n1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)))) AND CASE WHEN n2.root_id = CAST($6 AS uuid) THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = CAST($7 AS uuid) THEN true WHEN n2.root_id = ANY(CAST($8 AS uuid[])) THEN true WHEN n2.root_id = ANY(CAST($9 AS uuid[])) THEN false ELSE n2.acl_all >= 0 END ORDER BY n2.f_created_at DESC LIMIT $10",
+          "exchange_n": 85,
+          "mean_ms_per_request": 0.83983025,
+          "median_ms_per_exchange": 0.991388,
+          "category": "traversal.2hop.endpoint_projection_acl.topk"
+        },
+        {
+          "sql_id": "8ad9bb82821f8c2f",
+          "sql": "SELECT * FROM (SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text, f0.ord AS _tk1, e1.seq AS _tk2, e1.id AS _tk3 FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN g_n_profile_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($4 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($6 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY n1.f_created_at DESC, f0.ord, e1.seq, e1.id LIMIT $8) _topk ORDER BY _tk1, _tk2, _tk3",
+          "exchange_n": 85,
+          "mean_ms_per_request": 0.46855123,
+          "median_ms_per_exchange": 0.547696,
+          "category": "traversal.1hop.projection_acl.topk"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "tpcc",
+        "workload": "payment_name_GC",
+        "arm": "jac_final",
+        "delay_ms": 0
+      },
+      "n": 30,
+      "median_RTT_ms": 4.197428,
+      "mean_RTT_ms": 4.2632668,
+      "dominant_category": "transaction.commit",
+      "dominant_mean_ms": 1.5851646,
+      "categories": {
+        "graph.Customer.by_lastname_promoted": {
+          "mean_ms": 0.6019074666666667,
+          "median_ms": 0.583639,
+          "min_ms": 0.558768,
+          "max_ms": 0.888718,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "graph.Warehouse.hop": {
+          "mean_ms": 0.46141373333333335,
+          "median_ms": 0.45322850000000003,
+          "min_ms": 0.420725,
+          "max_ms": 0.773727,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "hydrate.generic_anchor": {
+          "mean_ms": 0.8874535,
+          "median_ms": 0.9308270000000001,
+          "min_ms": 0.767257,
+          "max_ms": 1.009997,
+          "mean_exchanges": 5,
+          "exchange_distribution": {
+            "5": 30
+          }
+        },
+        "transaction.begin": {
+          "mean_ms": 0.13256953333333332,
+          "median_ms": 0.12037400000000001,
+          "min_ms": 0.114171,
+          "max_ms": 0.165046,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "transaction.commit": {
+          "mean_ms": 1.5851646,
+          "median_ms": 1.6013085,
+          "min_ms": 1.315401,
+          "max_ms": 1.956501,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "transaction.set": {
+          "mean_ms": 0.11737443333333333,
+          "median_ms": 0.1043725,
+          "min_ms": 0.098023,
+          "max_ms": 0.143356,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "write.anchor_batch_upsert": {
+          "mean_ms": 0.3509001333333333,
+          "median_ms": 0.34845950000000003,
+          "min_ms": 0.314037,
+          "max_ms": 0.388666,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "write.type_registry": {
+          "mean_ms": 0.1264834,
+          "median_ms": 0.1185815,
+          "min_ms": 0.116822,
+          "max_ms": 0.162539,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        }
+      },
+      "by_operation": {
+        "None": {
+          "n": 30,
+          "mean_total_ms": 4.2632668,
+          "median_total_ms": 4.197428,
+          "category_mean_ms": {
+            "graph.Customer.by_lastname_promoted": 0.6019074666666667,
+            "graph.Warehouse.hop": 0.46141373333333335,
+            "hydrate.generic_anchor": 0.8874535,
+            "transaction.begin": 0.13256953333333332,
+            "transaction.commit": 1.5851646,
+            "transaction.set": 0.11737443333333333,
+            "write.anchor_batch_upsert": 0.3509001333333333,
+            "write.type_registry": 0.1264834
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "79663c1d3b43ceaf",
+          "sql": "COMMIT",
+          "exchange_n": 30,
+          "mean_ms_per_request": 1.5851646,
+          "median_ms_per_exchange": 1.6013085,
+          "category": "transaction.commit"
+        },
+        {
+          "sql_id": "4e92b5a8eea97088",
+          "sql": "\n        SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))\n        ",
+          "exchange_n": 150,
+          "mean_ms_per_request": 0.8874535,
+          "median_ms_per_exchange": 0.177758,
+          "category": "hydrate.generic_anchor"
+        },
+        {
+          "sql_id": "537ea72cb0f4f7ef",
+          "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors n1 ON n1.kind = 'NodeAnchor' AND (n1.arch_type = $2 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)) AND n1.g_customer_c_last = $3 AND n1.arch_type = $2 JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND e1.dst = n1.id AND (e1.dst_type IS NULL OR (e1.dst_type = $4 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)))) OR (e1.undirected AND (e1.dst = f0.id AND e1.src = n1.id AND (e1.src_type IS NULL OR (e1.src_type = $5 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)))))) ORDER BY f0.ord, e1.seq, e1.id",
+          "exchange_n": 30,
+          "mean_ms_per_request": 0.6019074666666667,
+          "median_ms_per_exchange": 0.583639,
+          "category": "graph.Customer.by_lastname_promoted"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "tpcc",
+        "workload": "payment_name_GC",
+        "arm": "jac_original",
+        "delay_ms": 0
+      },
+      "n": 30,
+      "median_RTT_ms": 3.976086,
+      "mean_RTT_ms": 4.038112233333333,
+      "dominant_category": "transaction.commit",
+      "dominant_mean_ms": 1.6350423333333333,
+      "categories": {
+        "graph.Customer.by_lastname_promoted": {
+          "mean_ms": 0.5678397666666667,
+          "median_ms": 0.5571630000000001,
+          "min_ms": 0.544713,
+          "max_ms": 0.87207,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "graph.Warehouse.hop": {
+          "mean_ms": 0.43253976666666666,
+          "median_ms": 0.42093349999999996,
+          "min_ms": 0.409264,
+          "max_ms": 0.742556,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "hydrate.generic_anchor": {
+          "mean_ms": 0.7649695333333333,
+          "median_ms": 0.7635000000000001,
+          "min_ms": 0.7479669999999999,
+          "max_ms": 0.7973699999999999,
+          "mean_exchanges": 5,
+          "exchange_distribution": {
+            "5": 30
+          }
+        },
+        "transaction.begin": {
+          "mean_ms": 0.09681213333333333,
+          "median_ms": 0.0963775,
+          "min_ms": 0.093788,
+          "max_ms": 0.101766,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "transaction.commit": {
+          "mean_ms": 1.6350423333333333,
+          "median_ms": 1.6033525,
+          "min_ms": 1.446482,
+          "max_ms": 2.239401,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "transaction.set": {
+          "mean_ms": 0.09280586666666667,
+          "median_ms": 0.091282,
+          "min_ms": 0.088744,
+          "max_ms": 0.12729,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "write.anchor_batch_upsert": {
+          "mean_ms": 0.32936293333333333,
+          "median_ms": 0.325312,
+          "min_ms": 0.309401,
+          "max_ms": 0.39002,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "write.type_registry": {
+          "mean_ms": 0.1187399,
+          "median_ms": 0.11740400000000001,
+          "min_ms": 0.114348,
+          "max_ms": 0.136532,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        }
+      },
+      "by_operation": {
+        "None": {
+          "n": 30,
+          "mean_total_ms": 4.038112233333333,
+          "median_total_ms": 3.976086,
+          "category_mean_ms": {
+            "graph.Customer.by_lastname_promoted": 0.5678397666666667,
+            "graph.Warehouse.hop": 0.43253976666666666,
+            "hydrate.generic_anchor": 0.7649695333333333,
+            "transaction.begin": 0.09681213333333333,
+            "transaction.commit": 1.6350423333333333,
+            "transaction.set": 0.09280586666666667,
+            "write.anchor_batch_upsert": 0.32936293333333333,
+            "write.type_registry": 0.1187399
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "79663c1d3b43ceaf",
+          "sql": "COMMIT",
+          "exchange_n": 30,
+          "mean_ms_per_request": 1.6350423333333335,
+          "median_ms_per_exchange": 1.6033525,
+          "category": "transaction.commit"
+        },
+        {
+          "sql_id": "4e92b5a8eea97088",
+          "sql": "\n        SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))\n        ",
+          "exchange_n": 150,
+          "mean_ms_per_request": 0.7649695333333334,
+          "median_ms_per_exchange": 0.150481,
+          "category": "hydrate.generic_anchor"
+        },
+        {
+          "sql_id": "537ea72cb0f4f7ef",
+          "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors n1 ON n1.kind = 'NodeAnchor' AND (n1.arch_type = $2 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)) AND n1.g_customer_c_last = $3 AND n1.arch_type = $2 JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND e1.dst = n1.id AND (e1.dst_type IS NULL OR (e1.dst_type = $4 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)))) OR (e1.undirected AND (e1.dst = f0.id AND e1.src = n1.id AND (e1.src_type IS NULL OR (e1.src_type = $5 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)))))) ORDER BY f0.ord, e1.seq, e1.id",
+          "exchange_n": 30,
+          "mean_ms_per_request": 0.5678397666666667,
+          "median_ms_per_exchange": 0.5571630000000001,
+          "category": "graph.Customer.by_lastname_promoted"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "tpcc",
+        "workload": "payment_name_GC",
+        "arm": "java_conventional",
+        "delay_ms": 0
+      },
+      "n": 30,
+      "median_RTT_ms": 3.837821423076093,
+      "mean_RTT_ms": 3.887542181958755,
+      "dominant_category": "transaction.setting",
+      "dominant_mean_ms": 2.646242819416026,
+      "categories": {
+        "relational.customer.select": {
+          "mean_ms": 0.22890604256341854,
+          "median_ms": 0.22181496024131775,
+          "min_ms": 0.2035200595855713,
+          "max_ms": 0.28323009610176086,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "relational.customer.update": {
+          "mean_ms": 0.17826451609532037,
+          "median_ms": 0.17396558541804552,
+          "min_ms": 0.16809883527457714,
+          "max_ms": 0.22309785708785057,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "relational.district.select": {
+          "mean_ms": 0.163514221397539,
+          "median_ms": 0.15655707102268934,
+          "min_ms": 0.14808401465415955,
+          "max_ms": 0.20177988335490227,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "relational.district.update": {
+          "mean_ms": 0.1646216648320357,
+          "median_ms": 0.15750853344798088,
+          "min_ms": 0.14968798495829105,
+          "max_ms": 0.20689680241048336,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "relational.history.insert": {
+          "mean_ms": 0.16622454083214203,
+          "median_ms": 0.15638652257621288,
+          "min_ms": 0.14392798766493797,
+          "max_ms": 0.2465739380568266,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "relational.warehouse.select": {
+          "mean_ms": 0.16872813769926628,
+          "median_ms": 0.1603715354576707,
+          "min_ms": 0.1524400431662798,
+          "max_ms": 0.22290297783911228,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "relational.warehouse.update": {
+          "mean_ms": 0.17104023912300667,
+          "median_ms": 0.1634805230423808,
+          "min_ms": 0.15123793855309486,
+          "max_ms": 0.24800188839435577,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 2.646242819416026,
+          "median_ms": 2.581591485068202,
+          "min_ms": 2.466138219460845,
+          "max_ms": 3.8607872556895018,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        }
+      },
+      "by_operation": {
+        "representative": {
+          "n": 30,
+          "mean_total_ms": 3.887542181958755,
+          "median_total_ms": 3.837821423076093,
+          "category_mean_ms": {
+            "relational.customer.select": 0.22890604256341854,
+            "relational.customer.update": 0.17826451609532037,
+            "relational.district.select": 0.163514221397539,
+            "relational.district.update": 0.1646216648320357,
+            "relational.history.insert": 0.16622454083214203,
+            "relational.warehouse.select": 0.16872813769926628,
+            "relational.warehouse.update": 0.17104023912300667,
+            "transaction.setting": 2.646242819416026
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "177299e3e9fa0fa62f66bb35e101c3c823715aee232360e6f4f1f9341f056893",
+          "sql": "SET autocommit=1",
+          "exchange_n": 30,
+          "mean_ms_per_request": 2.5049805253123245,
+          "median_ms_per_exchange": 2.4079385912045836,
+          "category": "transaction.setting"
+        },
+        {
+          "sql_id": "8ee8a1a1787859964551d16303f410ca816e97dfe13a447b44c538dc5929eaf3",
+          "sql": "SELECT c_id,c_credit,c_data FROM customer WHERE c_w_id=1 AND c_d_id=10 AND c_last='PRIABLEATION' ORDER BY c_first",
+          "exchange_n": 30,
+          "mean_ms_per_request": 0.22890604256341854,
+          "median_ms_per_exchange": 0.22181496024131775,
+          "category": "relational.customer.select"
+        },
+        {
+          "sql_id": "041ab66f05c552da5ad6283e132dfa22bdafbff9c071471a8e82243def5371b5",
+          "sql": "UPDATE customer SET c_balance=c_balance-1951.93,c_ytd_payment=c_ytd_payment+1951.93,c_payment_cnt=c_payment_cnt+1 WHERE c_w_id=1 AND c_d_id=10 AND c_id=329",
+          "exchange_n": 30,
+          "mean_ms_per_request": 0.17826451609532037,
+          "median_ms_per_exchange": 0.17396558541804552,
+          "category": "relational.customer.update"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "tpcc",
+        "workload": "payment_name_GC",
+        "arm": "webridge_conventional",
+        "delay_ms": 0
+      },
+      "n": 30,
+      "median_RTT_ms": 3.229053458198905,
+      "mean_RTT_ms": 3.3518357357631126,
+      "dominant_category": "stored_procedure.call",
+      "dominant_mean_ms": 3.3518357357631126,
+      "categories": {
+        "stored_procedure.call": {
+          "mean_ms": 3.3518357357631126,
+          "median_ms": 3.229053458198905,
+          "min_ms": 2.9985918663442135,
+          "max_ms": 3.892212873324752,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        }
+      },
+      "by_operation": {
+        "representative": {
+          "n": 30,
+          "mean_total_ms": 3.3518357357631126,
+          "median_total_ms": 3.229053458198905,
+          "category_mean_ms": {
+            "stored_procedure.call": 3.3518357357631126
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "b6b36c771f60e48b8a23fc26f2a3b2afa5b3bd54ea9b51bd98c9f78f1e5c784a",
+          "sql": "call Tpcc_ad8afad4201f_sp_1_ver0('PRIABLEATION', '2026-01-02T00:00:00Z', 1, 1951.93, 10, 1)",
+          "exchange_n": 30,
+          "mean_ms_per_request": 3.3518357357631126,
+          "median_ms_per_exchange": 3.229053458198905,
+          "category": "stored_procedure.call"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "tpcc",
+        "workload": "payment_name_GC",
+        "arm": "java_full",
+        "delay_ms": 0
+      },
+      "n": 30,
+      "median_RTT_ms": 52.43768868967891,
+      "mean_RTT_ms": 66.59318145054083,
+      "dominant_category": "graph.anchor_query",
+      "dominant_mean_ms": 37.543773224266864,
+      "categories": {
+        "graph.anchor_query": {
+          "mean_ms": 37.543773224266864,
+          "median_ms": 31.899271649308503,
+          "min_ms": 30.862349085509777,
+          "max_ms": 85.23858897387981,
+          "mean_exchanges": 7,
+          "exchange_distribution": {
+            "7": 30
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 18.58472361539801,
+          "median_ms": 15.664753038436174,
+          "min_ms": 2.830777084454894,
+          "max_ms": 83.87982379645109,
+          "mean_exchanges": 3,
+          "exchange_distribution": {
+            "3": 30
+          }
+        },
+        "write.anchor_upsert": {
+          "mean_ms": 10.19868158424894,
+          "median_ms": 2.522069960832596,
+          "min_ms": 1.0155369527637959,
+          "max_ms": 134.73684899508953,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "write.type_registry": {
+          "mean_ms": 0.26600302662700415,
+          "median_ms": 0.2609185175970197,
+          "min_ms": 0.19073300063610077,
+          "max_ms": 0.36735297180712223,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        }
+      },
+      "by_operation": {
+        "representative": {
+          "n": 30,
+          "mean_total_ms": 66.59318145054083,
+          "median_total_ms": 52.43768868967891,
+          "category_mean_ms": {
+            "graph.anchor_query": 37.543773224266864,
+            "transaction.setting": 18.58472361539801,
+            "write.anchor_upsert": 10.19868158424894,
+            "write.type_registry": 0.26600302662700415
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "1cb077c580eef4a774626ff5d2dfa4b0ac4ce8db856ba8d6adc9ebaa48ab632c",
+          "sql": "SELECT n.id,e.id FROM anchors e JOIN anchors n ON n.id=CASE WHEN e.src='5c72325d-05d3-4494-ad99-782a498afb97' THEN e.dst ELSE e.src END AND n.kind='NodeAnchor' AND(n.arch_type='Customer' OR n.arch_type IN(SELECT type_name FROM graph_types WHERE ancestor='Customer')) WHERE e.kind='EdgeAnchor' AND((e.src='5c72325d-05d3-4494-ad99-782a498afb97' AND(e.dst_type IS NULL OR e.dst_type='Customer' OR e.dst_type IN(SELECT type_name FROM graph_types WHERE ancestor='Customer')))OR(e.undirected=1 AND e.dst='5c72325d-05d3-4494-ad99-782a498afb97' AND(e.src_type IS NULL OR e.src_type='Customer' OR e.src_type IN(SELECT type_name FROM graph_types WHERE ancestor='Customer')))) AND n.arch_type='Customer' AND n.c_last='PRIABLEATION' ORDER BY e.seq,e.id",
+          "exchange_n": 30,
+          "mean_ms_per_request": 35.286732336195804,
+          "median_ms_per_exchange": 29.933740966953337,
+          "category": "graph.anchor_query"
+        },
+        {
+          "sql_id": "177299e3e9fa0fa62f66bb35e101c3c823715aee232360e6f4f1f9341f056893",
+          "sql": "SET autocommit=1",
+          "exchange_n": 30,
+          "mean_ms_per_request": 18.0351411147664,
+          "median_ms_per_exchange": 15.157578978687525,
+          "category": "transaction.setting"
+        },
+        {
+          "sql_id": "7552b438585252e7f8eb63980aacb60c29ecbd8350368656645a720679f320c5",
+          "sql": "INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,row_version,seq,src_type,dst_type)VALUES('0252681b-9dbd-46d2-8e32-536b506fde51','NodeAnchor','Warehouse','app','bce4e35bce901e65','036a6915-fe0f-43f0-a18e-b09f16822064',null,null,0,'{\"id\":\"0252681b-9dbd-46d2-8e32-536b506fde51\",\"root\":\"036a6915-fe0f-43f0-a18e-b09f16822064\",\"access\":{\"all\":-1,\"roots\":{\"anchors\":{}}},\"version\":0,\"__type__\":\"NodeAnchor\",\"archetype\":{\"w_id\":1,\"w_tax\":0.0127,\"w_ytd\":374173.33999999973,\"w_zip\":\"542011111\",\"w_city\":\"drynrfcylrgyfeo\",\"w_name\":\"iqcgfkp\",\"w_state\":\"VA\",\"__type__\":\"Warehouse\",\"__module__\":\"app\",\"w_street_1\":\"lszcwdxmwbdmruzupm\",\"w_street_2\":\"dsvbcugpyvlp\"},\"__module__\":\"jaclang.jac0core.archetype\",\"persistent\":true}','java-dirty',1281721,null,null),('ce186ef4-0cc0-4d5a-b2c4-d90c37b2ff0f','NodeAnchor','District','app','3f00ddd74ffcf758','036a6915-fe0f-43f0-a18e-b09f16822064',null,null,0,'{\"id\":\"ce186ef4-0cc0-4d5a-b2c4-d90c37b2ff0f\",\"root\":\"036a6915-fe0f-43f0-a18e-b09f16822064\",\"access\":{\"all\":-1,\"roots\":{\"anchors\":{}}},\"version\":0,\"__type__\":\"NodeAnchor\",\"archetype\":{\"d_id\":1,\"d_tax\":0.1913,\"d_ytd\":104173.33999999987,\"d_zip\":\"637011111\",\"d_city\":\"kzkrkhagoi\",\"d_name\":\"lhmvkmp\",\"d_state\":\"AI\",\"__type__\":\"District\",\"__module__\":\"app\",\"d_street_1\":\"sivmqpwaen\",\"d_street_2\":\"eswtmcjpccyrttpgkngz\",\"d_next_o_id\":3001},\"__module__\":\"jaclang.jac0core.archetype\",\"persistent\":true}','java-dirty',1281722,null,null),('42567bb9-1cd5-4966-babd-7de01026a7cc','NodeAnchor','Customer','app','20c4b063a648511e','036a6915-fe0f-43f0-a18e-b09f16822064',null,null,0,'{\"id\":\"42567bb9-1cd5-4966-babd-7de01026a7cc\",\"root\":\"036a6915-fe0f-43f0-a18e-b09f16822064\",\"access\":{\"all\":-1,\"roots\":{\"anchors\":{}}},\"version\":0,\"__type__\":\"NodeAnchor\",\"archetype\":{\"c_id\":329,\"c_zip\":\"233011111\",\"c_city\":\"tptsxpxsztlein\",\"c_data\":\"lnprnepheweavavirsollcjyswpndhuetvcrbrckknallouhyhixdnuoncxgdciupoksamgwoojfqkfqqpmjrlnukaiiiettbnimldadcbiacojqadisxbofkexztceqfevtiakjewaafbvmmsfpyobioreweniepfqdefmcemdqmroognodqtqplpvtprhlbaqbnwvnxziptmapdtgqkugbctqwwvyyitclrjcvawtjtrtijkjybkvscovjoqypyvnkajyfwtqghdscflnmndcwqihakrvdtbbxutelbnwpccoqsdnekpnxlakykykutdqrhrseuwbyapmaeltzhdqgbaroecrwkrvyk\",\"c_last\":\"PRIABLEATION\",\"c_first\":\"umbbuikh\",\"c_phone\":\"1628156115700978\",\"c_since\":\"2026-01-01T00:00:00+00:00\",\"c_state\":\"GQ\",\"__type__\":\"Customer\",\"c_credit\":\"GC\",\"c_middle\":\"OE\",\"c_balance\":-74183.33999999997,\"__module__\":\"app\",\"c_discount\":0.0024,\"c_street_1\":\"utmoqjssslkuhqrgnb\",\"c_street_2\":\"mqqrybqekbygdgohhnsj\",\"c_credit_lim\":50000.0,\"c_payment_cnt\":39,\"c_ytd_payment\":74183.33999999997,\"c_delivery_cnt\":0},\"__module__\":\"jaclang.jac0core.archetype\",\"persistent\":true}','java-dirty',1281723,null,null),('08d9d0d7-b7ce-47bc-883b-6090a0d30dea','EdgeAnchor','GenericEdge','jaclang.jac0core.archetype','4cd6bf5e8184719d','036a6915-fe0f-43f0-a18e-b09f16822064','42567bb9-1cd5-4966-babd-7de01026a7cc','233baa9d-1b90-46b8-8b1c-44f725e9b45e',0,'{\"id\":\"08d9d0d7-b7ce-47bc-883b-6090a0d30dea\",\"root\":\"036a6915-fe0f-43f0-a18e-b09f16822064\",\"access\":{\"all\":-1,\"roots\":{\"anchors\":{}}},\"source\":\"42567bb9-1cd5-4966-babd-7de01026a7cc\",\"target\":\"233baa9d-1b90-46b8-8b1c-44f725e9b45e\",\"__type__\":\"EdgeAnchor\",\"archetype\":{\"__type__\":\"GenericEdge\",\"__module__\":\"jaclang.jac0core.archetype\"},\"__module__\":\"jaclang.jac0core.archetype\",\"persistent\":true,\"is_undirected\":false}','java-dirty',1281724,'Customer','History'),('233baa9d-1b90-46b8-8b1c-44f725e9b45e','NodeAnchor','History','app','f36e39e45ab3235b','036a6915-fe0f-43f0-a18e-b09f16822064',null,null,0,'{\"id\":\"233baa9d-1b90-46b8-8b1c-44f725e9b45e\",\"root\":\"036a6915-fe0f-43f0-a18e-b09f16822064\",\"access\":{\"all\":-1,\"roots\":{\"anchors\":{}}},\"version\":0,\"__type__\":\"NodeAnchor\",\"archetype\":{\"__type__\":\"History\",\"__module__\":\"app\",\"h_d_id\":1,\"h_w_id\":1,\"h_date\":\"2026-01-02T00:00:00Z\",\"h_amount\":1951.93,\"h_data\":\"iqcgfkp    lhmvkmp\"},\"__module__\":\"jaclang.jac0core.archetype\",\"persistent\":true}','java-dirty',1281725,null,null) ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),row_version=VALUES(row_version),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)",
+          "exchange_n": 1,
+          "mean_ms_per_request": 4.491228299836318,
+          "median_ms_per_exchange": 134.73684899508953,
+          "category": "write.anchor_upsert"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "tpcc",
+        "workload": "payment_name_GC",
+        "arm": "java_pruned",
+        "delay_ms": 0
+      },
+      "n": 30,
+      "median_RTT_ms": 36.754179978743196,
+      "mean_RTT_ms": 38.71122106599311,
+      "dominant_category": "graph.anchor_query",
+      "dominant_mean_ms": 32.425394599946834,
+      "categories": {
+        "graph.anchor_query": {
+          "mean_ms": 32.425394599946834,
+          "median_ms": 31.110784620977938,
+          "min_ms": 30.159518821164966,
+          "max_ms": 53.99285978637636,
+          "mean_exchanges": 4,
+          "exchange_distribution": {
+            "4": 30
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 3.3270599165310464,
+          "median_ms": 3.225095570087433,
+          "min_ms": 2.411019755527377,
+          "max_ms": 5.405700067058206,
+          "mean_exchanges": 3,
+          "exchange_distribution": {
+            "3": 30
+          }
+        },
+        "write.anchor_upsert": {
+          "mean_ms": 2.9587665495152273,
+          "median_ms": 2.393281552940607,
+          "min_ms": 1.3100800570100546,
+          "max_ms": 11.608520988374949,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        }
+      },
+      "by_operation": {
+        "representative": {
+          "n": 30,
+          "mean_total_ms": 38.71122106599311,
+          "median_total_ms": 36.754179978743196,
+          "category_mean_ms": {
+            "graph.anchor_query": 32.425394599946834,
+            "transaction.setting": 3.3270599165310464,
+            "write.anchor_upsert": 2.9587665495152273
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "e3b4af8918176f311b4941ee1896976fa16d61b307211b45efa7035a4e75c645",
+          "sql": "SELECT n.id,e.id,n.props FROM anchors e JOIN anchors n ON n.id=CASE WHEN e.src='5c72325d-05d3-4494-ad99-782a498afb97' THEN e.dst ELSE e.src END AND n.kind='NodeAnchor' AND(n.arch_type='Customer' OR n.arch_type IN(SELECT type_name FROM graph_types WHERE ancestor='Customer')) WHERE e.kind='EdgeAnchor' AND((e.src='5c72325d-05d3-4494-ad99-782a498afb97' AND(e.dst_type IS NULL OR e.dst_type='Customer' OR e.dst_type IN(SELECT type_name FROM graph_types WHERE ancestor='Customer')))OR(e.undirected=1 AND e.dst='5c72325d-05d3-4494-ad99-782a498afb97' AND(e.src_type IS NULL OR e.src_type='Customer' OR e.src_type IN(SELECT type_name FROM graph_types WHERE ancestor='Customer')))) AND n.arch_type='Customer' AND n.c_last='PRIABLEATION' ORDER BY e.seq,e.id",
+          "exchange_n": 30,
+          "mean_ms_per_request": 31.452580052427948,
+          "median_ms_per_exchange": 30.117487534880638,
+          "category": "graph.anchor_query"
+        },
+        {
+          "sql_id": "177299e3e9fa0fa62f66bb35e101c3c823715aee232360e6f4f1f9341f056893",
+          "sql": "SET autocommit=1",
+          "exchange_n": 30,
+          "mean_ms_per_request": 2.9197323213641844,
+          "median_ms_per_exchange": 2.830323064699769,
+          "category": "transaction.setting"
+        },
+        {
+          "sql_id": "2baa529a60fcdb6e4c9e5f24001af69b4b786b902328a4c73fd115fb9952a35b",
+          "sql": "SELECT n.id,e.id,n.props FROM anchors e JOIN anchors n ON n.id=CASE WHEN e.src='036a6915-fe0f-43f0-a18e-b09f16822064' THEN e.dst ELSE e.src END AND n.kind='NodeAnchor' AND(n.arch_type='Warehouse' OR n.arch_type IN(SELECT type_name FROM graph_types WHERE ancestor='Warehouse')) WHERE e.kind='EdgeAnchor' AND((e.src='036a6915-fe0f-43f0-a18e-b09f16822064' AND(e.dst_type IS NULL OR e.dst_type='Warehouse' OR e.dst_type IN(SELECT type_name FROM graph_types WHERE ancestor='Warehouse')))OR(e.undirected=1 AND e.dst='036a6915-fe0f-43f0-a18e-b09f16822064' AND(e.src_type IS NULL OR e.src_type='Warehouse' OR e.src_type IN(SELECT type_name FROM graph_types WHERE ancestor='Warehouse')))) ORDER BY e.seq,e.id",
+          "exchange_n": 30,
+          "mean_ms_per_request": 0.5062726559117436,
+          "median_ms_per_exchange": 0.5125465104356408,
+          "category": "graph.anchor_query"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "feed",
+        "arm": "java_conventional",
+        "delay_ms": 0,
+        "tweets_per_user": 20
+      },
+      "n": 30,
+      "median_RTT_ms": 9.516119142062962,
+      "mean_RTT_ms": 9.649409803872308,
+      "dominant_category": "relational.lx_tweets.select",
+      "dominant_mean_ms": 8.689128801537057,
+      "categories": {
+        "relational.lx_tweets.select": {
+          "mean_ms": 8.689128801537057,
+          "median_ms": 8.49741802085191,
+          "min_ms": 8.345728041604161,
+          "max_ms": 11.761262081563473,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 0.9602810023352504,
+          "median_ms": 0.975431059487164,
+          "min_ms": 0.692916102707386,
+          "max_ms": 1.1798678897321224,
+          "mean_exchanges": 4,
+          "exchange_distribution": {
+            "4": 30
+          }
+        }
+      },
+      "by_operation": {
+        "feed": {
+          "n": 30,
+          "mean_total_ms": 9.649409803872308,
+          "median_total_ms": 9.516119142062962,
+          "category_mean_ms": {
+            "relational.lx_tweets.select": 8.689128801537057,
+            "transaction.setting": 0.9602810023352504
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "4c237d6fea01624ab98e9fd4fe2152a70362f78010c2c15b3c4e05c209721733",
+          "sql": "SELECT t.seed_id,t.content,p.username,t.created_at,t.likes,t.comments FROM lx_tweets t JOIN lx_profiles p ON p.id=t.author_id WHERE t.author_id='be88871d-b7c9-4cef-b134-df8946207f84' OR t.author_id IN(SELECT followee_id FROM lx_follows WHERE follower_id='be88871d-b7c9-4cef-b134-df8946207f84') ORDER BY t.created_at DESC",
+          "exchange_n": 1,
+          "mean_ms_per_request": 0.3920420693854491,
+          "median_ms_per_exchange": 11.761262081563473,
+          "category": "relational.lx_tweets.select"
+        },
+        {
+          "sql_id": "bd2930bf5866316fe50d5e94a5fea54d64cb771647af465ef5b4a376417110b2",
+          "sql": "SELECT t.seed_id,t.content,p.username,t.created_at,t.likes,t.comments FROM lx_tweets t JOIN lx_profiles p ON p.id=t.author_id WHERE t.author_id='a920f441-baa3-4cec-aad1-6f89665b11f0' OR t.author_id IN(SELECT followee_id FROM lx_follows WHERE follower_id='a920f441-baa3-4cec-aad1-6f89665b11f0') ORDER BY t.created_at DESC",
+          "exchange_n": 1,
+          "mean_ms_per_request": 0.3535962974031766,
+          "median_ms_per_exchange": 10.607888922095299,
+          "category": "relational.lx_tweets.select"
+        },
+        {
+          "sql_id": "f9923d1c73ced0ab1086f0f31b393f2c379ae046d84f8fb1921f9c2ac05d05e7",
+          "sql": "SELECT t.seed_id,t.content,p.username,t.created_at,t.likes,t.comments FROM lx_tweets t JOIN lx_profiles p ON p.id=t.author_id WHERE t.author_id='e788e628-6a8f-4e39-8e14-cbccdf471522' OR t.author_id IN(SELECT followee_id FROM lx_follows WHERE follower_id='e788e628-6a8f-4e39-8e14-cbccdf471522') ORDER BY t.created_at DESC",
+          "exchange_n": 1,
+          "mean_ms_per_request": 0.30105686746537685,
+          "median_ms_per_exchange": 9.031706023961306,
+          "category": "relational.lx_tweets.select"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "feed",
+        "arm": "webridge_conventional",
+        "delay_ms": 0,
+        "tweets_per_user": 20
+      },
+      "n": 30,
+      "median_RTT_ms": 9.180519380606711,
+      "mean_RTT_ms": 9.727431282711526,
+      "dominant_category": "stored_procedure.call",
+      "dominant_mean_ms": 9.196504391729832,
+      "categories": {
+        "stored_procedure.call": {
+          "mean_ms": 9.196504391729832,
+          "median_ms": 8.610763004980981,
+          "min_ms": 8.432658854871988,
+          "max_ms": 16.76822896115482,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 0.5309268909816941,
+          "median_ms": 0.5533224903047085,
+          "min_ms": 0.3402768634259701,
+          "max_ms": 0.6445578765124083,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        }
+      },
+      "by_operation": {
+        "feed": {
+          "n": 30,
+          "mean_total_ms": 9.727431282711526,
+          "median_total_ms": 9.180519380606711,
+          "category_mean_ms": {
+            "stored_procedure.call": 9.196504391729832,
+            "transaction.setting": 0.5309268909816941
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "49f2a5c537a80a88dfff17646c2a200de70c09fb7ee139372568ee1c0812cc30",
+          "sql": "call LittleX_85f8ae1d8669_sp_1_ver0('e788e628-6a8f-4e39-8e14-cbccdf471522')",
+          "exchange_n": 1,
+          "mean_ms_per_request": 0.5589409653718272,
+          "median_ms_per_exchange": 16.76822896115482,
+          "category": "stored_procedure.call"
+        },
+        {
+          "sql_id": "4d4445bbd540220609ebfa0cf52fb98faf041fb67a9567c625648eeb98d907c1",
+          "sql": "call LittleX_85f8ae1d8669_sp_1_ver0('6bc68f36-7f9e-428f-86b3-953f03fba248')",
+          "exchange_n": 1,
+          "mean_ms_per_request": 0.49914127060522634,
+          "median_ms_per_exchange": 14.97423811815679,
+          "category": "stored_procedure.call"
+        },
+        {
+          "sql_id": "f4cb835eb7dcb4629d7577bc86b564f2dfce5b1422a3a9078158e3b5bdc2b56f",
+          "sql": "call LittleX_85f8ae1d8669_sp_1_ver0('00ebd928-497c-46a9-b2b8-aa127ee0438f')",
+          "exchange_n": 1,
+          "mean_ms_per_request": 0.3723697659249107,
+          "median_ms_per_exchange": 11.171092977747321,
+          "category": "stored_procedure.call"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "feed",
+        "arm": "java_full",
+        "delay_ms": 0,
+        "tweets_per_user": 20
+      },
+      "n": 30,
+      "median_RTT_ms": 74.16183839086443,
+      "mean_RTT_ms": 76.52674932032824,
+      "dominant_category": "traversal.2hop.projection_acl",
+      "dominant_mean_ms": 41.97170522529632,
+      "categories": {
+        "acl.root_permissions": {
+          "mean_ms": 12.339214406286677,
+          "median_ms": 12.271639076061547,
+          "min_ms": 11.87900616787374,
+          "max_ms": 13.130886945873499,
+          "mean_exchanges": 3,
+          "exchange_distribution": {
+            "3": 30
+          }
+        },
+        "hydration.full_anchor": {
+          "mean_ms": 0.5938243043298522,
+          "median_ms": 0.5804061656817794,
+          "min_ms": 0.43619098141789436,
+          "max_ms": 0.8427130524069071,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "identity.lookup": {
+          "mean_ms": 0.5514472412566344,
+          "median_ms": 0.5748530384153128,
+          "min_ms": 0.374665018171072,
+          "max_ms": 0.7315129041671753,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 1.678005823244651,
+          "median_ms": 1.6921749338507652,
+          "min_ms": 1.2639190535992384,
+          "max_ms": 2.1626672241836786,
+          "mean_exchanges": 8,
+          "exchange_distribution": {
+            "8": 30
+          }
+        },
+        "traversal.1hop.projection_acl": {
+          "mean_ms": 18.849821800055604,
+          "median_ms": 18.722560023888946,
+          "min_ms": 17.741925083100796,
+          "max_ms": 21.060402039438486,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "traversal.2hop.projection_acl": {
+          "mean_ms": 41.97170522529632,
+          "median_ms": 39.40244752448052,
+          "min_ms": 37.77568694204092,
+          "max_ms": 89.8002649191767,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "type_registry.ancestry": {
+          "mean_ms": 0.5427305198584994,
+          "median_ms": 0.5466914735734463,
+          "min_ms": 0.38807583041489124,
+          "max_ms": 0.7241771090775728,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        }
+      },
+      "by_operation": {
+        "feed": {
+          "n": 30,
+          "mean_total_ms": 76.52674932032824,
+          "median_total_ms": 74.16183839086443,
+          "category_mean_ms": {
+            "acl.root_permissions": 12.339214406286677,
+            "hydration.full_anchor": 0.5938243043298522,
+            "identity.lookup": 0.5514472412566344,
+            "transaction.setting": 1.678005823244651,
+            "traversal.1hop.projection_acl": 18.849821800055604,
+            "traversal.2hop.projection_acl": 41.97170522529632,
+            "type_registry.ancestry": 0.5427305198584994
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "9c7646e49e12fbf8ff4114d2bdad3a4149885a39ada7ab338f766130a0d221e2",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at FROM (SELECT '92ea5506-b95b-4d6b-8dd7-8d1c41d78c48' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END AND CASE WHEN n2.root_id = '76939c2d-9151-4a41-9f8b-4453d7406bf7' THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = '2dabd933-744f-4633-91a5-4ff2b369811b' THEN true WHEN n2.root_id IN (NULL) THEN true WHEN n2.root_id IN (NULL) THEN false ELSE n2.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+          "exchange_n": 1,
+          "mean_ms_per_request": 2.9933421639725566,
+          "median_ms_per_exchange": 89.8002649191767,
+          "category": "traversal.2hop.projection_acl"
+        },
+        {
+          "sql_id": "c1ccf74ca868d204cbb339cb456a058c1a8886b1ff1219897021b8e07d61e058",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at FROM (SELECT '75bc1012-11aa-4153-a877-1d0b9e35142f' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END AND CASE WHEN n2.root_id = '52691408-c7a1-4183-9196-8cf2b4dc6898' THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = '2dabd933-744f-4633-91a5-4ff2b369811b' THEN true WHEN n2.root_id IN (NULL) THEN true WHEN n2.root_id IN (NULL) THEN false ELSE n2.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+          "exchange_n": 1,
+          "mean_ms_per_request": 1.968718304609259,
+          "median_ms_per_exchange": 59.06154913827777,
+          "category": "traversal.2hop.projection_acl"
+        },
+        {
+          "sql_id": "5492c1128635dd3c55dc63678e1bed313533e6f2a82a699ccd581d647ba338c4",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at FROM (SELECT '18b706b0-b964-4815-bf68-db745f7cfc33' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END AND CASE WHEN n2.root_id = '55171932-174a-4f50-9b49-d1ec751db7eb' THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = '2dabd933-744f-4633-91a5-4ff2b369811b' THEN true WHEN n2.root_id IN (NULL) THEN true WHEN n2.root_id IN (NULL) THEN false ELSE n2.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+          "exchange_n": 1,
+          "mean_ms_per_request": 1.4469532994553447,
+          "median_ms_per_exchange": 43.40859898366034,
+          "category": "traversal.2hop.projection_acl"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "feed",
+        "arm": "java_pruned",
+        "delay_ms": 0,
+        "tweets_per_user": 20
+      },
+      "n": 30,
+      "median_RTT_ms": 57.00307269580662,
+      "mean_RTT_ms": 60.6140423566103,
+      "dominant_category": "traversal.2hop.projection_acl",
+      "dominant_mean_ms": 40.81975745502859,
+      "categories": {
+        "transaction.setting": {
+          "mean_ms": 0.9974397951737046,
+          "median_ms": 0.9840211132541299,
+          "min_ms": 0.712996581569314,
+          "max_ms": 1.2785329017788172,
+          "mean_exchanges": 4,
+          "exchange_distribution": {
+            "4": 30
+          }
+        },
+        "traversal.1hop.projection_acl": {
+          "mean_ms": 18.796845106408,
+          "median_ms": 18.139954074285924,
+          "min_ms": 17.402089899405837,
+          "max_ms": 29.485014965757728,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "traversal.2hop.projection_acl": {
+          "mean_ms": 40.81975745502859,
+          "median_ms": 37.72069688420743,
+          "min_ms": 36.73761012032628,
+          "max_ms": 69.16731200180948,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        }
+      },
+      "by_operation": {
+        "feed": {
+          "n": 30,
+          "mean_total_ms": 60.6140423566103,
+          "median_total_ms": 57.00307269580662,
+          "category_mean_ms": {
+            "transaction.setting": 0.9974397951737046,
+            "traversal.1hop.projection_acl": 18.796845106408,
+            "traversal.2hop.projection_acl": 40.81975745502859
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "a7b0829cc2cce6a3967f9b921824d25536b0991e63f7e91f519af942bb7e07cb",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at FROM (SELECT '15e5c05a-1b68-426e-900d-419e606b024d' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+          "exchange_n": 1,
+          "mean_ms_per_request": 2.3055770667269826,
+          "median_ms_per_exchange": 69.16731200180948,
+          "category": "traversal.2hop.projection_acl"
+        },
+        {
+          "sql_id": "0e3e06481bcc0663a770069f72bdb1ad0b12a7c9795995b97a0e60f5dc69859d",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at FROM (SELECT '6bc68f36-7f9e-428f-86b3-953f03fba248' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+          "exchange_n": 1,
+          "mean_ms_per_request": 2.0977716349686184,
+          "median_ms_per_exchange": 62.93314904905856,
+          "category": "traversal.2hop.projection_acl"
+        },
+        {
+          "sql_id": "40c1cfb5bbe34049bc9e6289e11ff0a3623244319c9a72969c45d6bce400e88d",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at FROM (SELECT 'ecbf8abb-6d47-469e-879e-1d11025dc905' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+          "exchange_n": 1,
+          "mean_ms_per_request": 1.710444362834096,
+          "median_ms_per_exchange": 51.31333088502288,
+          "category": "traversal.2hop.projection_acl"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "feed",
+        "arm": "java_conventional",
+        "delay_ms": 0,
+        "tweets_per_user": 200
+      },
+      "n": 30,
+      "median_RTT_ms": 81.53135795146227,
+      "mean_RTT_ms": 82.58223950397223,
+      "dominant_category": "relational.lx_tweets.select",
+      "dominant_mean_ms": 81.37545468440901,
+      "categories": {
+        "relational.lx_tweets.select": {
+          "mean_ms": 81.37545468440901,
+          "median_ms": 80.374147859402,
+          "min_ms": 78.37005914188921,
+          "max_ms": 104.17701303958893,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 1.2067848195632298,
+          "median_ms": 1.2328819138929248,
+          "min_ms": 0.7430820260196924,
+          "max_ms": 1.5310142189264297,
+          "mean_exchanges": 4,
+          "exchange_distribution": {
+            "4": 30
+          }
+        }
+      },
+      "by_operation": {
+        "feed": {
+          "n": 30,
+          "mean_total_ms": 82.58223950397223,
+          "median_total_ms": 81.53135795146227,
+          "category_mean_ms": {
+            "relational.lx_tweets.select": 81.37545468440901,
+            "transaction.setting": 1.2067848195632298
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "666bff636277a595744816cee5dfd436ad4cfe4683565045e26d3bd74de1bccd",
+          "sql": "SELECT t.seed_id,t.content,p.username,t.created_at,t.likes,t.comments FROM lx_tweets t JOIN lx_profiles p ON p.id=t.author_id WHERE t.author_id='4f70031b-7b45-4a3c-9ff7-b9a43c703668' OR t.author_id IN(SELECT followee_id FROM lx_follows WHERE follower_id='4f70031b-7b45-4a3c-9ff7-b9a43c703668') ORDER BY t.created_at DESC",
+          "exchange_n": 1,
+          "mean_ms_per_request": 3.472567101319631,
+          "median_ms_per_exchange": 104.17701303958893,
+          "category": "relational.lx_tweets.select"
+        },
+        {
+          "sql_id": "150105daf1ad3401a914e7cced5862eee7e9c4a5a45294eb7de64102cfd5a231",
+          "sql": "SELECT t.seed_id,t.content,p.username,t.created_at,t.likes,t.comments FROM lx_tweets t JOIN lx_profiles p ON p.id=t.author_id WHERE t.author_id='4b74992a-48e9-4615-8056-4a6bc507f00a' OR t.author_id IN(SELECT followee_id FROM lx_follows WHERE follower_id='4b74992a-48e9-4615-8056-4a6bc507f00a') ORDER BY t.created_at DESC",
+          "exchange_n": 1,
+          "mean_ms_per_request": 2.8451881293828287,
+          "median_ms_per_exchange": 85.35564388148487,
+          "category": "relational.lx_tweets.select"
+        },
+        {
+          "sql_id": "5d280a2b568ade41ae453ab94eea024e96d60c4990aec676f66fa95fe2352a42",
+          "sql": "SELECT t.seed_id,t.content,p.username,t.created_at,t.likes,t.comments FROM lx_tweets t JOIN lx_profiles p ON p.id=t.author_id WHERE t.author_id='0e6c2934-fdca-4b95-a237-d270658d5eb6' OR t.author_id IN(SELECT followee_id FROM lx_follows WHERE follower_id='0e6c2934-fdca-4b95-a237-d270658d5eb6') ORDER BY t.created_at DESC",
+          "exchange_n": 1,
+          "mean_ms_per_request": 2.754496969282627,
+          "median_ms_per_exchange": 82.63490907847881,
+          "category": "relational.lx_tweets.select"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "feed",
+        "arm": "webridge_conventional",
+        "delay_ms": 0,
+        "tweets_per_user": 200
+      },
+      "n": 30,
+      "median_RTT_ms": 81.09829341992736,
+      "mean_RTT_ms": 82.4005339993164,
+      "dominant_category": "stored_procedure.call",
+      "dominant_mean_ms": 81.86276277216773,
+      "categories": {
+        "stored_procedure.call": {
+          "mean_ms": 81.86276277216773,
+          "median_ms": 80.55223897099495,
+          "min_ms": 78.91676388680935,
+          "max_ms": 109.44951209239662,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 0.537771227148672,
+          "median_ms": 0.534833874553442,
+          "min_ms": 0.2854128833860159,
+          "max_ms": 0.7367131765931845,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        }
+      },
+      "by_operation": {
+        "feed": {
+          "n": 30,
+          "mean_total_ms": 82.4005339993164,
+          "median_total_ms": 81.09829341992736,
+          "category_mean_ms": {
+            "stored_procedure.call": 81.86276277216773,
+            "transaction.setting": 0.537771227148672
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "062cae5a998910ad3893d499d9bddb1e698b0daecf32b6ccaebdfe18fd09d96d",
+          "sql": "call LittleX_85f8ae1d8669_sp_1_ver0('5f59b599-daef-41cf-9b37-97d50ab0409c')",
+          "exchange_n": 1,
+          "mean_ms_per_request": 3.648317069746554,
+          "median_ms_per_exchange": 109.44951209239662,
+          "category": "stored_procedure.call"
+        },
+        {
+          "sql_id": "e6bf2bef1ac68803c2c8d8db9e1799d98477378667bdb0fe419b6e7db27f129c",
+          "sql": "call LittleX_85f8ae1d8669_sp_1_ver0('4b9a32e6-3dd7-4552-84f4-c0269007b175')",
+          "exchange_n": 1,
+          "mean_ms_per_request": 2.8785329001645246,
+          "median_ms_per_exchange": 86.35598700493574,
+          "category": "stored_procedure.call"
+        },
+        {
+          "sql_id": "0daacca19bcdca5e268a33ef0c75d6f48e0e3545d8b6b1ccad384f4a8a0e21b1",
+          "sql": "call LittleX_85f8ae1d8669_sp_1_ver0('bcdd2a88-6da4-4101-b605-ba1a72a59193')",
+          "exchange_n": 1,
+          "mean_ms_per_request": 2.8208779326329627,
+          "median_ms_per_exchange": 84.62633797898889,
+          "category": "stored_procedure.call"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "mixed",
+        "arm": "java_conventional",
+        "delay_ms": 0,
+        "tweets_per_user": 200,
+        "write_percent": 15
+      },
+      "n": 100,
+      "median_RTT_ms": 34.489016281440854,
+      "mean_RTT_ms": 57.501473003067076,
+      "dominant_category": "relational.lx_tweets.select",
+      "dominant_mean_ms": 53.55483904713765,
+      "categories": {
+        "relational.lx_follows.insert": {
+          "mean_ms": 0.003721949178725481,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 0.3721949178725481,
+          "mean_exchanges": 0.01,
+          "exchange_distribution": {
+            "0": 99,
+            "1": 1
+          }
+        },
+        "relational.lx_tweets.insert": {
+          "mean_ms": 0.053678262047469616,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 2.5224192067980766,
+          "mean_exchanges": 0.1,
+          "exchange_distribution": {
+            "1": 10,
+            "0": 90
+          }
+        },
+        "relational.lx_tweets.select": {
+          "mean_ms": 53.55483904713765,
+          "median_ms": 33.55302708223462,
+          "min_ms": 0,
+          "max_ms": 2411.792031954974,
+          "mean_exchanges": 0.99,
+          "exchange_distribution": {
+            "1": 99,
+            "0": 1
+          }
+        },
+        "relational.lx_tweets.update": {
+          "mean_ms": 0.013284459710121155,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 0.3919180016964674,
+          "mean_exchanges": 0.04,
+          "exchange_distribution": {
+            "0": 96,
+            "1": 4
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 3.875949284993112,
+          "median_ms": 0.9071867680177093,
+          "min_ms": 0.5366369150578976,
+          "max_ms": 35.377983935177326,
+          "mean_exchanges": 4,
+          "exchange_distribution": {
+            "4": 100
+          }
+        }
+      },
+      "by_operation": {
+        "create_tweet": {
+          "n": 10,
+          "mean_total_ms": 17.84332355018705,
+          "median_total_ms": 16.89182105474174,
+          "category_mean_ms": {
+            "relational.lx_follows.insert": 0,
+            "relational.lx_tweets.insert": 0.5367826204746962,
+            "relational.lx_tweets.select": 0.2634012373164296,
+            "relational.lx_tweets.update": 0,
+            "transaction.setting": 17.043139692395926
+          }
+        },
+        "feed_page": {
+          "n": 85,
+          "mean_total_ms": 63.89326066710055,
+          "median_total_ms": 34.558084327727556,
+          "category_mean_ms": {
+            "relational.lx_follows.insert": 0,
+            "relational.lx_tweets.insert": 0,
+            "relational.lx_tweets.select": 62.964947097113026,
+            "relational.lx_tweets.update": 0,
+            "transaction.setting": 0.9283135699875215
+          }
+        },
+        "follow": {
+          "n": 1,
+          "mean_total_ms": 21.27228118479252,
+          "median_total_ms": 21.27228118479252,
+          "category_mean_ms": {
+            "relational.lx_follows.insert": 0.3721949178725481,
+            "relational.lx_tweets.insert": 0,
+            "relational.lx_tweets.select": 0,
+            "relational.lx_tweets.update": 0,
+            "transaction.setting": 20.90008626691997
+          }
+        },
+        "like": {
+          "n": 4,
+          "mean_total_ms": 29.878656729124486,
+          "median_total_ms": 29.38117238227278,
+          "category_mean_ms": {
+            "relational.lx_follows.insert": 0,
+            "relational.lx_tweets.insert": 0,
+            "relational.lx_tweets.select": 0.20734727149829268,
+            "relational.lx_tweets.update": 0.33211149275302887,
+            "transaction.setting": 29.339197964873165
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "1e32ef724ffa3e57e16c8487ce3fa265f3e79b9b2456ea6d2557890706230d74",
+          "sql": "SELECT t.seed_id,t.content,p.username,t.created_at,t.likes,t.comments FROM lx_tweets t JOIN lx_profiles p ON p.id=t.author_id WHERE t.author_id='894a7726-1285-4076-97bd-af550f33255b' OR t.author_id IN(SELECT followee_id FROM lx_follows WHERE follower_id='894a7726-1285-4076-97bd-af550f33255b') ORDER BY t.created_at DESC LIMIT 20",
+          "exchange_n": 1,
+          "mean_ms_per_request": 24.11792031954974,
+          "median_ms_per_exchange": 2411.792031954974,
+          "category": "relational.lx_tweets.select"
+        },
+        {
+          "sql_id": "177299e3e9fa0fa62f66bb35e101c3c823715aee232360e6f4f1f9341f056893",
+          "sql": "SET autocommit=1",
+          "exchange_n": 100,
+          "mean_ms_per_request": 3.267254449892789,
+          "median_ms_per_exchange": 0.2590095391497016,
+          "category": "transaction.setting"
+        },
+        {
+          "sql_id": "1713ceaf9c166c1f60d65a0506f5a6b640038ffcace91aeedb6f1133d830e582",
+          "sql": "SELECT t.seed_id,t.content,p.username,t.created_at,t.likes,t.comments FROM lx_tweets t JOIN lx_profiles p ON p.id=t.author_id WHERE t.author_id='5be2ece5-a592-4ffc-b13e-330db3442004' OR t.author_id IN(SELECT followee_id FROM lx_follows WHERE follower_id='5be2ece5-a592-4ffc-b13e-330db3442004') ORDER BY t.created_at DESC LIMIT 20",
+          "exchange_n": 1,
+          "mean_ms_per_request": 1.0310820606537163,
+          "median_ms_per_exchange": 103.10820606537163,
+          "category": "relational.lx_tweets.select"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "mixed",
+        "arm": "webridge_conventional",
+        "delay_ms": 0,
+        "tweets_per_user": 200,
+        "write_percent": 15
+      },
+      "n": 100,
+      "median_RTT_ms": 34.23876210581511,
+      "mean_RTT_ms": 29.755482526961714,
+      "dominant_category": "stored_procedure.call",
+      "dominant_mean_ms": 29.38243550946936,
+      "categories": {
+        "stored_procedure.call": {
+          "mean_ms": 29.38243550946936,
+          "median_ms": 33.86523749213666,
+          "min_ms": 2.93750106357038,
+          "max_ms": 34.89070595242083,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 100
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 0.3730470174923539,
+          "median_ms": 0.3661059308797121,
+          "min_ms": 0.2833041362464428,
+          "max_ms": 0.5756290629506111,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 100
+          }
+        }
+      },
+      "by_operation": {
+        "create_tweet": {
+          "n": 10,
+          "mean_total_ms": 3.929103189148009,
+          "median_total_ms": 3.8609065813943744,
+          "category_mean_ms": {
+            "stored_procedure.call": 3.5286705009639263,
+            "transaction.setting": 0.4004326881840825
+          }
+        },
+        "feed_page": {
+          "n": 85,
+          "mean_total_ms": 34.32139786617721,
+          "median_total_ms": 34.32525135576725,
+          "category_mean_ms": {
+            "stored_procedure.call": 33.95318162682302,
+            "transaction.setting": 0.3682162393541897
+          }
+        },
+        "follow": {
+          "n": 1,
+          "mean_total_ms": 3.7936395965516567,
+          "median_total_ms": 3.7936395965516567,
+          "category_mean_ms": {
+            "stored_procedure.call": 3.3578688744455576,
+            "transaction.setting": 0.43577072210609913
+          }
+        },
+        "like": {
+          "n": 4,
+          "mean_total_ms": 3.7861906457692385,
+          "median_total_ms": 3.806985798291862,
+          "category_mean_ms": {
+            "stored_procedure.call": 3.394634695723653,
+            "transaction.setting": 0.39155595004558563
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "d81639db7d3aab5fdb6a1ce67f550335701cf00347b48bc277ba781dbd5f6115",
+          "sql": "call LittleX_dd26f11d80bf_sp_1_ver0('43f6fa51-1878-4898-bf65-802997e8de2b')",
+          "exchange_n": 1,
+          "mean_ms_per_request": 0.3489070595242083,
+          "median_ms_per_exchange": 34.89070595242083,
+          "category": "stored_procedure.call"
+        },
+        {
+          "sql_id": "e0684fbcac2b4369e9fcea113f6c414c6e5f341e5ac091c90a1f241139fe9a9b",
+          "sql": "call LittleX_dd26f11d80bf_sp_1_ver0('235db265-56bd-4e32-b638-8f8b97f9bfa7')",
+          "exchange_n": 1,
+          "mean_ms_per_request": 0.34849853022024035,
+          "median_ms_per_exchange": 34.849853022024035,
+          "category": "stored_procedure.call"
+        },
+        {
+          "sql_id": "9460ad3add0a4d17ac661f7b7dd73c1936695a757c57e5562b580ad0af4d4e21",
+          "sql": "call LittleX_dd26f11d80bf_sp_1_ver0('dd716523-03a8-49b4-8523-edf2b7cd9bf4')",
+          "exchange_n": 1,
+          "mean_ms_per_request": 0.34597828052937984,
+          "median_ms_per_exchange": 34.597828052937984,
+          "category": "stored_procedure.call"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "feed",
+        "arm": "java_full",
+        "delay_ms": 0,
+        "tweets_per_user": 200
+      },
+      "n": 30,
+      "median_RTT_ms": 401.729908073321,
+      "mean_RTT_ms": 407.02426300073665,
+      "dominant_category": "traversal.2hop.projection_acl",
+      "dominant_mean_ms": 325.45366956231493,
+      "categories": {
+        "acl.root_permissions": {
+          "mean_ms": 12.258950613128642,
+          "median_ms": 12.29260116815567,
+          "min_ms": 11.906808242201805,
+          "max_ms": 12.641118140891194,
+          "mean_exchanges": 3,
+          "exchange_distribution": {
+            "3": 30
+          }
+        },
+        "hydration.full_anchor": {
+          "mean_ms": 0.6238654799138507,
+          "median_ms": 0.6056529236957431,
+          "min_ms": 0.4633059725165367,
+          "max_ms": 0.8227000944316387,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "identity.lookup": {
+          "mean_ms": 0.5187426771347722,
+          "median_ms": 0.4931145813316107,
+          "min_ms": 0.3869859501719475,
+          "max_ms": 0.7255491800606251,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 1.969844630608956,
+          "median_ms": 2.01600871514529,
+          "min_ms": 1.4361771754920483,
+          "max_ms": 2.417359035462141,
+          "mean_exchanges": 8,
+          "exchange_distribution": {
+            "8": 30
+          }
+        },
+        "traversal.1hop.projection_acl": {
+          "mean_ms": 65.61444182880223,
+          "median_ms": 65.54013397544622,
+          "min_ms": 63.72847920283675,
+          "max_ms": 68.10057489201427,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "traversal.2hop.projection_acl": {
+          "mean_ms": 325.45366956231493,
+          "median_ms": 320.72699547279626,
+          "min_ms": 315.20605413243175,
+          "max_ms": 367.2482210677117,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        },
+        "type_registry.ancestry": {
+          "mean_ms": 0.5847482088332375,
+          "median_ms": 0.5919855320826173,
+          "min_ms": 0.39452314376831055,
+          "max_ms": 0.7080298382788897,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        }
+      },
+      "by_operation": {
+        "feed": {
+          "n": 30,
+          "mean_total_ms": 407.02426300073665,
+          "median_total_ms": 401.729908073321,
+          "category_mean_ms": {
+            "acl.root_permissions": 12.258950613128642,
+            "hydration.full_anchor": 0.6238654799138507,
+            "identity.lookup": 0.5187426771347722,
+            "transaction.setting": 1.969844630608956,
+            "traversal.1hop.projection_acl": 65.61444182880223,
+            "traversal.2hop.projection_acl": 325.45366956231493,
+            "type_registry.ancestry": 0.5847482088332375
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "06bf5ca46956defc95943b886c4c66ae16b9bb47053d6667a7e8bb2b043ea48c",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at FROM (SELECT '5f59b599-daef-41cf-9b37-97d50ab0409c' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END AND CASE WHEN n2.root_id = 'ec0712da-a104-4226-8f96-670bdc3f2e31' THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = '6776593e-3878-4b21-a92c-3ca451cd218b' THEN true WHEN n2.root_id IN (NULL) THEN true WHEN n2.root_id IN (NULL) THEN false ELSE n2.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+          "exchange_n": 1,
+          "mean_ms_per_request": 12.241607368923724,
+          "median_ms_per_exchange": 367.2482210677117,
+          "category": "traversal.2hop.projection_acl"
+        },
+        {
+          "sql_id": "57f149a4ebc01a24cf72e2340dc3664dcb5f2f3b369eaed1e9e795c41f83fdcb",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at FROM (SELECT '4b9a32e6-3dd7-4552-84f4-c0269007b175' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END AND CASE WHEN n2.root_id = '7cf85456-35aa-4a09-b2db-72947f83d4a7' THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = '6776593e-3878-4b21-a92c-3ca451cd218b' THEN true WHEN n2.root_id IN (NULL) THEN true WHEN n2.root_id IN (NULL) THEN false ELSE n2.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+          "exchange_n": 1,
+          "mean_ms_per_request": 11.363052537975213,
+          "median_ms_per_exchange": 340.89157613925636,
+          "category": "traversal.2hop.projection_acl"
+        },
+        {
+          "sql_id": "2d8ac0a2975e12fb4ab7919f383614925b6fdca75ad0534fcfb715a397805fb1",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at FROM (SELECT 'b79dc399-4a84-42ad-88d7-407576fa9ef6' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END AND CASE WHEN n2.root_id = '9baf3801-b6fe-4922-98a5-747e01945064' THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = '6776593e-3878-4b21-a92c-3ca451cd218b' THEN true WHEN n2.root_id IN (NULL) THEN true WHEN n2.root_id IN (NULL) THEN false ELSE n2.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+          "exchange_n": 1,
+          "mean_ms_per_request": 11.192164096670846,
+          "median_ms_per_exchange": 335.7649229001254,
+          "category": "traversal.2hop.projection_acl"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "mixed",
+        "arm": "java_full",
+        "delay_ms": 0,
+        "tweets_per_user": 200,
+        "write_percent": 15
+      },
+      "n": 100,
+      "median_RTT_ms": 188.4485335322097,
+      "mean_RTT_ms": 168.19507790030912,
+      "dominant_category": "graph.anchor_query",
+      "dominant_mean_ms": 148.82402651710436,
+      "categories": {
+        "acl.root_permissions": {
+          "mean_ms": 10.1803805003874,
+          "median_ms": 11.942360200919211,
+          "min_ms": 0,
+          "max_ms": 12.685896828770638,
+          "mean_exchanges": 2.55,
+          "exchange_distribution": {
+            "0": 15,
+            "3": 85
+          }
+        },
+        "graph.anchor_query": {
+          "mean_ms": 148.82402651710436,
+          "median_ms": 173.242041724734,
+          "min_ms": 0,
+          "max_ms": 188.44581698067486,
+          "mean_exchanges": 2.55,
+          "exchange_distribution": {
+            "0": 15,
+            "3": 85
+          }
+        },
+        "hydration.full_anchor": {
+          "mean_ms": 0.6564628379419446,
+          "median_ms": 0.5896955262869596,
+          "min_ms": 0.3934181295335293,
+          "max_ms": 1.8670656718313694,
+          "mean_exchanges": 2.25,
+          "exchange_distribution": {
+            "3": 10,
+            "2": 85,
+            "5": 5
+          }
+        },
+        "identity.lookup": {
+          "mean_ms": 0.4033903987146914,
+          "median_ms": 0.4172684857621789,
+          "min_ms": 0,
+          "max_ms": 0.8270870894193649,
+          "mean_exchanges": 1.7,
+          "exchange_distribution": {
+            "0": 15,
+            "2": 85
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 1.9997762539424002,
+          "median_ms": 1.6987660201266408,
+          "min_ms": 1.1232758406549692,
+          "max_ms": 4.8377662897109985,
+          "mean_exchanges": 7.4,
+          "exchange_distribution": {
+            "4": 15,
+            "8": 85
+          }
+        },
+        "traversal.1hop.ids": {
+          "mean_ms": 5.444303937256336,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 69.60216793231666,
+          "mean_exchanges": 0.16,
+          "exchange_distribution": {
+            "1": 14,
+            "0": 85,
+            "2": 1
+          }
+        },
+        "type_registry.ancestry": {
+          "mean_ms": 0.46887500677257776,
+          "median_ms": 0.5517174722626805,
+          "min_ms": 0,
+          "max_ms": 0.7104179821908474,
+          "mean_exchanges": 1.7,
+          "exchange_distribution": {
+            "0": 15,
+            "2": 85
+          }
+        },
+        "write.anchor_upsert": {
+          "mean_ms": 0.1738697523251176,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 6.719155935570598,
+          "mean_exchanges": 0.15,
+          "exchange_distribution": {
+            "1": 15,
+            "0": 85
+          }
+        },
+        "write.type_registry": {
+          "mean_ms": 0.04399269586429,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 0.3854089882224798,
+          "mean_exchanges": 0.15,
+          "exchange_distribution": {
+            "1": 15,
+            "0": 85
+          }
+        }
+      },
+      "by_operation": {
+        "create_tweet": {
+          "n": 10,
+          "mean_total_ms": 40.75087292585522,
+          "median_total_ms": 40.46149947680533,
+          "category_mean_ms": {
+            "acl.root_permissions": 0,
+            "graph.anchor_query": 0,
+            "hydration.full_anchor": 0.9158330271020532,
+            "identity.lookup": 0,
+            "transaction.setting": 4.018483869731426,
+            "traversal.1hop.ids": 34.11248857155442,
+            "type_registry.ancestry": 0,
+            "write.anchor_upsert": 1.408417709171772,
+            "write.type_registry": 0.2956497482955456
+          }
+        },
+        "feed_page": {
+          "n": 85,
+          "mean_total_ms": 190.28668611529557,
+          "median_total_ms": 189.01778804138303,
+          "category_mean_ms": {
+            "acl.root_permissions": 11.976918235749883,
+            "graph.anchor_query": 175.0870900201228,
+            "hydration.full_anchor": 0.5678646074717536,
+            "identity.lookup": 0.47457693966434283,
+            "transaction.setting": 1.6286186572602566,
+            "traversal.1hop.ids": 0,
+            "type_registry.ancestry": 0.5516176550265621,
+            "write.anchor_upsert": 0,
+            "write.type_registry": 0
+          }
+        },
+        "follow": {
+          "n": 1,
+          "mean_total_ms": 76.39408833347261,
+          "median_total_ms": 76.39408833347261,
+          "category_mean_ms": {
+            "acl.root_permissions": 0,
+            "graph.anchor_query": 0,
+            "hydration.full_anchor": 1.4187104534357786,
+            "identity.lookup": 0,
+            "transaction.setting": 4.612280987203121,
+            "traversal.1hop.ids": 69.60216793231666,
+            "type_registry.ancestry": 0,
+            "write.anchor_upsert": 0.495200976729393,
+            "write.type_registry": 0.26572798378765583
+          }
+        },
+        "like": {
+          "n": 4,
+          "mean_total_ms": 40.3091631596908,
+          "median_total_ms": 40.237314300611615,
+          "category_mean_ms": {
+            "acl.root_permissions": 0,
+            "graph.anchor_query": 0,
+            "hydration.full_anchor": 1.700187858659774,
+            "identity.lookup": 0,
+            "transaction.setting": 4.186979960650206,
+            "traversal.1hop.ids": 33.425835019443184,
+            "type_registry.ancestry": 0,
+            "write.anchor_upsert": 0.7018992910161614,
+            "write.type_registry": 0.2942610299214721
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "a0d52e3f64a3ad9ccca7a6b4dcadc944c29d3d595fe784afe9394898e795e58d",
+          "sql": "SELECT * FROM (SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at, f0.ord AS _tk1, e1.seq AS _tk2, e1.id AS _tk3, e2.seq AS _tk4, e2.id AS _tk5 FROM (SELECT 'a2111774-50fa-4158-987b-25a1534a6ce3' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END AND CASE WHEN n2.root_id = '0fb51199-43ee-47bf-9e11-763e38d8158a' THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = '6776593e-3878-4b21-a92c-3ca451cd218b' THEN true WHEN n2.root_id IN (NULL) THEN true WHEN n2.root_id IN (NULL) THEN false ELSE n2.acl_all >= 0 END ORDER BY n2.f_created_at DESC, f0.ord, e1.seq, e1.id, e2.seq, e2.id LIMIT 28) _topk ORDER BY _tk1, _tk2, _tk3, _tk4, _tk5",
+          "exchange_n": 1,
+          "mean_ms_per_request": 1.361596949864179,
+          "median_ms_per_exchange": 136.1596949864179,
+          "category": "graph.anchor_query"
+        },
+        {
+          "sql_id": "d464639c9325df456372d32cc67dcee6bfc991eb88d166397d59fcfe1be7dca0",
+          "sql": "SELECT * FROM (SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at, f0.ord AS _tk1, e1.seq AS _tk2, e1.id AS _tk3, e2.seq AS _tk4, e2.id AS _tk5 FROM (SELECT '4b74992a-48e9-4615-8056-4a6bc507f00a' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END AND CASE WHEN n2.root_id = '7642722d-cbdb-4e52-a956-9977c1840fa5' THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = '6776593e-3878-4b21-a92c-3ca451cd218b' THEN true WHEN n2.root_id IN (NULL) THEN true WHEN n2.root_id IN (NULL) THEN false ELSE n2.acl_all >= 0 END ORDER BY n2.f_created_at DESC, f0.ord, e1.seq, e1.id, e2.seq, e2.id LIMIT 28) _topk ORDER BY _tk1, _tk2, _tk3, _tk4, _tk5",
+          "exchange_n": 1,
+          "mean_ms_per_request": 1.3474817713722587,
+          "median_ms_per_exchange": 134.74817713722587,
+          "category": "graph.anchor_query"
+        },
+        {
+          "sql_id": "927d88943b0ecb4bb77d4618295d9d1f39739eec7ab7044023cd942691ef0db4",
+          "sql": "SELECT * FROM (SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at, f0.ord AS _tk1, e1.seq AS _tk2, e1.id AS _tk3, e2.seq AS _tk4, e2.id AS _tk5 FROM (SELECT '54e45da6-9982-4b07-b24b-965916be2bdc' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END AND CASE WHEN n2.root_id = '8a19a50d-e1cd-44de-83a6-1718a614b404' THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = '6776593e-3878-4b21-a92c-3ca451cd218b' THEN true WHEN n2.root_id IN (NULL) THEN true WHEN n2.root_id IN (NULL) THEN false ELSE n2.acl_all >= 0 END ORDER BY n2.f_created_at DESC, f0.ord, e1.seq, e1.id, e2.seq, e2.id LIMIT 28) _topk ORDER BY _tk1, _tk2, _tk3, _tk4, _tk5",
+          "exchange_n": 1,
+          "mean_ms_per_request": 1.3207042589783669,
+          "median_ms_per_exchange": 132.07042589783669,
+          "category": "graph.anchor_query"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "feed",
+        "arm": "java_pruned",
+        "delay_ms": 0,
+        "tweets_per_user": 200
+      },
+      "n": 30,
+      "median_RTT_ms": 380.95698738470674,
+      "mean_RTT_ms": 383.18334837288904,
+      "dominant_category": "traversal.2hop.projection_acl",
+      "dominant_mean_ms": 316.3476194875936,
+      "categories": {
+        "transaction.setting": {
+          "mean_ms": 1.2891997350379825,
+          "median_ms": 1.304185134358704,
+          "min_ms": 1.052752137184143,
+          "max_ms": 1.47023587487638,
+          "mean_exchanges": 4,
+          "exchange_distribution": {
+            "4": 30
+          }
+        },
+        "traversal.1hop.projection_acl": {
+          "mean_ms": 65.54652915025751,
+          "median_ms": 65.02625090070069,
+          "min_ms": 63.43586090952158,
+          "max_ms": 69.4890902377665,
+          "mean_exchanges": 2,
+          "exchange_distribution": {
+            "2": 30
+          }
+        },
+        "traversal.2hop.projection_acl": {
+          "mean_ms": 316.3476194875936,
+          "median_ms": 314.535831916146,
+          "min_ms": 310.903063043952,
+          "max_ms": 359.5572852063924,
+          "mean_exchanges": 1,
+          "exchange_distribution": {
+            "1": 30
+          }
+        }
+      },
+      "by_operation": {
+        "feed": {
+          "n": 30,
+          "mean_total_ms": 383.18334837288904,
+          "median_total_ms": 380.95698738470674,
+          "category_mean_ms": {
+            "transaction.setting": 1.2891997350379825,
+            "traversal.1hop.projection_acl": 65.54652915025751,
+            "traversal.2hop.projection_acl": 316.3476194875936
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "8d7a695986845d4e29247e1e9329ec4e5a753248e5a959abc209a981a51236c8",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at FROM (SELECT 'f766b188-9b9a-4b2a-aebe-c416ebb4057f' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+          "exchange_n": 1,
+          "mean_ms_per_request": 11.98524284021308,
+          "median_ms_per_exchange": 359.5572852063924,
+          "category": "traversal.2hop.projection_acl"
+        },
+        {
+          "sql_id": "1e795de2f6f0793874db91d8834db036623d0c70fd77adbbd53644060bc94546",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at FROM (SELECT '4b74992a-48e9-4615-8056-4a6bc507f00a' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+          "exchange_n": 1,
+          "mean_ms_per_request": 10.925446171313524,
+          "median_ms_per_exchange": 327.7633851394057,
+          "category": "traversal.2hop.projection_acl"
+        },
+        {
+          "sql_id": "25baccef3a0df086468c3c2a717f1177f3580b1a1bbf1d36aa2b5f5e277f02c4",
+          "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at FROM (SELECT '77f5e2d1-bf7a-4f4d-a9b8-aa1f4e3b7792' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+          "exchange_n": 1,
+          "mean_ms_per_request": 10.624413463907937,
+          "median_ms_per_exchange": 318.7324039172381,
+          "category": "traversal.2hop.projection_acl"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "mixed",
+        "arm": "java_pruned",
+        "delay_ms": 0,
+        "tweets_per_user": 200,
+        "write_percent": 15
+      },
+      "n": 100,
+      "median_RTT_ms": 167.97046968713403,
+      "mean_RTT_ms": 150.63563922420144,
+      "dominant_category": "graph.anchor_query",
+      "dominant_mean_ms": 143.56939028948545,
+      "categories": {
+        "graph.anchor_query": {
+          "mean_ms": 143.56939028948545,
+          "median_ms": 166.81946523021907,
+          "min_ms": 0,
+          "max_ms": 197.077072924003,
+          "mean_exchanges": 2.55,
+          "exchange_distribution": {
+            "0": 15,
+            "3": 85
+          }
+        },
+        "hydration.full_anchor": {
+          "mean_ms": 0.018836588133126497,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 0.41885883547365665,
+          "mean_exchanges": 0.05,
+          "exchange_distribution": {
+            "0": 95,
+            "1": 5
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 1.5036815404891968,
+          "median_ms": 1.1162253795191646,
+          "min_ms": 0.652767252177,
+          "max_ms": 4.514992004260421,
+          "mean_exchanges": 4,
+          "exchange_distribution": {
+            "4": 100
+          }
+        },
+        "traversal.1hop.ids": {
+          "mean_ms": 5.3669423051178455,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 65.92056388035417,
+          "mean_exchanges": 0.16,
+          "exchange_distribution": {
+            "1": 14,
+            "0": 85,
+            "2": 1
+          }
+        },
+        "write.anchor_upsert": {
+          "mean_ms": 0.17678850097581744,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 6.978547899052501,
+          "mean_exchanges": 0.15,
+          "exchange_distribution": {
+            "1": 15,
+            "0": 85
+          }
+        }
+      },
+      "by_operation": {
+        "create_tweet": {
+          "n": 10,
+          "mean_total_ms": 39.0013110358268,
+          "median_total_ms": 38.40805008076131,
+          "category_mean_ms": {
+            "graph.anchor_query": 0,
+            "hydration.full_anchor": 0,
+            "transaction.setting": 3.982338774949312,
+            "traversal.1hop.ids": 33.581451955251396,
+            "write.anchor_upsert": 1.4375203056260943
+          }
+        },
+        "feed_page": {
+          "n": 85,
+          "mean_total_ms": 169.9654367971508,
+          "median_total_ms": 168.46307832747698,
+          "category_mean_ms": {
+            "graph.anchor_query": 168.90516504645348,
+            "hydration.full_anchor": 0,
+            "transaction.setting": 1.0602717506973183,
+            "traversal.1hop.ids": 0,
+            "write.anchor_upsert": 0
+          }
+        },
+        "follow": {
+          "n": 1,
+          "mean_total_ms": 70.65293285995722,
+          "median_total_ms": 70.65293285995722,
+          "category_mean_ms": {
+            "graph.anchor_query": 0,
+            "hydration.full_anchor": 0.3999748732894659,
+            "transaction.setting": 3.810984082520008,
+            "traversal.1hop.ids": 65.92056388035417,
+            "write.anchor_upsert": 0.5214100237935781
+          }
+        },
+        "like": {
+          "n": 4,
+          "mean_total_ms": 38.95893786102533,
+          "median_total_ms": 39.00225798133761,
+          "category_mean_ms": {
+            "graph.anchor_query": 0,
+            "hydration.full_anchor": 0.37092098500579596,
+            "transaction.setting": 4.152670851908624,
+            "traversal.1hop.ids": 33.73978676972911,
+            "write.anchor_upsert": 0.6955592543818057
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "38385e7384ea08338bec9a6febcdea554bf43cad24a67204ec8cc787e60de3b4",
+          "sql": "SELECT * FROM (SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at, f0.ord AS _tk1, e1.seq AS _tk2, e1.id AS _tk3, e2.seq AS _tk4, e2.id AS _tk5 FROM (SELECT '4b9a32e6-3dd7-4552-84f4-c0269007b175' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END ORDER BY n2.f_created_at DESC, f0.ord, e1.seq, e1.id, e2.seq, e2.id LIMIT 28) _topk ORDER BY _tk1, _tk2, _tk3, _tk4, _tk5",
+          "exchange_n": 1,
+          "mean_ms_per_request": 1.4484081510454416,
+          "median_ms_per_exchange": 144.84081510454416,
+          "category": "graph.anchor_query"
+        },
+        {
+          "sql_id": "c0a1d67294f4a817ce7df29094818a4822674370245aec42b88325a90423e271",
+          "sql": "SELECT * FROM (SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at, f0.ord AS _tk1, e1.seq AS _tk2, e1.id AS _tk3, e2.seq AS _tk4, e2.id AS _tk5 FROM (SELECT 'f36248ee-ef8f-455d-bd7d-69803b87e8f2' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END ORDER BY n2.f_created_at DESC, f0.ord, e1.seq, e1.id, e2.seq, e2.id LIMIT 28) _topk ORDER BY _tk1, _tk2, _tk3, _tk4, _tk5",
+          "exchange_n": 1,
+          "mean_ms_per_request": 1.4387240097858012,
+          "median_ms_per_exchange": 143.87240097858012,
+          "category": "graph.anchor_query"
+        },
+        {
+          "sql_id": "4e31c198bfdf190c4db2f49ead3fbb3dace334124c751a5986610888a1414ee8",
+          "sql": "SELECT * FROM (SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at, f0.ord AS _tk1, e1.seq AS _tk2, e1.id AS _tk3, e2.seq AS _tk4, e2.id AS _tk5 FROM (SELECT 'c464158f-8ab0-4b91-8b57-f82937c714b2' AS id, 1 AS ord) AS f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = 'Profile' OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = 'Profile' OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')))))) AND (e1.arch_type = 'Follow' OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Follow')) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = 'Profile' OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Profile')) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = 'Tweet' OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = 'Tweet' OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = 'Tweet')))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END ORDER BY n2.f_created_at DESC, f0.ord, e1.seq, e1.id, e2.seq, e2.id LIMIT 28) _topk ORDER BY _tk1, _tk2, _tk3, _tk4, _tk5",
+          "exchange_n": 1,
+          "mean_ms_per_request": 1.3091170485131443,
+          "median_ms_per_exchange": 130.91170485131443,
+          "category": "graph.anchor_query"
+        }
+      ]
+    },
+    {
+      "cell": {
+        "family": "littlex",
+        "workload": "mixed",
+        "arm": "webridge_pruned",
+        "delay_ms": 0,
+        "tweets_per_user": 200,
+        "write_percent": 15
+      },
+      "n": 100,
+      "median_RTT_ms": 166.7393899988383,
+      "mean_RTT_ms": 153.26467495178804,
+      "dominant_category": "stored_procedure.call",
+      "dominant_mean_ms": 150.05319705232978,
+      "categories": {
+        "framework.rollback_to_savepoint": {
+          "mean_ms": 0.03010472748428583,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 0.4078829661011696,
+          "mean_exchanges": 0.1,
+          "exchange_distribution": {
+            "1": 10,
+            "0": 90
+          }
+        },
+        "hydration.full_anchor": {
+          "mean_ms": 0.01866930164396763,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 0.425990903750062,
+          "mean_exchanges": 0.05,
+          "exchange_distribution": {
+            "0": 95,
+            "1": 5
+          }
+        },
+        "stored_procedure.call": {
+          "mean_ms": 150.05319705232978,
+          "median_ms": 166.3578849984333,
+          "min_ms": 0,
+          "max_ms": 204.57488810643554,
+          "mean_exchanges": 0.95,
+          "exchange_distribution": {
+            "1": 95,
+            "0": 5
+          }
+        },
+        "transaction.setting": {
+          "mean_ms": 0.7327287388034165,
+          "median_ms": 0.5503519205376506,
+          "min_ms": 0.2799159847199917,
+          "max_ms": 6.28825300373137,
+          "mean_exchanges": 2.2,
+          "exchange_distribution": {
+            "3": 10,
+            "2": 85,
+            "4": 5
+          }
+        },
+        "traversal.1hop.ids": {
+          "mean_ms": 2.0795687939971685,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 68.1781591847539,
+          "mean_exchanges": 0.06,
+          "exchange_distribution": {
+            "0": 95,
+            "1": 4,
+            "2": 1
+          }
+        },
+        "write.anchor_upsert": {
+          "mean_ms": 0.35040633752942085,
+          "median_ms": 0.0,
+          "min_ms": 0,
+          "max_ms": 4.67531499452889,
+          "mean_exchanges": 0.15,
+          "exchange_distribution": {
+            "1": 15,
+            "0": 85
+          }
+        }
+      },
+      "by_operation": {
+        "create_tweet": {
+          "n": 10,
+          "mean_total_ms": 43.58850345015526,
+          "median_total_ms": 43.27019990887493,
+          "category_mean_ms": {
+            "framework.rollback_to_savepoint": 0.3010472748428583,
+            "hydration.full_anchor": 0,
+            "stored_procedure.call": 39.261159556917846,
+            "transaction.setting": 0.8281588321551681,
+            "traversal.1hop.ids": 0,
+            "write.anchor_upsert": 3.1981377862393856
+          }
+        },
+        "feed_page": {
+          "n": 85,
+          "mean_total_ms": 172.4371997420402,
+          "median_total_ms": 167.8962828591466,
+          "category_mean_ms": {
+            "framework.rollback_to_savepoint": 0,
+            "hydration.full_anchor": 0,
+            "stored_procedure.call": 171.91421305486824,
+            "transaction.setting": 0.5229866871719852,
+            "traversal.1hop.ids": 0,
+            "write.anchor_upsert": 0
+          }
+        },
+        "follow": {
+          "n": 1,
+          "mean_total_ms": 73.29237624071538,
+          "median_total_ms": 73.29237624071538,
+          "category_mean_ms": {
+            "framework.rollback_to_savepoint": 0,
+            "hydration.full_anchor": 0.41322712786495686,
+            "stored_procedure.call": 0,
+            "transaction.setting": 4.158402094617486,
+            "traversal.1hop.ids": 68.1781591847539,
+            "write.anchor_upsert": 0.5425878334790468
+          }
+        },
+        "like": {
+          "n": 4,
+          "mean_total_ms": 40.032026590779424,
+          "median_total_ms": 39.540094789117575,
+          "category_mean_ms": {
+            "framework.rollback_to_savepoint": 0,
+            "hydration.full_anchor": 0.3634257591329515,
+            "stored_procedure.call": 0,
+            "transaction.setting": 4.094753763638437,
+            "traversal.1hop.ids": 34.94468005374074,
+            "write.anchor_upsert": 0.6291670142672956
+          }
+        }
+      },
+      "dominant_concrete_SQL": [
+        {
+          "sql_id": "69e5aa5a99e782682d37ed2c5c0a90245eba3ad62eed3d3b23af8ac54823653c",
+          "sql": "call LittleX_2ff90374d126_sp_1_ver1('590c6852-8f00-4b28-973f-6ddd8351c9b3', '0eb9fdf6-791f-4435-bed0-eee370243a44')",
+          "exchange_n": 1,
+          "mean_ms_per_request": 2.0457488810643554,
+          "median_ms_per_exchange": 204.57488810643554,
+          "category": "stored_procedure.call"
+        },
+        {
+          "sql_id": "a264ced21907d4c67e83ef059145d0dad614b14bec789f521936a5d406bf9508",
+          "sql": "call LittleX_2ff90374d126_sp_1_ver1('4b9a32e6-3dd7-4552-84f4-c0269007b175', '7cf85456-35aa-4a09-b2db-72947f83d4a7')",
+          "exchange_n": 1,
+          "mean_ms_per_request": 1.986304479651153,
+          "median_ms_per_exchange": 198.6304479651153,
+          "category": "stored_procedure.call"
+        },
+        {
+          "sql_id": "5dd51b6cd4d001166fdf43e961bdc23a59487faefc0178477ad582ba14d91cf7",
+          "sql": "call LittleX_2ff90374d126_sp_1_ver1('e509dc2f-0ee2-49c4-b026-6f749ee60914', 'ef9a9cc6-bfd6-4214-ba51-8b89afd71483')",
+          "exchange_n": 1,
+          "mean_ms_per_request": 1.966206340584904,
+          "median_ms_per_exchange": 196.6206340584904,
+          "category": "stored_procedure.call"
+        }
+      ]
+    }
+  ]
+}

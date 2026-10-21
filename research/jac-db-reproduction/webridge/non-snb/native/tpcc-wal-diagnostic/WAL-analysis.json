@@ -1,0 +1,86 @@
+{
+  "scope": "Instrumented diagnostic: measured request tags and actual traced application backend PIDs only; wait frequencies are sampled occupancy, not exact time. WAL counter deltas span measured-phase boundary through application shutdown and include shared backend-class counters.",
+  "cells": {
+    "payment_id_BC": {
+      "n": 30,
+      "application_backend_PIDs": [
+        3216097
+      ],
+      "commit_execute_median_ms": 1.626,
+      "active_owned_app_samples": 72,
+      "sampled_wait_counts": {
+        "IO/WalSync": 23,
+        "None/None": 49
+      },
+      "sampled_COMMIT_wait_counts": {
+        "IO/WalSync": 23,
+        "None/None": 2
+      },
+      "WAL_IO_delta": {
+        "client backend/normal": {
+          "writes": 35,
+          "write_time": 0.845,
+          "fsyncs": 35,
+          "fsync_time": 55.964
+        },
+        "walwriter/normal": {
+          "writes": 2,
+          "write_time": 0,
+          "fsyncs": 2,
+          "fsync_time": 0
+        }
+      },
+      "effective_settings": {
+        "checkpoint_timeout": "300",
+        "fsync": "on",
+        "log_checkpoints": "on",
+        "synchronous_commit": "on",
+        "track_io_timing": "off",
+        "track_wal_io_timing": "on",
+        "wal_sync_method": "fdatasync"
+      }
+    },
+    "payment_id_GC": {
+      "n": 30,
+      "application_backend_PIDs": [
+        3214459
+      ],
+      "commit_execute_median_ms": 1.689,
+      "active_owned_app_samples": 80,
+      "sampled_wait_counts": {
+        "None/None": 52,
+        "IO/WalSync": 23,
+        "Client/ClientRead": 4,
+        "IO/WalWrite": 1
+      },
+      "sampled_COMMIT_wait_counts": {
+        "IO/WalSync": 23,
+        "None/None": 2,
+        "IO/WalWrite": 1
+      },
+      "WAL_IO_delta": {
+        "client backend/normal": {
+          "writes": 36,
+          "write_time": 0.609,
+          "fsyncs": 35,
+          "fsync_time": 56.132000000000005
+        },
+        "walwriter/normal": {
+          "writes": 1,
+          "write_time": 0,
+          "fsyncs": 1,
+          "fsync_time": 0
+        }
+      },
+      "effective_settings": {
+        "checkpoint_timeout": "300",
+        "fsync": "on",
+        "log_checkpoints": "on",
+        "synchronous_commit": "on",
+        "track_io_timing": "off",
+        "track_wal_io_timing": "on",
+        "wal_sync_method": "fdatasync"
+      }
+    }
+  }
+}

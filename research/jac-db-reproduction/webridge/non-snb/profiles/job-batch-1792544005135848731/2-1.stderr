@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py", line 233, in <module>
+    result = analyze(args.directory.resolve(), args.generated_sources_json)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py", line 157, in analyze
+    assert procedure, ('Generated source required for cursor', event)
+           ^^^^^^^^^
+AssertionError: ('Generated source required for cursor', {'sql': None, 'name': 'statement/sp/copen', 'nest': 25, 'error': 0, 'event': 27, 'object': 'tpcc_ad8afad4201f_sp_1_ver0', 'thread': 3338, 'no_index': 0, 'timer_ps': 71530000, 'end_event': 27, 'nest_type': 'STATEMENT', 'rows_sent': 0, 'timer_end': 24988737076152000, 'object_type': 'PROCEDURE', 'timer_start': 24988737004622000, 'no_good_index': 0, 'object_schema': 'jac_tpcc_conventional', 'rows_examined': 0})

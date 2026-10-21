@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py", line 8, in <module>
+    for name,expected in manifest.get('sources_sha256',manifest.get('sources')).items():assert hashlib.sha256((source/name).read_bytes()).hexdigest()==expected,(name,'source/class manifest mismatch')
+                                                                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('LittleXTiming.java', 'source/class manifest mismatch')

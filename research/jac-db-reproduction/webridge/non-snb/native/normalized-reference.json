@@ -1,0 +1,1208 @@
+[
+  {
+    "family": "tpcc",
+    "workload": "original900",
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original-plan correctness/reference; separate from controlled representative RTT matrix",
+    "request_n": 900,
+    "warmup_n": 100,
+    "warmup_count": 100,
+    "sample_n": 800,
+    "measured_count": 800,
+    "outcomes": {
+      "payment": 406,
+      "rollback": 7,
+      "new_order": 487
+    },
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 8.137603,
+    "transport": "direct PostgreSQL Unix socket; no injected latency proxy",
+    "artifact": "non-snb/native/tpcc-gates/baseline/summary.json",
+    "requests_artifact": "non-snb/native/tpcc-gates/baseline/rows.jsonl",
+    "requests_sha256": "9a6de92a836659f8059e78a3da143229b75424a61b713a5fc93ef28af4614386",
+    "gates": {
+      "source_plan900": true,
+      "every_business_result_equal_between_native_versions": true,
+      "rollback_comparison": "Exact error code/message; source-version-specific traceback retained raw",
+      "independent_model_artifact": "non-snb/native/tpcc-gates/baseline/independent-model-verification.json",
+      "full_eight_relation_initial_final_state_equality_artifact": "non-snb/native/tpcc-gates/paired-state-verification.json"
+    }
+  },
+  {
+    "family": "tpcc",
+    "workload": "original900",
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original-plan correctness/reference; separate from controlled representative RTT matrix",
+    "request_n": 900,
+    "warmup_n": 100,
+    "warmup_count": 100,
+    "sample_n": 800,
+    "measured_count": 800,
+    "outcomes": {
+      "payment": 406,
+      "rollback": 7,
+      "new_order": 487
+    },
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 8.261638999999999,
+    "transport": "direct PostgreSQL Unix socket; no injected latency proxy",
+    "artifact": "non-snb/native/tpcc-gates/final/summary.json",
+    "requests_artifact": "non-snb/native/tpcc-gates/final/rows.jsonl",
+    "requests_sha256": "ec0ee6637d5f18bc367b76b8c4ea2367e9f17f7b12cea99bd3b2aa1cc7269a1f",
+    "gates": {
+      "source_plan900": true,
+      "every_business_result_equal_between_native_versions": true,
+      "rollback_comparison": "Exact error code/message; source-version-specific traceback retained raw",
+      "independent_model_artifact": "non-snb/native/tpcc-gates/baseline/independent-model-verification.json",
+      "full_eight_relation_initial_final_state_equality_artifact": "non-snb/native/tpcc-gates/paired-state-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "feed",
+    "tweets_per_user": 20,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 24.241645,
+    "observed_server_median_ms": 16.506,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "feed": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t20/delay-0ms/baseline/t20/W1-feed/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t20/delay-0ms/baseline/t20/W1-feed/rows.chunks.json",
+    "logical_rows_path": "non-snb/native/littlex-reference-t20/delay-0ms/baseline/t20/W1-feed/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t20/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "like",
+    "tweets_per_user": 20,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 4.495043,
+    "observed_server_median_ms": 3.0469999999999997,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "like": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t20/delay-0ms/baseline/t20/W2-like/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t20/delay-0ms/baseline/t20/W2-like/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t20/delay-0ms/baseline/t20/W2-like/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t20/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "follow",
+    "tweets_per_user": 20,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 5.1810845,
+    "observed_server_median_ms": 3.7424999999999997,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "follow": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t20/delay-0ms/baseline/t20/W2-follow/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t20/delay-0ms/baseline/t20/W2-follow/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t20/delay-0ms/baseline/t20/W2-follow/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t20/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "create_tweet",
+    "tweets_per_user": 20,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 4.233281,
+    "observed_server_median_ms": 2.785,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "create_tweet": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t20/delay-0ms/baseline/t20/W2-create_tweet/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t20/delay-0ms/baseline/t20/W2-create_tweet/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t20/delay-0ms/baseline/t20/W2-create_tweet/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t20/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "feed",
+    "tweets_per_user": 20,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 23.519134,
+    "observed_server_median_ms": 17.164,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "feed": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t20/delay-0ms/final/t20/W1-feed/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t20/delay-0ms/final/t20/W1-feed/rows.chunks.json",
+    "logical_rows_path": "non-snb/native/littlex-reference-t20/delay-0ms/final/t20/W1-feed/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t20/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "like",
+    "tweets_per_user": 20,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 4.3475975,
+    "observed_server_median_ms": 3.512,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "like": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t20/delay-0ms/final/t20/W2-like/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t20/delay-0ms/final/t20/W2-like/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t20/delay-0ms/final/t20/W2-like/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t20/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "follow",
+    "tweets_per_user": 20,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 5.0045175,
+    "observed_server_median_ms": 4.1705,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "follow": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t20/delay-0ms/final/t20/W2-follow/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t20/delay-0ms/final/t20/W2-follow/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t20/delay-0ms/final/t20/W2-follow/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t20/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "create_tweet",
+    "tweets_per_user": 20,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 4.050568,
+    "observed_server_median_ms": 3.2,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "create_tweet": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t20/delay-0ms/final/t20/W2-create_tweet/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t20/delay-0ms/final/t20/W2-create_tweet/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t20/delay-0ms/final/t20/W2-create_tweet/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t20/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "feed",
+    "tweets_per_user": 50,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 44.0293245,
+    "observed_server_median_ms": 28.77,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "feed": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t50/delay-0ms/baseline/t50/W1-feed/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t50/delay-0ms/baseline/t50/W1-feed/rows.chunks.json",
+    "logical_rows_path": "non-snb/native/littlex-reference-t50/delay-0ms/baseline/t50/W1-feed/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t50/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "like",
+    "tweets_per_user": 50,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 4.6565445,
+    "observed_server_median_ms": 3.1790000000000003,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "like": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t50/delay-0ms/baseline/t50/W2-like/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t50/delay-0ms/baseline/t50/W2-like/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t50/delay-0ms/baseline/t50/W2-like/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t50/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "follow",
+    "tweets_per_user": 50,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 5.398137,
+    "observed_server_median_ms": 3.9190000000000005,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "follow": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t50/delay-0ms/baseline/t50/W2-follow/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t50/delay-0ms/baseline/t50/W2-follow/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t50/delay-0ms/baseline/t50/W2-follow/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t50/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "create_tweet",
+    "tweets_per_user": 50,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 4.3910455,
+    "observed_server_median_ms": 2.884,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "create_tweet": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t50/delay-0ms/baseline/t50/W2-create_tweet/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t50/delay-0ms/baseline/t50/W2-create_tweet/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t50/delay-0ms/baseline/t50/W2-create_tweet/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t50/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "feed",
+    "tweets_per_user": 50,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 43.226321,
+    "observed_server_median_ms": 29.3405,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "feed": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t50/delay-0ms/final/t50/W1-feed/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t50/delay-0ms/final/t50/W1-feed/rows.chunks.json",
+    "logical_rows_path": "non-snb/native/littlex-reference-t50/delay-0ms/final/t50/W1-feed/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t50/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "like",
+    "tweets_per_user": 50,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 4.4464585,
+    "observed_server_median_ms": 3.622,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "like": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t50/delay-0ms/final/t50/W2-like/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t50/delay-0ms/final/t50/W2-like/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t50/delay-0ms/final/t50/W2-like/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t50/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "follow",
+    "tweets_per_user": 50,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 5.0225935,
+    "observed_server_median_ms": 4.188,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "follow": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t50/delay-0ms/final/t50/W2-follow/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t50/delay-0ms/final/t50/W2-follow/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t50/delay-0ms/final/t50/W2-follow/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t50/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "create_tweet",
+    "tweets_per_user": 50,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 4.06737,
+    "observed_server_median_ms": 3.2344999999999997,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "create_tweet": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t50/delay-0ms/final/t50/W2-create_tweet/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t50/delay-0ms/final/t50/W2-create_tweet/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t50/delay-0ms/final/t50/W2-create_tweet/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t50/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "feed",
+    "tweets_per_user": 100,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 80.867726,
+    "observed_server_median_ms": 50.177,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "feed": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t100/delay-0ms/baseline/t100/W1-feed/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t100/delay-0ms/baseline/t100/W1-feed/rows.chunks.json",
+    "logical_rows_path": "non-snb/native/littlex-reference-t100/delay-0ms/baseline/t100/W1-feed/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t100/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "like",
+    "tweets_per_user": 100,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 4.5092265000000005,
+    "observed_server_median_ms": 3.0575,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "like": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t100/delay-0ms/baseline/t100/W2-like/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t100/delay-0ms/baseline/t100/W2-like/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t100/delay-0ms/baseline/t100/W2-like/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t100/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "follow",
+    "tweets_per_user": 100,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 5.257655,
+    "observed_server_median_ms": 3.8285,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "follow": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t100/delay-0ms/baseline/t100/W2-follow/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t100/delay-0ms/baseline/t100/W2-follow/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t100/delay-0ms/baseline/t100/W2-follow/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t100/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "create_tweet",
+    "tweets_per_user": 100,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 4.2610645,
+    "observed_server_median_ms": 2.806,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "create_tweet": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t100/delay-0ms/baseline/t100/W2-create_tweet/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t100/delay-0ms/baseline/t100/W2-create_tweet/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t100/delay-0ms/baseline/t100/W2-create_tweet/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t100/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "feed",
+    "tweets_per_user": 100,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 79.657808,
+    "observed_server_median_ms": 50.718,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "feed": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t100/delay-0ms/final/t100/W1-feed/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t100/delay-0ms/final/t100/W1-feed/rows.chunks.json",
+    "logical_rows_path": "non-snb/native/littlex-reference-t100/delay-0ms/final/t100/W1-feed/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t100/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "like",
+    "tweets_per_user": 100,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 4.2812665,
+    "observed_server_median_ms": 3.4545000000000003,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "like": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t100/delay-0ms/final/t100/W2-like/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t100/delay-0ms/final/t100/W2-like/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t100/delay-0ms/final/t100/W2-like/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t100/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "follow",
+    "tweets_per_user": 100,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 5.1914125,
+    "observed_server_median_ms": 4.351,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "follow": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t100/delay-0ms/final/t100/W2-follow/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t100/delay-0ms/final/t100/W2-follow/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t100/delay-0ms/final/t100/W2-follow/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t100/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "create_tweet",
+    "tweets_per_user": 100,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 4.0556765,
+    "observed_server_median_ms": 3.2255000000000003,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "create_tweet": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t100/delay-0ms/final/t100/W2-create_tweet/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t100/delay-0ms/final/t100/W2-create_tweet/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t100/delay-0ms/final/t100/W2-create_tweet/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t100/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "feed",
+    "tweets_per_user": 200,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 169.33261800000002,
+    "observed_server_median_ms": 109.65299999999999,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "feed": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t200-retry/delay-0ms/baseline/t200/W1-feed/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t200-retry/delay-0ms/baseline/t200/W1-feed/rows.chunks.json",
+    "logical_rows_path": "non-snb/native/littlex-reference-t200-retry/delay-0ms/baseline/t200/W1-feed/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t200-retry/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "like",
+    "tweets_per_user": 200,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 4.693903,
+    "observed_server_median_ms": 3.1999999999999997,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "like": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t200-retry/delay-0ms/baseline/t200/W2-like/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t200-retry/delay-0ms/baseline/t200/W2-like/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t200-retry/delay-0ms/baseline/t200/W2-like/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t200-retry/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "follow",
+    "tweets_per_user": 200,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 5.5315345,
+    "observed_server_median_ms": 4.04,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "follow": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t200-retry/delay-0ms/baseline/t200/W2-follow/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t200-retry/delay-0ms/baseline/t200/W2-follow/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t200-retry/delay-0ms/baseline/t200/W2-follow/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t200-retry/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "create_tweet",
+    "tweets_per_user": 200,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 4.242684000000001,
+    "observed_server_median_ms": 2.7965,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "create_tweet": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t200-retry/delay-0ms/baseline/t200/W2-create_tweet/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t200-retry/delay-0ms/baseline/t200/W2-create_tweet/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t200-retry/delay-0ms/baseline/t200/W2-create_tweet/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t200-retry/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "feed",
+    "tweets_per_user": 200,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 167.0214835,
+    "observed_server_median_ms": 109.4205,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "feed": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t200-retry/delay-0ms/final/t200/W1-feed/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t200-retry/delay-0ms/final/t200/W1-feed/rows.chunks.json",
+    "logical_rows_path": "non-snb/native/littlex-reference-t200-retry/delay-0ms/final/t200/W1-feed/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t200-retry/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "like",
+    "tweets_per_user": 200,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 4.368256000000001,
+    "observed_server_median_ms": 3.5374999999999996,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "like": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t200-retry/delay-0ms/final/t200/W2-like/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t200-retry/delay-0ms/final/t200/W2-like/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t200-retry/delay-0ms/final/t200/W2-like/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t200-retry/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "follow",
+    "tweets_per_user": 200,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 5.1207905,
+    "observed_server_median_ms": 4.301,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "follow": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t200-retry/delay-0ms/final/t200/W2-follow/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t200-retry/delay-0ms/final/t200/W2-follow/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t200-retry/delay-0ms/final/t200/W2-follow/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t200-retry/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "create_tweet",
+    "tweets_per_user": 200,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 610,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 500,
+    "measured_count": 500,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 4.056941500000001,
+    "observed_server_median_ms": 3.2045,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "create_tweet": 500
+    },
+    "artifact": "non-snb/native/littlex-reference-t200-retry/delay-0ms/final/t200/W2-create_tweet/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-t200-retry/delay-0ms/final/t200/W2-create_tweet/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-t200-retry/delay-0ms/final/t200/W2-create_tweet/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-t200-retry/independent-offline-verification.json"
+    }
+  },
+  {
+    "family": "littlex",
+    "workload": "mixed",
+    "tweets_per_user": 200,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 1110,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 1000,
+    "measured_count": 1000,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 6.944522,
+    "observed_server_median_ms": 4.9205000000000005,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "feed_page": 1000
+    },
+    "artifact": "non-snb/native/littlex-reference-mix0/delay-0ms/baseline/t200/W3-0/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-mix0/delay-0ms/baseline/t200/W3-0/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-mix0/delay-0ms/baseline/t200/W3-0/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-mix0/independent-offline-verification.json"
+    },
+    "write_percent": 0
+  },
+  {
+    "family": "littlex",
+    "workload": "mixed",
+    "tweets_per_user": 200,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 1110,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 1000,
+    "measured_count": 1000,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 6.402805,
+    "observed_server_median_ms": 5.218999999999999,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "feed_page": 1000
+    },
+    "artifact": "non-snb/native/littlex-reference-mix0/delay-0ms/final/t200/W3-0/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-mix0/delay-0ms/final/t200/W3-0/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-mix0/delay-0ms/final/t200/W3-0/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-mix0/independent-offline-verification.json"
+    },
+    "write_percent": 0
+  },
+  {
+    "family": "littlex",
+    "workload": "mixed",
+    "tweets_per_user": 200,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 1110,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 1000,
+    "measured_count": 1000,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 6.58642,
+    "observed_server_median_ms": 4.696,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "create_tweet": 30,
+      "feed_page": 950,
+      "like": 10,
+      "follow": 10
+    },
+    "artifact": "non-snb/native/littlex-reference-mix5/delay-0ms/baseline/t200/W3-5/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-mix5/delay-0ms/baseline/t200/W3-5/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-mix5/delay-0ms/baseline/t200/W3-5/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-mix5/independent-offline-verification.json"
+    },
+    "write_percent": 5
+  },
+  {
+    "family": "littlex",
+    "workload": "mixed",
+    "tweets_per_user": 200,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 1110,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 1000,
+    "measured_count": 1000,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 6.7526655,
+    "observed_server_median_ms": 5.6025,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "create_tweet": 30,
+      "feed_page": 950,
+      "like": 10,
+      "follow": 10
+    },
+    "artifact": "non-snb/native/littlex-reference-mix5/delay-0ms/final/t200/W3-5/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-mix5/delay-0ms/final/t200/W3-5/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-mix5/delay-0ms/final/t200/W3-5/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-mix5/independent-offline-verification.json"
+    },
+    "write_percent": 5
+  },
+  {
+    "family": "littlex",
+    "workload": "mixed",
+    "tweets_per_user": 200,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 1110,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 1000,
+    "measured_count": 1000,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 6.7342255,
+    "observed_server_median_ms": 4.8585,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "create_tweet": 100,
+      "feed_page": 850,
+      "like": 40,
+      "follow": 10
+    },
+    "artifact": "non-snb/native/littlex-reference-mix15/delay-0ms/baseline/t200/W3-15/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-mix15/delay-0ms/baseline/t200/W3-15/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-mix15/delay-0ms/baseline/t200/W3-15/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-mix15/independent-offline-verification.json"
+    },
+    "write_percent": 15
+  },
+  {
+    "family": "littlex",
+    "workload": "mixed",
+    "tweets_per_user": 200,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 1110,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 1000,
+    "measured_count": 1000,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 6.769394999999999,
+    "observed_server_median_ms": 5.641,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "create_tweet": 100,
+      "feed_page": 850,
+      "like": 40,
+      "follow": 10
+    },
+    "artifact": "non-snb/native/littlex-reference-mix15/delay-0ms/final/t200/W3-15/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-mix15/delay-0ms/final/t200/W3-15/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-mix15/delay-0ms/final/t200/W3-15/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-mix15/independent-offline-verification.json"
+    },
+    "write_percent": 15
+  },
+  {
+    "family": "littlex",
+    "workload": "mixed",
+    "tweets_per_user": 200,
+    "arm": "jac_original",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 1110,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 1000,
+    "measured_count": 1000,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 6.59519,
+    "observed_server_median_ms": 4.7535,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "create_tweet": 200,
+      "feed_page": 700,
+      "like": 80,
+      "follow": 20
+    },
+    "artifact": "non-snb/native/littlex-reference-mix30/delay-0ms/baseline/t200/W3-30/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-mix30/delay-0ms/baseline/t200/W3-30/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-mix30/delay-0ms/baseline/t200/W3-30/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-mix30/independent-offline-verification.json"
+    },
+    "write_percent": 30
+  },
+  {
+    "family": "littlex",
+    "workload": "mixed",
+    "tweets_per_user": 200,
+    "arm": "jac_final",
+    "status": "accepted",
+    "measurement_role": "original reference schedule; separate from RTT matrix",
+    "request_n": 1110,
+    "warmup_n": 110,
+    "warmup_count": 110,
+    "sample_n": 1000,
+    "measured_count": 1000,
+    "timer": "HTTP_client_wall_ms",
+    "observed_client_median_ms": 6.203025500000001,
+    "observed_server_median_ms": 5.135999999999999,
+    "transport": "shared PostgreSQL proxy with zero injected delay",
+    "measured_operation_counts": {
+      "create_tweet": 200,
+      "feed_page": 700,
+      "like": 80,
+      "follow": 20
+    },
+    "artifact": "non-snb/native/littlex-reference-mix30/delay-0ms/final/t200/W3-30/summary.json",
+    "requests_artifact": "non-snb/native/littlex-reference-mix30/delay-0ms/final/t200/W3-30/rows.jsonl.gz",
+    "logical_rows_path": "non-snb/native/littlex-reference-mix30/delay-0ms/final/t200/W3-30/rows.jsonl.gz",
+    "gates": {
+      "every_request_source_oracle": true,
+      "full_final_state": true,
+      "independent_offline_artifact": "non-snb/native/littlex-reference-mix30/independent-offline-verification.json"
+    },
+    "write_percent": 30
+  }
+]

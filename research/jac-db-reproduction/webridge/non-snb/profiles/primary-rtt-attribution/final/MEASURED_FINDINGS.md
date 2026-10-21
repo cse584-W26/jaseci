@@ -1,0 +1,13 @@
+# Measured primary database-call costs
+
+All values below use the fresh compact captures at 0 ms injected delay. PostgreSQL and MySQL are separate execution environments. Category means sum to mean request RTT; primary medians are computed per request. CALL costs cover the complete outer response.
+
+* PostgreSQL Payment-by-name GC has median request RTT 3.976 ms in the original runtime and 4.197 ms in the final runtime. COMMIT contributes mean 1.635 and 1.585 ms respectively; five anchor hydrations together contribute 0.765 and 0.887 ms. The promoted last-name lookup contributes 0.568 and 0.602 ms.
+* PostgreSQL full feed is dominated by the same two-hop projection SQL (normalized SQL ID `f2c5cb3431ee8dc3`). Its final-runtime mean cost is 8.755 ms at t20 and 57.179 ms at t200. The full request medians are 13.167 and 62.822 ms. The SQL projects endpoint IDs, root/ACL fields, fragments and timestamps.
+* PostgreSQL mixed15 uses the bounded top-K query shape. Its 85 measured feed_page requests have median RTT 4.651 ms. The two-hop top-K projection contributes mean 0.978 ms per feed_page request, alongside ACL checks and other traversal operations.
+* MySQL conventional Payment-by-name GC has median 3.838 ms directly and 3.229 ms through WeBridge. The direct autocommit=1 exchange contributes mean 2.505 ms; the complete outer CALL contributes mean 3.352 ms. The measured SQL exchange counts are 9 and 1.
+* MySQL full-feed t200 has medians 81.531 ms directly and 81.098 ms through conventional WeBridge. The direct tweet SELECT contributes mean 81.375 ms; the complete CALL contributes 81.863 ms. Session setup exchanges contribute 1.207 and 0.538 ms respectively. The measured counts are 5 and 3.
+* In MySQL conventional mixed15, feed_page medians are 34.558 ms directly and 34.325 ms through WeBridge. The WeBridge outer CALL contributes mean 33.953 ms per feed_page, with 0.368 ms of session setup. In pruned graph Java, the three wrapped graph queries together contribute mean 168.905 ms per feed_page; the WeBridge outer CALL contributes 171.914 ms. Their feed_page medians are 168.463 and 167.896 ms.
+* TPC-C graph Payment's actual anchor traversal is labeled graph.anchor_query. Its measured mean is 35.287 ms in full Java and 31.453 ms in pruned Java. The archived exact SQL and regression check distinguish this graph traversal from a relational Customer SELECT.
+
+`representative-costs.json` contains these category costs, exact SQL IDs/text and per-operation summaries. `attribution.json` retains every request's additive cost reconciliation. The regression receipts and category-only revision proof preserve the source-classifier correction separately from all measured timings.

@@ -1,0 +1,632 @@
+[
+  {
+    "implementation": "LittleXSql",
+    "operation": "feed",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXSql-baseline-1792543173261174656",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-feed-LittleXSql-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "feed",
+          "--implementation",
+          "LittleXSql",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXSql-baseline-1792543173261174656"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXSql-baseline-1792543173261174656/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXSql-baseline-1792543173261174656/prepare-command.json",
+          "--database",
+          "jac_lx_t20_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-feed-LittleXSql-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-feed-LittleXSql-baseline"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py",
+          "--tier",
+          "t20",
+          "--plan",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXSql-baseline-1792543173261174656/plan.json",
+          "--results",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-feed-LittleXSql-baseline/run/full-results.jsonl.gz",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-feed-LittleXSql-baseline/independent-results.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "implementation": "LittleXSql",
+    "operation": "like",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-like-LittleXSql-baseline-1792543285563963821",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-like-LittleXSql-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "like",
+          "--implementation",
+          "LittleXSql",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-like-LittleXSql-baseline-1792543285563963821"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-like-LittleXSql-baseline-1792543285563963821/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-like-LittleXSql-baseline-1792543285563963821/prepare-command.json",
+          "--database",
+          "jac_lx_t20_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-like-LittleXSql-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-like-LittleXSql-baseline"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py",
+          "--tier",
+          "t20",
+          "--plan",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-like-LittleXSql-baseline-1792543285563963821/plan.json",
+          "--results",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-like-LittleXSql-baseline/run/full-results.jsonl.gz",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-like-LittleXSql-baseline/independent-results.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "implementation": "LittleXSql",
+    "operation": "follow",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXSql-baseline-1792543455358061123",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-follow-LittleXSql-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "follow",
+          "--implementation",
+          "LittleXSql",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXSql-baseline-1792543455358061123"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXSql-baseline-1792543455358061123/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXSql-baseline-1792543455358061123/prepare-command.json",
+          "--database",
+          "jac_lx_t20_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-follow-LittleXSql-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-follow-LittleXSql-baseline"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py",
+          "--tier",
+          "t20",
+          "--plan",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXSql-baseline-1792543455358061123/plan.json",
+          "--results",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-follow-LittleXSql-baseline/run/full-results.jsonl.gz",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-follow-LittleXSql-baseline/independent-results.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "implementation": "LittleXSql",
+    "operation": "create_tweet",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXSql-baseline-1792543504499864895",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-create_tweet-LittleXSql-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "create_tweet",
+          "--implementation",
+          "LittleXSql",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXSql-baseline-1792543504499864895"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXSql-baseline-1792543504499864895/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXSql-baseline-1792543504499864895/prepare-command.json",
+          "--database",
+          "jac_lx_t20_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-create_tweet-LittleXSql-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-create_tweet-LittleXSql-baseline"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py",
+          "--tier",
+          "t20",
+          "--plan",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXSql-baseline-1792543504499864895/plan.json",
+          "--results",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-create_tweet-LittleXSql-baseline/run/full-results.jsonl.gz",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-create_tweet-LittleXSql-baseline/independent-results.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "implementation": "LittleXSql",
+    "operation": "feed_page",
+    "tier": "t200",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXSql-baseline-1792543592757930663",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t200-feed_page-LittleXSql-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t200",
+          "--operation",
+          "feed_page",
+          "--implementation",
+          "LittleXSql",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXSql-baseline-1792543592757930663"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXSql-baseline-1792543592757930663/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXSql-baseline-1792543592757930663/prepare-command.json",
+          "--database",
+          "jac_lx_t200_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t200-feed_page-LittleXSql-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t200-feed_page-LittleXSql-baseline"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py",
+          "--tier",
+          "t200",
+          "--plan",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXSql-baseline-1792543592757930663/plan.json",
+          "--results",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t200-feed_page-LittleXSql-baseline/run/full-results.jsonl.gz",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t200-feed_page-LittleXSql-baseline/independent-results.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "implementation": "LittleXFull",
+    "operation": "feed",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXFull-baseline-1792543757156701990",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-feed-LittleXFull-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "feed",
+          "--implementation",
+          "LittleXFull",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXFull-baseline-1792543757156701990"
+        ],
+        "returncode": 1
+      }
+    ],
+    "status": "failed-stage",
+    "failure_scope": "Profile preparation rejected changed live Java source versus prior compiled build; source transition to transaction-inclusive capture. No workload execution."
+  },
+  {
+    "implementation": "LittleXFull",
+    "operation": "like",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-like-LittleXFull-baseline-1792543757202737182",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-like-LittleXFull-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "like",
+          "--implementation",
+          "LittleXFull",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-like-LittleXFull-baseline-1792543757202737182"
+        ],
+        "returncode": 1
+      }
+    ],
+    "status": "failed-stage",
+    "failure_scope": "Profile preparation rejected changed live Java source versus prior compiled build; source transition to transaction-inclusive capture. No workload execution."
+  },
+  {
+    "implementation": "LittleXFull",
+    "operation": "follow",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXFull-baseline-1792543757244210084",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-follow-LittleXFull-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "follow",
+          "--implementation",
+          "LittleXFull",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXFull-baseline-1792543757244210084"
+        ],
+        "returncode": 1
+      }
+    ],
+    "status": "failed-stage",
+    "failure_scope": "Profile preparation rejected changed live Java source versus prior compiled build; source transition to transaction-inclusive capture. No workload execution."
+  },
+  {
+    "implementation": "LittleXFull",
+    "operation": "create_tweet",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXFull-baseline-1792543757278863409",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-create_tweet-LittleXFull-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "create_tweet",
+          "--implementation",
+          "LittleXFull",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXFull-baseline-1792543757278863409"
+        ],
+        "returncode": 1
+      }
+    ],
+    "status": "failed-stage",
+    "failure_scope": "Profile preparation rejected changed live Java source versus prior compiled build; source transition to transaction-inclusive capture. No workload execution."
+  },
+  {
+    "implementation": "LittleXFull",
+    "operation": "feed_page",
+    "tier": "t200",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXFull-baseline-1792543757329424143",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t200-feed_page-LittleXFull-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t200",
+          "--operation",
+          "feed_page",
+          "--implementation",
+          "LittleXFull",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXFull-baseline-1792543757329424143"
+        ],
+        "returncode": 1
+      }
+    ],
+    "status": "failed-stage",
+    "failure_scope": "Profile preparation rejected changed live Java source versus prior compiled build; source transition to transaction-inclusive capture. No workload execution."
+  },
+  {
+    "implementation": "LittleXPruned",
+    "operation": "feed",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXPruned-baseline-1792543757406474228",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-feed-LittleXPruned-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "feed",
+          "--implementation",
+          "LittleXPruned",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXPruned-baseline-1792543757406474228"
+        ],
+        "returncode": 1
+      }
+    ],
+    "status": "failed-stage",
+    "failure_scope": "Profile preparation rejected changed live Java source versus prior compiled build; source transition to transaction-inclusive capture. No workload execution."
+  },
+  {
+    "implementation": "LittleXPruned",
+    "operation": "like",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-like-LittleXPruned-baseline-1792543757448095773",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-like-LittleXPruned-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "like",
+          "--implementation",
+          "LittleXPruned",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-like-LittleXPruned-baseline-1792543757448095773"
+        ],
+        "returncode": 1
+      }
+    ],
+    "status": "failed-stage",
+    "failure_scope": "Profile preparation rejected changed live Java source versus prior compiled build; source transition to transaction-inclusive capture. No workload execution."
+  },
+  {
+    "implementation": "LittleXPruned",
+    "operation": "follow",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXPruned-baseline-1792543757492939257",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-follow-LittleXPruned-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "follow",
+          "--implementation",
+          "LittleXPruned",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXPruned-baseline-1792543757492939257"
+        ],
+        "returncode": 1
+      }
+    ],
+    "status": "failed-stage",
+    "failure_scope": "Profile preparation rejected changed live Java source versus prior compiled build; source transition to transaction-inclusive capture. No workload execution."
+  },
+  {
+    "implementation": "LittleXPruned",
+    "operation": "create_tweet",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXPruned-baseline-1792543757549123420",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t20-create_tweet-LittleXPruned-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "create_tweet",
+          "--implementation",
+          "LittleXPruned",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXPruned-baseline-1792543757549123420"
+        ],
+        "returncode": 1
+      }
+    ],
+    "status": "failed-stage",
+    "failure_scope": "Profile preparation rejected changed live Java source versus prior compiled build; source transition to transaction-inclusive capture. No workload execution."
+  },
+  {
+    "implementation": "LittleXPruned",
+    "operation": "feed_page",
+    "tier": "t200",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXPruned-baseline-1792543757589931084",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792543173261100277/t200-feed_page-LittleXPruned-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t200",
+          "--operation",
+          "feed_page",
+          "--implementation",
+          "LittleXPruned",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXPruned-baseline-1792543757589931084"
+        ],
+        "returncode": 1
+      }
+    ],
+    "status": "failed-stage",
+    "failure_scope": "Profile preparation rejected changed live Java source versus prior compiled build; source transition to transaction-inclusive capture. No workload execution."
+  }
+]

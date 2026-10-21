@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "checked_requests": 13,
+  "per_operation_counts": {
+    "like": 13
+  },
+  "scope": "every returned field and feed order against independent immutable source-fixture state, evolved after every operation",
+  "source_fixture": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/fixtures/t20/anchors.tsv",
+  "source_fixture_sha256": "21f4a6942ecf9461110fc4ca7c4fb95881ad84467d421148c441938fb5b3b0e0",
+  "plan_sha256": "c066f7ee6fa14571a7818e3c247a26a3f8d3a1f87f5fffdc22da94511fa23835",
+  "full_results": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792545522724201166/t20-like-LittleXSql-baseline/run/full-results.jsonl.gz",
+  "full_results_sha256": "2f0234f35a41d3b76d1f0f283a15464c548bed6a13431461ed278ba7dbb7957a",
+  "final_expected_state": {
+    "profiles": {
+      "rows": 100,
+      "sha256": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931"
+    },
+    "follows": {
+      "rows": 5000,
+      "sha256": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d"
+    },
+    "tweets": {
+      "rows": 2000,
+      "sha256": "8d979a782f74c66dbb090631ed64708ae63374554c882888b87d6b832c2029c2"
+    }
+  },
+  "UUID_policy": "Only native metadata _jac_id is supplied from the exact preallocated Java request ID for the shared oracle; business fields are checked as returned"
+}

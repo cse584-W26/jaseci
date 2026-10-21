@@ -1,0 +1,16 @@
+{
+  "label": "Rasterize three actual-data comparison pages for review",
+  "pid": 2,
+  "requested_utc": "2026-10-21T04:16:59.624319+00:00",
+  "lock": "/home/baichuan/jaseci/reproduction/webridge/non-snb/.measurement.lock",
+  "acquired_utc": "2026-10-21T04:20:59.878180+00:00",
+  "acquired_monotonic_ns": 1092829963905222,
+  "command": [
+    "python",
+    "-c",
+    "import fitz; d=fitz.open('/tmp/non-snb-narrative-preview.pdf'); [(d[i-1].get_pixmap(matrix=fitz.Matrix(1,1)).save('/tmp/non-snb-page-'+str(i)+'.png')) for i in [9,10,15]]"
+  ],
+  "returncode": 1,
+  "released_utc": "2026-10-21T04:20:59.888647+00:00",
+  "released_monotonic_ns": 1092829974365345
+}

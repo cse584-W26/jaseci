@@ -1,0 +1,59 @@
+{
+  "PASS": true,
+  "relations": {
+    "warehouse": {
+      "rows": 1,
+      "expected_canonical_sha256": "c34778bd595f3d9a00c1fc156519ff6b1572ea563a0d2e9b78a3f0df75524bba",
+      "actual_canonical_sha256": "c34778bd595f3d9a00c1fc156519ff6b1572ea563a0d2e9b78a3f0df75524bba",
+      "PASS": true
+    },
+    "district": {
+      "rows": 10,
+      "expected_canonical_sha256": "1ace4172ec3adee47ccb3c89a515b48a62f4323752d7aaae79591f163b147b8a",
+      "actual_canonical_sha256": "1ace4172ec3adee47ccb3c89a515b48a62f4323752d7aaae79591f163b147b8a",
+      "PASS": true
+    },
+    "customer": {
+      "rows": 30000,
+      "expected_canonical_sha256": "8dddda83f63c084977e7a25f15a2628da6412440369457d34d9d269197bd6316",
+      "actual_canonical_sha256": "8dddda83f63c084977e7a25f15a2628da6412440369457d34d9d269197bd6316",
+      "PASS": true
+    },
+    "stock": {
+      "rows": 100000,
+      "expected_canonical_sha256": "0a5d05858ad3f2f69f87492ac9454921f04314f9f429d743495a817c52dcb229",
+      "actual_canonical_sha256": "0a5d05858ad3f2f69f87492ac9454921f04314f9f429d743495a817c52dcb229",
+      "PASS": true
+    },
+    "orders": {
+      "rows": 30000,
+      "expected_canonical_sha256": "44cba83dae1aea9c0113c1ea6f18889fd5073c5dc70105d1a381ce2e53bdc87f",
+      "actual_canonical_sha256": "44cba83dae1aea9c0113c1ea6f18889fd5073c5dc70105d1a381ce2e53bdc87f",
+      "PASS": true
+    },
+    "new_order": {
+      "rows": 9000,
+      "expected_canonical_sha256": "fcd25286de2b35a9336565d9834495bccf12977f71fc7f1927bb9451beb06154",
+      "actual_canonical_sha256": "fcd25286de2b35a9336565d9834495bccf12977f71fc7f1927bb9451beb06154",
+      "PASS": true
+    },
+    "order_line": {
+      "rows": 300754,
+      "expected_canonical_sha256": "c72c878aa82685ac4e5b6c812b91af70a6769f56c9edac488575def3711466f1",
+      "actual_canonical_sha256": "c72c878aa82685ac4e5b6c812b91af70a6769f56c9edac488575def3711466f1",
+      "PASS": true
+    },
+    "history": {
+      "rows": 30000,
+      "expected_canonical_sha256": "2e5b975959ab3bb21a530785d4d7fe3bd8bc6d241bb7d6dbe4289deec3b1cf58",
+      "actual_canonical_sha256": "2e5b975959ab3bb21a530785d4d7fe3bd8bc6d241bb7d6dbe4289deec3b1cf58",
+      "PASS": true
+    }
+  },
+  "seed_projection_changes": {
+    "history": "Synthesized per Customer: amount10, data=seed, district/warehouse from Customer; history.jsonl not loaded.",
+    "orders": "Carrier NULL normalized to0.",
+    "order_line": "Delivery-date NULL\u2192empty string; dates excluded from logical-state projection."
+  },
+  "scope": "Full logical business-key projection, all initial rows; money canonicalized to two decimals then exact equality."
+}

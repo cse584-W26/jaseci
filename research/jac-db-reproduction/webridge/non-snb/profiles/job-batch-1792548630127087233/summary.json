@@ -1,0 +1,74 @@
+[
+  {
+    "phase": "baseline",
+    "input": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-final-graph-pruned-payment_name_BC-1792548624366972955-baseline",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-final-graph-pruned-payment_name_BC-1792548624366972955-baseline",
+    "database": "jac_tpcc_graph",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-final-graph-pruned-payment_name_BC-1792548624366972955-baseline/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-final-graph-pruned-payment_name_BC-1792548624366972955-baseline/prepare-command.json",
+          "--database",
+          "jac_tpcc_graph",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-final-graph-pruned-payment_name_BC-1792548624366972955-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-final-graph-pruned-payment_name_BC-1792548624366972955-baseline",
+          "--generated-sources-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-final-graph-pruned-payment_name_BC-1792548624366972955-baseline/generated-sources.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "phase": "baseline",
+    "input": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-final-graph-pruned-payment_id_BC-1792548624402756257-baseline",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-final-graph-pruned-payment_id_BC-1792548624402756257-baseline",
+    "database": "jac_tpcc_graph",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-final-graph-pruned-payment_id_BC-1792548624402756257-baseline/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-final-graph-pruned-payment_id_BC-1792548624402756257-baseline/prepare-command.json",
+          "--database",
+          "jac_tpcc_graph",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-final-graph-pruned-payment_id_BC-1792548624402756257-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-final-graph-pruned-payment_id_BC-1792548624402756257-baseline",
+          "--generated-sources-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-final-graph-pruned-payment_id_BC-1792548624402756257-baseline/generated-sources.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  }
+]

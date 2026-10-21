@@ -1,0 +1,819 @@
+[
+  {
+    "implementation": "LittleXSql",
+    "operation": "feed",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXSql-baseline-1792546306789192760",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-feed-LittleXSql-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "feed",
+          "--implementation",
+          "LittleXSql",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXSql-baseline-1792546306789192760",
+          "--build-snapshot",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98e99204fbc041a7f4140e8a3030121757bedc167b260a389570919b79891d4a"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXSql-baseline-1792546306789192760/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXSql-baseline-1792546306789192760/prepare-command.json",
+          "--database",
+          "jac_lx_t20_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-feed-LittleXSql-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-feed-LittleXSql-baseline"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py",
+          "--tier",
+          "t20",
+          "--plan",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXSql-baseline-1792546306789192760/plan.json",
+          "--results",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-feed-LittleXSql-baseline/run/full-results.jsonl.gz",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-feed-LittleXSql-baseline/independent-results.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "implementation": "LittleXSql",
+    "operation": "follow",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXSql-baseline-1792546401632522788",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-follow-LittleXSql-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "follow",
+          "--implementation",
+          "LittleXSql",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXSql-baseline-1792546401632522788",
+          "--build-snapshot",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98e99204fbc041a7f4140e8a3030121757bedc167b260a389570919b79891d4a"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXSql-baseline-1792546401632522788/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXSql-baseline-1792546401632522788/prepare-command.json",
+          "--database",
+          "jac_lx_t20_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-follow-LittleXSql-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-follow-LittleXSql-baseline"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py",
+          "--tier",
+          "t20",
+          "--plan",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXSql-baseline-1792546401632522788/plan.json",
+          "--results",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-follow-LittleXSql-baseline/run/full-results.jsonl.gz",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-follow-LittleXSql-baseline/independent-results.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "implementation": "LittleXSql",
+    "operation": "create_tweet",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXSql-baseline-1792546448235612291",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-create_tweet-LittleXSql-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "create_tweet",
+          "--implementation",
+          "LittleXSql",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXSql-baseline-1792546448235612291",
+          "--build-snapshot",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98e99204fbc041a7f4140e8a3030121757bedc167b260a389570919b79891d4a"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXSql-baseline-1792546448235612291/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXSql-baseline-1792546448235612291/prepare-command.json",
+          "--database",
+          "jac_lx_t20_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-create_tweet-LittleXSql-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-create_tweet-LittleXSql-baseline"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py",
+          "--tier",
+          "t20",
+          "--plan",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXSql-baseline-1792546448235612291/plan.json",
+          "--results",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-create_tweet-LittleXSql-baseline/run/full-results.jsonl.gz",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-create_tweet-LittleXSql-baseline/independent-results.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "implementation": "LittleXSql",
+    "operation": "feed_page",
+    "tier": "t200",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXSql-baseline-1792546700015410994",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t200-feed_page-LittleXSql-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t200",
+          "--operation",
+          "feed_page",
+          "--implementation",
+          "LittleXSql",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXSql-baseline-1792546700015410994",
+          "--build-snapshot",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98e99204fbc041a7f4140e8a3030121757bedc167b260a389570919b79891d4a"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXSql-baseline-1792546700015410994/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXSql-baseline-1792546700015410994/prepare-command.json",
+          "--database",
+          "jac_lx_t200_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t200-feed_page-LittleXSql-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t200-feed_page-LittleXSql-baseline"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py",
+          "--tier",
+          "t200",
+          "--plan",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXSql-baseline-1792546700015410994/plan.json",
+          "--results",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t200-feed_page-LittleXSql-baseline/run/full-results.jsonl.gz",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t200-feed_page-LittleXSql-baseline/independent-results.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "implementation": "LittleXFull",
+    "operation": "feed",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXFull-baseline-1792546858591133789",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-feed-LittleXFull-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "feed",
+          "--implementation",
+          "LittleXFull",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXFull-baseline-1792546858591133789",
+          "--build-snapshot",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98e99204fbc041a7f4140e8a3030121757bedc167b260a389570919b79891d4a"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXFull-baseline-1792546858591133789/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXFull-baseline-1792546858591133789/prepare-command.json",
+          "--database",
+          "jac_lx_t20_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-feed-LittleXFull-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-feed-LittleXFull-baseline"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py",
+          "--tier",
+          "t20",
+          "--plan",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXFull-baseline-1792546858591133789/plan.json",
+          "--results",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-feed-LittleXFull-baseline/run/full-results.jsonl.gz",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-feed-LittleXFull-baseline/independent-results.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "implementation": "LittleXFull",
+    "operation": "follow",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXFull-baseline-1792547264855958786",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-follow-LittleXFull-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "follow",
+          "--implementation",
+          "LittleXFull",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXFull-baseline-1792547264855958786",
+          "--build-snapshot",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98e99204fbc041a7f4140e8a3030121757bedc167b260a389570919b79891d4a"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXFull-baseline-1792547264855958786/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXFull-baseline-1792547264855958786/prepare-command.json",
+          "--database",
+          "jac_lx_t20_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-follow-LittleXFull-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 1
+      }
+    ],
+    "status": "failed-stage"
+  },
+  {
+    "implementation": "LittleXFull",
+    "operation": "create_tweet",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXFull-baseline-1792547357189150750",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-create_tweet-LittleXFull-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "create_tweet",
+          "--implementation",
+          "LittleXFull",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXFull-baseline-1792547357189150750",
+          "--build-snapshot",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98e99204fbc041a7f4140e8a3030121757bedc167b260a389570919b79891d4a"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXFull-baseline-1792547357189150750/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXFull-baseline-1792547357189150750/prepare-command.json",
+          "--database",
+          "jac_lx_t20_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-create_tweet-LittleXFull-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-create_tweet-LittleXFull-baseline"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py",
+          "--tier",
+          "t20",
+          "--plan",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXFull-baseline-1792547357189150750/plan.json",
+          "--results",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-create_tweet-LittleXFull-baseline/run/full-results.jsonl.gz",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-create_tweet-LittleXFull-baseline/independent-results.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "implementation": "LittleXFull",
+    "operation": "feed_page",
+    "tier": "t200",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXFull-baseline-1792547514268930550",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t200-feed_page-LittleXFull-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t200",
+          "--operation",
+          "feed_page",
+          "--implementation",
+          "LittleXFull",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXFull-baseline-1792547514268930550",
+          "--build-snapshot",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98e99204fbc041a7f4140e8a3030121757bedc167b260a389570919b79891d4a"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXFull-baseline-1792547514268930550/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXFull-baseline-1792547514268930550/prepare-command.json",
+          "--database",
+          "jac_lx_t200_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t200-feed_page-LittleXFull-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t200-feed_page-LittleXFull-baseline"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py",
+          "--tier",
+          "t200",
+          "--plan",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXFull-baseline-1792547514268930550/plan.json",
+          "--results",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t200-feed_page-LittleXFull-baseline/run/full-results.jsonl.gz",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t200-feed_page-LittleXFull-baseline/independent-results.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "implementation": "LittleXPruned",
+    "operation": "feed",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXPruned-baseline-1792547643756615784",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-feed-LittleXPruned-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "feed",
+          "--implementation",
+          "LittleXPruned",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXPruned-baseline-1792547643756615784",
+          "--build-snapshot",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98e99204fbc041a7f4140e8a3030121757bedc167b260a389570919b79891d4a"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXPruned-baseline-1792547643756615784/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXPruned-baseline-1792547643756615784/prepare-command.json",
+          "--database",
+          "jac_lx_t20_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-feed-LittleXPruned-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-feed-LittleXPruned-baseline"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py",
+          "--tier",
+          "t20",
+          "--plan",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-feed-LittleXPruned-baseline-1792547643756615784/plan.json",
+          "--results",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-feed-LittleXPruned-baseline/run/full-results.jsonl.gz",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-feed-LittleXPruned-baseline/independent-results.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "implementation": "LittleXPruned",
+    "operation": "follow",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXPruned-baseline-1792547908753866400",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-follow-LittleXPruned-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "follow",
+          "--implementation",
+          "LittleXPruned",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXPruned-baseline-1792547908753866400",
+          "--build-snapshot",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98e99204fbc041a7f4140e8a3030121757bedc167b260a389570919b79891d4a"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXPruned-baseline-1792547908753866400/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXPruned-baseline-1792547908753866400/prepare-command.json",
+          "--database",
+          "jac_lx_t20_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-follow-LittleXPruned-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-follow-LittleXPruned-baseline"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py",
+          "--tier",
+          "t20",
+          "--plan",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-follow-LittleXPruned-baseline-1792547908753866400/plan.json",
+          "--results",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-follow-LittleXPruned-baseline/run/full-results.jsonl.gz",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-follow-LittleXPruned-baseline/independent-results.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "implementation": "LittleXPruned",
+    "operation": "create_tweet",
+    "tier": "t20",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXPruned-baseline-1792547967163558371",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-create_tweet-LittleXPruned-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "create_tweet",
+          "--implementation",
+          "LittleXPruned",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXPruned-baseline-1792547967163558371",
+          "--build-snapshot",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98e99204fbc041a7f4140e8a3030121757bedc167b260a389570919b79891d4a"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXPruned-baseline-1792547967163558371/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXPruned-baseline-1792547967163558371/prepare-command.json",
+          "--database",
+          "jac_lx_t20_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-create_tweet-LittleXPruned-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-create_tweet-LittleXPruned-baseline"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py",
+          "--tier",
+          "t20",
+          "--plan",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-create_tweet-LittleXPruned-baseline-1792547967163558371/plan.json",
+          "--results",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-create_tweet-LittleXPruned-baseline/run/full-results.jsonl.gz",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t20-create_tweet-LittleXPruned-baseline/independent-results.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "implementation": "LittleXPruned",
+    "operation": "feed_page",
+    "tier": "t200",
+    "phase": "baseline",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXPruned-baseline-1792550085462326178",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t200-feed_page-LittleXPruned-baseline",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t200",
+          "--operation",
+          "feed_page",
+          "--implementation",
+          "LittleXPruned",
+          "--phase",
+          "baseline",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXPruned-baseline-1792550085462326178",
+          "--build-snapshot",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98e99204fbc041a7f4140e8a3030121757bedc167b260a389570919b79891d4a"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXPruned-baseline-1792550085462326178/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXPruned-baseline-1792550085462326178/prepare-command.json",
+          "--database",
+          "jac_lx_t200_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t200-feed_page-LittleXPruned-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t200-feed_page-LittleXPruned-baseline"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py",
+          "--tier",
+          "t200",
+          "--plan",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t200-feed_page-LittleXPruned-baseline-1792550085462326178/plan.json",
+          "--results",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t200-feed_page-LittleXPruned-baseline/run/full-results.jsonl.gz",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792546306789108986/t200-feed_page-LittleXPruned-baseline/independent-results.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  }
+]

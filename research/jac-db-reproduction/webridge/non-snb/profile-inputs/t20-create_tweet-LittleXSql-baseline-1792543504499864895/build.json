@@ -1,0 +1,36 @@
+{
+  "command": [
+    "taskset",
+    "-c",
+    "9,19",
+    "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/javac",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+    "-d",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/classes",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/LittleXSql.java",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/LittleXGate.java",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/LittleXWeBridge.java",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/VerifyLittleX.java",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/LittleXTiming.java",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/LittleXGraph.java",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/LittleXFull.java",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/LittleXPruned.java",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/LittleXGraphGate.java"
+  ],
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "Note: Some input files use or override a deprecated API.\nNote: Recompile with -Xlint:deprecation for details.\n",
+  "sources_sha256": {
+    "LittleXTiming.java": "a95176f10f93de1ba0b615d4ae5a10b91318fe69886987191685c37bb1bb7445",
+    "LittleXGraphGate.java": "b8fd3e47f4f67d8b0a82107a03601a17db0cb61ecdada08e85e8b6c66d6e8175",
+    "LittleXWeBridge.java": "bc8c8fc73a203bd3a5604bc08a1caa9220af737989f28627e36836ce94771b06",
+    "VerifyLittleX.java": "4eccd26f3736fb5ae224e071c0a1f1c098ee307128acfa12cbb70086698cbb15",
+    "LittleXGate.java": "8a91f11c6ed721bd3d185fe5306cf6d7f87f8b3ebae7ea7aa8c700009c53e9ba",
+    "LittleXPruned.java": "04ca30ece516d6e9ed72d8a6bd15ba1954724223de1aa6cfc04c0fbbab9351ae",
+    "LittleXFull.java": "4d54aeee1068c14f13fb61acb6833e4fefc2eb4f4bfa73eb5a2241a2825dc884",
+    "LittleXSql.java": "c58137c2e76a5db07c8a145ae6ed3ed100f4a741490d26d8670c5f3a4c8754c6",
+    "LittleXGraph.java": "97ecb2f8872386fcd7c6b7be9540a80694c783371ce612717bc7eb72eb07cd2c"
+  },
+  "utc": "2026-10-21T00:28:39Z"
+}

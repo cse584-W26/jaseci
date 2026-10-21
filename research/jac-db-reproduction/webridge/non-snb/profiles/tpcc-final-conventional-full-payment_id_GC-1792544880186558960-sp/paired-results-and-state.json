@@ -1,0 +1,100 @@
+{
+  "status": "PASS",
+  "requests_compared": 13,
+  "scope": "Every evolving result, all retained affected-row snapshots in eight business relations, plus complete global entity counts; full eight-table procedure gates are separate.",
+  "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1",
+  "checks": {
+    "before": {
+      "warehouse": {
+        "rows": 1,
+        "sha256": "c0cfb9c0ef4504fb4022a511f830cad4ec6cbb8653d972635a84756a085a3dbd"
+      },
+      "district": {
+        "rows": 1,
+        "sha256": "532f8402f46bc5bd35a77e86db952ea1b60b8c83b0f5a8c4e39a91c95d98c143"
+      },
+      "customer": {
+        "rows": 3000,
+        "sha256": "4809b75bb6e33c9ee3a81d441433416f2c8d1c331f52c27d29866e701a1b1fce"
+      },
+      "stock": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "orders": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "new_order": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "order_line": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "history": {
+        "rows": 3000,
+        "sha256": "3211d4769a8b00f5189b6cd15793a5728f6092c163d9e0280ed21e2e0dea583d"
+      },
+      "global_counts": {
+        "warehouse": 1,
+        "district": 10,
+        "customer": 30000,
+        "stock": 100000,
+        "orders": 30000,
+        "new_order": 9000,
+        "order_line": 300754,
+        "history": 30000
+      }
+    },
+    "after": {
+      "warehouse": {
+        "rows": 1,
+        "sha256": "c0986ef81ffbc58614f684dfeb71b23bd66b6719a945d6194eaeb0cc2fac3167"
+      },
+      "district": {
+        "rows": 1,
+        "sha256": "27f6d869b5e4052cb3cc6a4374dbf6f5d90bbbb9748bb91ee2c8fe1187801103"
+      },
+      "customer": {
+        "rows": 3000,
+        "sha256": "9684c035ad38440a81c05d367ae186bcf61e6c972c206fa07f8aedc7d63bbf6e"
+      },
+      "stock": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "orders": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "new_order": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "order_line": {
+        "rows": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "history": {
+        "rows": 3013,
+        "sha256": "0c144bd6b79926c88545d67fc5b48c9a40c78d440944dde6cc205d1f6f8afec3"
+      },
+      "global_counts": {
+        "warehouse": 1,
+        "district": 10,
+        "customer": 30000,
+        "stock": 100000,
+        "orders": 30000,
+        "new_order": 9000,
+        "order_line": 300754,
+        "history": 30013
+      }
+    }
+  },
+  "profiles": {
+    "baseline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-final-conventional-full-payment_id_GC-1792544880186558960-baseline",
+    "sp": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-final-conventional-full-payment_id_GC-1792544880186558960-sp"
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "status": "PASS",
+  "response_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792549879927774846/t20-create_tweet-LittleXFull-baseline/run/independent-committed-state-responses.json",
+  "checked_requests": 13,
+  "actual_committed_state": {
+    "profiles": {
+      "rows": 100,
+      "sha256": "d301f59681744ec2545fba31257bfc340efe665fb38a4464ca850d9c089bc8fd",
+      "query": "SELECT id,JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.username')) FROM anchors WHERE kind='NodeAnchor' AND arch_type='Profile' ORDER BY id"
+    },
+    "follows": {
+      "rows": 5000,
+      "sha256": "8a1dbf76372511ac8f17361a532be1603a0fe5412c46be1d2c5b3b36be27d07b",
+      "query": "SELECT src,dst FROM anchors WHERE kind='EdgeAnchor' AND arch_type='Follow' ORDER BY src,dst"
+    },
+    "tweets": {
+      "rows": 2013,
+      "sha256": "7e6a38c34b721b5465b89d6de90d7e0b8f14370fbeefe755e651b6a4057cb4bd",
+      "query": "SELECT id,JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.seed_id')),JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.content')),JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.author_username')),JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.created_at')),JSON_EXTRACT(props,'$.archetype.likes'),JSON_EXTRACT(props,'$.archetype.comments') FROM anchors WHERE kind='NodeAnchor' AND arch_type='Tweet' ORDER BY id"
+    }
+  },
+  "independent_expected_state": {
+    "profiles": {
+      "rows": 100,
+      "sha256": "d301f59681744ec2545fba31257bfc340efe665fb38a4464ca850d9c089bc8fd"
+    },
+    "follows": {
+      "rows": 5000,
+      "sha256": "8a1dbf76372511ac8f17361a532be1603a0fe5412c46be1d2c5b3b36be27d07b"
+    },
+    "tweets": {
+      "rows": 2013,
+      "sha256": "7e6a38c34b721b5465b89d6de90d7e0b8f14370fbeefe755e651b6a4057cb4bd"
+    }
+  },
+  "matched": {
+    "profiles": {
+      "rows": 100,
+      "sha256": "d301f59681744ec2545fba31257bfc340efe665fb38a4464ca850d9c089bc8fd"
+    },
+    "follows": {
+      "rows": 5000,
+      "sha256": "8a1dbf76372511ac8f17361a532be1603a0fe5412c46be1d2c5b3b36be27d07b"
+    },
+    "tweets": {
+      "rows": 2013,
+      "sha256": "7e6a38c34b721b5465b89d6de90d7e0b8f14370fbeefe755e651b6a4057cb4bd"
+    }
+  },
+  "initial_fixture_expected_state": {
+    "profiles": {
+      "rows": 100,
+      "sha256": "d301f59681744ec2545fba31257bfc340efe665fb38a4464ca850d9c089bc8fd"
+    },
+    "follows": {
+      "rows": 5000,
+      "sha256": "8a1dbf76372511ac8f17361a532be1603a0fe5412c46be1d2c5b3b36be27d07b"
+    },
+    "tweets": {
+      "rows": 2000,
+      "sha256": "1503eced7bcf46cd79b2c0bba301e999a15151b476761bfe5e0b26000d454dd2"
+    }
+  },
+  "scope": "Profiles(id,username), Follow rows with multiplicity, Tweets(id,seed_id,content,author,created_at,likes,comments)",
+  "follow_multiplicity": "All graph Follow edges counted; duplicate rows change count/hash",
+  "helper_sha256": {
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_profile_state.py": "900502e7444f47370ba61459b0a414083f2809e3e5c0d8a389ae6a8ce0a06428",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/verify_outputs.py": "2c7d859a9adf9cc4f4f86365684b478b5ca7bd4de6abd6800504e3c87465fcb9",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/business_state.py": "95bc3335d96bd538bb20b64afb68e22ac2ed2a498f099f6dd24dcbd06cdca5ee",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/result_chunks.py": "d65bc47aeb1c50f19f3755dcd4ffcc42011b2db01e7512301f433c5f1782f38e",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/littlex_oracle.py": "578d00630d34762cd1a2c53500bb9df0cc92c7ac725d9771351aa98f46f4ec48"
+  }
+}

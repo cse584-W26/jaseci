@@ -1,0 +1,118 @@
+[
+  {
+    "variant": "baseline",
+    "label": "payment_id_BC",
+    "n": 30,
+    "server_median_ms": 35.7325,
+    "client_median_ms": 39.8748715,
+    "commit_span_median_ms": 11.6265,
+    "median_of_per_request_commit_span_minus_observed_flush_wire_ms": 1.2528834999999994,
+    "median_of_per_request_commit_span_minus_flush_execute_and_proxy_hold_ms": 2.7975334999999997,
+    "PG_execution_median_by_category_ms": {
+      "graph.Warehouse.hop": 0.0665,
+      "hydrate.generic_anchor": 0.10550000000000001,
+      "transaction.begin": 0.01,
+      "transaction.commit": 1.2875,
+      "transaction.set": 0.006,
+      "write.anchor_batch_upsert": 0.2495,
+      "write.type_registry": 0.041499999999999995
+    },
+    "flight_median_by_category_ms": {
+      "graph.Warehouse.hop": 3.288353,
+      "hydrate.generic_anchor": 11.3039405,
+      "transaction.begin": 2.7022000000000004,
+      "transaction.commit": 4.225835,
+      "transaction.set": 2.6686575,
+      "write.anchor_batch_upsert": 3.2916055,
+      "write.type_registry": 2.7874895
+    },
+    "server_chunk_received_to_delivered_median_ms": 2.2499944999999997
+  },
+  {
+    "variant": "baseline",
+    "label": "payment_id_GC",
+    "n": 30,
+    "server_median_ms": 55.435500000000005,
+    "client_median_ms": 58.47853,
+    "commit_span_median_ms": 26.975499999999997,
+    "median_of_per_request_commit_span_minus_observed_flush_wire_ms": 1.055314499999997,
+    "median_of_per_request_commit_span_minus_flush_execute_and_proxy_hold_ms": 2.3261324999999986,
+    "PG_execution_median_by_category_ms": {
+      "graph.Warehouse.hop": 0.062,
+      "hydrate.generic_anchor": 0.1175,
+      "transaction.begin": 0.020999999999999998,
+      "transaction.commit": 13.466999999999999,
+      "transaction.set": 0.0085,
+      "write.anchor_batch_upsert": 0.217,
+      "write.type_registry": 0.0305
+    },
+    "flight_median_by_category_ms": {
+      "graph.Warehouse.hop": 3.3163970000000003,
+      "hydrate.generic_anchor": 11.399808499999999,
+      "transaction.begin": 3.4077599999999997,
+      "transaction.commit": 16.584583000000002,
+      "transaction.set": 2.973731,
+      "write.anchor_batch_upsert": 2.9876135,
+      "write.type_registry": 2.5736805
+    },
+    "server_chunk_received_to_delivered_median_ms": 2.2476944999999997
+  },
+  {
+    "variant": "final",
+    "label": "payment_id_BC",
+    "n": 30,
+    "server_median_ms": 41.269,
+    "client_median_ms": 44.8654655,
+    "commit_span_median_ms": 12.4115,
+    "median_of_per_request_commit_span_minus_observed_flush_wire_ms": 1.4628699999999997,
+    "median_of_per_request_commit_span_minus_flush_execute_and_proxy_hold_ms": 3.297020500000001,
+    "PG_execution_median_by_category_ms": {
+      "graph.Warehouse.hop": 0.086,
+      "hydrate.generic_anchor": 0.158,
+      "transaction.begin": 0.0115,
+      "transaction.commit": 1.62,
+      "transaction.set": 0.009000000000000001,
+      "write.anchor_batch_upsert": 0.3175,
+      "write.type_registry": 0.048
+    },
+    "flight_median_by_category_ms": {
+      "graph.Warehouse.hop": 4.2648969999999995,
+      "hydrate.generic_anchor": 12.5052715,
+      "transaction.begin": 3.0397635000000003,
+      "transaction.commit": 4.4390765000000005,
+      "transaction.set": 3.0666219999999997,
+      "write.anchor_batch_upsert": 3.479939,
+      "write.type_registry": 2.8727425
+    },
+    "server_chunk_received_to_delivered_median_ms": 2.2461395
+  },
+  {
+    "variant": "final",
+    "label": "payment_id_GC",
+    "n": 30,
+    "server_median_ms": 42.8805,
+    "client_median_ms": 45.542442,
+    "commit_span_median_ms": 11.348500000000001,
+    "median_of_per_request_commit_span_minus_observed_flush_wire_ms": 1.271843500000001,
+    "median_of_per_request_commit_span_minus_flush_execute_and_proxy_hold_ms": 2.5312935,
+    "PG_execution_median_by_category_ms": {
+      "graph.Warehouse.hop": 0.1005,
+      "hydrate.generic_anchor": 0.17,
+      "transaction.begin": 0.0185,
+      "transaction.commit": 1.5659999999999998,
+      "transaction.set": 0.0145,
+      "write.anchor_batch_upsert": 0.2525,
+      "write.type_registry": 0.0335
+    },
+    "flight_median_by_category_ms": {
+      "graph.Warehouse.hop": 5.0237205,
+      "hydrate.generic_anchor": 12.929481,
+      "transaction.begin": 3.454646,
+      "transaction.commit": 4.37406,
+      "transaction.set": 3.375592,
+      "write.anchor_batch_upsert": 3.1783495,
+      "write.type_registry": 2.7282685
+    },
+    "server_chunk_received_to_delivered_median_ms": 2.245032
+  }
+]

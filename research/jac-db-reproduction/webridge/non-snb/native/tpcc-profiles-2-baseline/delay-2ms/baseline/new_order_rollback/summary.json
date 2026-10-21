@@ -1,0 +1,77 @@
+{
+  "label": "new_order_rollback",
+  "variant": "baseline",
+  "delay_ms": 2,
+  "instrumented": true,
+  "warm": 10,
+  "n": 3,
+  "server_median_ms": null,
+  "client_median_ms": 116.011671,
+  "app_cpu_total_ms": 90.0,
+  "CPU_tick_ms": 10.0,
+  "path": "tpcc-profiles-2-baseline/delay-2ms/baseline/new_order_rollback",
+  "initial": {
+    "counts": {
+      "Customer": 30000,
+      "District": 10,
+      "GenericEdge": 560765,
+      "History": 30000,
+      "Item": 100000,
+      "Of": 100000,
+      "Order": 30000,
+      "OrderLine": 300754,
+      "Placed": 30000,
+      "Root": 5,
+      "Stock": 100000,
+      "Warehouse": 1
+    },
+    "numeric_sums": {
+      "Warehouse.w_ytd": "300000.0",
+      "District.d_ytd": "300000.0",
+      "District.d_next_o_id": "30010",
+      "Customer.c_balance": "-300000.0",
+      "Customer.c_ytd_payment": "300000.0",
+      "Customer.c_payment_cnt": "30000",
+      "Stock.s_quantity": "5495254",
+      "Stock.s_ytd": "0",
+      "Stock.s_order_cnt": "0",
+      "Stock.s_remote_cnt": "0",
+      "History.h_amount": "300000.0",
+      "OrderLine.ol_amount": "452379373.56"
+    },
+    "district_order_consistency_bad": 0
+  },
+  "after_requests": {
+    "counts": {
+      "Customer": 30000,
+      "District": 10,
+      "GenericEdge": 560765,
+      "History": 30000,
+      "Item": 100000,
+      "Of": 100000,
+      "Order": 30000,
+      "OrderLine": 300754,
+      "Placed": 30000,
+      "Root": 5,
+      "Stock": 100000,
+      "Warehouse": 1
+    },
+    "numeric_sums": {
+      "Warehouse.w_ytd": "300000.0",
+      "District.d_ytd": "300000.0",
+      "District.d_next_o_id": "30010",
+      "Customer.c_balance": "-300000.0",
+      "Customer.c_ytd_payment": "300000.0",
+      "Customer.c_payment_cnt": "30000",
+      "Stock.s_quantity": "5495254",
+      "Stock.s_ytd": "0",
+      "Stock.s_order_cnt": "0",
+      "Stock.s_remote_cnt": "0",
+      "History.h_amount": "300000.0",
+      "OrderLine.ol_amount": "452379373.56"
+    },
+    "district_order_consistency_bad": 0
+  },
+  "logging_restored": true,
+  "service_stopped": true
+}

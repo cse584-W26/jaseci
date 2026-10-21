@@ -1,0 +1,74 @@
+{
+  "warehouse": {
+    "rows": 1,
+    "sha256": "5608886bc4d63c85cc1932c03c9f89ca0e9cfb2dc2ee4e9cf09d57932efb4225",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-gates/final/after-state/warehouse.jsonl.gz",
+    "sql": "SELECT 1,(props->'archetype'->>'w_ytd')::numeric FROM anchors WHERE arch_type='Warehouse' ORDER BY 1",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-gates/final/after-state/warehouse.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "5e2747e20d9009288e452f79ece12f09ad7f85021ddd017fd7baee9532a532ff",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "district": {
+    "rows": 10,
+    "sha256": "464c59c4e9402c70ad1a6555723cdd951b511089d67aad2c496d71692032548d",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-gates/final/after-state/district.jsonl.gz",
+    "sql": "SELECT 1,(props->'archetype'->>'d_id')::int,(props->'archetype'->>'d_ytd')::numeric,(props->'archetype'->>'d_next_o_id')::int FROM anchors WHERE arch_type='District' ORDER BY 1,2",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-gates/final/after-state/district.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "0e933a9c538c25ddf1ee9b32c8e03a916f7312adb11278242c0d8073cc31bf1d",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "customer": {
+    "rows": 30000,
+    "sha256": "a75bbf23c26ee8d2813a8bd7f20c9049ce1bac6328538a21c421cb6f6a07825c",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-gates/final/after-state/customer.jsonl.gz",
+    "sql": "SELECT 1,(d.props->'archetype'->>'d_id')::int,(c.props->'archetype'->>'c_id')::int,(c.props->'archetype'->>'c_balance')::numeric,(c.props->'archetype'->>'c_ytd_payment')::numeric,(c.props->'archetype'->>'c_payment_cnt')::int,c.props->'archetype'->>'c_data' FROM anchors c JOIN anchors e ON e.dst=c.id AND e.kind='EdgeAnchor'JOIN anchors d ON d.id=e.src AND d.arch_type='District'WHERE c.arch_type='Customer'ORDER BY 1,2,3",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-gates/final/after-state/customer.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "751297b58375222e6374a1fd6db92bc3aef741e7a3bf74d9da84a8c29be3a6c9",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "stock": {
+    "rows": 100000,
+    "sha256": "7b8cb0a33c0dfc46be1254c59a05af42698e7c1f955319cdf071dc3b61a8d6db",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-gates/final/after-state/stock.jsonl.gz",
+    "sql": "SELECT 1,(props->'archetype'->>'s_i_id')::int,(props->'archetype'->>'s_quantity')::int,(props->'archetype'->>'s_ytd')::int,(props->'archetype'->>'s_order_cnt')::int,(props->'archetype'->>'s_remote_cnt')::int FROM anchors WHERE arch_type='Stock' ORDER BY 1,2",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-gates/final/after-state/stock.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "7b8cb0a33c0dfc46be1254c59a05af42698e7c1f955319cdf071dc3b61a8d6db",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "orders": {
+    "rows": 30487,
+    "sha256": "be1c0a984eb61155b04c3ce78c1264483fa9abee33556124ea0c2d6954879152",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-gates/final/after-state/orders.jsonl.gz",
+    "sql": "SELECT 1,(props->'archetype'->>'o_d_id')::int,(props->'archetype'->>'o_id')::int,(props->'archetype'->>'o_c_id')::int,coalesce((props->'archetype'->>'o_carrier_id')::int,0),(props->'archetype'->>'o_ol_cnt')::int,(props->'archetype'->>'o_all_local')::int FROM anchors WHERE arch_type='Order' ORDER BY 1,2,3",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-gates/final/after-state/orders.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "be1c0a984eb61155b04c3ce78c1264483fa9abee33556124ea0c2d6954879152",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "new_order": {
+    "rows": 9487,
+    "sha256": "281025225a699ba845af648614273436d202e193b7df47829e75e192d3a5d830",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-gates/final/after-state/new_order.jsonl.gz",
+    "sql": "SELECT 1,(props->'archetype'->>'o_d_id')::int,(props->'archetype'->>'o_id')::int FROM anchors WHERE arch_type='Order'AND(props->'archetype'->>'new_order')::boolean ORDER BY 1,2,3",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-gates/final/after-state/new_order.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "281025225a699ba845af648614273436d202e193b7df47829e75e192d3a5d830",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "order_line": {
+    "rows": 305500,
+    "sha256": "364944626050fd350450a09d4d1e89ebdfbea595ebbb19e2dfbe06f752e3298d",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-gates/final/after-state/order_line.jsonl.gz",
+    "sql": "SELECT 1,(o.props->'archetype'->>'o_d_id')::int,(o.props->'archetype'->>'o_id')::int,(l.props->'archetype'->>'ol_number')::int,(l.props->'archetype'->>'ol_i_id')::int,(l.props->'archetype'->>'ol_supply_w_id')::int,(l.props->'archetype'->>'ol_quantity')::int,(l.props->'archetype'->>'ol_amount')::numeric,l.props->'archetype'->>'ol_dist_info'FROM anchors l JOIN anchors e ON e.dst=l.id AND e.kind='EdgeAnchor'JOIN anchors o ON o.id=e.src AND o.arch_type='Order'WHERE l.arch_type='OrderLine'ORDER BY 1,2,3,4",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-gates/final/after-state/order_line.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "8806918389c99dc4f2fe1d58f8627976eb83dde784bc3028e37fe4d8e4e57018",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "history": {
+    "rows": 30406,
+    "sha256": "d975923f2afc04bdf8d3ab9b531fddbb72c6e76c14b2e147950d02ddec38419f",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-gates/final/after-state/history.jsonl.gz",
+    "sql": "SELECT 1,(d.props->'archetype'->>'d_id')::int,(c.props->'archetype'->>'c_id')::int,(h.props->'archetype'->>'h_w_id')::int,(h.props->'archetype'->>'h_d_id')::int,(h.props->'archetype'->>'h_amount')::numeric,h.props->'archetype'->>'h_data'FROM anchors h JOIN anchors e ON e.dst=h.id AND e.kind='EdgeAnchor'JOIN anchors c ON c.id=e.src AND c.arch_type='Customer'JOIN anchors p ON p.dst=c.id AND p.kind='EdgeAnchor'JOIN anchors d ON d.id=p.src AND d.arch_type='District'WHERE h.arch_type='History'ORDER BY 1,2,3,4,5,6,7",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-gates/final/after-state/history.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "3f22ff2394d72ac12d19ff3cba5c99a5e3ae2da5f5f4a28d4e10aaf9b84502e0",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  }
+}

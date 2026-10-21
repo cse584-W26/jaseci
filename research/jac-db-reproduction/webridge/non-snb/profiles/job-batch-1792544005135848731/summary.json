@@ -1,0 +1,81 @@
+[
+  {
+    "phase": "baseline",
+    "input": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-final-payment-name-GC-baseline-1792543948054657977",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-final-payment-name-GC-baseline-1792543948054657977",
+    "database": "jac_tpcc_conventional",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-final-payment-name-GC-baseline-1792543948054657977/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-final-payment-name-GC-baseline-1792543948054657977/prepare-command.json",
+          "--database",
+          "jac_tpcc_conventional",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-final-payment-name-GC-baseline-1792543948054657977",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-final-payment-name-GC-baseline-1792543948054657977",
+          "--generated-sources-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-final-payment-name-GC-baseline-1792543948054657977/generated-sources.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "phase": "sp",
+    "input": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-final-payment-name-GC-sp-1792543948055566958",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-final-payment-name-GC-sp-1792543948055566958",
+    "database": "jac_tpcc_conventional",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-final-payment-name-GC-sp-1792543948055566958/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-final-payment-name-GC-sp-1792543948055566958/prepare-command.json",
+          "--database",
+          "jac_tpcc_conventional",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-final-payment-name-GC-sp-1792543948055566958",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-final-payment-name-GC-sp-1792543948055566958",
+          "--generated-sources-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-final-payment-name-GC-sp-1792543948055566958/generated-sources.json"
+        ],
+        "returncode": 1
+      }
+    ],
+    "status": "PASS",
+    "initial_analysis_failure": "MySQL P_S lowercases procedure OBJECT_NAME; generated source names retain case. Cursor mapping now uses casefold; raw data unchanged.",
+    "reanalysis": {
+      "status": "PASS",
+      "analyzer_source_sha256": "e8a7df537e3da8dcda661e4af3a6cc5d0b93a8846897c1690fb473c297865eeb",
+      "analysis": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-final-payment-name-GC-sp-1792543948055566958/analysis.json",
+      "paired_results_and_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-final-payment-name-GC-sp-1792543948055566958/paired-results-and-state.json"
+    }
+  }
+]

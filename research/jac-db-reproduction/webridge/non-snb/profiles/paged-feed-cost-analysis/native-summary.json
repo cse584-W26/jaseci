@@ -1,0 +1,1940 @@
+[
+  {
+    "case_id": "littlex-feed-t20",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 74.493674,
+        "min": 73.396179,
+        "max": 75.788565,
+        "sum": 223.67841800000002
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 18,
+        "min": 18,
+        "max": 18,
+        "sum": 54
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 19.811,
+        "min": 18.979,
+        "max": 20.598000000000003,
+        "sum": 59.388000000000005
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 18.809,
+        "min": 17.833000000000002,
+        "max": 19.527000000000005,
+        "sum": 56.16900000000001
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.17099999999999999,
+        "min": 0.138,
+        "max": 0.185,
+        "sum": 0.494
+      }
+    },
+    "op_counts": {
+      "feed": 3
+    }
+  },
+  {
+    "case_id": "littlex-create_tweet-t20",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 39.338948,
+        "min": 32.180166,
+        "max": 41.724204,
+        "sum": 113.243318
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 9,
+        "min": 9,
+        "max": 9,
+        "sum": 27
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 5.931,
+        "min": 3.0629999999999997,
+        "max": 8.396,
+        "sum": 17.39
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 2.22,
+        "min": 0.7729999999999999,
+        "max": 4.225,
+        "sum": 7.218
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.496,
+        "min": 1.376,
+        "max": 1.609,
+        "sum": 4.481
+      }
+    },
+    "op_counts": {
+      "create_tweet": 3
+    }
+  },
+  {
+    "case_id": "littlex-follow-t20",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 35.542675,
+        "min": 33.870547,
+        "max": 35.710525000000004,
+        "sum": 105.12374700000001
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 12,
+        "min": 12,
+        "max": 12,
+        "sum": 36
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 3.093,
+        "min": 2.586,
+        "max": 3.657,
+        "sum": 9.336
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 1.2800000000000002,
+        "min": 0.988,
+        "max": 1.7670000000000001,
+        "sum": 4.035
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.158,
+        "min": 1.0499999999999998,
+        "max": 1.216,
+        "sum": 3.4239999999999995
+      }
+    },
+    "op_counts": {
+      "follow": 3
+    }
+  },
+  {
+    "case_id": "littlex-like-t20",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 33.522323,
+        "min": 33.279665,
+        "max": 46.988469,
+        "sum": 113.790457
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 11,
+        "min": 10,
+        "max": 11,
+        "sum": 32
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 3.165,
+        "min": 1.963,
+        "max": 6.558,
+        "sum": 11.686
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 0.7060000000000001,
+        "min": 0.434,
+        "max": 2.38,
+        "sum": 3.52
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.298,
+        "min": 1.0130000000000001,
+        "max": 1.473,
+        "sum": 3.7840000000000003
+      }
+    },
+    "op_counts": {
+      "like": 3
+    }
+  },
+  {
+    "case_id": "littlex-feed-t20",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 80.804193,
+        "min": 68.564148,
+        "max": 89.896536,
+        "sum": 239.264877
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 14,
+        "min": 14,
+        "max": 14,
+        "sum": 42
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 22.983999999999998,
+        "min": 19.636,
+        "max": 26.633,
+        "sum": 69.253
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 22.022999999999996,
+        "min": 17.633999999999997,
+        "max": 24.246,
+        "sum": 63.90299999999999
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.15100000000000002,
+        "min": 0.091,
+        "max": 0.15900000000000003,
+        "sum": 0.401
+      }
+    },
+    "op_counts": {
+      "feed": 3
+    }
+  },
+  {
+    "case_id": "littlex-create_tweet-t20",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 22.434919999999998,
+        "min": 22.155618,
+        "max": 39.157168,
+        "sum": 83.747706
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 8,
+        "min": 8,
+        "max": 8,
+        "sum": 24
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 1.933,
+        "min": 1.895,
+        "max": 8.52,
+        "sum": 12.347999999999999
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 0.419,
+        "min": 0.39799999999999996,
+        "max": 4.366,
+        "sum": 5.183
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.157,
+        "min": 1.054,
+        "max": 1.802,
+        "sum": 4.013
+      }
+    },
+    "op_counts": {
+      "create_tweet": 3
+    }
+  },
+  {
+    "case_id": "littlex-follow-t20",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 50.016167,
+        "min": 37.336242,
+        "max": 50.271268,
+        "sum": 137.623677
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 11,
+        "min": 11,
+        "max": 11,
+        "sum": 33
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 9.314,
+        "min": 5.122,
+        "max": 9.537,
+        "sum": 23.973
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 5.408,
+        "min": 2.81,
+        "max": 5.57,
+        "sum": 13.788
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.429,
+        "min": 1.272,
+        "max": 1.4540000000000002,
+        "sum": 4.155
+      }
+    },
+    "op_counts": {
+      "follow": 3
+    }
+  },
+  {
+    "case_id": "littlex-like-t20",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 39.403829,
+        "min": 29.369049,
+        "max": 41.636935,
+        "sum": 110.409813
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 10,
+        "min": 9,
+        "max": 10,
+        "sum": 29
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 5.548,
+        "min": 1.925,
+        "max": 8.257,
+        "sum": 15.73
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 2.3739999999999997,
+        "min": 0.375,
+        "max": 4.355,
+        "sum": 7.104
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.317,
+        "min": 0.9500000000000001,
+        "max": 1.552,
+        "sum": 3.819
+      }
+    },
+    "op_counts": {
+      "like": 3
+    }
+  },
+  {
+    "case_id": "littlex-feed-t100",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 169.98800400000002,
+        "min": 169.598332,
+        "max": 213.861896,
+        "sum": 553.448232
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 18,
+        "min": 18,
+        "max": 19,
+        "sum": 55
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 100.098,
+        "min": 99.217,
+        "max": 134.347,
+        "sum": 333.66200000000003
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 98.29,
+        "min": 97.605,
+        "max": 132.116,
+        "sum": 328.011
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.312,
+        "min": 0.311,
+        "max": 0.3370000000000001,
+        "sum": 0.9600000000000001
+      }
+    },
+    "op_counts": {
+      "feed": 3
+    }
+  },
+  {
+    "case_id": "littlex-create_tweet-t100",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 37.435223,
+        "min": 24.55972,
+        "max": 40.62735,
+        "sum": 102.622293
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 9,
+        "min": 9,
+        "max": 9,
+        "sum": 27
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 5.825,
+        "min": 1.9720000000000002,
+        "max": 8.163,
+        "sum": 15.96
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 2.131,
+        "min": 0.383,
+        "max": 4.171,
+        "sum": 6.6850000000000005
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.447,
+        "min": 1.147,
+        "max": 1.4500000000000002,
+        "sum": 4.0440000000000005
+      }
+    },
+    "op_counts": {
+      "create_tweet": 3
+    }
+  },
+  {
+    "case_id": "littlex-follow-t100",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 34.130252,
+        "min": 34.003631,
+        "max": 38.166188,
+        "sum": 106.300071
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 12,
+        "min": 12,
+        "max": 12,
+        "sum": 36
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 2.882,
+        "min": 2.773,
+        "max": 4.095,
+        "sum": 9.75
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 1.103,
+        "min": 0.983,
+        "max": 1.7760000000000002,
+        "sum": 3.862
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.269,
+        "min": 1.1440000000000001,
+        "max": 1.274,
+        "sum": 3.6870000000000003
+      }
+    },
+    "op_counts": {
+      "follow": 3
+    }
+  },
+  {
+    "case_id": "littlex-like-t100",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 32.845801,
+        "min": 29.242766,
+        "max": 36.834136,
+        "sum": 98.922703
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 10,
+        "min": 10,
+        "max": 11,
+        "sum": 31
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 2.903,
+        "min": 2.2079999999999997,
+        "max": 6.7219999999999995,
+        "sum": 11.832999999999998
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 0.38599999999999995,
+        "min": 0.374,
+        "max": 4.279,
+        "sum": 5.039
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.284,
+        "min": 1.2389999999999999,
+        "max": 1.37,
+        "sum": 3.893
+      }
+    },
+    "op_counts": {
+      "like": 3
+    }
+  },
+  {
+    "case_id": "littlex-feed-t200",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 274.918585,
+        "min": 273.773631,
+        "max": 277.08025200000003,
+        "sum": 825.7724680000001
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 18,
+        "min": 18,
+        "max": 18,
+        "sum": 54
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 218.02200000000002,
+        "min": 213.40099999999998,
+        "max": 219.947,
+        "sum": 651.37
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 216.318,
+        "min": 211.831,
+        "max": 218.299,
+        "sum": 646.448
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.7670000000000001,
+        "min": 0.6330000000000001,
+        "max": 0.7939999999999999,
+        "sum": 2.194
+      }
+    },
+    "op_counts": {
+      "feed": 3
+    }
+  },
+  {
+    "case_id": "littlex-create_tweet-t200",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 24.963016,
+        "min": 24.955898,
+        "max": 25.237224,
+        "sum": 75.156138
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 9,
+        "min": 9,
+        "max": 9,
+        "sum": 27
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 2.022,
+        "min": 1.995,
+        "max": 2.378,
+        "sum": 6.395
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 0.38799999999999996,
+        "min": 0.374,
+        "max": 0.732,
+        "sum": 1.494
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.2489999999999999,
+        "min": 1.2089999999999999,
+        "max": 1.2489999999999999,
+        "sum": 3.707
+      }
+    },
+    "op_counts": {
+      "create_tweet": 3
+    }
+  },
+  {
+    "case_id": "littlex-follow-t200",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 33.587324,
+        "min": 33.460136,
+        "max": 34.132421,
+        "sum": 101.179881
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 12,
+        "min": 12,
+        "max": 12,
+        "sum": 36
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 3.036,
+        "min": 2.941,
+        "max": 3.919,
+        "sum": 9.896
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 1.1400000000000001,
+        "min": 1.121,
+        "max": 1.981,
+        "sum": 4.242
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.277,
+        "min": 1.2670000000000001,
+        "max": 1.3319999999999999,
+        "sum": 3.876
+      }
+    },
+    "op_counts": {
+      "follow": 3
+    }
+  },
+  {
+    "case_id": "littlex-like-t200",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 31.436953,
+        "min": 28.837833,
+        "max": 31.53765,
+        "sum": 91.81243599999999
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 11,
+        "min": 10,
+        "max": 11,
+        "sum": 32
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 2.316,
+        "min": 2.261,
+        "max": 2.342,
+        "sum": 6.9190000000000005
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 0.413,
+        "min": 0.39299999999999996,
+        "max": 0.757,
+        "sum": 1.563
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.352,
+        "min": 0.9620000000000001,
+        "max": 1.388,
+        "sum": 3.702
+      }
+    },
+    "op_counts": {
+      "like": 3
+    }
+  },
+  {
+    "case_id": "littlex-feed-t50",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 117.220636,
+        "min": 114.761927,
+        "max": 184.12581,
+        "sum": 416.10837300000003
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 18,
+        "min": 18,
+        "max": 18,
+        "sum": 54
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 48.164,
+        "min": 47.66,
+        "max": 96.32700000000001,
+        "sum": 192.151
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 46.651,
+        "min": 46.196,
+        "max": 93.80300000000001,
+        "sum": 186.65
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.20800000000000002,
+        "min": 0.162,
+        "max": 0.21900000000000003,
+        "sum": 0.5890000000000001
+      }
+    },
+    "op_counts": {
+      "feed": 3
+    }
+  },
+  {
+    "case_id": "littlex-create_tweet-t50",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 26.834422,
+        "min": 23.785329,
+        "max": 37.939079,
+        "sum": 88.55883
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 9,
+        "min": 9,
+        "max": 9,
+        "sum": 27
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 2.415,
+        "min": 1.996,
+        "max": 7.186,
+        "sum": 11.597
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 0.501,
+        "min": 0.416,
+        "max": 4.427,
+        "sum": 5.343999999999999
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.319,
+        "min": 1.096,
+        "max": 1.338,
+        "sum": 3.753
+      }
+    },
+    "op_counts": {
+      "create_tweet": 3
+    }
+  },
+  {
+    "case_id": "littlex-follow-t50",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 53.075938,
+        "min": 34.786164,
+        "max": 54.131170999999995,
+        "sum": 141.993273
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 12,
+        "min": 12,
+        "max": 12,
+        "sum": 36
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 9.562,
+        "min": 3.87,
+        "max": 9.695,
+        "sum": 23.127
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 5.343,
+        "min": 1.839,
+        "max": 5.505,
+        "sum": 12.687
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.4260000000000002,
+        "min": 1.3439999999999999,
+        "max": 1.429,
+        "sum": 4.199
+      }
+    },
+    "op_counts": {
+      "follow": 3
+    }
+  },
+  {
+    "case_id": "littlex-like-t50",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 30.613623,
+        "min": 27.165419,
+        "max": 33.893246,
+        "sum": 91.672288
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 11,
+        "min": 10,
+        "max": 11,
+        "sum": 32
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 2.394,
+        "min": 2.326,
+        "max": 2.945,
+        "sum": 7.665
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 0.6789999999999999,
+        "min": 0.475,
+        "max": 0.747,
+        "sum": 1.9009999999999998
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.091,
+        "min": 1.085,
+        "max": 1.16,
+        "sum": 3.336
+      }
+    },
+    "op_counts": {
+      "like": 3
+    }
+  },
+  {
+    "case_id": "littlex-feed-t100",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 167.908493,
+        "min": 152.534587,
+        "max": 196.376718,
+        "sum": 516.819798
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 14,
+        "min": 14,
+        "max": 15,
+        "sum": 43
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 104.156,
+        "min": 103.622,
+        "max": 111.24000000000001,
+        "sum": 319.01800000000003
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 102.644,
+        "min": 102.58099999999999,
+        "max": 108.34100000000001,
+        "sum": 313.56600000000003
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.243,
+        "min": 0.21800000000000003,
+        "max": 0.271,
+        "sum": 0.732
+      }
+    },
+    "op_counts": {
+      "feed": 3
+    }
+  },
+  {
+    "case_id": "littlex-create_tweet-t100",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 23.164439,
+        "min": 21.904339999999998,
+        "max": 32.14836,
+        "sum": 77.217139
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 8,
+        "min": 8,
+        "max": 8,
+        "sum": 24
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 2.583,
+        "min": 2.186,
+        "max": 4.524,
+        "sum": 9.293
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 0.754,
+        "min": 0.413,
+        "max": 1.347,
+        "sum": 2.514
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.369,
+        "min": 1.335,
+        "max": 1.4909999999999999,
+        "sum": 4.195
+      }
+    },
+    "op_counts": {
+      "create_tweet": 3
+    }
+  },
+  {
+    "case_id": "littlex-follow-t100",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 32.546453,
+        "min": 31.385652,
+        "max": 40.272398,
+        "sum": 104.204503
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 11,
+        "min": 11,
+        "max": 11,
+        "sum": 33
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 3.3529999999999998,
+        "min": 3.127,
+        "max": 7.785,
+        "sum": 14.265
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 1.35,
+        "min": 1.2189999999999999,
+        "max": 5.459,
+        "sum": 8.027999999999999
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.3499999999999999,
+        "min": 1.3159999999999998,
+        "max": 1.361,
+        "sum": 4.026999999999999
+      }
+    },
+    "op_counts": {
+      "follow": 3
+    }
+  },
+  {
+    "case_id": "littlex-like-t100",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 38.909177,
+        "min": 25.825025,
+        "max": 41.192338,
+        "sum": 105.92654
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 9,
+        "min": 9,
+        "max": 10,
+        "sum": 28
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 4.514,
+        "min": 1.935,
+        "max": 8.449,
+        "sum": 14.898
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 1.101,
+        "min": 0.411,
+        "max": 4.2829999999999995,
+        "sum": 5.794999999999999
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.277,
+        "min": 1.06,
+        "max": 1.818,
+        "sum": 4.155
+      }
+    },
+    "op_counts": {
+      "like": 3
+    }
+  },
+  {
+    "case_id": "littlex-feed-t200",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 293.239644,
+        "min": 274.912568,
+        "max": 300.462089,
+        "sum": 868.6143010000001
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 14,
+        "min": 14,
+        "max": 15,
+        "sum": 43
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 226.682,
+        "min": 220.168,
+        "max": 239.63400000000001,
+        "sum": 686.484
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 224.96099999999998,
+        "min": 217.99699999999999,
+        "max": 237.762,
+        "sum": 680.72
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.5960000000000001,
+        "min": 0.5910000000000001,
+        "max": 0.881,
+        "sum": 2.068
+      }
+    },
+    "op_counts": {
+      "feed": 3
+    }
+  },
+  {
+    "case_id": "littlex-create_tweet-t200",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 23.702170000000002,
+        "min": 23.040559000000002,
+        "max": 32.509851,
+        "sum": 79.25258
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 8,
+        "min": 8,
+        "max": 8,
+        "sum": 24
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 2.629,
+        "min": 2.274,
+        "max": 4.929,
+        "sum": 9.832
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 0.77,
+        "min": 0.503,
+        "max": 1.7990000000000002,
+        "sum": 3.072
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.4489999999999998,
+        "min": 1.317,
+        "max": 1.466,
+        "sum": 4.231999999999999
+      }
+    },
+    "op_counts": {
+      "create_tweet": 3
+    }
+  },
+  {
+    "case_id": "littlex-follow-t200",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 50.291401,
+        "min": 32.681365,
+        "max": 55.966547,
+        "sum": 138.939313
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 11,
+        "min": 11,
+        "max": 11,
+        "sum": 33
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 10.323,
+        "min": 2.981,
+        "max": 15.6,
+        "sum": 28.904
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 6.176,
+        "min": 1.142,
+        "max": 10.860999999999997,
+        "sum": 18.179
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.677,
+        "min": 1.403,
+        "max": 1.689,
+        "sum": 4.769
+      }
+    },
+    "op_counts": {
+      "follow": 3
+    }
+  },
+  {
+    "case_id": "littlex-like-t200",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 41.375254,
+        "min": 32.114125,
+        "max": 42.621317,
+        "sum": 116.11069599999999
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 10,
+        "min": 9,
+        "max": 10,
+        "sum": 29
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 5.968999999999999,
+        "min": 5.321,
+        "max": 6.813,
+        "sum": 18.102999999999998
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 2.363,
+        "min": 2.3369999999999997,
+        "max": 3.232,
+        "sum": 7.932
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.3679999999999999,
+        "min": 1.283,
+        "max": 1.837,
+        "sum": 4.4879999999999995
+      }
+    },
+    "op_counts": {
+      "like": 3
+    }
+  },
+  {
+    "case_id": "littlex-feed-t50",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 169.03816700000002,
+        "min": 97.698493,
+        "max": 170.096871,
+        "sum": 436.833531
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 14,
+        "min": 14,
+        "max": 14,
+        "sum": 42
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 86.173,
+        "min": 48.32299999999999,
+        "max": 95.297,
+        "sum": 229.793
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 83.781,
+        "min": 47.48599999999999,
+        "max": 93.268,
+        "sum": 224.535
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.096,
+        "min": 0.08700000000000001,
+        "max": 0.185,
+        "sum": 0.368
+      }
+    },
+    "op_counts": {
+      "feed": 3
+    }
+  },
+  {
+    "case_id": "littlex-create_tweet-t50",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 35.046373,
+        "min": 34.355547,
+        "max": 38.520524,
+        "sum": 107.92244400000001
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 8,
+        "min": 8,
+        "max": 8,
+        "sum": 24
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 5.806,
+        "min": 5.536,
+        "max": 8.199,
+        "sum": 19.541
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 2.342,
+        "min": 2.236,
+        "max": 4.4559999999999995,
+        "sum": 9.033999999999999
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.498,
+        "min": 1.405,
+        "max": 1.545,
+        "sum": 4.448
+      }
+    },
+    "op_counts": {
+      "create_tweet": 3
+    }
+  },
+  {
+    "case_id": "littlex-follow-t50",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 39.926462,
+        "min": 37.33952,
+        "max": 46.200757,
+        "sum": 123.466739
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 11,
+        "min": 11,
+        "max": 11,
+        "sum": 33
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 5.324,
+        "min": 5.097,
+        "max": 8.947,
+        "sum": 19.368
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 3.0300000000000002,
+        "min": 2.258,
+        "max": 5.834,
+        "sum": 11.122
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.346,
+        "min": 1.198,
+        "max": 1.5270000000000001,
+        "sum": 4.071
+      }
+    },
+    "op_counts": {
+      "follow": 3
+    }
+  },
+  {
+    "case_id": "littlex-like-t50",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 34.769391999999996,
+        "min": 27.500647,
+        "max": 42.215085,
+        "sum": 104.485124
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 10,
+        "min": 9,
+        "max": 10,
+        "sum": 29
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 3.3160000000000003,
+        "min": 2.261,
+        "max": 8.321,
+        "sum": 13.898
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 0.74,
+        "min": 0.421,
+        "max": 4.416,
+        "sum": 5.577
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 1.381,
+        "min": 1.319,
+        "max": 1.538,
+        "sum": 4.2379999999999995
+      }
+    },
+    "op_counts": {
+      "like": 3
+    }
+  },
+  {
+    "case_id": "littlex-mixed-t200-w0",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 100,
+        "median": 61.7958795,
+        "min": 47.191619,
+        "max": 100.343109,
+        "sum": 6744.791475
+      },
+      "db_call_count": {
+        "n": 100,
+        "median": 18.0,
+        "min": 18,
+        "max": 19,
+        "sum": 1803
+      },
+      "db_sum_ms": {
+        "n": 100,
+        "median": 3.7285,
+        "min": 2.402,
+        "max": 10.254,
+        "sum": 463.017
+      },
+      "business_select_ms": {
+        "n": 100,
+        "median": 2.0164999999999997,
+        "min": 1.449,
+        "max": 6.821,
+        "sum": 252.349
+      },
+      "transaction_control_ms": {
+        "n": 100,
+        "median": 0.17950000000000005,
+        "min": 0.08,
+        "max": 0.34400000000000003,
+        "sum": 18.86
+      }
+    },
+    "op_counts": {
+      "feed_page": 100
+    }
+  },
+  {
+    "case_id": "littlex-mixed-t200-w15",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 100,
+        "median": 58.437256500000004,
+        "min": 24.781427,
+        "max": 94.408461,
+        "sum": 6329.022933
+      },
+      "db_call_count": {
+        "n": 100,
+        "median": 18.0,
+        "min": 9,
+        "max": 19,
+        "sum": 1679
+      },
+      "db_sum_ms": {
+        "n": 100,
+        "median": 3.713,
+        "min": 1.892,
+        "max": 9.488,
+        "sum": 461.747
+      },
+      "business_select_ms": {
+        "n": 100,
+        "median": 1.99,
+        "min": 0.417,
+        "max": 6.025,
+        "sum": 256.934
+      },
+      "transaction_control_ms": {
+        "n": 100,
+        "median": 0.20450000000000002,
+        "min": 0.081,
+        "max": 1.833,
+        "sum": 37.429
+      }
+    },
+    "op_counts": {
+      "create_tweet": 10,
+      "feed_page": 85,
+      "like": 4,
+      "follow": 1
+    }
+  },
+  {
+    "case_id": "littlex-mixed-t200-w30",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 100,
+        "median": 54.065329,
+        "min": 25.141416,
+        "max": 94.368932,
+        "sum": 5763.69734
+      },
+      "db_call_count": {
+        "n": 100,
+        "median": 18.0,
+        "min": 9,
+        "max": 19,
+        "sum": 1555
+      },
+      "db_sum_ms": {
+        "n": 100,
+        "median": 4.09,
+        "min": 2.113,
+        "max": 8.459,
+        "sum": 436.435
+      },
+      "business_select_ms": {
+        "n": 100,
+        "median": 2.0635,
+        "min": 0.409,
+        "max": 5.1129999999999995,
+        "sum": 225.153
+      },
+      "transaction_control_ms": {
+        "n": 100,
+        "median": 0.2415,
+        "min": 0.08199999999999999,
+        "max": 1.7160000000000002,
+        "sum": 54.613
+      }
+    },
+    "op_counts": {
+      "create_tweet": 20,
+      "feed_page": 70,
+      "like": 8,
+      "follow": 2
+    }
+  },
+  {
+    "case_id": "littlex-mixed-t200-w5",
+    "arm": "jac_original",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 100,
+        "median": 67.28725850000001,
+        "min": 25.192892,
+        "max": 95.545701,
+        "sum": 6780.512178
+      },
+      "db_call_count": {
+        "n": 100,
+        "median": 18.0,
+        "min": 9,
+        "max": 19,
+        "sum": 1763
+      },
+      "db_sum_ms": {
+        "n": 100,
+        "median": 3.923,
+        "min": 2.286,
+        "max": 8.795,
+        "sum": 476.116
+      },
+      "business_select_ms": {
+        "n": 100,
+        "median": 2.203,
+        "min": 0.485,
+        "max": 5.303000000000001,
+        "sum": 270.323
+      },
+      "transaction_control_ms": {
+        "n": 100,
+        "median": 0.20950000000000002,
+        "min": 0.08199999999999999,
+        "max": 1.538,
+        "sum": 24.923000000000002
+      }
+    },
+    "op_counts": {
+      "create_tweet": 3,
+      "feed_page": 95,
+      "like": 1,
+      "follow": 1
+    }
+  },
+  {
+    "case_id": "littlex-mixed-t200-w0",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 100,
+        "median": 54.603198,
+        "min": 37.392439,
+        "max": 82.28771,
+        "sum": 5748.254645
+      },
+      "db_call_count": {
+        "n": 100,
+        "median": 14.0,
+        "min": 14,
+        "max": 15,
+        "sum": 1403
+      },
+      "db_sum_ms": {
+        "n": 100,
+        "median": 4.268000000000001,
+        "min": 2.315,
+        "max": 8.975999999999999,
+        "sum": 492.42900000000003
+      },
+      "business_select_ms": {
+        "n": 100,
+        "median": 2.8280000000000003,
+        "min": 1.515,
+        "max": 5.113,
+        "sum": 299.005
+      },
+      "transaction_control_ms": {
+        "n": 100,
+        "median": 0.07949999999999999,
+        "min": 0.053000000000000005,
+        "max": 0.171,
+        "sum": 8.907
+      }
+    },
+    "op_counts": {
+      "feed_page": 100
+    }
+  },
+  {
+    "case_id": "littlex-mixed-t200-w15",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 100,
+        "median": 47.439518500000005,
+        "min": 22.412528000000002,
+        "max": 94.428853,
+        "sum": 5258.28467
+      },
+      "db_call_count": {
+        "n": 100,
+        "median": 14.0,
+        "min": 8,
+        "max": 15,
+        "sum": 1324
+      },
+      "db_sum_ms": {
+        "n": 100,
+        "median": 3.5540000000000003,
+        "min": 2.129,
+        "max": 10.948,
+        "sum": 466.548
+      },
+      "business_select_ms": {
+        "n": 100,
+        "median": 1.953,
+        "min": 0.40099999999999997,
+        "max": 6.827,
+        "sum": 265.703
+      },
+      "transaction_control_ms": {
+        "n": 100,
+        "median": 0.08399999999999999,
+        "min": 0.046000000000000006,
+        "max": 1.939,
+        "sum": 28.974999999999998
+      }
+    },
+    "op_counts": {
+      "create_tweet": 10,
+      "feed_page": 85,
+      "like": 4,
+      "follow": 1
+    }
+  },
+  {
+    "case_id": "littlex-mixed-t200-w30",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 100,
+        "median": 42.5232785,
+        "min": 22.504315,
+        "max": 82.735519,
+        "sum": 4810.834768
+      },
+      "db_call_count": {
+        "n": 100,
+        "median": 14.0,
+        "min": 8,
+        "max": 15,
+        "sum": 1244
+      },
+      "db_sum_ms": {
+        "n": 100,
+        "median": 3.472,
+        "min": 2.18,
+        "max": 11.734,
+        "sum": 447.377
+      },
+      "business_select_ms": {
+        "n": 100,
+        "median": 1.8695,
+        "min": 0.39099999999999996,
+        "max": 7.5200000000000005,
+        "sum": 232.114
+      },
+      "transaction_control_ms": {
+        "n": 100,
+        "median": 0.11150000000000002,
+        "min": 0.048,
+        "max": 3.382,
+        "sum": 50.685
+      }
+    },
+    "op_counts": {
+      "create_tweet": 20,
+      "feed_page": 70,
+      "like": 8,
+      "follow": 2
+    }
+  },
+  {
+    "case_id": "littlex-mixed-t200-w5",
+    "arm": "jac_final",
+    "engine": "PostgreSQL18",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums certified complete-response flights, including prepare-only flights. db_sum_ms is secondary owner-verified parse+bind+execute/simple server phases on every tagged backendPID including identity; server metric excludes proxy/client gaps.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/db-time-analysis",
+    "source_sha256": "7408774ed0f1cd15fe48005e5f93535a1478662a56ce6ea31f4775a7912f9fe3",
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 100,
+        "median": 54.080804,
+        "min": 23.308145,
+        "max": 95.087307,
+        "sum": 5784.50942
+      },
+      "db_call_count": {
+        "n": 100,
+        "median": 14.0,
+        "min": 8,
+        "max": 15,
+        "sum": 1379
+      },
+      "db_sum_ms": {
+        "n": 100,
+        "median": 3.9939999999999998,
+        "min": 2.28,
+        "max": 10.707,
+        "sum": 518.568
+      },
+      "business_select_ms": {
+        "n": 100,
+        "median": 2.4015,
+        "min": 0.432,
+        "max": 6.522,
+        "sum": 305.116
+      },
+      "transaction_control_ms": {
+        "n": 100,
+        "median": 0.0935,
+        "min": 0.048,
+        "max": 2.001,
+        "sum": 16.963
+      }
+    },
+    "op_counts": {
+      "create_tweet": 3,
+      "feed_page": 95,
+      "like": 1,
+      "follow": 1
+    }
+  }
+]

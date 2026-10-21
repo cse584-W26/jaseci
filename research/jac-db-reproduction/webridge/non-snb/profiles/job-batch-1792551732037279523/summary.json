@@ -1,0 +1,74 @@
+[
+  {
+    "phase": "baseline",
+    "input": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-typed-fallback-prefix23-1792551669399853822-baseline",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-typed-fallback-prefix23-1792551669399853822-baseline",
+    "database": "jac_tpcc_conventional",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-typed-fallback-prefix23-1792551669399853822-baseline/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-typed-fallback-prefix23-1792551669399853822-baseline/prepare-command.json",
+          "--database",
+          "jac_tpcc_conventional",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-typed-fallback-prefix23-1792551669399853822-baseline",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-typed-fallback-prefix23-1792551669399853822-baseline",
+          "--generated-sources-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-typed-fallback-prefix23-1792551669399853822-baseline/generated-sources.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  },
+  {
+    "phase": "sp",
+    "input": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-typed-fallback-prefix23-1792551669399853822-sp",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-typed-fallback-prefix23-1792551669399853822-sp",
+    "database": "jac_tpcc_conventional",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-typed-fallback-prefix23-1792551669399853822-sp/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-typed-fallback-prefix23-1792551669399853822-sp/prepare-command.json",
+          "--database",
+          "jac_tpcc_conventional",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-typed-fallback-prefix23-1792551669399853822-sp",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/analyze_mysql_profile.py",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-typed-fallback-prefix23-1792551669399853822-sp",
+          "--generated-sources-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/tpcc-typed-fallback-prefix23-1792551669399853822-sp/generated-sources.json"
+        ],
+        "returncode": 0
+      }
+    ],
+    "status": "PASS"
+  }
+]

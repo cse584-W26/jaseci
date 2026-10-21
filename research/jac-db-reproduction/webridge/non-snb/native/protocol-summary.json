@@ -1,0 +1,2740 @@
+{
+  "scope": "Separate instrumented TPC-C census,10warm+3measured per class/variant/delay",
+  "arms": [
+    {
+      "variant": "baseline",
+      "delay_ms": 0,
+      "class": "new_order_15",
+      "n": 3,
+      "actual_SQL_counts": {
+        "14": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "14": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        },
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        },
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 36
+        },
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 36
+        },
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 36
+        }
+      ],
+      "source": "tpcc-profiles-0-baseline/certified-requests.json",
+      "source_sha256": "c3539d1d0c1525852009a1b4719ddc34026ee415c5058010a46d4c7fb24b677d",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "baseline",
+      "delay_ms": 0,
+      "class": "new_order_5",
+      "n": 3,
+      "actual_SQL_counts": {
+        "14": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "14": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        },
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        },
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 16
+        },
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 16
+        },
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 16
+        }
+      ],
+      "source": "tpcc-profiles-0-baseline/certified-requests.json",
+      "source_sha256": "c3539d1d0c1525852009a1b4719ddc34026ee415c5058010a46d4c7fb24b677d",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "baseline",
+      "delay_ms": 0,
+      "class": "new_order_rollback",
+      "n": 3,
+      "actual_SQL_counts": {
+        "17": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "18": 3
+      },
+      "actual_prepare_only_counts": [
+        1,
+        1,
+        1
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 8,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.rollback": 1,
+          "driver.prepared_cache_cleanup": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 8,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.rollback": 1,
+          "driver.prepared_cache_cleanup": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 8,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.rollback": 1,
+          "driver.prepared_cache_cleanup": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "Q": 4,
+          "P": 11,
+          "B": 13,
+          "D": 13,
+          "E": 13,
+          "S": 14
+        },
+        {
+          "Q": 4,
+          "P": 11,
+          "B": 13,
+          "D": 13,
+          "E": 13,
+          "S": 14
+        },
+        {
+          "Q": 4,
+          "P": 11,
+          "B": 13,
+          "D": 13,
+          "E": 13,
+          "S": 14
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "C": 17,
+          "Z": 18,
+          "1": 11,
+          "2": 13,
+          "T": 9,
+          "D": 30,
+          "n": 4
+        },
+        {
+          "C": 17,
+          "Z": 18,
+          "1": 11,
+          "2": 13,
+          "T": 9,
+          "D": 30,
+          "n": 4
+        },
+        {
+          "C": 17,
+          "Z": 18,
+          "1": 11,
+          "2": 13,
+          "T": 9,
+          "D": 30,
+          "n": 4
+        }
+      ],
+      "source": "tpcc-profiles-0-baseline/certified-requests.json",
+      "source_sha256": "c3539d1d0c1525852009a1b4719ddc34026ee415c5058010a46d4c7fb24b677d",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "baseline",
+      "delay_ms": 0,
+      "class": "payment_id_BC",
+      "n": 3,
+      "actual_SQL_counts": {
+        "10": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "10": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        },
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        },
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        },
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        },
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        }
+      ],
+      "source": "tpcc-profiles-0-baseline/certified-requests.json",
+      "source_sha256": "c3539d1d0c1525852009a1b4719ddc34026ee415c5058010a46d4c7fb24b677d",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "baseline",
+      "delay_ms": 0,
+      "class": "payment_id_GC",
+      "n": 3,
+      "actual_SQL_counts": {
+        "10": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "10": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        },
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        },
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        },
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        },
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        }
+      ],
+      "source": "tpcc-profiles-0-baseline/certified-requests.json",
+      "source_sha256": "c3539d1d0c1525852009a1b4719ddc34026ee415c5058010a46d4c7fb24b677d",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "baseline",
+      "delay_ms": 0,
+      "class": "payment_name_BC",
+      "n": 3,
+      "actual_SQL_counts": {
+        "11": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "11": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 11,
+          "D": 11,
+          "E": 11,
+          "S": 11
+        },
+        {
+          "B": 11,
+          "D": 11,
+          "E": 11,
+          "S": 11
+        },
+        {
+          "B": 11,
+          "D": 11,
+          "E": 11,
+          "S": 11
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 11,
+          "n": 5,
+          "C": 11,
+          "Z": 11,
+          "T": 6,
+          "D": 6
+        },
+        {
+          "2": 11,
+          "n": 5,
+          "C": 11,
+          "Z": 11,
+          "T": 6,
+          "D": 6
+        },
+        {
+          "2": 11,
+          "n": 5,
+          "C": 11,
+          "Z": 11,
+          "T": 6,
+          "D": 6
+        }
+      ],
+      "source": "tpcc-profiles-0-baseline/certified-requests.json",
+      "source_sha256": "c3539d1d0c1525852009a1b4719ddc34026ee415c5058010a46d4c7fb24b677d",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "baseline",
+      "delay_ms": 0,
+      "class": "payment_name_GC",
+      "n": 3,
+      "actual_SQL_counts": {
+        "12": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "12": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 5,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 5,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 5,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 12,
+          "D": 12,
+          "E": 12,
+          "S": 12
+        },
+        {
+          "B": 12,
+          "D": 12,
+          "E": 12,
+          "S": 12
+        },
+        {
+          "B": 12,
+          "D": 12,
+          "E": 12,
+          "S": 12
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 12,
+          "n": 5,
+          "C": 12,
+          "Z": 12,
+          "T": 7,
+          "D": 9
+        },
+        {
+          "2": 12,
+          "n": 5,
+          "C": 12,
+          "Z": 12,
+          "T": 7,
+          "D": 9
+        },
+        {
+          "2": 12,
+          "n": 5,
+          "C": 12,
+          "Z": 12,
+          "T": 7,
+          "D": 9
+        }
+      ],
+      "source": "tpcc-profiles-0-baseline/certified-requests.json",
+      "source_sha256": "c3539d1d0c1525852009a1b4719ddc34026ee415c5058010a46d4c7fb24b677d",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "final",
+      "delay_ms": 0,
+      "class": "new_order_15",
+      "n": 3,
+      "actual_SQL_counts": {
+        "14": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "14": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        },
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        },
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 36
+        },
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 36
+        },
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 36
+        }
+      ],
+      "source": "tpcc-profiles-0-final-resumed/certified-requests.json",
+      "source_sha256": "502651967409f38c155662cb62a69152e66fb560609e402890fa3032accdca53",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "final",
+      "delay_ms": 0,
+      "class": "new_order_5",
+      "n": 3,
+      "actual_SQL_counts": {
+        "14": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "14": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        },
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        },
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 16
+        },
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 16
+        },
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 16
+        }
+      ],
+      "source": "tpcc-profiles-0-final-resumed/certified-requests.json",
+      "source_sha256": "502651967409f38c155662cb62a69152e66fb560609e402890fa3032accdca53",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "final",
+      "delay_ms": 0,
+      "class": "new_order_rollback",
+      "n": 3,
+      "actual_SQL_counts": {
+        "17": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "18": 3
+      },
+      "actual_prepare_only_counts": [
+        1,
+        1,
+        1
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 8,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.rollback": 1,
+          "driver.prepared_cache_cleanup": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 8,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.rollback": 1,
+          "driver.prepared_cache_cleanup": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 8,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.rollback": 1,
+          "driver.prepared_cache_cleanup": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "Q": 4,
+          "P": 11,
+          "B": 13,
+          "D": 13,
+          "E": 13,
+          "S": 14
+        },
+        {
+          "Q": 4,
+          "P": 11,
+          "B": 13,
+          "D": 13,
+          "E": 13,
+          "S": 14
+        },
+        {
+          "Q": 4,
+          "P": 11,
+          "B": 13,
+          "D": 13,
+          "E": 13,
+          "S": 14
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "C": 17,
+          "Z": 18,
+          "1": 11,
+          "2": 13,
+          "T": 9,
+          "D": 30,
+          "n": 4
+        },
+        {
+          "C": 17,
+          "Z": 18,
+          "1": 11,
+          "2": 13,
+          "T": 9,
+          "D": 30,
+          "n": 4
+        },
+        {
+          "C": 17,
+          "Z": 18,
+          "1": 11,
+          "2": 13,
+          "T": 9,
+          "D": 30,
+          "n": 4
+        }
+      ],
+      "source": "tpcc-profiles-0-final-resumed/certified-requests.json",
+      "source_sha256": "502651967409f38c155662cb62a69152e66fb560609e402890fa3032accdca53",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "final",
+      "delay_ms": 0,
+      "class": "payment_id_BC",
+      "n": 3,
+      "actual_SQL_counts": {
+        "10": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "10": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        },
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        },
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        },
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        },
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        }
+      ],
+      "source": "tpcc-profiles-0-final-resumed/certified-requests.json",
+      "source_sha256": "502651967409f38c155662cb62a69152e66fb560609e402890fa3032accdca53",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "final",
+      "delay_ms": 0,
+      "class": "payment_id_GC",
+      "n": 3,
+      "actual_SQL_counts": {
+        "10": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "10": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        },
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        },
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        },
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        },
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        }
+      ],
+      "source": "tpcc-profiles-0-final-resumed/certified-requests.json",
+      "source_sha256": "502651967409f38c155662cb62a69152e66fb560609e402890fa3032accdca53",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "final",
+      "delay_ms": 0,
+      "class": "payment_name_BC",
+      "n": 3,
+      "actual_SQL_counts": {
+        "11": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "11": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 11,
+          "D": 11,
+          "E": 11,
+          "S": 11
+        },
+        {
+          "B": 11,
+          "D": 11,
+          "E": 11,
+          "S": 11
+        },
+        {
+          "B": 11,
+          "D": 11,
+          "E": 11,
+          "S": 11
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 11,
+          "n": 5,
+          "C": 11,
+          "Z": 11,
+          "T": 6,
+          "D": 6
+        },
+        {
+          "2": 11,
+          "n": 5,
+          "C": 11,
+          "Z": 11,
+          "T": 6,
+          "D": 6
+        },
+        {
+          "2": 11,
+          "n": 5,
+          "C": 11,
+          "Z": 11,
+          "T": 6,
+          "D": 6
+        }
+      ],
+      "source": "tpcc-profiles-0-final-resumed/certified-requests.json",
+      "source_sha256": "502651967409f38c155662cb62a69152e66fb560609e402890fa3032accdca53",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "final",
+      "delay_ms": 0,
+      "class": "payment_name_GC",
+      "n": 3,
+      "actual_SQL_counts": {
+        "12": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "12": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 5,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 5,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 5,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 12,
+          "D": 12,
+          "E": 12,
+          "S": 12
+        },
+        {
+          "B": 12,
+          "D": 12,
+          "E": 12,
+          "S": 12
+        },
+        {
+          "B": 12,
+          "D": 12,
+          "E": 12,
+          "S": 12
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 12,
+          "n": 5,
+          "C": 12,
+          "Z": 12,
+          "T": 7,
+          "D": 9
+        },
+        {
+          "2": 12,
+          "n": 5,
+          "C": 12,
+          "Z": 12,
+          "T": 7,
+          "D": 9
+        },
+        {
+          "2": 12,
+          "n": 5,
+          "C": 12,
+          "Z": 12,
+          "T": 7,
+          "D": 9
+        }
+      ],
+      "source": "tpcc-profiles-0-final-resumed/certified-requests.json",
+      "source_sha256": "502651967409f38c155662cb62a69152e66fb560609e402890fa3032accdca53",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "baseline",
+      "delay_ms": 2,
+      "class": "new_order_15",
+      "n": 3,
+      "actual_SQL_counts": {
+        "14": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "14": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        },
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        },
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 36
+        },
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 36
+        },
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 36
+        }
+      ],
+      "source": "tpcc-profiles-2-baseline/certified-requests.json",
+      "source_sha256": "079f36ff42ca54a515c2589760084fe12d831505a96ff6492b69264abcaf4f59",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "baseline",
+      "delay_ms": 2,
+      "class": "new_order_5",
+      "n": 3,
+      "actual_SQL_counts": {
+        "14": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "14": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        },
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        },
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 16
+        },
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 16
+        },
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 16
+        }
+      ],
+      "source": "tpcc-profiles-2-baseline/certified-requests.json",
+      "source_sha256": "079f36ff42ca54a515c2589760084fe12d831505a96ff6492b69264abcaf4f59",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "baseline",
+      "delay_ms": 2,
+      "class": "new_order_rollback",
+      "n": 3,
+      "actual_SQL_counts": {
+        "17": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "18": 3
+      },
+      "actual_prepare_only_counts": [
+        1,
+        1,
+        1
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 8,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.rollback": 1,
+          "driver.prepared_cache_cleanup": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 8,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.rollback": 1,
+          "driver.prepared_cache_cleanup": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 8,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.rollback": 1,
+          "driver.prepared_cache_cleanup": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "Q": 4,
+          "P": 11,
+          "B": 13,
+          "D": 13,
+          "E": 13,
+          "S": 14
+        },
+        {
+          "Q": 4,
+          "P": 11,
+          "B": 13,
+          "D": 13,
+          "E": 13,
+          "S": 14
+        },
+        {
+          "Q": 4,
+          "P": 11,
+          "B": 13,
+          "D": 13,
+          "E": 13,
+          "S": 14
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "C": 17,
+          "Z": 18,
+          "1": 11,
+          "2": 13,
+          "T": 9,
+          "D": 30,
+          "n": 4
+        },
+        {
+          "C": 17,
+          "Z": 18,
+          "1": 11,
+          "2": 13,
+          "T": 9,
+          "D": 30,
+          "n": 4
+        },
+        {
+          "C": 17,
+          "Z": 18,
+          "1": 11,
+          "2": 13,
+          "T": 9,
+          "D": 30,
+          "n": 4
+        }
+      ],
+      "source": "tpcc-profiles-2-baseline/certified-requests.json",
+      "source_sha256": "079f36ff42ca54a515c2589760084fe12d831505a96ff6492b69264abcaf4f59",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "baseline",
+      "delay_ms": 2,
+      "class": "payment_id_BC",
+      "n": 3,
+      "actual_SQL_counts": {
+        "10": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "10": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        },
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        },
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        },
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        },
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        }
+      ],
+      "source": "tpcc-profiles-2-baseline/certified-requests.json",
+      "source_sha256": "079f36ff42ca54a515c2589760084fe12d831505a96ff6492b69264abcaf4f59",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "baseline",
+      "delay_ms": 2,
+      "class": "payment_id_GC",
+      "n": 3,
+      "actual_SQL_counts": {
+        "10": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "10": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        },
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        },
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        },
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        },
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        }
+      ],
+      "source": "tpcc-profiles-2-baseline/certified-requests.json",
+      "source_sha256": "079f36ff42ca54a515c2589760084fe12d831505a96ff6492b69264abcaf4f59",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "baseline",
+      "delay_ms": 2,
+      "class": "payment_name_BC",
+      "n": 3,
+      "actual_SQL_counts": {
+        "11": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "11": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 11,
+          "D": 11,
+          "E": 11,
+          "S": 11
+        },
+        {
+          "B": 11,
+          "D": 11,
+          "E": 11,
+          "S": 11
+        },
+        {
+          "B": 11,
+          "D": 11,
+          "E": 11,
+          "S": 11
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 11,
+          "n": 5,
+          "C": 11,
+          "Z": 11,
+          "T": 6,
+          "D": 6
+        },
+        {
+          "2": 11,
+          "n": 5,
+          "C": 11,
+          "Z": 11,
+          "T": 6,
+          "D": 6
+        },
+        {
+          "2": 11,
+          "n": 5,
+          "C": 11,
+          "Z": 11,
+          "T": 6,
+          "D": 6
+        }
+      ],
+      "source": "tpcc-profiles-2-baseline/certified-requests.json",
+      "source_sha256": "079f36ff42ca54a515c2589760084fe12d831505a96ff6492b69264abcaf4f59",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "baseline",
+      "delay_ms": 2,
+      "class": "payment_name_GC",
+      "n": 3,
+      "actual_SQL_counts": {
+        "12": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "12": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 5,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 5,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 5,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 12,
+          "D": 12,
+          "E": 12,
+          "S": 12
+        },
+        {
+          "B": 12,
+          "D": 12,
+          "E": 12,
+          "S": 12
+        },
+        {
+          "B": 12,
+          "D": 12,
+          "E": 12,
+          "S": 12
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 12,
+          "n": 5,
+          "C": 12,
+          "Z": 12,
+          "T": 7,
+          "D": 9
+        },
+        {
+          "2": 12,
+          "n": 5,
+          "C": 12,
+          "Z": 12,
+          "T": 7,
+          "D": 9
+        },
+        {
+          "2": 12,
+          "n": 5,
+          "C": 12,
+          "Z": 12,
+          "T": 7,
+          "D": 9
+        }
+      ],
+      "source": "tpcc-profiles-2-baseline/certified-requests.json",
+      "source_sha256": "079f36ff42ca54a515c2589760084fe12d831505a96ff6492b69264abcaf4f59",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "final",
+      "delay_ms": 2,
+      "class": "new_order_15",
+      "n": 3,
+      "actual_SQL_counts": {
+        "14": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "14": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        },
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        },
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 36
+        },
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 36
+        },
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 36
+        }
+      ],
+      "source": "tpcc-profiles-2-final/certified-requests.json",
+      "source_sha256": "6108774981c9580179ab96003f70fa102ba4b6ef175bde7384d37f1da86a55a9",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "final",
+      "delay_ms": 2,
+      "class": "new_order_5",
+      "n": 3,
+      "actual_SQL_counts": {
+        "14": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "14": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 6,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        },
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        },
+        {
+          "B": 14,
+          "D": 14,
+          "E": 14,
+          "S": 14
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 16
+        },
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 16
+        },
+        {
+          "2": 14,
+          "n": 7,
+          "C": 14,
+          "Z": 14,
+          "T": 7,
+          "D": 16
+        }
+      ],
+      "source": "tpcc-profiles-2-final/certified-requests.json",
+      "source_sha256": "6108774981c9580179ab96003f70fa102ba4b6ef175bde7384d37f1da86a55a9",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "final",
+      "delay_ms": 2,
+      "class": "new_order_rollback",
+      "n": 3,
+      "actual_SQL_counts": {
+        "17": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "18": 3
+      },
+      "actual_prepare_only_counts": [
+        1,
+        1,
+        1
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 8,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.rollback": 1,
+          "driver.prepared_cache_cleanup": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 8,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.rollback": 1,
+          "driver.prepared_cache_cleanup": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 8,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 2,
+          "write.type_registry": 2,
+          "transaction.rollback": 1,
+          "driver.prepared_cache_cleanup": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "Q": 4,
+          "P": 11,
+          "B": 13,
+          "D": 13,
+          "E": 13,
+          "S": 14
+        },
+        {
+          "Q": 4,
+          "P": 11,
+          "B": 13,
+          "D": 13,
+          "E": 13,
+          "S": 14
+        },
+        {
+          "Q": 4,
+          "P": 11,
+          "B": 13,
+          "D": 13,
+          "E": 13,
+          "S": 14
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "C": 17,
+          "Z": 18,
+          "1": 11,
+          "2": 13,
+          "T": 9,
+          "D": 30,
+          "n": 4
+        },
+        {
+          "C": 17,
+          "Z": 18,
+          "1": 11,
+          "2": 13,
+          "T": 9,
+          "D": 30,
+          "n": 4
+        },
+        {
+          "C": 17,
+          "Z": 18,
+          "1": 11,
+          "2": 13,
+          "T": 9,
+          "D": 30,
+          "n": 4
+        }
+      ],
+      "source": "tpcc-profiles-2-final/certified-requests.json",
+      "source_sha256": "6108774981c9580179ab96003f70fa102ba4b6ef175bde7384d37f1da86a55a9",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "final",
+      "delay_ms": 2,
+      "class": "payment_id_BC",
+      "n": 3,
+      "actual_SQL_counts": {
+        "10": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "10": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        },
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        },
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        },
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        },
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        }
+      ],
+      "source": "tpcc-profiles-2-final/certified-requests.json",
+      "source_sha256": "6108774981c9580179ab96003f70fa102ba4b6ef175bde7384d37f1da86a55a9",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "final",
+      "delay_ms": 2,
+      "class": "payment_id_GC",
+      "n": 3,
+      "actual_SQL_counts": {
+        "10": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "10": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        },
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        },
+        {
+          "B": 10,
+          "D": 10,
+          "E": 10,
+          "S": 10
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        },
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        },
+        {
+          "2": 10,
+          "n": 5,
+          "C": 10,
+          "Z": 10,
+          "T": 5,
+          "D": 5
+        }
+      ],
+      "source": "tpcc-profiles-2-final/certified-requests.json",
+      "source_sha256": "6108774981c9580179ab96003f70fa102ba4b6ef175bde7384d37f1da86a55a9",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "final",
+      "delay_ms": 2,
+      "class": "payment_name_BC",
+      "n": 3,
+      "actual_SQL_counts": {
+        "11": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "11": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 4,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 11,
+          "D": 11,
+          "E": 11,
+          "S": 11
+        },
+        {
+          "B": 11,
+          "D": 11,
+          "E": 11,
+          "S": 11
+        },
+        {
+          "B": 11,
+          "D": 11,
+          "E": 11,
+          "S": 11
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 11,
+          "n": 5,
+          "C": 11,
+          "Z": 11,
+          "T": 6,
+          "D": 6
+        },
+        {
+          "2": 11,
+          "n": 5,
+          "C": 11,
+          "Z": 11,
+          "T": 6,
+          "D": 6
+        },
+        {
+          "2": 11,
+          "n": 5,
+          "C": 11,
+          "Z": 11,
+          "T": 6,
+          "D": 6
+        }
+      ],
+      "source": "tpcc-profiles-2-final/certified-requests.json",
+      "source_sha256": "6108774981c9580179ab96003f70fa102ba4b6ef175bde7384d37f1da86a55a9",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    },
+    {
+      "variant": "final",
+      "delay_ms": 2,
+      "class": "payment_name_GC",
+      "n": 3,
+      "actual_SQL_counts": {
+        "12": 3
+      },
+      "actual_complete_response_flight_counts": {
+        "12": 3
+      },
+      "actual_prepare_only_counts": [
+        0,
+        0,
+        0
+      ],
+      "SQL_categories_per_request": [
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 5,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 5,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        },
+        {
+          "transaction.begin": 1,
+          "transaction.set": 1,
+          "hydrate.generic_anchor": 5,
+          "graph.Warehouse.hop": 1,
+          "graph.Customer.by_lastname_promoted": 1,
+          "write.anchor_batch_upsert": 1,
+          "write.type_registry": 1,
+          "transaction.commit": 1
+        }
+      ],
+      "actual_frontend_message_counts": [
+        {
+          "B": 12,
+          "D": 12,
+          "E": 12,
+          "S": 12
+        },
+        {
+          "B": 12,
+          "D": 12,
+          "E": 12,
+          "S": 12
+        },
+        {
+          "B": 12,
+          "D": 12,
+          "E": 12,
+          "S": 12
+        }
+      ],
+      "actual_backend_message_counts": [
+        {
+          "2": 12,
+          "n": 5,
+          "C": 12,
+          "Z": 12,
+          "T": 7,
+          "D": 9
+        },
+        {
+          "2": 12,
+          "n": 5,
+          "C": 12,
+          "Z": 12,
+          "T": 7,
+          "D": 9
+        },
+        {
+          "2": 12,
+          "n": 5,
+          "C": 12,
+          "Z": 12,
+          "T": 7,
+          "D": 9
+        }
+      ],
+      "source": "tpcc-profiles-2-final/certified-requests.json",
+      "source_sha256": "6108774981c9580179ab96003f70fa102ba4b6ef175bde7384d37f1da86a55a9",
+      "all_response_delivery_and_PID_SQL_order_verified": true
+    }
+  ],
+  "expected_total_arms": 28,
+  "completed_arms": 28,
+  "completed_measured_requests": 84
+}

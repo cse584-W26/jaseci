@@ -1,0 +1,3797 @@
+[
+  {
+    "label": "payment_name_GC",
+    "plan_idx": 0,
+    "transaction": {
+      "amount": 1951.93,
+      "c_d_id": 10,
+      "c_id": null,
+      "c_last": "PRIABLEATION",
+      "d_id": 1,
+      "kind": "payment"
+    },
+    "iteration": 0,
+    "cold": true,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560765,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560766,
+        "History": 30001,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "301951.93",
+        "District.d_ytd": "301951.93",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-301951.93",
+        "Customer.c_ytd_payment": "301951.93",
+        "Customer.c_payment_cnt": "30001",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "301951.93",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2906820
+      ]
+    ],
+    "start_wall_ns": 1792538519497810609,
+    "client_ms": 680.26596,
+    "path": "/walker/payment",
+    "body": {
+      "district_id": "ce186ef40cc04d5ab2c4d90c37b2ff0f",
+      "c_district_id": "5c72325d05d34494ad99782a498afb97",
+      "customer_id": "",
+      "c_last": "PRIABLEATION",
+      "amount": 1951.93
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "121",
+      "connection": "keep-alive",
+      "x-server-total-ms": "671.757",
+      "x-server-commit-ms": "3.202",
+      "x-server-ser-ms": "0.012",
+      "x-trace-id": "1ba5324b-06a7-43cc-b2a1-c08f6891a995",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "c_id": 329,
+            "amount": 1951.93
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      674.959,
+      {
+        "success": true,
+        "c_id": 329,
+        "amount": 1951.93
+      }
+    ]
+  },
+  {
+    "label": "payment_name_GC",
+    "plan_idx": 0,
+    "transaction": {
+      "amount": 1951.93,
+      "c_d_id": 10,
+      "c_id": null,
+      "c_last": "PRIABLEATION",
+      "d_id": 1,
+      "kind": "payment"
+    },
+    "iteration": 1,
+    "cold": false,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560766,
+        "History": 30001,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "301951.93",
+        "District.d_ytd": "301951.93",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-301951.93",
+        "Customer.c_ytd_payment": "301951.93",
+        "Customer.c_payment_cnt": "30001",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "301951.93",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560767,
+        "History": 30002,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "303903.86",
+        "District.d_ytd": "303903.86",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-303903.86",
+        "Customer.c_ytd_payment": "303903.86",
+        "Customer.c_payment_cnt": "30002",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "303903.86",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2906918
+      ],
+      [
+        2906820
+      ]
+    ],
+    "start_wall_ns": 1792538522789721853,
+    "client_ms": 8.819363,
+    "path": "/walker/payment",
+    "body": {
+      "district_id": "ce186ef40cc04d5ab2c4d90c37b2ff0f",
+      "c_district_id": "5c72325d05d34494ad99782a498afb97",
+      "customer_id": "",
+      "c_last": "PRIABLEATION",
+      "amount": 1951.93
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "121",
+      "connection": "keep-alive",
+      "x-server-total-ms": "3.998",
+      "x-server-commit-ms": "3.289",
+      "x-server-ser-ms": "0.008",
+      "x-trace-id": "94344c45-50c1-4f61-b911-e6b39ff7b718",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "c_id": 329,
+            "amount": 1951.93
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      7.287000000000001,
+      {
+        "success": true,
+        "c_id": 329,
+        "amount": 1951.93
+      }
+    ]
+  },
+  {
+    "label": "payment_name_GC",
+    "plan_idx": 0,
+    "transaction": {
+      "amount": 1951.93,
+      "c_d_id": 10,
+      "c_id": null,
+      "c_last": "PRIABLEATION",
+      "d_id": 1,
+      "kind": "payment"
+    },
+    "iteration": 2,
+    "cold": false,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560767,
+        "History": 30002,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "303903.86",
+        "District.d_ytd": "303903.86",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-303903.86",
+        "Customer.c_ytd_payment": "303903.86",
+        "Customer.c_payment_cnt": "30002",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "303903.86",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560768,
+        "History": 30003,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "305855.79",
+        "District.d_ytd": "305855.79",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-305855.79",
+        "Customer.c_ytd_payment": "305855.79",
+        "Customer.c_payment_cnt": "30003",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "305855.79",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2906918
+      ],
+      [
+        2906820
+      ]
+    ],
+    "start_wall_ns": 1792538525334207865,
+    "client_ms": 14.170674,
+    "path": "/walker/payment",
+    "body": {
+      "district_id": "ce186ef40cc04d5ab2c4d90c37b2ff0f",
+      "c_district_id": "5c72325d05d34494ad99782a498afb97",
+      "customer_id": "",
+      "c_last": "PRIABLEATION",
+      "amount": 1951.93
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "121",
+      "connection": "keep-alive",
+      "x-server-total-ms": "3.958",
+      "x-server-commit-ms": "2.643",
+      "x-server-ser-ms": "0.007",
+      "x-trace-id": "244a47fb-16ed-46d1-be5d-2460440ad65f",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "c_id": 329,
+            "amount": 1951.93
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      6.601,
+      {
+        "success": true,
+        "c_id": 329,
+        "amount": 1951.93
+      }
+    ]
+  },
+  {
+    "label": "new_order_rollback",
+    "plan_idx": 1,
+    "transaction": {
+      "c_id": 2117,
+      "d_id": 3,
+      "invalid": true,
+      "kind": "new_order",
+      "lines": [
+        {
+          "i_id": 64704,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 61496,
+          "quantity": 3,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 20425,
+          "quantity": 10,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 88071,
+          "quantity": 8,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 15716,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 16617,
+          "quantity": 9,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 18622,
+          "quantity": 3,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 44158,
+          "quantity": 2,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 22472,
+          "quantity": 4,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 90250,
+          "quantity": 10,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 87603,
+          "quantity": 4,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 58402,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": -1,
+          "quantity": 6,
+          "supply_w_id": 1
+        }
+      ]
+    },
+    "iteration": 0,
+    "cold": true,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560765,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560765,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2908984
+      ]
+    ],
+    "start_wall_ns": 1792538557079405528,
+    "client_ms": 488.594996,
+    "path": "/walker/new_order",
+    "body": {
+      "district_id": "059ef3db2a624ecabe03c636c97d5d5c",
+      "customer_id": "82553f8234234e75bf61d3671053867e",
+      "lines": [
+        {
+          "item_id": "ab00a5a9a7e049ba9cc58ccbd527f479",
+          "stock_id": "149e3946f09d4f1fa571606bd3a7713f",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "1407d74046d043e6967e0aa59a15d420",
+          "stock_id": "135d65436cc14fcaa8331b0fcf20132a",
+          "supply_w_id": 1,
+          "quantity": 3
+        },
+        {
+          "item_id": "d66bf37b1be74b2f96d2b24dd3bd5c7f",
+          "stock_id": "8daa3c083e5a48cbaf8c3552cbc3e44d",
+          "supply_w_id": 1,
+          "quantity": 10
+        },
+        {
+          "item_id": "1c451192367b41778f083f6816e6a053",
+          "stock_id": "afd804e676d7408aba5214a173439b90",
+          "supply_w_id": 1,
+          "quantity": 8
+        },
+        {
+          "item_id": "32d5d6c8107e462eae32d7dac1651eff",
+          "stock_id": "285f6d24af4f414d877b06292ece3be0",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "690ffa072b8348b8af63ab9e9da88f2a",
+          "stock_id": "885e7d729145405da828aa0ba38b2467",
+          "supply_w_id": 1,
+          "quantity": 9
+        },
+        {
+          "item_id": "7c5e3cfc246c4ee1a6393c620a461c0e",
+          "stock_id": "f405cf9ca0354e1aa0de131b9d99c3b8",
+          "supply_w_id": 1,
+          "quantity": 3
+        },
+        {
+          "item_id": "9a2eb42d1e7c435890b783c2ba66f164",
+          "stock_id": "702155988e194d50b12e7aa644dec743",
+          "supply_w_id": 1,
+          "quantity": 2
+        },
+        {
+          "item_id": "85a6473f7af74fdcbb38559caf49e2fe",
+          "stock_id": "bfda377ce1fb4dfb95542fcc604c4347",
+          "supply_w_id": 1,
+          "quantity": 4
+        },
+        {
+          "item_id": "97feb269501342019fb0b9a57c454b1c",
+          "stock_id": "c4e48e568bb14a53ae8b90e867e0297b",
+          "supply_w_id": 1,
+          "quantity": 10
+        },
+        {
+          "item_id": "1523a8d1021c4d1bb90d3f032a3184c6",
+          "stock_id": "1b4700ef7c2f4176a1c350525590cd8c",
+          "supply_w_id": 1,
+          "quantity": 4
+        },
+        {
+          "item_id": "af98db2801dd4277ae9605b7304f7d4f",
+          "stock_id": "52e201615ad84f95b08435f3e55b403c",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "00000000000000000000000000000000",
+          "stock_id": "00000000000000000000000000000000",
+          "supply_w_id": 1,
+          "quantity": 6
+        }
+      ]
+    },
+    "status": 500,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "2338",
+      "connection": "keep-alive",
+      "x-trace-id": "8f4773e5-1af2-4d84-bfd1-c3bb33246758",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": false,
+      "type": "error",
+      "data": null,
+      "error": {
+        "code": "EXECUTION_ERROR",
+        "message": "item not found",
+        "details": "Traceback (most recent call last):\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/runtimelib/server.jac\", line 475, in _run_function_with_occ\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/runtimelib/server.jac\", line 609, in run_attempt\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/asyncio/threads.py\", line 26, in to_thread\n    return await loop.run_in_executor(None, func_call)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/concurrent/futures/thread.py\", line 86, in run\n    result = ctx.run(self.task)\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/concurrent/futures/thread.py\", line 73, in run\n    return fn(*args, **kwargs)\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/runtime.jac\", line 931, in spawn\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/runtime.jac\", line 887, in spawn_call\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 171, in osp_spawn\n    if child is not None {\n           ^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 124, in _visit_recursive\n    def _dequeue(scope: WalkScope) -> (int | None) {\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 88, in run_typed\n    scope.disengaged = True;\n        ^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel_sv.jac\", line 67, in call\n    if isinstance(_kernel._walk_stack, _ContextStack) {\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/webridge/non-snb/native/baseline/app/app.jac\", line 183, in run\n    raise ValueError(\"item not found\");\n     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: item not found\n"
+      }
+    },
+    "driver_result": [
+      false,
+      true,
+      null,
+      {
+        "ok": false,
+        "type": "error",
+        "data": null,
+        "error": {
+          "code": "EXECUTION_ERROR",
+          "message": "item not found",
+          "details": "Traceback (most recent call last):\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/runtimelib/server.jac\", line 475, in _run_function_with_occ\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/runtimelib/server.jac\", line 609, in run_attempt\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/asyncio/threads.py\", line 26, in to_thread\n    return await loop.run_in_executor(None, func_call)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/concurrent/futures/thread.py\", line 86, in run\n    result = ctx.run(self.task)\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/concurrent/futures/thread.py\", line 73, in run\n    return fn(*args, **kwargs)\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/runtime.jac\", line 931, in spawn\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/runtime.jac\", line 887, in spawn_call\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 171, in osp_spawn\n    if child is not None {\n           ^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 124, in _visit_recursive\n    def _dequeue(scope: WalkScope) -> (int | None) {\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 88, in run_typed\n    scope.disengaged = True;\n        ^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel_sv.jac\", line 67, in call\n    if isinstance(_kernel._walk_stack, _ContextStack) {\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/webridge/non-snb/native/baseline/app/app.jac\", line 183, in run\n    raise ValueError(\"item not found\");\n     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: item not found\n"
+        }
+      }
+    ]
+  },
+  {
+    "label": "new_order_rollback",
+    "plan_idx": 1,
+    "transaction": {
+      "c_id": 2117,
+      "d_id": 3,
+      "invalid": true,
+      "kind": "new_order",
+      "lines": [
+        {
+          "i_id": 64704,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 61496,
+          "quantity": 3,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 20425,
+          "quantity": 10,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 88071,
+          "quantity": 8,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 15716,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 16617,
+          "quantity": 9,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 18622,
+          "quantity": 3,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 44158,
+          "quantity": 2,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 22472,
+          "quantity": 4,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 90250,
+          "quantity": 10,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 87603,
+          "quantity": 4,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 58402,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": -1,
+          "quantity": 6,
+          "supply_w_id": 1
+        }
+      ]
+    },
+    "iteration": 1,
+    "cold": false,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560765,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560765,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2908984
+      ],
+      [
+        2909297
+      ]
+    ],
+    "start_wall_ns": 1792538560072607026,
+    "client_ms": 13.146096,
+    "path": "/walker/new_order",
+    "body": {
+      "district_id": "059ef3db2a624ecabe03c636c97d5d5c",
+      "customer_id": "82553f8234234e75bf61d3671053867e",
+      "lines": [
+        {
+          "item_id": "ab00a5a9a7e049ba9cc58ccbd527f479",
+          "stock_id": "149e3946f09d4f1fa571606bd3a7713f",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "1407d74046d043e6967e0aa59a15d420",
+          "stock_id": "135d65436cc14fcaa8331b0fcf20132a",
+          "supply_w_id": 1,
+          "quantity": 3
+        },
+        {
+          "item_id": "d66bf37b1be74b2f96d2b24dd3bd5c7f",
+          "stock_id": "8daa3c083e5a48cbaf8c3552cbc3e44d",
+          "supply_w_id": 1,
+          "quantity": 10
+        },
+        {
+          "item_id": "1c451192367b41778f083f6816e6a053",
+          "stock_id": "afd804e676d7408aba5214a173439b90",
+          "supply_w_id": 1,
+          "quantity": 8
+        },
+        {
+          "item_id": "32d5d6c8107e462eae32d7dac1651eff",
+          "stock_id": "285f6d24af4f414d877b06292ece3be0",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "690ffa072b8348b8af63ab9e9da88f2a",
+          "stock_id": "885e7d729145405da828aa0ba38b2467",
+          "supply_w_id": 1,
+          "quantity": 9
+        },
+        {
+          "item_id": "7c5e3cfc246c4ee1a6393c620a461c0e",
+          "stock_id": "f405cf9ca0354e1aa0de131b9d99c3b8",
+          "supply_w_id": 1,
+          "quantity": 3
+        },
+        {
+          "item_id": "9a2eb42d1e7c435890b783c2ba66f164",
+          "stock_id": "702155988e194d50b12e7aa644dec743",
+          "supply_w_id": 1,
+          "quantity": 2
+        },
+        {
+          "item_id": "85a6473f7af74fdcbb38559caf49e2fe",
+          "stock_id": "bfda377ce1fb4dfb95542fcc604c4347",
+          "supply_w_id": 1,
+          "quantity": 4
+        },
+        {
+          "item_id": "97feb269501342019fb0b9a57c454b1c",
+          "stock_id": "c4e48e568bb14a53ae8b90e867e0297b",
+          "supply_w_id": 1,
+          "quantity": 10
+        },
+        {
+          "item_id": "1523a8d1021c4d1bb90d3f032a3184c6",
+          "stock_id": "1b4700ef7c2f4176a1c350525590cd8c",
+          "supply_w_id": 1,
+          "quantity": 4
+        },
+        {
+          "item_id": "af98db2801dd4277ae9605b7304f7d4f",
+          "stock_id": "52e201615ad84f95b08435f3e55b403c",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "00000000000000000000000000000000",
+          "stock_id": "00000000000000000000000000000000",
+          "supply_w_id": 1,
+          "quantity": 6
+        }
+      ]
+    },
+    "status": 500,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "2338",
+      "connection": "keep-alive",
+      "x-trace-id": "0aa70a63-7129-4cfd-b360-1e666718d457",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": false,
+      "type": "error",
+      "data": null,
+      "error": {
+        "code": "EXECUTION_ERROR",
+        "message": "item not found",
+        "details": "Traceback (most recent call last):\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/runtimelib/server.jac\", line 475, in _run_function_with_occ\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/runtimelib/server.jac\", line 609, in run_attempt\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/asyncio/threads.py\", line 26, in to_thread\n    return await loop.run_in_executor(None, func_call)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/concurrent/futures/thread.py\", line 86, in run\n    result = ctx.run(self.task)\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/concurrent/futures/thread.py\", line 73, in run\n    return fn(*args, **kwargs)\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/runtime.jac\", line 931, in spawn\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/runtime.jac\", line 887, in spawn_call\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 171, in osp_spawn\n    if child is not None {\n           ^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 124, in _visit_recursive\n    def _dequeue(scope: WalkScope) -> (int | None) {\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 88, in run_typed\n    scope.disengaged = True;\n        ^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel_sv.jac\", line 67, in call\n    if isinstance(_kernel._walk_stack, _ContextStack) {\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/webridge/non-snb/native/baseline/app/app.jac\", line 183, in run\n    raise ValueError(\"item not found\");\n     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: item not found\n"
+      }
+    },
+    "driver_result": [
+      false,
+      true,
+      null,
+      {
+        "ok": false,
+        "type": "error",
+        "data": null,
+        "error": {
+          "code": "EXECUTION_ERROR",
+          "message": "item not found",
+          "details": "Traceback (most recent call last):\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/runtimelib/server.jac\", line 475, in _run_function_with_occ\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/runtimelib/server.jac\", line 609, in run_attempt\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/asyncio/threads.py\", line 26, in to_thread\n    return await loop.run_in_executor(None, func_call)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/concurrent/futures/thread.py\", line 86, in run\n    result = ctx.run(self.task)\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/concurrent/futures/thread.py\", line 73, in run\n    return fn(*args, **kwargs)\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/runtime.jac\", line 931, in spawn\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/runtime.jac\", line 887, in spawn_call\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 171, in osp_spawn\n    if child is not None {\n           ^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 124, in _visit_recursive\n    def _dequeue(scope: WalkScope) -> (int | None) {\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 88, in run_typed\n    scope.disengaged = True;\n        ^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel_sv.jac\", line 67, in call\n    if isinstance(_kernel._walk_stack, _ContextStack) {\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/webridge/non-snb/native/baseline/app/app.jac\", line 183, in run\n    raise ValueError(\"item not found\");\n     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: item not found\n"
+        }
+      }
+    ]
+  },
+  {
+    "label": "new_order_rollback",
+    "plan_idx": 1,
+    "transaction": {
+      "c_id": 2117,
+      "d_id": 3,
+      "invalid": true,
+      "kind": "new_order",
+      "lines": [
+        {
+          "i_id": 64704,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 61496,
+          "quantity": 3,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 20425,
+          "quantity": 10,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 88071,
+          "quantity": 8,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 15716,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 16617,
+          "quantity": 9,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 18622,
+          "quantity": 3,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 44158,
+          "quantity": 2,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 22472,
+          "quantity": 4,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 90250,
+          "quantity": 10,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 87603,
+          "quantity": 4,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 58402,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": -1,
+          "quantity": 6,
+          "supply_w_id": 1
+        }
+      ]
+    },
+    "iteration": 2,
+    "cold": false,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560765,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560765,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2908984
+      ],
+      [
+        2909297
+      ]
+    ],
+    "start_wall_ns": 1792538562572305854,
+    "client_ms": 13.440652,
+    "path": "/walker/new_order",
+    "body": {
+      "district_id": "059ef3db2a624ecabe03c636c97d5d5c",
+      "customer_id": "82553f8234234e75bf61d3671053867e",
+      "lines": [
+        {
+          "item_id": "ab00a5a9a7e049ba9cc58ccbd527f479",
+          "stock_id": "149e3946f09d4f1fa571606bd3a7713f",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "1407d74046d043e6967e0aa59a15d420",
+          "stock_id": "135d65436cc14fcaa8331b0fcf20132a",
+          "supply_w_id": 1,
+          "quantity": 3
+        },
+        {
+          "item_id": "d66bf37b1be74b2f96d2b24dd3bd5c7f",
+          "stock_id": "8daa3c083e5a48cbaf8c3552cbc3e44d",
+          "supply_w_id": 1,
+          "quantity": 10
+        },
+        {
+          "item_id": "1c451192367b41778f083f6816e6a053",
+          "stock_id": "afd804e676d7408aba5214a173439b90",
+          "supply_w_id": 1,
+          "quantity": 8
+        },
+        {
+          "item_id": "32d5d6c8107e462eae32d7dac1651eff",
+          "stock_id": "285f6d24af4f414d877b06292ece3be0",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "690ffa072b8348b8af63ab9e9da88f2a",
+          "stock_id": "885e7d729145405da828aa0ba38b2467",
+          "supply_w_id": 1,
+          "quantity": 9
+        },
+        {
+          "item_id": "7c5e3cfc246c4ee1a6393c620a461c0e",
+          "stock_id": "f405cf9ca0354e1aa0de131b9d99c3b8",
+          "supply_w_id": 1,
+          "quantity": 3
+        },
+        {
+          "item_id": "9a2eb42d1e7c435890b783c2ba66f164",
+          "stock_id": "702155988e194d50b12e7aa644dec743",
+          "supply_w_id": 1,
+          "quantity": 2
+        },
+        {
+          "item_id": "85a6473f7af74fdcbb38559caf49e2fe",
+          "stock_id": "bfda377ce1fb4dfb95542fcc604c4347",
+          "supply_w_id": 1,
+          "quantity": 4
+        },
+        {
+          "item_id": "97feb269501342019fb0b9a57c454b1c",
+          "stock_id": "c4e48e568bb14a53ae8b90e867e0297b",
+          "supply_w_id": 1,
+          "quantity": 10
+        },
+        {
+          "item_id": "1523a8d1021c4d1bb90d3f032a3184c6",
+          "stock_id": "1b4700ef7c2f4176a1c350525590cd8c",
+          "supply_w_id": 1,
+          "quantity": 4
+        },
+        {
+          "item_id": "af98db2801dd4277ae9605b7304f7d4f",
+          "stock_id": "52e201615ad84f95b08435f3e55b403c",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "00000000000000000000000000000000",
+          "stock_id": "00000000000000000000000000000000",
+          "supply_w_id": 1,
+          "quantity": 6
+        }
+      ]
+    },
+    "status": 500,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "2338",
+      "connection": "keep-alive",
+      "x-trace-id": "de8b31ce-277b-46bc-9347-1f1900a2f2ea",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": false,
+      "type": "error",
+      "data": null,
+      "error": {
+        "code": "EXECUTION_ERROR",
+        "message": "item not found",
+        "details": "Traceback (most recent call last):\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/runtimelib/server.jac\", line 475, in _run_function_with_occ\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/runtimelib/server.jac\", line 609, in run_attempt\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/asyncio/threads.py\", line 26, in to_thread\n    return await loop.run_in_executor(None, func_call)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/concurrent/futures/thread.py\", line 86, in run\n    result = ctx.run(self.task)\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/concurrent/futures/thread.py\", line 73, in run\n    return fn(*args, **kwargs)\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/runtime.jac\", line 931, in spawn\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/runtime.jac\", line 887, in spawn_call\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 171, in osp_spawn\n    if child is not None {\n           ^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 124, in _visit_recursive\n    def _dequeue(scope: WalkScope) -> (int | None) {\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 88, in run_typed\n    scope.disengaged = True;\n        ^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel_sv.jac\", line 67, in call\n    if isinstance(_kernel._walk_stack, _ContextStack) {\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/webridge/non-snb/native/baseline/app/app.jac\", line 183, in run\n    raise ValueError(\"item not found\");\n     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: item not found\n"
+      }
+    },
+    "driver_result": [
+      false,
+      true,
+      null,
+      {
+        "ok": false,
+        "type": "error",
+        "data": null,
+        "error": {
+          "code": "EXECUTION_ERROR",
+          "message": "item not found",
+          "details": "Traceback (most recent call last):\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/runtimelib/server.jac\", line 475, in _run_function_with_occ\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/runtimelib/server.jac\", line 609, in run_attempt\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/asyncio/threads.py\", line 26, in to_thread\n    return await loop.run_in_executor(None, func_call)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/concurrent/futures/thread.py\", line 86, in run\n    result = ctx.run(self.task)\n  File \"/home/baichuan/jaseci/reproduction/runtime/pbs314/python/install/lib/python3.14/concurrent/futures/thread.py\", line 73, in run\n    return fn(*args, **kwargs)\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/runtime.jac\", line 931, in spawn\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/runtime.jac\", line 887, in spawn_call\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 171, in osp_spawn\n    if child is not None {\n           ^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 124, in _visit_recursive\n    def _dequeue(scope: WalkScope) -> (int | None) {\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel.jac\", line 88, in run_typed\n    scope.disengaged = True;\n        ^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/runtime/baseline-source/jac/jaclang/jac0core/osp_kernel_sv.jac\", line 67, in call\n    if isinstance(_kernel._walk_stack, _ContextStack) {\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/webridge/non-snb/native/baseline/app/app.jac\", line 183, in run\n    raise ValueError(\"item not found\");\n     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: item not found\n"
+        }
+      }
+    ]
+  },
+  {
+    "label": "payment_id_GC",
+    "plan_idx": 3,
+    "transaction": {
+      "amount": 3329.91,
+      "c_d_id": 7,
+      "c_id": 1911,
+      "c_last": null,
+      "d_id": 7,
+      "kind": "payment"
+    },
+    "iteration": 0,
+    "cold": true,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560765,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560766,
+        "History": 30001,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "303329.91",
+        "District.d_ytd": "303329.91",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-303329.91",
+        "Customer.c_ytd_payment": "303329.91",
+        "Customer.c_payment_cnt": "30001",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "303329.91",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2911519
+      ]
+    ],
+    "start_wall_ns": 1792538593999432332,
+    "client_ms": 478.922606,
+    "path": "/walker/payment",
+    "body": {
+      "district_id": "355e480fc16f476c802ff0fcf5b9fc99",
+      "c_district_id": "355e480fc16f476c802ff0fcf5b9fc99",
+      "customer_id": "1add5fe5e70f49ae959be62b46d16a94",
+      "c_last": "",
+      "amount": 3329.91
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "122",
+      "connection": "keep-alive",
+      "x-server-total-ms": "470.225",
+      "x-server-commit-ms": "4.244",
+      "x-server-ser-ms": "0.012",
+      "x-trace-id": "1ae1fee2-94d7-45fc-973f-32b498b58f04",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "c_id": 1911,
+            "amount": 3329.91
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      474.46900000000005,
+      {
+        "success": true,
+        "c_id": 1911,
+        "amount": 3329.91
+      }
+    ]
+  },
+  {
+    "label": "payment_id_GC",
+    "plan_idx": 3,
+    "transaction": {
+      "amount": 3329.91,
+      "c_d_id": 7,
+      "c_id": 1911,
+      "c_last": null,
+      "d_id": 7,
+      "kind": "payment"
+    },
+    "iteration": 1,
+    "cold": false,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560766,
+        "History": 30001,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "303329.91",
+        "District.d_ytd": "303329.91",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-303329.91",
+        "Customer.c_ytd_payment": "303329.91",
+        "Customer.c_payment_cnt": "30001",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "303329.91",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560767,
+        "History": 30002,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "306659.81999999995",
+        "District.d_ytd": "306659.82000000001",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-306659.82",
+        "Customer.c_ytd_payment": "306659.82",
+        "Customer.c_payment_cnt": "30002",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "306659.82",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2911519
+      ],
+      [
+        2911594
+      ]
+    ],
+    "start_wall_ns": 1792538597065596504,
+    "client_ms": 7.947419,
+    "path": "/walker/payment",
+    "body": {
+      "district_id": "355e480fc16f476c802ff0fcf5b9fc99",
+      "c_district_id": "355e480fc16f476c802ff0fcf5b9fc99",
+      "customer_id": "1add5fe5e70f49ae959be62b46d16a94",
+      "c_last": "",
+      "amount": 3329.91
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "122",
+      "connection": "keep-alive",
+      "x-server-total-ms": "2.397",
+      "x-server-commit-ms": "4.112",
+      "x-server-ser-ms": "0.007",
+      "x-trace-id": "9c0a62fb-812c-41c6-b0a9-2f1f2cb360f1",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "c_id": 1911,
+            "amount": 3329.91
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      6.509,
+      {
+        "success": true,
+        "c_id": 1911,
+        "amount": 3329.91
+      }
+    ]
+  },
+  {
+    "label": "payment_id_GC",
+    "plan_idx": 3,
+    "transaction": {
+      "amount": 3329.91,
+      "c_d_id": 7,
+      "c_id": 1911,
+      "c_last": null,
+      "d_id": 7,
+      "kind": "payment"
+    },
+    "iteration": 2,
+    "cold": false,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560767,
+        "History": 30002,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "306659.81999999995",
+        "District.d_ytd": "306659.82000000001",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-306659.82",
+        "Customer.c_ytd_payment": "306659.82",
+        "Customer.c_payment_cnt": "30002",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "306659.82",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560768,
+        "History": 30003,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "309989.7299999999",
+        "District.d_ytd": "309989.73000000001",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-309989.73",
+        "Customer.c_ytd_payment": "309989.73",
+        "Customer.c_payment_cnt": "30003",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "309989.73",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2911519
+      ],
+      [
+        2911594
+      ]
+    ],
+    "start_wall_ns": 1792538599586864130,
+    "client_ms": 7.514912,
+    "path": "/walker/payment",
+    "body": {
+      "district_id": "355e480fc16f476c802ff0fcf5b9fc99",
+      "c_district_id": "355e480fc16f476c802ff0fcf5b9fc99",
+      "customer_id": "1add5fe5e70f49ae959be62b46d16a94",
+      "c_last": "",
+      "amount": 3329.91
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "122",
+      "connection": "keep-alive",
+      "x-server-total-ms": "2.684",
+      "x-server-commit-ms": "3.492",
+      "x-server-ser-ms": "0.006",
+      "x-trace-id": "724f6c4a-520e-4e69-95b1-f408cd7849cc",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "c_id": 1911,
+            "amount": 3329.91
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      6.176,
+      {
+        "success": true,
+        "c_id": 1911,
+        "amount": 3329.91
+      }
+    ]
+  },
+  {
+    "label": "new_order_5",
+    "plan_idx": 28,
+    "transaction": {
+      "c_id": 302,
+      "d_id": 10,
+      "invalid": false,
+      "kind": "new_order",
+      "lines": [
+        {
+          "i_id": 13154,
+          "quantity": 7,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 31258,
+          "quantity": 4,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 89660,
+          "quantity": 8,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 33477,
+          "quantity": 2,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 61609,
+          "quantity": 1,
+          "supply_w_id": 1
+        }
+      ]
+    },
+    "iteration": 0,
+    "cold": true,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560765,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560770,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30001,
+        "OrderLine": 300759,
+        "Placed": 30001,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30011",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495323",
+        "Stock.s_ytd": "22",
+        "Stock.s_order_cnt": "5",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452379881.19"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2913581
+      ]
+    ],
+    "start_wall_ns": 1792538630588770515,
+    "client_ms": 517.565929,
+    "path": "/walker/new_order",
+    "body": {
+      "district_id": "5c72325d05d34494ad99782a498afb97",
+      "customer_id": "551ee658cdf142b6a26063906afcdab6",
+      "lines": [
+        {
+          "item_id": "61497e8cc633467f837c41c2e8b8393f",
+          "stock_id": "c8ab1c4205b548389e3bba78f19078d8",
+          "supply_w_id": 1,
+          "quantity": 7
+        },
+        {
+          "item_id": "dbbc36d428c544e9bb3a6ec01637891b",
+          "stock_id": "8921a198d96f4c969e1da24a010aa59b",
+          "supply_w_id": 1,
+          "quantity": 4
+        },
+        {
+          "item_id": "7cb857be1b44478388824e3ef276f012",
+          "stock_id": "401559d264af4bff9849d9d6aa9cd56b",
+          "supply_w_id": 1,
+          "quantity": 8
+        },
+        {
+          "item_id": "10acc0195f7342ebab06f3fcbfb88736",
+          "stock_id": "e6d9d7a2ac5b4803acc5831b540c7303",
+          "supply_w_id": 1,
+          "quantity": 2
+        },
+        {
+          "item_id": "86dbcdc5775f40e794fd6c11ce3f191c",
+          "stock_id": "37197cc92f4b4340a3f5b6dea1011275",
+          "supply_w_id": 1,
+          "quantity": 1
+        }
+      ]
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "133",
+      "connection": "keep-alive",
+      "x-server-total-ms": "509.586",
+      "x-server-commit-ms": "3.622",
+      "x-server-ser-ms": "0.012",
+      "x-trace-id": "d906d3f9-3ff9-4852-92f5-a2f1c2ca6c4e",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "o_id": 3001,
+            "total": 486.63,
+            "ol_cnt": 5
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      513.208,
+      {
+        "success": true,
+        "o_id": 3001,
+        "total": 486.63,
+        "ol_cnt": 5
+      }
+    ]
+  },
+  {
+    "label": "new_order_5",
+    "plan_idx": 28,
+    "transaction": {
+      "c_id": 302,
+      "d_id": 10,
+      "invalid": false,
+      "kind": "new_order",
+      "lines": [
+        {
+          "i_id": 13154,
+          "quantity": 7,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 31258,
+          "quantity": 4,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 89660,
+          "quantity": 8,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 33477,
+          "quantity": 2,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 61609,
+          "quantity": 1,
+          "supply_w_id": 1
+        }
+      ]
+    },
+    "iteration": 1,
+    "cold": false,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560770,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30001,
+        "OrderLine": 300759,
+        "Placed": 30001,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30011",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495323",
+        "Stock.s_ytd": "22",
+        "Stock.s_order_cnt": "5",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452379881.19"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560775,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30002,
+        "OrderLine": 300764,
+        "Placed": 30002,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30012",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495301",
+        "Stock.s_ytd": "44",
+        "Stock.s_order_cnt": "10",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452380388.82"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2913581
+      ],
+      [
+        2913641
+      ]
+    ],
+    "start_wall_ns": 1792538633673648336,
+    "client_ms": 10.859107,
+    "path": "/walker/new_order",
+    "body": {
+      "district_id": "5c72325d05d34494ad99782a498afb97",
+      "customer_id": "551ee658cdf142b6a26063906afcdab6",
+      "lines": [
+        {
+          "item_id": "61497e8cc633467f837c41c2e8b8393f",
+          "stock_id": "c8ab1c4205b548389e3bba78f19078d8",
+          "supply_w_id": 1,
+          "quantity": 7
+        },
+        {
+          "item_id": "dbbc36d428c544e9bb3a6ec01637891b",
+          "stock_id": "8921a198d96f4c969e1da24a010aa59b",
+          "supply_w_id": 1,
+          "quantity": 4
+        },
+        {
+          "item_id": "7cb857be1b44478388824e3ef276f012",
+          "stock_id": "401559d264af4bff9849d9d6aa9cd56b",
+          "supply_w_id": 1,
+          "quantity": 8
+        },
+        {
+          "item_id": "10acc0195f7342ebab06f3fcbfb88736",
+          "stock_id": "e6d9d7a2ac5b4803acc5831b540c7303",
+          "supply_w_id": 1,
+          "quantity": 2
+        },
+        {
+          "item_id": "86dbcdc5775f40e794fd6c11ce3f191c",
+          "stock_id": "37197cc92f4b4340a3f5b6dea1011275",
+          "supply_w_id": 1,
+          "quantity": 1
+        }
+      ]
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "133",
+      "connection": "keep-alive",
+      "x-server-total-ms": "4.55",
+      "x-server-commit-ms": "4.888",
+      "x-server-ser-ms": "0.008",
+      "x-trace-id": "fb52ffce-038f-45c7-a764-14fd3c9a8c2c",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "o_id": 3002,
+            "total": 486.63,
+            "ol_cnt": 5
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      9.437999999999999,
+      {
+        "success": true,
+        "o_id": 3002,
+        "total": 486.63,
+        "ol_cnt": 5
+      }
+    ]
+  },
+  {
+    "label": "new_order_5",
+    "plan_idx": 28,
+    "transaction": {
+      "c_id": 302,
+      "d_id": 10,
+      "invalid": false,
+      "kind": "new_order",
+      "lines": [
+        {
+          "i_id": 13154,
+          "quantity": 7,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 31258,
+          "quantity": 4,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 89660,
+          "quantity": 8,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 33477,
+          "quantity": 2,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 61609,
+          "quantity": 1,
+          "supply_w_id": 1
+        }
+      ]
+    },
+    "iteration": 2,
+    "cold": false,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560775,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30002,
+        "OrderLine": 300764,
+        "Placed": 30002,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30012",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495301",
+        "Stock.s_ytd": "44",
+        "Stock.s_order_cnt": "10",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452380388.82"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560780,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30003,
+        "OrderLine": 300769,
+        "Placed": 30003,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30013",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495461",
+        "Stock.s_ytd": "66",
+        "Stock.s_order_cnt": "15",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452380896.45"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2913581
+      ],
+      [
+        2913641
+      ]
+    ],
+    "start_wall_ns": 1792538636164857904,
+    "client_ms": 9.570151,
+    "path": "/walker/new_order",
+    "body": {
+      "district_id": "5c72325d05d34494ad99782a498afb97",
+      "customer_id": "551ee658cdf142b6a26063906afcdab6",
+      "lines": [
+        {
+          "item_id": "61497e8cc633467f837c41c2e8b8393f",
+          "stock_id": "c8ab1c4205b548389e3bba78f19078d8",
+          "supply_w_id": 1,
+          "quantity": 7
+        },
+        {
+          "item_id": "dbbc36d428c544e9bb3a6ec01637891b",
+          "stock_id": "8921a198d96f4c969e1da24a010aa59b",
+          "supply_w_id": 1,
+          "quantity": 4
+        },
+        {
+          "item_id": "7cb857be1b44478388824e3ef276f012",
+          "stock_id": "401559d264af4bff9849d9d6aa9cd56b",
+          "supply_w_id": 1,
+          "quantity": 8
+        },
+        {
+          "item_id": "10acc0195f7342ebab06f3fcbfb88736",
+          "stock_id": "e6d9d7a2ac5b4803acc5831b540c7303",
+          "supply_w_id": 1,
+          "quantity": 2
+        },
+        {
+          "item_id": "86dbcdc5775f40e794fd6c11ce3f191c",
+          "stock_id": "37197cc92f4b4340a3f5b6dea1011275",
+          "supply_w_id": 1,
+          "quantity": 1
+        }
+      ]
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "133",
+      "connection": "keep-alive",
+      "x-server-total-ms": "4.246",
+      "x-server-commit-ms": "3.977",
+      "x-server-ser-ms": "0.007",
+      "x-trace-id": "76f7363e-50b6-4ecd-9875-82f955dd8a0b",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "o_id": 3003,
+            "total": 486.63,
+            "ol_cnt": 5
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      8.223,
+      {
+        "success": true,
+        "o_id": 3003,
+        "total": 486.63,
+        "ol_cnt": 5
+      }
+    ]
+  },
+  {
+    "label": "new_order_15",
+    "plan_idx": 35,
+    "transaction": {
+      "c_id": 2752,
+      "d_id": 5,
+      "invalid": false,
+      "kind": "new_order",
+      "lines": [
+        {
+          "i_id": 81015,
+          "quantity": 2,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 13634,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 18944,
+          "quantity": 5,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 33750,
+          "quantity": 3,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 57461,
+          "quantity": 8,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 85962,
+          "quantity": 5,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 97993,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 18541,
+          "quantity": 8,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 6861,
+          "quantity": 3,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 40053,
+          "quantity": 8,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 33229,
+          "quantity": 2,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 48518,
+          "quantity": 3,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 44971,
+          "quantity": 10,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 60712,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 35532,
+          "quantity": 8,
+          "supply_w_id": 1
+        }
+      ]
+    },
+    "iteration": 0,
+    "cold": true,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560765,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560780,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30001,
+        "OrderLine": 300769,
+        "Placed": 30001,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30011",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495186",
+        "Stock.s_ytd": "68",
+        "Stock.s_order_cnt": "15",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452383233.60"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2914993
+      ]
+    ],
+    "start_wall_ns": 1792538667325763575,
+    "client_ms": 490.797616,
+    "path": "/walker/new_order",
+    "body": {
+      "district_id": "98efeb8ba3f244bfbddab94c01d6ac75",
+      "customer_id": "7156b807a9b24853a4fe38223d0df95f",
+      "lines": [
+        {
+          "item_id": "736128e929c2483487bcd6b14f10c98a",
+          "stock_id": "33595d1b1d00482e94fe50256649b294",
+          "supply_w_id": 1,
+          "quantity": 2
+        },
+        {
+          "item_id": "0caa26b9d375441f986ed798c0468833",
+          "stock_id": "b9fd18646f074721b9c0f6c6e2bd7d61",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "9fc6471db3ac4cccba421149131c2cb2",
+          "stock_id": "97a5d5ce9ba2440eb4de4ed365b3cdc3",
+          "supply_w_id": 1,
+          "quantity": 5
+        },
+        {
+          "item_id": "ba4822c6fb2c400eb67684d7731d2dee",
+          "stock_id": "3d57aa01eb1144d5867a2feef4d17c90",
+          "supply_w_id": 1,
+          "quantity": 3
+        },
+        {
+          "item_id": "e64496714ca2438c949da99bc2a5db21",
+          "stock_id": "204bb8a581f84c2099f754ff351b8f69",
+          "supply_w_id": 1,
+          "quantity": 8
+        },
+        {
+          "item_id": "9ccb7e19d50840b59faab8f7ee0e41a6",
+          "stock_id": "6ccb0c1efb1949b38962f2b6a1c919a3",
+          "supply_w_id": 1,
+          "quantity": 5
+        },
+        {
+          "item_id": "8243b1adb1c14ebbbf108d1a2d4d71df",
+          "stock_id": "4fab5f922a274d72bbc672a6174cce7b",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "68c7c99bd0854548ba17ebcaadf94d06",
+          "stock_id": "cbd9e7306f3d4843ba8575863ee6001e",
+          "supply_w_id": 1,
+          "quantity": 8
+        },
+        {
+          "item_id": "43eb87ffb1ed461683bb8324f7556495",
+          "stock_id": "d0bf6a1540e84bff9ea0835e5634cf20",
+          "supply_w_id": 1,
+          "quantity": 3
+        },
+        {
+          "item_id": "f571c70f96564918832e03dee2eeab35",
+          "stock_id": "73bd05e711b44e36938ca59c414887c4",
+          "supply_w_id": 1,
+          "quantity": 8
+        },
+        {
+          "item_id": "f599582c3a7f4b6aaf4164aff138f113",
+          "stock_id": "134e9bee1d0e493683fa56b3b2849f13",
+          "supply_w_id": 1,
+          "quantity": 2
+        },
+        {
+          "item_id": "747b88fc21a24666a26024d766501027",
+          "stock_id": "6793317532c64ab8b16ff754cf381ab5",
+          "supply_w_id": 1,
+          "quantity": 3
+        },
+        {
+          "item_id": "4dd68e9e91494c388e0484aebdc1f802",
+          "stock_id": "3250d2c0ddf443958cbada3b92459e93",
+          "supply_w_id": 1,
+          "quantity": 10
+        },
+        {
+          "item_id": "7571682c3ae3402d972c17c39596bcb3",
+          "stock_id": "c22c3142322840ebbebcd116274ea0c5",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "026d673af5e04bcca73331eb4756ad9e",
+          "stock_id": "cb21e81040d4423fbc959b79e83efd72",
+          "supply_w_id": 1,
+          "quantity": 8
+        }
+      ]
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "135",
+      "connection": "keep-alive",
+      "x-server-total-ms": "478.883",
+      "x-server-commit-ms": "7.44",
+      "x-server-ser-ms": "0.012",
+      "x-trace-id": "d2c4a9db-3ff8-42a4-869f-259d62455f57",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "o_id": 3001,
+            "total": 2466.68,
+            "ol_cnt": 15
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      486.323,
+      {
+        "success": true,
+        "o_id": 3001,
+        "total": 2466.68,
+        "ol_cnt": 15
+      }
+    ]
+  },
+  {
+    "label": "new_order_15",
+    "plan_idx": 35,
+    "transaction": {
+      "c_id": 2752,
+      "d_id": 5,
+      "invalid": false,
+      "kind": "new_order",
+      "lines": [
+        {
+          "i_id": 81015,
+          "quantity": 2,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 13634,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 18944,
+          "quantity": 5,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 33750,
+          "quantity": 3,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 57461,
+          "quantity": 8,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 85962,
+          "quantity": 5,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 97993,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 18541,
+          "quantity": 8,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 6861,
+          "quantity": 3,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 40053,
+          "quantity": 8,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 33229,
+          "quantity": 2,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 48518,
+          "quantity": 3,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 44971,
+          "quantity": 10,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 60712,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 35532,
+          "quantity": 8,
+          "supply_w_id": 1
+        }
+      ]
+    },
+    "iteration": 1,
+    "cold": false,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560780,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30001,
+        "OrderLine": 300769,
+        "Placed": 30001,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30011",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495186",
+        "Stock.s_ytd": "68",
+        "Stock.s_order_cnt": "15",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452383233.60"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560795,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30002,
+        "OrderLine": 300784,
+        "Placed": 30002,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30012",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495391",
+        "Stock.s_ytd": "136",
+        "Stock.s_order_cnt": "30",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452387093.64"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2914993
+      ],
+      [
+        2915072
+      ]
+    ],
+    "start_wall_ns": 1792538670300074634,
+    "client_ms": 15.972527,
+    "path": "/walker/new_order",
+    "body": {
+      "district_id": "98efeb8ba3f244bfbddab94c01d6ac75",
+      "customer_id": "7156b807a9b24853a4fe38223d0df95f",
+      "lines": [
+        {
+          "item_id": "736128e929c2483487bcd6b14f10c98a",
+          "stock_id": "33595d1b1d00482e94fe50256649b294",
+          "supply_w_id": 1,
+          "quantity": 2
+        },
+        {
+          "item_id": "0caa26b9d375441f986ed798c0468833",
+          "stock_id": "b9fd18646f074721b9c0f6c6e2bd7d61",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "9fc6471db3ac4cccba421149131c2cb2",
+          "stock_id": "97a5d5ce9ba2440eb4de4ed365b3cdc3",
+          "supply_w_id": 1,
+          "quantity": 5
+        },
+        {
+          "item_id": "ba4822c6fb2c400eb67684d7731d2dee",
+          "stock_id": "3d57aa01eb1144d5867a2feef4d17c90",
+          "supply_w_id": 1,
+          "quantity": 3
+        },
+        {
+          "item_id": "e64496714ca2438c949da99bc2a5db21",
+          "stock_id": "204bb8a581f84c2099f754ff351b8f69",
+          "supply_w_id": 1,
+          "quantity": 8
+        },
+        {
+          "item_id": "9ccb7e19d50840b59faab8f7ee0e41a6",
+          "stock_id": "6ccb0c1efb1949b38962f2b6a1c919a3",
+          "supply_w_id": 1,
+          "quantity": 5
+        },
+        {
+          "item_id": "8243b1adb1c14ebbbf108d1a2d4d71df",
+          "stock_id": "4fab5f922a274d72bbc672a6174cce7b",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "68c7c99bd0854548ba17ebcaadf94d06",
+          "stock_id": "cbd9e7306f3d4843ba8575863ee6001e",
+          "supply_w_id": 1,
+          "quantity": 8
+        },
+        {
+          "item_id": "43eb87ffb1ed461683bb8324f7556495",
+          "stock_id": "d0bf6a1540e84bff9ea0835e5634cf20",
+          "supply_w_id": 1,
+          "quantity": 3
+        },
+        {
+          "item_id": "f571c70f96564918832e03dee2eeab35",
+          "stock_id": "73bd05e711b44e36938ca59c414887c4",
+          "supply_w_id": 1,
+          "quantity": 8
+        },
+        {
+          "item_id": "f599582c3a7f4b6aaf4164aff138f113",
+          "stock_id": "134e9bee1d0e493683fa56b3b2849f13",
+          "supply_w_id": 1,
+          "quantity": 2
+        },
+        {
+          "item_id": "747b88fc21a24666a26024d766501027",
+          "stock_id": "6793317532c64ab8b16ff754cf381ab5",
+          "supply_w_id": 1,
+          "quantity": 3
+        },
+        {
+          "item_id": "4dd68e9e91494c388e0484aebdc1f802",
+          "stock_id": "3250d2c0ddf443958cbada3b92459e93",
+          "supply_w_id": 1,
+          "quantity": 10
+        },
+        {
+          "item_id": "7571682c3ae3402d972c17c39596bcb3",
+          "stock_id": "c22c3142322840ebbebcd116274ea0c5",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "026d673af5e04bcca73331eb4756ad9e",
+          "stock_id": "cb21e81040d4423fbc959b79e83efd72",
+          "supply_w_id": 1,
+          "quantity": 8
+        }
+      ]
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "135",
+      "connection": "keep-alive",
+      "x-server-total-ms": "6.317",
+      "x-server-commit-ms": "8.166",
+      "x-server-ser-ms": "0.007",
+      "x-trace-id": "e4628bba-40d4-4542-8bde-b126c613e773",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "o_id": 3002,
+            "total": 2466.68,
+            "ol_cnt": 15
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      14.483,
+      {
+        "success": true,
+        "o_id": 3002,
+        "total": 2466.68,
+        "ol_cnt": 15
+      }
+    ]
+  },
+  {
+    "label": "new_order_15",
+    "plan_idx": 35,
+    "transaction": {
+      "c_id": 2752,
+      "d_id": 5,
+      "invalid": false,
+      "kind": "new_order",
+      "lines": [
+        {
+          "i_id": 81015,
+          "quantity": 2,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 13634,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 18944,
+          "quantity": 5,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 33750,
+          "quantity": 3,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 57461,
+          "quantity": 8,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 85962,
+          "quantity": 5,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 97993,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 18541,
+          "quantity": 8,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 6861,
+          "quantity": 3,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 40053,
+          "quantity": 8,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 33229,
+          "quantity": 2,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 48518,
+          "quantity": 3,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 44971,
+          "quantity": 10,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 60712,
+          "quantity": 1,
+          "supply_w_id": 1
+        },
+        {
+          "i_id": 35532,
+          "quantity": 8,
+          "supply_w_id": 1
+        }
+      ]
+    },
+    "iteration": 2,
+    "cold": false,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560795,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30002,
+        "OrderLine": 300784,
+        "Placed": 30002,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30012",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495391",
+        "Stock.s_ytd": "136",
+        "Stock.s_order_cnt": "30",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452387093.64"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560810,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30003,
+        "OrderLine": 300799,
+        "Placed": 30003,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30013",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495505",
+        "Stock.s_ytd": "204",
+        "Stock.s_order_cnt": "45",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452390953.68"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2914993
+      ],
+      [
+        2915072
+      ]
+    ],
+    "start_wall_ns": 1792538672789341611,
+    "client_ms": 14.577842,
+    "path": "/walker/new_order",
+    "body": {
+      "district_id": "98efeb8ba3f244bfbddab94c01d6ac75",
+      "customer_id": "7156b807a9b24853a4fe38223d0df95f",
+      "lines": [
+        {
+          "item_id": "736128e929c2483487bcd6b14f10c98a",
+          "stock_id": "33595d1b1d00482e94fe50256649b294",
+          "supply_w_id": 1,
+          "quantity": 2
+        },
+        {
+          "item_id": "0caa26b9d375441f986ed798c0468833",
+          "stock_id": "b9fd18646f074721b9c0f6c6e2bd7d61",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "9fc6471db3ac4cccba421149131c2cb2",
+          "stock_id": "97a5d5ce9ba2440eb4de4ed365b3cdc3",
+          "supply_w_id": 1,
+          "quantity": 5
+        },
+        {
+          "item_id": "ba4822c6fb2c400eb67684d7731d2dee",
+          "stock_id": "3d57aa01eb1144d5867a2feef4d17c90",
+          "supply_w_id": 1,
+          "quantity": 3
+        },
+        {
+          "item_id": "e64496714ca2438c949da99bc2a5db21",
+          "stock_id": "204bb8a581f84c2099f754ff351b8f69",
+          "supply_w_id": 1,
+          "quantity": 8
+        },
+        {
+          "item_id": "9ccb7e19d50840b59faab8f7ee0e41a6",
+          "stock_id": "6ccb0c1efb1949b38962f2b6a1c919a3",
+          "supply_w_id": 1,
+          "quantity": 5
+        },
+        {
+          "item_id": "8243b1adb1c14ebbbf108d1a2d4d71df",
+          "stock_id": "4fab5f922a274d72bbc672a6174cce7b",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "68c7c99bd0854548ba17ebcaadf94d06",
+          "stock_id": "cbd9e7306f3d4843ba8575863ee6001e",
+          "supply_w_id": 1,
+          "quantity": 8
+        },
+        {
+          "item_id": "43eb87ffb1ed461683bb8324f7556495",
+          "stock_id": "d0bf6a1540e84bff9ea0835e5634cf20",
+          "supply_w_id": 1,
+          "quantity": 3
+        },
+        {
+          "item_id": "f571c70f96564918832e03dee2eeab35",
+          "stock_id": "73bd05e711b44e36938ca59c414887c4",
+          "supply_w_id": 1,
+          "quantity": 8
+        },
+        {
+          "item_id": "f599582c3a7f4b6aaf4164aff138f113",
+          "stock_id": "134e9bee1d0e493683fa56b3b2849f13",
+          "supply_w_id": 1,
+          "quantity": 2
+        },
+        {
+          "item_id": "747b88fc21a24666a26024d766501027",
+          "stock_id": "6793317532c64ab8b16ff754cf381ab5",
+          "supply_w_id": 1,
+          "quantity": 3
+        },
+        {
+          "item_id": "4dd68e9e91494c388e0484aebdc1f802",
+          "stock_id": "3250d2c0ddf443958cbada3b92459e93",
+          "supply_w_id": 1,
+          "quantity": 10
+        },
+        {
+          "item_id": "7571682c3ae3402d972c17c39596bcb3",
+          "stock_id": "c22c3142322840ebbebcd116274ea0c5",
+          "supply_w_id": 1,
+          "quantity": 1
+        },
+        {
+          "item_id": "026d673af5e04bcca73331eb4756ad9e",
+          "stock_id": "cb21e81040d4423fbc959b79e83efd72",
+          "supply_w_id": 1,
+          "quantity": 8
+        }
+      ]
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "135",
+      "connection": "keep-alive",
+      "x-server-total-ms": "6.044",
+      "x-server-commit-ms": "7.124",
+      "x-server-ser-ms": "0.007",
+      "x-trace-id": "79d9b13b-cdfe-46d0-a05f-c15971925ad2",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "o_id": 3003,
+            "total": 2466.68,
+            "ol_cnt": 15
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      13.168,
+      {
+        "success": true,
+        "o_id": 3003,
+        "total": 2466.68,
+        "ol_cnt": 15
+      }
+    ]
+  },
+  {
+    "label": "payment_name_BC",
+    "plan_idx": 50,
+    "transaction": {
+      "amount": 4792.26,
+      "c_d_id": 5,
+      "c_id": null,
+      "c_last": "CALLYCALLYCALLY",
+      "d_id": 5,
+      "kind": "payment"
+    },
+    "iteration": 0,
+    "cold": true,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560765,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560766,
+        "History": 30001,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "304792.26",
+        "District.d_ytd": "304792.26",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-304792.26",
+        "Customer.c_ytd_payment": "304792.26",
+        "Customer.c_payment_cnt": "30001",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "304792.26",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2917426
+      ]
+    ],
+    "start_wall_ns": 1792538703936164407,
+    "client_ms": 495.636258,
+    "path": "/walker/payment",
+    "body": {
+      "district_id": "98efeb8ba3f244bfbddab94c01d6ac75",
+      "c_district_id": "98efeb8ba3f244bfbddab94c01d6ac75",
+      "customer_id": "",
+      "c_last": "CALLYCALLYCALLY",
+      "amount": 4792.26
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "121",
+      "connection": "keep-alive",
+      "x-server-total-ms": "487.224",
+      "x-server-commit-ms": "3.889",
+      "x-server-ser-ms": "0.012",
+      "x-trace-id": "aee4508c-7158-4e6c-ac08-5671ce3e8644",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "c_id": 778,
+            "amount": 4792.26
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      491.113,
+      {
+        "success": true,
+        "c_id": 778,
+        "amount": 4792.26
+      }
+    ]
+  },
+  {
+    "label": "payment_name_BC",
+    "plan_idx": 50,
+    "transaction": {
+      "amount": 4792.26,
+      "c_d_id": 5,
+      "c_id": null,
+      "c_last": "CALLYCALLYCALLY",
+      "d_id": 5,
+      "kind": "payment"
+    },
+    "iteration": 1,
+    "cold": false,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560766,
+        "History": 30001,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "304792.26",
+        "District.d_ytd": "304792.26",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-304792.26",
+        "Customer.c_ytd_payment": "304792.26",
+        "Customer.c_payment_cnt": "30001",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "304792.26",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560767,
+        "History": 30002,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "309584.52",
+        "District.d_ytd": "309584.520000000004",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-309584.52",
+        "Customer.c_ytd_payment": "309584.52",
+        "Customer.c_payment_cnt": "30002",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "309584.52",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2917519
+      ],
+      [
+        2917426
+      ]
+    ],
+    "start_wall_ns": 1792538706903084926,
+    "client_ms": 9.090767,
+    "path": "/walker/payment",
+    "body": {
+      "district_id": "98efeb8ba3f244bfbddab94c01d6ac75",
+      "c_district_id": "98efeb8ba3f244bfbddab94c01d6ac75",
+      "customer_id": "",
+      "c_last": "CALLYCALLYCALLY",
+      "amount": 4792.26
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "121",
+      "connection": "keep-alive",
+      "x-server-total-ms": "3.522",
+      "x-server-commit-ms": "4.171",
+      "x-server-ser-ms": "0.008",
+      "x-trace-id": "e364ee4c-23ae-4860-ae81-f32edb49d881",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "c_id": 778,
+            "amount": 4792.26
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      7.693,
+      {
+        "success": true,
+        "c_id": 778,
+        "amount": 4792.26
+      }
+    ]
+  },
+  {
+    "label": "payment_name_BC",
+    "plan_idx": 50,
+    "transaction": {
+      "amount": 4792.26,
+      "c_d_id": 5,
+      "c_id": null,
+      "c_last": "CALLYCALLYCALLY",
+      "d_id": 5,
+      "kind": "payment"
+    },
+    "iteration": 2,
+    "cold": false,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560767,
+        "History": 30002,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "309584.52",
+        "District.d_ytd": "309584.520000000004",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-309584.52",
+        "Customer.c_ytd_payment": "309584.52",
+        "Customer.c_payment_cnt": "30002",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "309584.52",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560768,
+        "History": 30003,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "314376.78",
+        "District.d_ytd": "314376.780000000006",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-314376.78",
+        "Customer.c_ytd_payment": "314376.78",
+        "Customer.c_payment_cnt": "30003",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "314376.78",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2917519
+      ],
+      [
+        2917426
+      ]
+    ],
+    "start_wall_ns": 1792538709421278090,
+    "client_ms": 7.487819,
+    "path": "/walker/payment",
+    "body": {
+      "district_id": "98efeb8ba3f244bfbddab94c01d6ac75",
+      "c_district_id": "98efeb8ba3f244bfbddab94c01d6ac75",
+      "customer_id": "",
+      "c_last": "CALLYCALLYCALLY",
+      "amount": 4792.26
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "121",
+      "connection": "keep-alive",
+      "x-server-total-ms": "3.275",
+      "x-server-commit-ms": "2.873",
+      "x-server-ser-ms": "0.006",
+      "x-trace-id": "73095923-97f3-4f5f-8e09-59eb6c14cf1b",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "c_id": 778,
+            "amount": 4792.26
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      6.148,
+      {
+        "success": true,
+        "c_id": 778,
+        "amount": 4792.26
+      }
+    ]
+  },
+  {
+    "label": "payment_id_BC",
+    "plan_idx": 54,
+    "transaction": {
+      "amount": 1150.75,
+      "c_d_id": 4,
+      "c_id": 2998,
+      "c_last": null,
+      "d_id": 6,
+      "kind": "payment"
+    },
+    "iteration": 0,
+    "cold": true,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560765,
+        "History": 30000,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "300000.0",
+        "District.d_ytd": "300000.0",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-300000.0",
+        "Customer.c_ytd_payment": "300000.0",
+        "Customer.c_payment_cnt": "30000",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "300000.0",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560766,
+        "History": 30001,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "301150.75",
+        "District.d_ytd": "301150.75",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-301150.75",
+        "Customer.c_ytd_payment": "301150.75",
+        "Customer.c_payment_cnt": "30001",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "301150.75",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2918667
+      ]
+    ],
+    "start_wall_ns": 1792538740107189226,
+    "client_ms": 480.170676,
+    "path": "/walker/payment",
+    "body": {
+      "district_id": "991dfc61417144d785de347b08ef637f",
+      "c_district_id": "2b5a05c2ebea4e9dabd262029ae89627",
+      "customer_id": "d77d245c84944190bc39d31483a5d94b",
+      "c_last": "",
+      "amount": 1150.75
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "122",
+      "connection": "keep-alive",
+      "x-server-total-ms": "472.314",
+      "x-server-commit-ms": "3.476",
+      "x-server-ser-ms": "0.012",
+      "x-trace-id": "4df6f1da-22a1-43e6-b19d-6d3d95842890",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "c_id": 2998,
+            "amount": 1150.75
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      475.79,
+      {
+        "success": true,
+        "c_id": 2998,
+        "amount": 1150.75
+      }
+    ]
+  },
+  {
+    "label": "payment_id_BC",
+    "plan_idx": 54,
+    "transaction": {
+      "amount": 1150.75,
+      "c_d_id": 4,
+      "c_id": 2998,
+      "c_last": null,
+      "d_id": 6,
+      "kind": "payment"
+    },
+    "iteration": 1,
+    "cold": false,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560766,
+        "History": 30001,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "301150.75",
+        "District.d_ytd": "301150.75",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-301150.75",
+        "Customer.c_ytd_payment": "301150.75",
+        "Customer.c_payment_cnt": "30001",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "301150.75",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560767,
+        "History": 30002,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "302301.5",
+        "District.d_ytd": "302301.5",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-302301.5",
+        "Customer.c_ytd_payment": "302301.5",
+        "Customer.c_payment_cnt": "30002",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "302301.50",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2918789
+      ],
+      [
+        2918667
+      ]
+    ],
+    "start_wall_ns": 1792538743062044267,
+    "client_ms": 6.632352,
+    "path": "/walker/payment",
+    "body": {
+      "district_id": "991dfc61417144d785de347b08ef637f",
+      "c_district_id": "2b5a05c2ebea4e9dabd262029ae89627",
+      "customer_id": "d77d245c84944190bc39d31483a5d94b",
+      "c_last": "",
+      "amount": 1150.75
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "122",
+      "connection": "keep-alive",
+      "x-server-total-ms": "2.606",
+      "x-server-commit-ms": "2.472",
+      "x-server-ser-ms": "0.008",
+      "x-trace-id": "1ef20b81-0c13-4639-aa15-21a465c9ce84",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "c_id": 2998,
+            "amount": 1150.75
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      5.077999999999999,
+      {
+        "success": true,
+        "c_id": 2998,
+        "amount": 1150.75
+      }
+    ]
+  },
+  {
+    "label": "payment_id_BC",
+    "plan_idx": 54,
+    "transaction": {
+      "amount": 1150.75,
+      "c_d_id": 4,
+      "c_id": 2998,
+      "c_last": null,
+      "d_id": 6,
+      "kind": "payment"
+    },
+    "iteration": 2,
+    "cold": false,
+    "state_before": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560767,
+        "History": 30002,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "302301.5",
+        "District.d_ytd": "302301.5",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-302301.5",
+        "Customer.c_ytd_payment": "302301.5",
+        "Customer.c_payment_cnt": "30002",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "302301.50",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "state_after": {
+      "counts": {
+        "Customer": 30000,
+        "District": 10,
+        "GenericEdge": 560768,
+        "History": 30003,
+        "Item": 100000,
+        "Of": 100000,
+        "Order": 30000,
+        "OrderLine": 300754,
+        "Placed": 30000,
+        "Root": 5,
+        "Stock": 100000,
+        "Warehouse": 1
+      },
+      "numeric_sums": {
+        "Warehouse.w_ytd": "303452.25",
+        "District.d_ytd": "303452.25",
+        "District.d_next_o_id": "30010",
+        "Customer.c_balance": "-303452.25",
+        "Customer.c_ytd_payment": "303452.25",
+        "Customer.c_payment_cnt": "30003",
+        "Stock.s_quantity": "5495254",
+        "Stock.s_ytd": "0",
+        "Stock.s_order_cnt": "0",
+        "Stock.s_remote_cnt": "0",
+        "History.h_amount": "303452.25",
+        "OrderLine.ol_amount": "452379373.56"
+      },
+      "district_order_consistency_bad": 0
+    },
+    "backend_pids": [
+      [
+        2918789
+      ],
+      [
+        2918667
+      ]
+    ],
+    "start_wall_ns": 1792538745515634146,
+    "client_ms": 6.598568,
+    "path": "/walker/payment",
+    "body": {
+      "district_id": "991dfc61417144d785de347b08ef637f",
+      "c_district_id": "2b5a05c2ebea4e9dabd262029ae89627",
+      "customer_id": "d77d245c84944190bc39d31483a5d94b",
+      "c_last": "",
+      "amount": 1150.75
+    },
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "content-length": "122",
+      "connection": "keep-alive",
+      "x-server-total-ms": "2.624",
+      "x-server-commit-ms": "2.645",
+      "x-server-ser-ms": "0.006",
+      "x-trace-id": "f19054fd-0819-4a62-a364-c5b3183bdf85",
+      "access-control-allow-origin": "*",
+      "access-control-allow-credentials": "true"
+    },
+    "response": {
+      "ok": true,
+      "type": "response",
+      "data": {
+        "reports": [
+          {
+            "success": true,
+            "c_id": 2998,
+            "amount": 1150.75
+          }
+        ]
+      },
+      "error": null
+    },
+    "driver_result": [
+      true,
+      false,
+      5.269,
+      {
+        "success": true,
+        "c_id": 2998,
+        "amount": 1150.75
+      }
+    ]
+  }
+]

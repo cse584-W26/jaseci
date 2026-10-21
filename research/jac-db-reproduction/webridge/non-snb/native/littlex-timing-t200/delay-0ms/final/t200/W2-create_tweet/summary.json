@@ -1,0 +1,34 @@
+{
+  "instrumented": false,
+  "tier": "t200",
+  "workload": "W2",
+  "operation": "create_tweet",
+  "method": "latency",
+  "variant": "final",
+  "delay_ms": 0,
+  "warm": 10,
+  "n": 30,
+  "server_median_ms": 3.287,
+  "client_median_ms": 4.274703000000001,
+  "app_cpu_total_ms": 60.0,
+  "CPU_tick_ms": 10.0,
+  "measured_operation_counts": {
+    "create_tweet": 30
+  },
+  "state": {
+    "exact_business_state_verified": true,
+    "rows": {
+      "profiles": 100,
+      "follows": 5000,
+      "tweets": 20040
+    },
+    "sha256": {
+      "profiles": "54f1ba13e93e16ba808aa0eaf72df7d575b58f8d6c8acd83276e20b70dff97f7",
+      "follows": "581889288c92ec7c7ba95dcca58b3f35fc85751ecff82978f1b66423c5aa4b9b",
+      "tweets": "cbc2701b9a0fe7507d0b62d36a46e2a04cbf23ef4957e350b0927e3d22929a20"
+    },
+    "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+  },
+  "path": "littlex-timing-t200/delay-0ms/final/t200/W2-create_tweet",
+  "all_request_oracles_verified": true
+}

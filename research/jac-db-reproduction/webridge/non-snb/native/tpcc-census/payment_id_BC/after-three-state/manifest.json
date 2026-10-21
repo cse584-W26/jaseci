@@ -1,0 +1,74 @@
+{
+  "warehouse": {
+    "rows": 1,
+    "sha256": "50d962786aea86457c42429cb671ccd088f2ec9d04a0997fb838b51f969edefc",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-census/payment_id_BC/after-three-state/warehouse.jsonl.gz",
+    "sql": "SELECT 1,(props->'archetype'->>'w_ytd')::numeric FROM anchors WHERE arch_type='Warehouse' ORDER BY 1",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-census/payment_id_BC/after-three-state/warehouse.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "50d962786aea86457c42429cb671ccd088f2ec9d04a0997fb838b51f969edefc",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "district": {
+    "rows": 10,
+    "sha256": "84d18ec41422db8d6a2e122e796ba4ad5a36b70d8de6bf948e5cc4f24df2cb1f",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-census/payment_id_BC/after-three-state/district.jsonl.gz",
+    "sql": "SELECT 1,(props->'archetype'->>'d_id')::int,(props->'archetype'->>'d_ytd')::numeric,(props->'archetype'->>'d_next_o_id')::int FROM anchors WHERE arch_type='District' ORDER BY 1,2",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-census/payment_id_BC/after-three-state/district.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "5e899be0a8eae16e8ee6399dff3805a9fcfd93d2fcdcefc362eedd0b6d041ce5",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "customer": {
+    "rows": 30000,
+    "sha256": "d3eedf36860bb863d1abcd92071b6e863a85b856f8f14112da13c506512084a2",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-census/payment_id_BC/after-three-state/customer.jsonl.gz",
+    "sql": "SELECT 1,(d.props->'archetype'->>'d_id')::int,(c.props->'archetype'->>'c_id')::int,(c.props->'archetype'->>'c_balance')::numeric,(c.props->'archetype'->>'c_ytd_payment')::numeric,(c.props->'archetype'->>'c_payment_cnt')::int,c.props->'archetype'->>'c_data' FROM anchors c JOIN anchors e ON e.dst=c.id AND e.kind='EdgeAnchor'JOIN anchors d ON d.id=e.src AND d.arch_type='District'WHERE c.arch_type='Customer'ORDER BY 1,2,3",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-census/payment_id_BC/after-three-state/customer.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "f2c027ed8f3cf50fbbd582704426e1749f8a98435af54d58f91421d770336c07",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "stock": {
+    "rows": 100000,
+    "sha256": "0a5d05858ad3f2f69f87492ac9454921f04314f9f429d743495a817c52dcb229",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-census/payment_id_BC/after-three-state/stock.jsonl.gz",
+    "sql": "SELECT 1,(props->'archetype'->>'s_i_id')::int,(props->'archetype'->>'s_quantity')::int,(props->'archetype'->>'s_ytd')::int,(props->'archetype'->>'s_order_cnt')::int,(props->'archetype'->>'s_remote_cnt')::int FROM anchors WHERE arch_type='Stock' ORDER BY 1,2",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-census/payment_id_BC/after-three-state/stock.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "0a5d05858ad3f2f69f87492ac9454921f04314f9f429d743495a817c52dcb229",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "orders": {
+    "rows": 30000,
+    "sha256": "44cba83dae1aea9c0113c1ea6f18889fd5073c5dc70105d1a381ce2e53bdc87f",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-census/payment_id_BC/after-three-state/orders.jsonl.gz",
+    "sql": "SELECT 1,(props->'archetype'->>'o_d_id')::int,(props->'archetype'->>'o_id')::int,(props->'archetype'->>'o_c_id')::int,coalesce((props->'archetype'->>'o_carrier_id')::int,0),(props->'archetype'->>'o_ol_cnt')::int,(props->'archetype'->>'o_all_local')::int FROM anchors WHERE arch_type='Order' ORDER BY 1,2,3",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-census/payment_id_BC/after-three-state/orders.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "44cba83dae1aea9c0113c1ea6f18889fd5073c5dc70105d1a381ce2e53bdc87f",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "new_order": {
+    "rows": 9000,
+    "sha256": "fcd25286de2b35a9336565d9834495bccf12977f71fc7f1927bb9451beb06154",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-census/payment_id_BC/after-three-state/new_order.jsonl.gz",
+    "sql": "SELECT 1,(props->'archetype'->>'o_d_id')::int,(props->'archetype'->>'o_id')::int FROM anchors WHERE arch_type='Order'AND(props->'archetype'->>'new_order')::boolean ORDER BY 1,2,3",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-census/payment_id_BC/after-three-state/new_order.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "fcd25286de2b35a9336565d9834495bccf12977f71fc7f1927bb9451beb06154",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "order_line": {
+    "rows": 300754,
+    "sha256": "70f0648049b3a6f8516af4903b1295196ff61d048dbbd7754521e205cf3ea021",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-census/payment_id_BC/after-three-state/order_line.jsonl.gz",
+    "sql": "SELECT 1,(o.props->'archetype'->>'o_d_id')::int,(o.props->'archetype'->>'o_id')::int,(l.props->'archetype'->>'ol_number')::int,(l.props->'archetype'->>'ol_i_id')::int,(l.props->'archetype'->>'ol_supply_w_id')::int,(l.props->'archetype'->>'ol_quantity')::int,(l.props->'archetype'->>'ol_amount')::numeric,l.props->'archetype'->>'ol_dist_info'FROM anchors l JOIN anchors e ON e.dst=l.id AND e.kind='EdgeAnchor'JOIN anchors o ON o.id=e.src AND o.arch_type='Order'WHERE l.arch_type='OrderLine'ORDER BY 1,2,3,4",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-census/payment_id_BC/after-three-state/order_line.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "c72c878aa82685ac4e5b6c812b91af70a6769f56c9edac488575def3711466f1",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "history": {
+    "rows": 30003,
+    "sha256": "717f0b87539efcd53a9fd8dc0aea8ba4d1463e79dd18342527f883a9cc0396af",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-census/payment_id_BC/after-three-state/history.jsonl.gz",
+    "sql": "SELECT 1,(d.props->'archetype'->>'d_id')::int,(c.props->'archetype'->>'c_id')::int,(h.props->'archetype'->>'h_w_id')::int,(h.props->'archetype'->>'h_d_id')::int,(h.props->'archetype'->>'h_amount')::numeric,h.props->'archetype'->>'h_data'FROM anchors h JOIN anchors e ON e.dst=h.id AND e.kind='EdgeAnchor'JOIN anchors c ON c.id=e.src AND c.arch_type='Customer'JOIN anchors p ON p.dst=c.id AND p.kind='EdgeAnchor'JOIN anchors d ON d.id=p.src AND d.arch_type='District'WHERE h.arch_type='History'ORDER BY 1,2,3,4,5,6,7",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-census/payment_id_BC/after-three-state/history.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "f067e56636ce2593ac70fab49d7f2d95efd47075263a8d9dafb4ea907b744f71",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  }
+}

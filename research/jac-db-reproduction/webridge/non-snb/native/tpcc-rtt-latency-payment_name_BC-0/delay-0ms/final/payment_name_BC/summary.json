@@ -1,0 +1,78 @@
+{
+  "label": "payment_name_BC",
+  "variant": "final",
+  "delay_ms": 0,
+  "warm": 10,
+  "n": 30,
+  "method": "latency",
+  "server_median_ms": 5.8105,
+  "client_median_ms": 6.6864535,
+  "app_cpu_total_ms": 70.0,
+  "CPU_tick_ms": 10.0,
+  "path": "tpcc-rtt-latency-payment_name_BC-0/delay-0ms/final/payment_name_BC",
+  "initial": {
+    "counts": {
+      "Customer": 30000,
+      "District": 10,
+      "GenericEdge": 560765,
+      "History": 30000,
+      "Item": 100000,
+      "Of": 100000,
+      "Order": 30000,
+      "OrderLine": 300754,
+      "Placed": 30000,
+      "Root": 5,
+      "Stock": 100000,
+      "Warehouse": 1
+    },
+    "numeric_sums": {
+      "Warehouse.w_ytd": "300000.0",
+      "District.d_ytd": "300000.0",
+      "District.d_next_o_id": "30010",
+      "Customer.c_balance": "-300000.0",
+      "Customer.c_ytd_payment": "300000.0",
+      "Customer.c_payment_cnt": "30000",
+      "Stock.s_quantity": "5495254",
+      "Stock.s_ytd": "0",
+      "Stock.s_order_cnt": "0",
+      "Stock.s_remote_cnt": "0",
+      "History.h_amount": "300000.0",
+      "OrderLine.ol_amount": "452379373.56"
+    },
+    "district_order_consistency_bad": 0
+  },
+  "after_request_count": 40,
+  "after": {
+    "counts": {
+      "Customer": 30000,
+      "District": 10,
+      "GenericEdge": 560805,
+      "History": 30040,
+      "Item": 100000,
+      "Of": 100000,
+      "Order": 30000,
+      "OrderLine": 300754,
+      "Placed": 30000,
+      "Root": 5,
+      "Stock": 100000,
+      "Warehouse": 1
+    },
+    "numeric_sums": {
+      "Warehouse.w_ytd": "491690.4000000004",
+      "District.d_ytd": "491690.4000000001",
+      "District.d_next_o_id": "30010",
+      "Customer.c_balance": "-491690.40000000005",
+      "Customer.c_ytd_payment": "491690.40000000005",
+      "Customer.c_payment_cnt": "30040",
+      "Stock.s_quantity": "5495254",
+      "Stock.s_ytd": "0",
+      "Stock.s_order_cnt": "0",
+      "Stock.s_remote_cnt": "0",
+      "History.h_amount": "491690.40",
+      "OrderLine.ol_amount": "452379373.56"
+    },
+    "district_order_consistency_bad": 0
+  },
+  "logging_restored": true,
+  "service_stopped": true
+}

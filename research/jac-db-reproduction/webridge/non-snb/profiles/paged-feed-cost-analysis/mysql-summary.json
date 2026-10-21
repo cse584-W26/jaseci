@@ -1,0 +1,2094 @@
+[
+  {
+    "case_id": "littlex-create_tweet-t20",
+    "arm": "java_conventional",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792547993708251332/t20-create_tweet-LittleXSql-baseline",
+    "source_files": {
+      "analysis.json": "ab88955e0aeb67f2ee1e0687d7c5ded6e18c0c19b86199091e6febdefad1abaf",
+      "pfs.jsonl": "ad86dac4236c2e303d4f1641703188b60d4334b35abe06c2ce9d67f1354bf05d",
+      "business-verification.json": "9b0d0975839ee949ca06dce5dd8dc29f0d20d67d725f45ea5aadab0d350cd4f0"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 16.267389757558703,
+        "min": 15.953699825331569,
+        "max": 16.469395719468594,
+        "sum": 48.690485302358866
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 6,
+        "min": 6,
+        "max": 6,
+        "sum": 18
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 2.704947,
+        "min": 2.360762,
+        "max": 2.941247,
+        "sum": 8.006956
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 0.078834,
+        "min": 0.078545,
+        "max": 0.079031,
+        "sum": 0.23641
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 2.1389940000000003,
+        "min": 2.0967309999999997,
+        "max": 2.7372360000000002,
+        "sum": 6.972961
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 1,
+        "min": 1,
+        "max": 1,
+        "sum": 3
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "op_counts": {
+      "create_tweet": 3
+    }
+  },
+  {
+    "case_id": "littlex-feed-t20",
+    "arm": "java_conventional",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792547993708251332/t20-feed-LittleXSql-baseline",
+    "source_files": {
+      "analysis.json": "7ef7e563246b8cade6c364fa851179c675567c7e1aed9a40701cea5bf989db83",
+      "pfs.jsonl": "d0910928343a7cf6d159d3c4f75d9f5bdaa7265dc0b0dd96087a215f15892bb3",
+      "business-verification.json": "1cfc3f4394ca97b2d2bb76b712c1666c50c5abafcc3b858a67ffc089fb6b5367"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 26.601979741826653,
+        "min": 26.183466194197536,
+        "max": 30.682477168738842,
+        "sum": 83.46792310476303
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 5,
+        "min": 5,
+        "max": 5,
+        "sum": 15
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 5.79239,
+        "min": 5.663372,
+        "max": 9.629881,
+        "sum": 21.085642999999997
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 5.678485,
+        "min": 5.551822,
+        "max": 9.484172,
+        "sum": 20.714478999999997
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.113905,
+        "min": 0.11155,
+        "max": 0.145709,
+        "sum": 0.371164
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 4190,
+        "min": 4190,
+        "max": 4190,
+        "sum": 12570
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "op_counts": {
+      "feed": 3
+    }
+  },
+  {
+    "case_id": "littlex-follow-t20",
+    "arm": "java_conventional",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792547993708251332/t20-follow-LittleXSql-baseline",
+    "source_files": {
+      "analysis.json": "e559faace059ce3134347c3d24387a4398711fe045981ee5392f90d625856747",
+      "pfs.jsonl": "02792a45032f0c1dc6e427e8f426a5389d3b2a9d7daa8e6bf3f9a7364841fec8",
+      "business-verification.json": "348c322be53c7ac6eb7eef992b6b6b53c365e5bee268357ad69fc2a19e5c40ca"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 13.713234104216099,
+        "min": 13.533043907955289,
+        "max": 13.86461895890534,
+        "sum": 41.11089697107673
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 5,
+        "min": 5,
+        "max": 5,
+        "sum": 15
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 2.39268,
+        "min": 2.327255,
+        "max": 2.4074079999999998,
+        "sum": 7.127343
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 2.246321,
+        "min": 2.196081,
+        "max": 2.292268,
+        "sum": 6.7346699999999995
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "op_counts": {
+      "follow": 3
+    }
+  },
+  {
+    "case_id": "littlex-like-t20",
+    "arm": "java_conventional",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792547993708251332/t20-like-LittleXSql-baseline",
+    "source_files": {
+      "analysis.json": "b4c5b52c6c2f55b7aea41f0730ba897895a1823b95fe8fe37c413c28887ed4ec",
+      "pfs.jsonl": "20a2ed6ebd65899dcf0b40e042e777fcf757c97c8deef1baa011c67f3874d746",
+      "business-verification.json": "ca7c90be95ba0ed9d1c00dac8cc3f4f9a332e9e48a2a512b153ada939ced0ca0"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 16.281675081700087,
+        "min": 16.098944237455726,
+        "max": 16.395813087001443,
+        "sum": 48.776432406157255
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 6,
+        "min": 6,
+        "max": 6,
+        "sum": 18
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 2.7127850000000002,
+        "min": 2.450841,
+        "max": 2.862892,
+        "sum": 8.026518
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 0.070085,
+        "min": 0.058329,
+        "max": 0.070661,
+        "sum": 0.199075
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 2.483617,
+        "min": 2.2194390000000004,
+        "max": 2.596225,
+        "sum": 7.299281000000001
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 1,
+        "min": 1,
+        "max": 1,
+        "sum": 3
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "op_counts": {
+      "like": 3
+    }
+  },
+  {
+    "case_id": "littlex-feed_page-t200",
+    "arm": "java_conventional",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792547993708251332/t200-feed_page-LittleXSql-baseline",
+    "source_files": {
+      "analysis.json": "d59650bf6f7a2a2d6f938c30f097c6328a17d52c4bcf84c230f3036e5edb63ca",
+      "pfs.jsonl": "10bd1d83517b6cf03d38a726ab27f3b22a95570b490b77fd3fbeca8b1f919995",
+      "business-verification.json": "0a1b522bc323cc23c63aeed693ee902af8625e0f71415392cc210e59beb8b419"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 45.636053662747145,
+        "min": 45.403712429106236,
+        "max": 45.66078097559512,
+        "sum": 136.7005470674485
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 5,
+        "min": 5,
+        "max": 5,
+        "sum": 15
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 33.726245000000006,
+        "min": 33.677350999999994,
+        "max": 33.942522000000004,
+        "sum": 101.346118
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 33.577198,
+        "min": 33.561218,
+        "max": 33.800198,
+        "sum": 100.938614
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.142324,
+        "min": 0.116133,
+        "max": 0.14904699999999999,
+        "sum": 0.407504
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 20090,
+        "min": 20090,
+        "max": 20090,
+        "sum": 60270
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 1,
+        "min": 1,
+        "max": 1,
+        "sum": 3
+      }
+    },
+    "op_counts": {
+      "feed_page": 3
+    }
+  },
+  {
+    "case_id": "littlex-create_tweet-t20",
+    "arm": "webridge_conventional",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792547997581462562/t20-create_tweet-LittleXSql-sp",
+    "source_files": {
+      "analysis.json": "168807f44977388e12253035adf8d5308ea68fb3499d865969ef9d5a4f2d8687",
+      "pfs.jsonl": "11aa55265aa60f12387f4ebc1151e3a84fefaa7887d5630fd671c66e8e3f5d13",
+      "business-verification.json": "e62663af9c7af5310a67d83f9f54a22a414f72192aea0a3d83ef4ce4029284b2"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 9.746422059834003,
+        "min": 9.476935025304556,
+        "max": 9.842443047091365,
+        "sum": 29.065800132229924
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 3,
+        "min": 3,
+        "max": 3,
+        "sum": 9
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 2.780188,
+        "min": 2.5805450000000003,
+        "max": 3.015427,
+        "sum": 8.37616
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 0.052159,
+        "min": 0.048994,
+        "max": 0.053538,
+        "sum": 0.154691
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 2.3077810000000003,
+        "min": 2.2075029999999995,
+        "max": 2.441399,
+        "sum": 6.956683
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 2.720983,
+        "min": 2.522654,
+        "max": 2.951873,
+        "sum": 8.19551
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 2.668824,
+        "min": 2.47366,
+        "max": 2.898335,
+        "sum": 8.040818999999999
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 2,
+        "min": 2,
+        "max": 2,
+        "sum": 6
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "op_counts": {
+      "create_tweet": 3
+    }
+  },
+  {
+    "case_id": "littlex-feed-t20",
+    "arm": "webridge_conventional",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792547997581462562/t20-feed-LittleXSql-sp",
+    "source_files": {
+      "analysis.json": "067f599378434edb215c9619362da407c2b7f1a897ee546864f7d3623dcdee41",
+      "pfs.jsonl": "8280e6b58cc9afa552a2809730bb944e8beecd1152fecbef8051142fc0a0fa5c",
+      "business-verification.json": "5bddf118e70ffd85d18bf75768de96d2f6e2682565235ba21dd05505e6079cb6"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 22.31998508796096,
+        "min": 21.754748420789838,
+        "max": 22.777782985940576,
+        "sum": 66.85251649469137
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 3,
+        "min": 3,
+        "max": 3,
+        "sum": 9
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 5.957034,
+        "min": 5.793766000000001,
+        "max": 6.054780999999999,
+        "sum": 17.805581
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 5.796972,
+        "min": 5.63812,
+        "max": 5.895872,
+        "sum": 17.330964
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.066567,
+        "min": 0.064805,
+        "max": 0.07115099999999999,
+        "sum": 0.202523
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 5.898162,
+        "min": 5.73885,
+        "max": 6.00313,
+        "sum": 17.640142
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0.10118999999999989,
+        "min": 0.10073000000000043,
+        "max": 0.10725799999999985,
+        "sum": 0.3091780000000002
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 4190,
+        "min": 4190,
+        "max": 4190,
+        "sum": 12570
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "op_counts": {
+      "feed": 3
+    }
+  },
+  {
+    "case_id": "littlex-follow-t20",
+    "arm": "webridge_conventional",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792547997581462562/t20-follow-LittleXSql-sp",
+    "source_files": {
+      "analysis.json": "9c081ec3e2b29506366e751262f6a3679b5e37d69a21de36b176b0e274ba4181",
+      "pfs.jsonl": "16c162a40b1692495e9ef26661ee5b91a899ab6dfbcdd0fdece9a88f89f8561a",
+      "business-verification.json": "fd705a7b4adcfd05616d22f100b30e9bf70ad37809044a893c68f9b31b721302"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 9.56804072484374,
+        "min": 9.172597201541066,
+        "max": 9.80970379896462,
+        "sum": 28.550341725349426
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 3,
+        "min": 3,
+        "max": 3,
+        "sum": 9
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 2.587948,
+        "min": 2.230548,
+        "max": 3.035157,
+        "sum": 7.8536529999999996
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 2.4370979999999998,
+        "min": 1.9788899999999998,
+        "max": 2.623833,
+        "sum": 7.039821
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 2.540658,
+        "min": 2.155011,
+        "max": 2.993839,
+        "sum": 7.689508
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 2.540658,
+        "min": 2.155011,
+        "max": 2.993839,
+        "sum": 7.689508
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "op_counts": {
+      "follow": 3
+    }
+  },
+  {
+    "case_id": "littlex-like-t20",
+    "arm": "webridge_conventional",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792547997581462562/t20-like-LittleXSql-sp",
+    "source_files": {
+      "analysis.json": "948ceab105167f91f48302d2d377c92553d47a4fc8e558109f8c6ac9239e486c",
+      "pfs.jsonl": "300dbaca89aef3cc3964e473f14147aaf7e5d249eacda3ba0fef9cca6d2f8921",
+      "business-verification.json": "b368ee74c7261c7974de1f56ec66bd4520f1c675134d694bd2bd0fe9a9a22bb7"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 10.041248984634876,
+        "min": 9.66696091927588,
+        "max": 10.043688118457794,
+        "sum": 29.75189802236855
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 3,
+        "min": 3,
+        "max": 3,
+        "sum": 9
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 3.079165,
+        "min": 2.874489,
+        "max": 3.159598,
+        "sum": 9.113252
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 0.038101,
+        "min": 0.03673,
+        "max": 0.039636,
+        "sum": 0.114467
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 2.758696,
+        "min": 2.609571,
+        "max": 2.8801309999999996,
+        "sum": 8.248398
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 3.017523,
+        "min": 2.810334,
+        "max": 3.107453,
+        "sum": 8.935310000000001
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 2.9778870000000004,
+        "min": 2.772233,
+        "max": 3.070723,
+        "sum": 8.820843
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 2,
+        "min": 2,
+        "max": 2,
+        "sum": 6
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "op_counts": {
+      "like": 3
+    }
+  },
+  {
+    "case_id": "littlex-feed_page-t200",
+    "arm": "webridge_conventional",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792547997581462562/t200-feed_page-LittleXSql-sp",
+    "source_files": {
+      "analysis.json": "73dce74bdb673b8024b5331daf452c9687b8711d092b07eedab72421ff1eab36",
+      "pfs.jsonl": "22dd0f284883fef0bfff81f012757f0b8860725f9acacd105925411c22a180e4",
+      "business-verification.json": "48e23c9c1bb93fe18a35e1ddc54f6c21f010552419b22bd6a1ea9961706428e9"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 41.96341196075082,
+        "min": 41.962833143770695,
+        "max": 42.121558682993054,
+        "sum": 126.04780378751457
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 3,
+        "min": 3,
+        "max": 3,
+        "sum": 9
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 34.635097,
+        "min": 34.619136999999995,
+        "max": 34.931958,
+        "sum": 104.186192
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 34.454571,
+        "min": 34.45106,
+        "max": 34.741895,
+        "sum": 103.647526
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.08018099999999999,
+        "min": 0.073224,
+        "max": 0.084427,
+        "sum": 0.237832
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 34.568496,
+        "min": 34.558457,
+        "max": 34.869355,
+        "sum": 103.996308
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0.11392500000000183,
+        "min": 0.10739699999999885,
+        "max": 0.12745999999999924,
+        "sum": 0.3487819999999999
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 20090,
+        "min": 20090,
+        "max": 20090,
+        "sum": 60270
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 1,
+        "min": 1,
+        "max": 1,
+        "sum": 3
+      }
+    },
+    "op_counts": {
+      "feed_page": 3
+    }
+  },
+  {
+    "case_id": "littlex-create_tweet-t20",
+    "arm": "java_full",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792549879927774846/t20-create_tweet-LittleXFull-baseline",
+    "source_files": {
+      "analysis.json": "38c1b23c99cf48d70ea84bf16c6c4e8228babf216b9115d064fb47f29096857c",
+      "pfs.jsonl": "cf5fa8c50c7e5f1eaaa6174ea6b4a32692a8c2e1f07acbf47bc7d900745334b8",
+      "business-verification.json": "19181524704b4c1b0645d5732105a5ba33b633ce372ce326cb423c303b1a1dfa"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 36.82330437004566,
+        "min": 36.090717650949955,
+        "max": 37.03459375537932,
+        "sum": 109.94861577637494
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 10,
+        "min": 10,
+        "max": 10,
+        "sum": 30
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 13.32019,
+        "min": 13.214307,
+        "max": 14.028091000000002,
+        "sum": 40.562588000000005
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 9.797942,
+        "min": 9.730916,
+        "max": 9.892147,
+        "sum": 29.421005
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 2.6769,
+        "min": 2.6753,
+        "max": 3.5137970000000003,
+        "sum": 8.865997
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 7113,
+        "min": 7112,
+        "max": 7114,
+        "sum": 21339
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "op_counts": {
+      "create_tweet": 3
+    }
+  },
+  {
+    "case_id": "littlex-create_tweet-t20",
+    "arm": "java_pruned",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792549879927774846/t20-create_tweet-LittleXPruned-baseline",
+    "source_files": {
+      "analysis.json": "789df9d82edd9e0cbd2b4dddf82e11b2a6a3d4ec25f8bfa05e35ff7dbffb0d8c",
+      "pfs.jsonl": "d7517df914b1b6ad7a13a2961d6bdaca3d18fa295d670b0c1b1f04eb7ff8a8d5",
+      "business-verification.json": "b1c5a67aedbc7a3eca757b8e61048c00154a83b1086244dcb2d5b689fad7bf07"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 26.340882293879986,
+        "min": 26.179584907367826,
+        "max": 27.79544098302722,
+        "sum": 80.31590818427503
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 6,
+        "min": 6,
+        "max": 6,
+        "sum": 18
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 12.439452999999999,
+        "min": 12.347868,
+        "max": 13.831629,
+        "sum": 38.61895
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 9.563106,
+        "min": 9.560506,
+        "max": 10.791252,
+        "sum": 29.914864
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 2.501181,
+        "min": 2.434977,
+        "max": 2.542379,
+        "sum": 7.478536999999999
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 7113,
+        "min": 7112,
+        "max": 7114,
+        "sum": 21339
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "op_counts": {
+      "create_tweet": 3
+    }
+  },
+  {
+    "case_id": "littlex-feed-t20",
+    "arm": "java_full",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792549879927774846/t20-feed-LittleXFull-baseline",
+    "source_files": {
+      "analysis.json": "e4552984c6dcd99602790119964a8e337ec0025cf72a4136a7d93ed34dd9ed05",
+      "pfs.jsonl": "e709584e862db2fdca61b744f5fa3d01acdf333f97e963b86f3d3c3f83b1ed9d",
+      "business-verification.json": "0a75911b4d1469901e0229560d470c9b429a94665e03f87cab3f95fd63f1077b"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 125.03630621358752,
+        "min": 124.31552354246378,
+        "max": 128.88501561246812,
+        "sum": 378.2368453685194
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 20,
+        "min": 20,
+        "max": 20,
+        "sum": 60
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 66.003679,
+        "min": 64.45753,
+        "max": 68.953194,
+        "sum": 199.414403
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 54.085757,
+        "min": 53.05428500000001,
+        "max": 56.080519,
+        "sum": 163.220561
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.249718,
+        "min": 0.200901,
+        "max": 0.250019,
+        "sum": 0.700638
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 33714,
+        "min": 33714,
+        "max": 33714,
+        "sum": 101142
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 1,
+        "min": 1,
+        "max": 1,
+        "sum": 3
+      }
+    },
+    "op_counts": {
+      "feed": 3
+    }
+  },
+  {
+    "case_id": "littlex-feed-t20",
+    "arm": "java_pruned",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792549879927774846/t20-feed-LittleXPruned-baseline",
+    "source_files": {
+      "analysis.json": "1d44e765d41b585f033fb35c681e485fe800e1dcae8f41356d9ea969043f98d2",
+      "pfs.jsonl": "20604903d3c6804231e03080d646b41acc933440428ec20be5b6e5c15cd721a8",
+      "business-verification.json": "e6480604a4f2d278e9f32a1911fca4317ffffdfeee235814696eaa9ff3ee1a84"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 80.70689486339688,
+        "min": 78.94662115722895,
+        "max": 80.96605446189642,
+        "sum": 240.61957048252225
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 7,
+        "min": 7,
+        "max": 7,
+        "sum": 21
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 53.122063,
+        "min": 52.616419,
+        "max": 54.522712,
+        "sum": 160.261194
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 52.977853999999994,
+        "min": 52.484646,
+        "max": 54.405547,
+        "sum": 159.868047
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.131773,
+        "min": 0.11716499999999999,
+        "max": 0.144209,
+        "sum": 0.393147
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 33714,
+        "min": 33714,
+        "max": 33714,
+        "sum": 101142
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 1,
+        "min": 1,
+        "max": 1,
+        "sum": 3
+      }
+    },
+    "op_counts": {
+      "feed": 3
+    }
+  },
+  {
+    "case_id": "littlex-follow-t20",
+    "arm": "java_full",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792549879927774846/t20-follow-LittleXFull-baseline",
+    "source_files": {
+      "analysis.json": "192fb7dfad455ff435aaf31cc632f06968c5131bf3bf9eb4d96b05a991de250b",
+      "pfs.jsonl": "040fbbe92ff65d7021dfe8048f1fd84462870edfaefa5998cf6c088965d73d88",
+      "business-verification.json": "6e60e84fb13c7aa167b1c312d18dccb2e021d3f3e7bc27b87bb3424d1d9b9e11"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 53.333579329773784,
+        "min": 52.19373293220997,
+        "max": 53.76447574235499,
+        "sum": 159.29178800433874
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 13,
+        "min": 13,
+        "max": 13,
+        "sum": 39
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 23.242478,
+        "min": 22.408146,
+        "max": 23.655826,
+        "sum": 69.30645
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 19.752693,
+        "min": 19.093803,
+        "max": 19.801906000000002,
+        "sum": 58.648402000000004
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 2.8600179999999997,
+        "min": 2.6595,
+        "max": 3.1610560000000003,
+        "sum": 8.680574
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 14224,
+        "min": 14222,
+        "max": 14226,
+        "sum": 42672
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "op_counts": {
+      "follow": 3
+    }
+  },
+  {
+    "case_id": "littlex-follow-t20",
+    "arm": "java_pruned",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792549879927774846/t20-follow-LittleXPruned-baseline",
+    "source_files": {
+      "analysis.json": "7bf0fcb56f71e09d6d0b105df43dc82b04b94a377d4e9ce9f6d0d21d906f0666",
+      "pfs.jsonl": "6c1574e4d0b232659126efc42dd2512a8dcd1c696987230976b383b7f17a9563",
+      "business-verification.json": "e81d5a08c14df4d6573695496c4e71bf6158212a799dfe649fb1345fd8fad2a5"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 40.66927288658917,
+        "min": 40.30395578593016,
+        "max": 40.957356337457895,
+        "sum": 121.93058500997722
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 8,
+        "min": 8,
+        "max": 8,
+        "sum": 24
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 22.100351,
+        "min": 21.451484,
+        "max": 22.586225,
+        "sum": 66.13806
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 19.212238999999997,
+        "min": 18.72009,
+        "max": 19.799331000000002,
+        "sum": 57.73166
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 2.4771,
+        "min": 2.466851,
+        "max": 2.6042609999999997,
+        "sum": 7.5482119999999995
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 14224,
+        "min": 14222,
+        "max": 14226,
+        "sum": 42672
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "op_counts": {
+      "follow": 3
+    }
+  },
+  {
+    "case_id": "littlex-like-t20",
+    "arm": "java_full",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792549879927774846/t20-like-LittleXFull-baseline",
+    "source_files": {
+      "analysis.json": "5e939372df5af27caf4dadfec2d7fb3b275b19830bbeeb557254e5fa235b6a2c",
+      "pfs.jsonl": "b970072e37c37e4a4528b4c03a3822db5b352e4673b8f291e796b161839654c7",
+      "business-verification.json": "aaab4c4da281ef2ccf4a6a5261a7d5f811db81f6de31b13e5adb50ceb6ea30fa"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 41.56117723323405,
+        "min": 41.4549030829221,
+        "max": 42.20118001103401,
+        "sum": 125.21726032719016
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 12,
+        "min": 11,
+        "max": 12,
+        "sum": 35
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 13.853435,
+        "min": 12.871156,
+        "max": 16.805249,
+        "sum": 43.52984
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 10.275227,
+        "min": 9.691286,
+        "max": 12.923824,
+        "sum": 32.890337
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 2.753177,
+        "min": 2.369278,
+        "max": 2.954281,
+        "sum": 8.076736
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 7102,
+        "min": 7102,
+        "max": 7102,
+        "sum": 21306
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "op_counts": {
+      "like": 3
+    }
+  },
+  {
+    "case_id": "littlex-like-t20",
+    "arm": "java_pruned",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792549879927774846/t20-like-LittleXPruned-baseline",
+    "source_files": {
+      "analysis.json": "2175a26eda21aaf01cd3ac3eb9fb3755b01236a6615fd0310060b65a153256b8",
+      "pfs.jsonl": "008c0500daedd61c159bfd1bb939268c1469698ec9b073bca59382fa707dccc2",
+      "business-verification.json": "2f10a368a5b4ca9e022710facbd2edeb6541f03dc3610949de9c09a023339615"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 28.636150527745485,
+        "min": 28.218705905601382,
+        "max": 29.22638296149671,
+        "sum": 86.08123939484358
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 7,
+        "min": 7,
+        "max": 7,
+        "sum": 21
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 12.113273,
+        "min": 11.968358,
+        "max": 12.857129,
+        "sum": 36.93876
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 9.410473,
+        "min": 9.244754,
+        "max": 9.675136,
+        "sum": 28.330363
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 2.28701,
+        "min": 2.270953,
+        "max": 2.6665129999999997,
+        "sum": 7.224475999999999
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 7102,
+        "min": 7102,
+        "max": 7102,
+        "sum": 21306
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "op_counts": {
+      "like": 3
+    }
+  },
+  {
+    "case_id": "littlex-feed_page-t200",
+    "arm": "java_full",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792549879927774846/t200-feed_page-LittleXFull-baseline",
+    "source_files": {
+      "analysis.json": "d7384036efeb382d77fb3c28b982165a97920e56407e87f3c8674e08df29e5d3",
+      "pfs.jsonl": "f803a956934a1f28cc1f31f1375e74d9ec7380d9046ea860b508fdface6dbcf0",
+      "business-verification.json": "550496bf469d4943bde7218fc457f8a77a4c0138497171a06494c2512f3baf96"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 241.3344457745552,
+        "min": 238.56669384986162,
+        "max": 297.8001495357603,
+        "sum": 777.7012891601771
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 20,
+        "min": 20,
+        "max": 20,
+        "sum": 60
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 191.53884299999999,
+        "min": 189.576751,
+        "max": 248.793953,
+        "sum": 629.909547
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 180.087342,
+        "min": 178.21959800000002,
+        "max": 236.992,
+        "sum": 595.29894
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.22173299999999999,
+        "min": 0.202141,
+        "max": 0.242215,
+        "sum": 0.6660889999999999
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 111008,
+        "min": 110996,
+        "max": 111024,
+        "sum": 333028
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 3,
+        "min": 3,
+        "max": 3,
+        "sum": 9
+      }
+    },
+    "op_counts": {
+      "feed_page": 3
+    }
+  },
+  {
+    "case_id": "littlex-feed_page-t200",
+    "arm": "java_pruned",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792549879927774846/t200-feed_page-LittleXPruned-baseline",
+    "source_files": {
+      "analysis.json": "2fb967d5112c8540a48a5d13b34a56a37238078697f4c1afe166f60bf5cf6fea",
+      "pfs.jsonl": "7ec2cb179385a4ae173aa99c91fd91bfd3c4dec674d74dfec64d50bbd3e506b4",
+      "business-verification.json": "d131c5d4c2af81ff8ce1528bcc15ea186167c918bd8fd578ec98aaeefac29878"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 193.10125685296953,
+        "min": 192.6881461404264,
+        "max": 213.69975083507597,
+        "sum": 599.4891538284719
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 7,
+        "min": 7,
+        "max": 7,
+        "sum": 21
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 175.711337,
+        "min": 175.583993,
+        "max": 196.308129,
+        "sum": 547.6034589999999
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 175.576078,
+        "min": 175.454146,
+        "max": 196.177491,
+        "sum": 547.207715
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.130638,
+        "min": 0.129847,
+        "max": 0.135259,
+        "sum": 0.395744
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 111008,
+        "min": 110996,
+        "max": 111024,
+        "sum": 333028
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 3,
+        "min": 3,
+        "max": 3,
+        "sum": 9
+      }
+    },
+    "op_counts": {
+      "feed_page": 3
+    }
+  },
+  {
+    "case_id": "littlex-mixed-t200-w15",
+    "arm": "java_conventional",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792549904262819171/t200-mixed-LittleXSql-baseline-w15",
+    "source_files": {
+      "analysis.json": "ff36a85253eee829bf84bc98c74301182765ff3acb9a6bc9ecb9306277a32377",
+      "pfs.jsonl": "82a05ad20c930b5db7ad4c8df5f350e99a8e9707a4b866c1078a580b2c77832c",
+      "business-verification.json": "325a57300d11d3fbfdee3b22ac4f71ce245b299ae6328c7ab03063c665f5dd02"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 100,
+        "median": 45.89087166823447,
+        "min": 14.706799061968923,
+        "max": 58.835803065449,
+        "sum": 4218.263016315177
+      },
+      "db_call_count": {
+        "n": 100,
+        "median": 5.0,
+        "min": 5,
+        "max": 6,
+        "sum": 514
+      },
+      "db_sum_ms": {
+        "n": 100,
+        "median": 34.163117,
+        "min": 2.521915,
+        "max": 47.290166,
+        "sum": 3015.280024
+      },
+      "business_select_ms": {
+        "n": 100,
+        "median": 34.0416545,
+        "min": 0,
+        "max": 47.155085,
+        "sum": 2956.883568
+      },
+      "transaction_control_ms": {
+        "n": 100,
+        "median": 0.1240635,
+        "min": 0.10419,
+        "max": 3.866974,
+        "sum": 55.261193
+      },
+      "call_inclusive_ms": {
+        "n": 100,
+        "median": 0.0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 100,
+        "median": 0.0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 100,
+        "median": 20109.0,
+        "min": 0,
+        "max": 20112,
+        "sum": 1709282
+      },
+      "no_index_used_business_select_events": {
+        "n": 100,
+        "median": 1.0,
+        "min": 0,
+        "max": 1,
+        "sum": 85
+      }
+    },
+    "op_counts": {
+      "create_tweet": 10,
+      "feed_page": 85,
+      "like": 4,
+      "follow": 1
+    }
+  },
+  {
+    "case_id": "littlex-mixed-t200-w15",
+    "arm": "webridge_conventional",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792550987625646491/t200-mixed-LittleXSql-sp-w15",
+    "source_files": {
+      "analysis.json": "cd811239b811bf97a3ca0352aa40d7ef1ff9678133bb2509379710257e7ff882",
+      "pfs.jsonl": "6aa6a54aee96c5b88ae851f7b68c353dfa135d3903ffe81bd25407c19676ad44",
+      "business-verification.json": "48a1cadd42b98386c4bc23c2eaf896ce3e7c333bd42b7f6fb120ed4a9b6d7085"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 100,
+        "median": 41.00994032341987,
+        "min": 9.52962995506823,
+        "max": 52.695529302582145,
+        "sum": 3694.5512644015253
+      },
+      "db_call_count": {
+        "n": 100,
+        "median": 3.0,
+        "min": 3,
+        "max": 3,
+        "sum": 300
+      },
+      "db_sum_ms": {
+        "n": 100,
+        "median": 33.8638455,
+        "min": 2.631077,
+        "max": 45.600876,
+        "sum": 2982.553007
+      },
+      "business_select_ms": {
+        "n": 100,
+        "median": 33.707215500000004,
+        "min": 0,
+        "max": 45.418673,
+        "sum": 2920.092568
+      },
+      "transaction_control_ms": {
+        "n": 100,
+        "median": 0.07134950000000001,
+        "min": 0.054561,
+        "max": 3.5669069999999996,
+        "sum": 50.554187
+      },
+      "call_inclusive_ms": {
+        "n": 100,
+        "median": 33.810647,
+        "min": 2.574852,
+        "max": 45.541803,
+        "sum": 2977.019452
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 100,
+        "median": 0.1169659999999979,
+        "min": 0.09227500000000077,
+        "max": 3.740506,
+        "sum": 56.92688400000001
+      },
+      "rows_examined_business_select": {
+        "n": 100,
+        "median": 20109.0,
+        "min": 0,
+        "max": 20112,
+        "sum": 1709296
+      },
+      "no_index_used_business_select_events": {
+        "n": 100,
+        "median": 1.0,
+        "min": 0,
+        "max": 1,
+        "sum": 85
+      }
+    },
+    "op_counts": {
+      "create_tweet": 10,
+      "feed_page": 85,
+      "like": 4,
+      "follow": 1
+    }
+  },
+  {
+    "case_id": "littlex-create_tweet-t20",
+    "arm": "webridge_pruned",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792553206613375301/t20-create_tweet-LittleXPruned-sp",
+    "source_files": {
+      "analysis.json": "b42ab597f93049359be3fab510f11131932e0fb79cf9ae46be3f0ec517a80169",
+      "pfs.jsonl": "31b1daf4c98ea62c9ce9daa7c92f0ca4f72432666ca166fd4066345259336052",
+      "business-verification.json": "e95869dfd77fc67cf089044e36e01a8b61054e3f9eeec589e9665084cb8ecd36"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 29.229751089587808,
+        "min": 29.03320174664259,
+        "max": 30.071958201006055,
+        "sum": 88.33491103723645
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 6,
+        "min": 6,
+        "max": 6,
+        "sum": 18
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 15.389264999999998,
+        "min": 15.018677,
+        "max": 16.375496000000002,
+        "sum": 46.783438000000004
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 9.674733,
+        "min": 9.590403,
+        "max": 9.691085,
+        "sum": 28.956221
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 2.520453,
+        "min": 2.2976780000000003,
+        "max": 2.9249709999999998,
+        "sum": 7.743102
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 12.69489,
+        "min": 12.365455,
+        "max": 13.129524,
+        "sum": 38.189869
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 3.0201569999999993,
+        "min": 2.7750520000000005,
+        "max": 3.4384390000000007,
+        "sum": 9.233648
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 7113,
+        "min": 7112,
+        "max": 7114,
+        "sum": 21339
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      }
+    },
+    "op_counts": {
+      "create_tweet": 3
+    }
+  },
+  {
+    "case_id": "littlex-feed_page-t200",
+    "arm": "webridge_pruned",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792553206613375301/t200-feed_page-LittleXPruned-sp",
+    "source_files": {
+      "analysis.json": "69854313eda32ad175e2388b35b7d31f61b7db2b70e03f73a59523b942017028",
+      "pfs.jsonl": "5b1eee7a4b569686473be0eeffe133951d8f9fc22eb1612d602c7ce83172ec4f",
+      "business-verification.json": "c2de43336837ee42d246ab1356f41d816a28f9d2dc9d40f4de85a791b22d1cb4"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 3,
+        "median": 183.3880990743637,
+        "min": 183.01414884626865,
+        "max": 183.6586850695312,
+        "sum": 550.0609329901636
+      },
+      "db_call_count": {
+        "n": 3,
+        "median": 3,
+        "min": 3,
+        "max": 3,
+        "sum": 9
+      },
+      "db_sum_ms": {
+        "n": 3,
+        "median": 175.583606,
+        "min": 175.097258,
+        "max": 176.09499,
+        "sum": 526.775854
+      },
+      "business_select_ms": {
+        "n": 3,
+        "median": 175.271999,
+        "min": 174.796695,
+        "max": 175.79879300000002,
+        "sum": 525.867487
+      },
+      "transaction_control_ms": {
+        "n": 3,
+        "median": 0.070748,
+        "min": 0.070266,
+        "max": 0.07195599999999999,
+        "sum": 0.21297
+      },
+      "call_inclusive_ms": {
+        "n": 3,
+        "median": 175.526744,
+        "min": 175.040704,
+        "max": 176.036971,
+        "sum": 526.604419
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 3,
+        "median": 0.24400900000000547,
+        "min": 0.23817799999997646,
+        "max": 0.254745000000014,
+        "sum": 0.7369319999999959
+      },
+      "rows_examined_business_select": {
+        "n": 3,
+        "median": 186808,
+        "min": 186796,
+        "max": 186824,
+        "sum": 560428
+      },
+      "no_index_used_business_select_events": {
+        "n": 3,
+        "median": 3,
+        "min": 3,
+        "max": 3,
+        "sum": 9
+      }
+    },
+    "op_counts": {
+      "feed_page": 3
+    }
+  },
+  {
+    "case_id": "littlex-mixed-t200-w15",
+    "arm": "java_pruned",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792555546513752376/t200-mixed-LittleXPruned-baseline-w15",
+    "source_files": {
+      "analysis.json": "45f61b0c59a22b28f7c8a87732e0997122c4d08e3687af7588bfa7a5238b872d",
+      "pfs.jsonl": "a87aba54fe70d002cd071a644db95e530f567591a3b9d1033d744e5fbe12c75c",
+      "business-verification.json": "391968af90c3ae60e1d39784d3db5e70be453dbcc3d401366b6657e71883f1c1"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 100,
+        "median": 190.84386434406042,
+        "min": 51.48354498669505,
+        "max": 221.20864037424326,
+        "sum": 17278.67425652221
+      },
+      "db_call_count": {
+        "n": 100,
+        "median": 7.0,
+        "min": 6,
+        "max": 8,
+        "sum": 691
+      },
+      "db_sum_ms": {
+        "n": 100,
+        "median": 173.83387399999998,
+        "min": 37.501496,
+        "max": 203.95185800000002,
+        "sum": 15608.105593
+      },
+      "business_select_ms": {
+        "n": 100,
+        "median": 173.712805,
+        "min": 34.087018,
+        "max": 203.835532,
+        "sum": 15513.239409
+      },
+      "transaction_control_ms": {
+        "n": 100,
+        "median": 0.1243135,
+        "min": 0.096854,
+        "max": 24.660185,
+        "sum": 80.82927
+      },
+      "call_inclusive_ms": {
+        "n": 100,
+        "median": 0.0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 100,
+        "median": 0.0,
+        "min": 0,
+        "max": 0,
+        "sum": 0
+      },
+      "rows_examined_business_select": {
+        "n": 100,
+        "median": 111095.0,
+        "min": 25115,
+        "max": 111169,
+        "sum": 9845629
+      },
+      "no_index_used_business_select_events": {
+        "n": 100,
+        "median": 3.0,
+        "min": 0,
+        "max": 3,
+        "sum": 255
+      }
+    },
+    "op_counts": {
+      "create_tweet": 10,
+      "feed_page": 85,
+      "like": 4,
+      "follow": 1
+    }
+  },
+  {
+    "case_id": "littlex-mixed-t200-w15",
+    "arm": "webridge_pruned",
+    "engine": "MySQL5.7",
+    "scope": "Existing rich-trace diagnostic. summed_db_call_rtt_ms sums outer command-to-complete-response delivery durations; db_sum_ms is secondary P_S outer foreground timer sum within exact request SHOWSTATUS boundaries. Observer status excluded; CALL counted once inclusive, child SQL only attribution.",
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792555553389885692/t200-mixed-LittleXPruned-sp-w15",
+    "source_files": {
+      "analysis.json": "b5a4c895ebef0e9cbd900878067aa8ed5ea2fd860c0cc0ae084d7720128c7d83",
+      "pfs.jsonl": "b713e400b030ab63deeb4ddbc3338e5ccbf986d27782775345b44c29116222ae",
+      "business-verification.json": "13ca5b740bf0987bb73d6de4c1d81cd6e9ea7a9842875a7d121bb8d46b67817d"
+    },
+    "metrics": {
+      "summed_db_call_rtt_ms": {
+        "n": 100,
+        "median": 181.9005529396236,
+        "min": 54.58553321659565,
+        "max": 214.7766889538616,
+        "sum": 16540.855921804905
+      },
+      "db_call_count": {
+        "n": 100,
+        "median": 3.0,
+        "min": 3,
+        "max": 8,
+        "sum": 351
+      },
+      "db_sum_ms": {
+        "n": 100,
+        "median": 174.332809,
+        "min": 38.778371,
+        "max": 207.126428,
+        "sum": 15668.720392
+      },
+      "business_select_ms": {
+        "n": 100,
+        "median": 174.02473300000003,
+        "min": 34.044765,
+        "max": 206.78731799999997,
+        "sum": 15547.234936
+      },
+      "transaction_control_ms": {
+        "n": 100,
+        "median": 0.07499549999999999,
+        "min": 0.061785999999999994,
+        "max": 4.758325999999999,
+        "sum": 56.334300999999996
+      },
+      "call_inclusive_ms": {
+        "n": 100,
+        "median": 174.27871449999998,
+        "min": 0,
+        "max": 207.06979,
+        "sum": 15400.960882
+      },
+      "call_nonselect_remainder_ms": {
+        "n": 100,
+        "median": 0.2595785000000035,
+        "min": 0,
+        "max": 9.006267000000001,
+        "sum": 67.28172
+      },
+      "rows_examined_business_select": {
+        "n": 100,
+        "median": 186959.5,
+        "min": 25115,
+        "max": 187038,
+        "sum": 16293756
+      },
+      "no_index_used_business_select_events": {
+        "n": 100,
+        "median": 3.0,
+        "min": 0,
+        "max": 3,
+        "sum": 255
+      }
+    },
+    "op_counts": {
+      "create_tweet": 10,
+      "feed_page": 85,
+      "like": 4,
+      "follow": 1
+    }
+  }
+]

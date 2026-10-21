@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py", line 322, in <module>
+    main()
+  File "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py", line 86, in main
+    profile(args, out, command)
+  File "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py", line 317, in profile
+    raise RuntimeError(failure or errors)
+RuntimeError: Traceback (most recent call last):
+  File "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py", line 252, in profile
+    ctl.command(command, out / 'run', args.timeout)
+  File "/home/baichuan/jaseci/reproduction/webridge/integration/control.py", line 113, in command
+    if rc:raise SystemExit(rc)
+          ^^^^^^^^^^^^^^^^^^^^
+SystemExit: 1
+

@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "scope": "Independent seed-derived model; every request and all eight mutable business relations",
+  "requests_checked": 40,
+  "outcomes": {
+    "new_order": 40
+  },
+  "before_rows": {
+    "warehouse": 1,
+    "district": 10,
+    "customer": 30000,
+    "stock": 100000,
+    "orders": 30000,
+    "new_order": 9000,
+    "order_line": 300754,
+    "history": 30000
+  },
+  "after_rows": {
+    "warehouse": 1,
+    "district": 10,
+    "customer": 30000,
+    "stock": 100000,
+    "orders": 30040,
+    "new_order": 9040,
+    "order_line": 301354,
+    "history": 30000
+  },
+  "money_comparison": "Two decimal places, exact cents; raw precision retained in snapshots",
+  "initial_history_projection": "jac",
+  "input_layout": "native HTTP",
+  "repeated_original_plan_index": 35,
+  "plan_sha256": "4358d01cc7ae244d1679a6d1d1992c5f6fee6218cca7d402b341e7de68dfc641",
+  "seed_manifest_sha256": "6a65e8df4414c055f5e365d1118636d2a987b8cdfdce26e6dedaf9a8ecc1fd58",
+  "request_log_sha256": "1a98ad7939ef7c4e7b81f11be9abc0f1c06ad311c1fb4314948261494f10d38f"
+}

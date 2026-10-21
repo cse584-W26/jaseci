@@ -1,0 +1,818 @@
+[
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W1",
+    "operation": "feed",
+    "method": "latency",
+    "variant": "baseline",
+    "delay_ms": 0,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 16.0025,
+    "client_median_ms": 23.488649,
+    "app_cpu_total_ms": 400.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "feed": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "ecabe349afad1d90b692d526baeb1da684ef7f5deb2fe3709c40ab6b0407527e"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-0ms/baseline/t20/W1-feed",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "like",
+    "method": "latency",
+    "variant": "baseline",
+    "delay_ms": 0,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 3.152,
+    "client_median_ms": 4.672007499999999,
+    "app_cpu_total_ms": 60.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "like": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "2fe5f19b245074ac38ed018b4d9a8e4af04383d0d7c5d98fc25d7d6aba23b90a"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-0ms/baseline/t20/W2-like",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "follow",
+    "method": "latency",
+    "variant": "baseline",
+    "delay_ms": 0,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 4.016,
+    "client_median_ms": 5.83626,
+    "app_cpu_total_ms": 70.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "follow": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5040,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "2376da2d97f9a63e467f0d055a18ffc01ed1cf8b72cbadff9ca5aa5f3429cd6d",
+        "tweets": "ecabe349afad1d90b692d526baeb1da684ef7f5deb2fe3709c40ab6b0407527e"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-0ms/baseline/t20/W2-follow",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "create_tweet",
+    "method": "latency",
+    "variant": "baseline",
+    "delay_ms": 0,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 2.8515,
+    "client_median_ms": 4.390896,
+    "app_cpu_total_ms": 60.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "create_tweet": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2040
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "97ca9d7168e682e7e7ec29c973fdf714790cfdde8de0c773e1e3bad9b0d8ffb8"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-0ms/baseline/t20/W2-create_tweet",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W1",
+    "operation": "feed",
+    "method": "latency",
+    "variant": "final",
+    "delay_ms": 0,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 17.052,
+    "client_median_ms": 23.396926,
+    "app_cpu_total_ms": 390.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "feed": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "ecabe349afad1d90b692d526baeb1da684ef7f5deb2fe3709c40ab6b0407527e"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-0ms/final/t20/W1-feed",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "like",
+    "method": "latency",
+    "variant": "final",
+    "delay_ms": 0,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 24.567500000000003,
+    "client_median_ms": 26.542963999999998,
+    "app_cpu_total_ms": 150.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "like": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "2fe5f19b245074ac38ed018b4d9a8e4af04383d0d7c5d98fc25d7d6aba23b90a"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-0ms/final/t20/W2-like",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "follow",
+    "method": "latency",
+    "variant": "final",
+    "delay_ms": 0,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 13.5235,
+    "client_median_ms": 16.294404999999998,
+    "app_cpu_total_ms": 180.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "follow": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5040,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "2376da2d97f9a63e467f0d055a18ffc01ed1cf8b72cbadff9ca5aa5f3429cd6d",
+        "tweets": "ecabe349afad1d90b692d526baeb1da684ef7f5deb2fe3709c40ab6b0407527e"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-0ms/final/t20/W2-follow",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "create_tweet",
+    "method": "latency",
+    "variant": "final",
+    "delay_ms": 0,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 3.241,
+    "client_median_ms": 4.216924000000001,
+    "app_cpu_total_ms": 50.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "create_tweet": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2040
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "97ca9d7168e682e7e7ec29c973fdf714790cfdde8de0c773e1e3bad9b0d8ffb8"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-0ms/final/t20/W2-create_tweet",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W1",
+    "operation": "feed",
+    "method": "latency",
+    "variant": "baseline",
+    "delay_ms": 2,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 51.376000000000005,
+    "client_median_ms": 70.317912,
+    "app_cpu_total_ms": 560.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "feed": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "ecabe349afad1d90b692d526baeb1da684ef7f5deb2fe3709c40ab6b0407527e"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-2ms/baseline/t20/W1-feed",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "like",
+    "method": "latency",
+    "variant": "baseline",
+    "delay_ms": 2,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 19.454,
+    "client_median_ms": 32.474033,
+    "app_cpu_total_ms": 140.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "like": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "2fe5f19b245074ac38ed018b4d9a8e4af04383d0d7c5d98fc25d7d6aba23b90a"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-2ms/baseline/t20/W2-like",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "follow",
+    "method": "latency",
+    "variant": "baseline",
+    "delay_ms": 2,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 23.1555,
+    "client_median_ms": 36.9637175,
+    "app_cpu_total_ms": 180.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "follow": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5040,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "2376da2d97f9a63e467f0d055a18ffc01ed1cf8b72cbadff9ca5aa5f3429cd6d",
+        "tweets": "ecabe349afad1d90b692d526baeb1da684ef7f5deb2fe3709c40ab6b0407527e"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-2ms/baseline/t20/W2-follow",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "create_tweet",
+    "method": "latency",
+    "variant": "baseline",
+    "delay_ms": 2,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 17.183999999999997,
+    "client_median_ms": 32.096143,
+    "app_cpu_total_ms": 190.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "create_tweet": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2040
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "97ca9d7168e682e7e7ec29c973fdf714790cfdde8de0c773e1e3bad9b0d8ffb8"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-2ms/baseline/t20/W2-create_tweet",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W1",
+    "operation": "feed",
+    "method": "latency",
+    "variant": "final",
+    "delay_ms": 2,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 57.7965,
+    "client_median_ms": 68.342242,
+    "app_cpu_total_ms": 650.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "feed": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "ecabe349afad1d90b692d526baeb1da684ef7f5deb2fe3709c40ab6b0407527e"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-2ms/final/t20/W1-feed",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "like",
+    "method": "latency",
+    "variant": "final",
+    "delay_ms": 2,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 28.341,
+    "client_median_ms": 32.7055825,
+    "app_cpu_total_ms": 170.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "like": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "2fe5f19b245074ac38ed018b4d9a8e4af04383d0d7c5d98fc25d7d6aba23b90a"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-2ms/final/t20/W2-like",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "follow",
+    "method": "latency",
+    "variant": "final",
+    "delay_ms": 2,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 29.41,
+    "client_median_ms": 32.809711,
+    "app_cpu_total_ms": 130.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "follow": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5040,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "2376da2d97f9a63e467f0d055a18ffc01ed1cf8b72cbadff9ca5aa5f3429cd6d",
+        "tweets": "ecabe349afad1d90b692d526baeb1da684ef7f5deb2fe3709c40ab6b0407527e"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-2ms/final/t20/W2-follow",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "create_tweet",
+    "method": "latency",
+    "variant": "final",
+    "delay_ms": 2,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 22.3005,
+    "client_median_ms": 25.647271000000003,
+    "app_cpu_total_ms": 130.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "create_tweet": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2040
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "97ca9d7168e682e7e7ec29c973fdf714790cfdde8de0c773e1e3bad9b0d8ffb8"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-2ms/final/t20/W2-create_tweet",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W1",
+    "operation": "feed",
+    "method": "latency",
+    "variant": "baseline",
+    "delay_ms": 10,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 173.15300000000002,
+    "client_median_ms": 227.66195199999999,
+    "app_cpu_total_ms": 650.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "feed": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "ecabe349afad1d90b692d526baeb1da684ef7f5deb2fe3709c40ab6b0407527e"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-10ms/baseline/t20/W1-feed",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "like",
+    "method": "latency",
+    "variant": "baseline",
+    "delay_ms": 10,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 83.6175,
+    "client_median_ms": 138.71810449999998,
+    "app_cpu_total_ms": 260.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "like": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "2fe5f19b245074ac38ed018b4d9a8e4af04383d0d7c5d98fc25d7d6aba23b90a"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-10ms/baseline/t20/W2-like",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "follow",
+    "method": "latency",
+    "variant": "baseline",
+    "delay_ms": 10,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 94.1955,
+    "client_median_ms": 144.89182,
+    "app_cpu_total_ms": 220.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "follow": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5040,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "2376da2d97f9a63e467f0d055a18ffc01ed1cf8b72cbadff9ca5aa5f3429cd6d",
+        "tweets": "ecabe349afad1d90b692d526baeb1da684ef7f5deb2fe3709c40ab6b0407527e"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-10ms/baseline/t20/W2-follow",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "create_tweet",
+    "method": "latency",
+    "variant": "baseline",
+    "delay_ms": 10,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 59.597500000000004,
+    "client_median_ms": 117.410874,
+    "app_cpu_total_ms": 230.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "create_tweet": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2040
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "97ca9d7168e682e7e7ec29c973fdf714790cfdde8de0c773e1e3bad9b0d8ffb8"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-10ms/baseline/t20/W2-create_tweet",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W1",
+    "operation": "feed",
+    "method": "latency",
+    "variant": "final",
+    "delay_ms": 10,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 189.3625,
+    "client_median_ms": 211.23551600000002,
+    "app_cpu_total_ms": 790.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "feed": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "ecabe349afad1d90b692d526baeb1da684ef7f5deb2fe3709c40ab6b0407527e"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-10ms/final/t20/W1-feed",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "like",
+    "method": "latency",
+    "variant": "final",
+    "delay_ms": 10,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 115.404,
+    "client_median_ms": 127.1302045,
+    "app_cpu_total_ms": 230.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "like": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "2fe5f19b245074ac38ed018b4d9a8e4af04383d0d7c5d98fc25d7d6aba23b90a"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-10ms/final/t20/W2-like",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "follow",
+    "method": "latency",
+    "variant": "final",
+    "delay_ms": 10,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 130.527,
+    "client_median_ms": 142.1544455,
+    "app_cpu_total_ms": 270.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "follow": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5040,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "2376da2d97f9a63e467f0d055a18ffc01ed1cf8b72cbadff9ca5aa5f3429cd6d",
+        "tweets": "ecabe349afad1d90b692d526baeb1da684ef7f5deb2fe3709c40ab6b0407527e"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-10ms/final/t20/W2-follow",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "create_tweet",
+    "method": "latency",
+    "variant": "final",
+    "delay_ms": 10,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 88.92750000000001,
+    "client_median_ms": 100.0267695,
+    "app_cpu_total_ms": 180.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "create_tweet": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 2040
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d",
+        "tweets": "97ca9d7168e682e7e7ec29c973fdf714790cfdde8de0c773e1e3bad9b0d8ffb8"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-timing-t20/delay-10ms/final/t20/W2-create_tweet",
+    "all_request_oracles_verified": true
+  }
+]

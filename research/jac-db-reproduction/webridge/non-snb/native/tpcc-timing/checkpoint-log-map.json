@@ -1,0 +1,3262 @@
+{
+  "scope": "Actual native PostgreSQL log metadata across quiet lease; checkpoints can start before a request envelope and complete inside it",
+  "quiet_lease": {
+    "label": "native TPC-C quiet seven-class delay sweep",
+    "pid": 2977666,
+    "requested_utc": "2026-10-20T23:48:31.144232+00:00",
+    "lock": "/home/baichuan/jaseci/reproduction/webridge/non-snb/.measurement.lock",
+    "acquired_utc": "2026-10-20T23:50:10.826760+00:00",
+    "acquired_monotonic_ns": 1076580912484963,
+    "released_utc": "2026-10-21T00:17:32.853474+00:00",
+    "released_monotonic_ns": 1078222939193469
+  },
+  "source_file": "/home/baichuan/jaseci/reproduction/dbcache/pg/main/server.log",
+  "source_size_at_scan": 2071194565,
+  "tail_bytes_scanned": 12582912,
+  "tail_reached_before_lease": true,
+  "boundary_context_seconds": {
+    "before": 60,
+    "after": 120
+  },
+  "events": [
+    {
+      "wall_ns": 1792540211708000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:50:11.708 EDT [3795615] LOG:  checkpoint complete: wrote 1612 buffers (9.8%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 36 recycled; write=243.011 s, sync=0.276 s, total=243.404 s; sync files=359, longest=0.002 s, average=0.001 s; distance=585822 kB, estimate=585822 kB; lsn=17/76AEB80, redo lsn=16/FE018A78",
+      "line_sha256": "812205d2736509b24e1375411a0a1c1caceb728c30d0502d4b7109fe6a3d51f0"
+    },
+    {
+      "wall_ns": 1792540211708000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:50:11.708 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "c9096f419bfa01bf10ace9bdd86369e52b811fc74ec1203459183a6591590a76"
+    },
+    {
+      "wall_ns": 1792540212076000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:50:12.076 EDT [3795615] LOG:  checkpoint complete: wrote 2401 buffers (14.7%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 9 recycled; write=0.018 s, sync=0.317 s, total=0.368 s; sync files=295, longest=0.008 s, average=0.002 s; distance=154200 kB, estimate=542660 kB; lsn=17/76AEC50, redo lsn=17/76AEBF8",
+      "line_sha256": "8845f7db61161822e3b9e7bd3cae4c627065d7f19a7029721f16ac726b196f64"
+    },
+    {
+      "wall_ns": 1792540213101999872,
+      "pid": 3795615,
+      "line": "2026-10-20 19:50:13.102 EDT [3795615] LOG:  checkpoints are occurring too frequently (2 seconds apart)",
+      "line_sha256": "212bb76a5b709622cff211c88863497dd2c15b0779188d529a4710920c3a37d3"
+    },
+    {
+      "wall_ns": 1792540213101999872,
+      "pid": 3795615,
+      "line": "2026-10-20 19:50:13.102 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "802fe2995436d69d416ec3f2e45f2c18f47ddfddd6197cb1909027c9930b1798"
+    },
+    {
+      "wall_ns": 1792540224776000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:50:24.776 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=8.426 s, sync=3.095 s, total=11.674 s; sync files=48, longest=2.175 s, average=0.065 s; distance=537147 kB, estimate=542109 kB; lsn=17/4ACA2398, redo lsn=17/2833DB28",
+      "line_sha256": "fca7593dba50969d3fb623121ffc0e606fb31c3b3aba20018fc6d4d39b5525c6"
+    },
+    {
+      "wall_ns": 1792540224776000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:50:24.776 EDT [3795615] LOG:  checkpoints are occurring too frequently (11 seconds apart)",
+      "line_sha256": "969de0d4085af932441533ef9539e04d5f2584c59abe69f7a559870a79dac3a0"
+    },
+    {
+      "wall_ns": 1792540224776000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:50:24.776 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "d2945efda01161f9fae1ffef414a621e66f73194ef502ee6e6fc4cd19c92f0da"
+    },
+    {
+      "wall_ns": 1792540247500000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:50:47.500 EDT [3795615] LOG:  checkpoint complete: wrote 10 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=22.617 s, sync=0.007 s, total=22.724 s; sync files=4, longest=0.003 s, average=0.002 s; distance=566679 kB, estimate=566679 kB; lsn=17/4ADD6380, redo lsn=17/4ACA37F0",
+      "line_sha256": "d4835f6e069c651567934c8bce05e7e6ecfd3e643c48ea7b1e928f8415c63e52"
+    },
+    {
+      "wall_ns": 1792540247500000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:50:47.500 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "773d11e783cc2c8a7cbed79180e55f7c821e774e3ffc5835baa3e6adb504cb19"
+    },
+    {
+      "wall_ns": 1792540247515000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:50:47.515 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.004 s, total=0.016 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1227 kB, estimate=510133 kB; lsn=17/4ADD6450, redo lsn=17/4ADD63F8",
+      "line_sha256": "51633176d0acc176d440fb950e4bad4ff950a54c373f447204e47a1c27f98a6b"
+    },
+    {
+      "wall_ns": 1792540252085999872,
+      "pid": 3795615,
+      "line": "2026-10-20 19:50:52.086 EDT [3795615] LOG:  checkpoints are occurring too frequently (5 seconds apart)",
+      "line_sha256": "26d47cdf0fc363c33df5b354887ba51897e6e10a564a64d349a0a619d7ab6c91"
+    },
+    {
+      "wall_ns": 1792540252085999872,
+      "pid": 3795615,
+      "line": "2026-10-20 19:50:52.086 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "18121cc848322b14fbdaa44444a42d1daa06ce5a7972b76329b685b71c18df0b"
+    },
+    {
+      "wall_ns": 1792540260888999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:51:00.889 EDT [3795615] LOG:  checkpoint complete: wrote 162 buffers (1.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=7.233 s, sync=0.751 s, total=8.803 s; sync files=48, longest=0.432 s, average=0.016 s; distance=530632 kB, estimate=530632 kB; lsn=17/8D4041D8, redo lsn=17/6B408468",
+      "line_sha256": "19a3fbc1446fbf771b575526303d26bccecbd74fe1252fa79ce3116ae2f48c7b"
+    },
+    {
+      "wall_ns": 1792540260888999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:51:00.889 EDT [3795615] LOG:  checkpoints are occurring too frequently (8 seconds apart)",
+      "line_sha256": "3f75f2e0dd2edf692ea754505c7a7820b9ee637bc313e8fa7d3ed966980f7753"
+    },
+    {
+      "wall_ns": 1792540260888999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:51:00.889 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "7e7bba916fa46ddb9a117f61ee915da7b6e5b7d4ce9a1094cfff3da49ce86bde"
+    },
+    {
+      "wall_ns": 1792540283760999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:51:23.761 EDT [3795615] LOG:  checkpoint complete: wrote 46 buffers (0.3%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=22.760 s, sync=0.007 s, total=22.872 s; sync files=4, longest=0.003 s, average=0.002 s; distance=573190 kB, estimate=573190 kB; lsn=17/8F1E1B38, redo lsn=17/8E3C9D88",
+      "line_sha256": "94811d34021f60a88bbf528c8f13c053a588f0e445e78d42d912cadba38521a0"
+    },
+    {
+      "wall_ns": 1792540283760999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:51:23.761 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "0317bd7669171f06c5e21a20a19fc620c213c0b6971dfc65c5e1bd75c2352a59"
+    },
+    {
+      "wall_ns": 1792540283783000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:51:23.783 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.005 s, sync=0.004 s, total=0.022 s; sync files=2, longest=0.003 s, average=0.002 s; distance=14431 kB, estimate=517314 kB; lsn=17/8F1E1C08, redo lsn=17/8F1E1BB0",
+      "line_sha256": "7b48a521717f65fdbb1ba30c713a6dd711c0de0a67fddac469d656307046198c"
+    },
+    {
+      "wall_ns": 1792540290620000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:51:30.620 EDT [3795615] LOG:  checkpoints are occurring too frequently (7 seconds apart)",
+      "line_sha256": "6ad30c9ac15855de649f9b63b332c3d7f745449e4e512a087f14fb527e9ca585"
+    },
+    {
+      "wall_ns": 1792540290620000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:51:30.620 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "8d9e222d2a9433ec1f8b24008ba025f9867486df62907907d60c031c0672040c"
+    },
+    {
+      "wall_ns": 1792540296631000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:51:36.631 EDT [3795615] LOG:  checkpoint complete: wrote 295 buffers (1.8%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=4.834 s, sync=0.540 s, total=6.011 s; sync files=49, longest=0.401 s, average=0.012 s; distance=542877 kB, estimate=542877 kB; lsn=17/D27D6A20, redo lsn=17/B0409100",
+      "line_sha256": "4529551353465ea510e80d1e78800b42103f15a6fa2b4d5d245416a4814f0bb5"
+    },
+    {
+      "wall_ns": 1792540296631000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:51:36.631 EDT [3795615] LOG:  checkpoints are occurring too frequently (6 seconds apart)",
+      "line_sha256": "ffdc5d6c1496cc028134c0b99e3132f7beddd4afe179495e658862656f1066a4"
+    },
+    {
+      "wall_ns": 1792540319421999872,
+      "pid": 3795615,
+      "line": "2026-10-20 19:51:59.422 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "5b079396f214ed901fc42c619ba5b9b2d90229313c852311e35977579a691555"
+    },
+    {
+      "wall_ns": 1792540319706000128,
+      "pid": 3795615,
+      "line": "2026-10-20 19:51:59.706 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.007 s, sync=0.024 s, total=0.285 s; sync files=7, longest=0.006 s, average=0.004 s; distance=561183 kB, estimate=561183 kB; lsn=17/D2810E08, redo lsn=17/D2810DB0",
+      "line_sha256": "410d69f1b0bb4d94122c1cd35bda03faec04a679444d729edb54ae0ed3211a3e"
+    },
+    {
+      "wall_ns": 1792540326174000128,
+      "pid": 3795615,
+      "line": "2026-10-20 19:52:06.174 EDT [3795615] LOG:  checkpoints are occurring too frequently (7 seconds apart)",
+      "line_sha256": "cecb271034c045bae7923939125cc5c7f2e6037b288c0d95407963cd8a96152f"
+    },
+    {
+      "wall_ns": 1792540326174000128,
+      "pid": 3795615,
+      "line": "2026-10-20 19:52:06.174 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "34661cbe4ddd11e44f46b08fd835b5aad7f7bbcd57b42226e04e332f706902aa"
+    },
+    {
+      "wall_ns": 1792540338208000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:52:18.208 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.816 s, sync=11.064 s, total=12.035 s; sync files=48, longest=10.914 s, average=0.231 s; distance=536533 kB, estimate=558718 kB; lsn=18/15A763D0, redo lsn=17/F3406300",
+      "line_sha256": "706b5cc4d1c65f3144c16c4dc6ae00cb1cbd5c8c199a4539ca612bb0ed4d0471"
+    },
+    {
+      "wall_ns": 1792540338208000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:52:18.208 EDT [3795615] LOG:  checkpoints are occurring too frequently (12 seconds apart)",
+      "line_sha256": "daec510abbcbaf2f1048ae4a1a62c2dd7bcd4ff25b13fcc8f10dbdcdcb3e0013"
+    },
+    {
+      "wall_ns": 1792540338208000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:52:18.208 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "9570ed83b6e342ad0a2698cc3946a98ad49b77213435af7f02d01af1b0e16214"
+    },
+    {
+      "wall_ns": 1792540361040000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:52:41.040 EDT [3795615] LOG:  checkpoint complete: wrote 11 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=22.722 s, sync=0.007 s, total=22.832 s; sync files=4, longest=0.003 s, average=0.002 s; distance=567294 kB, estimate=567294 kB; lsn=18/164F1708, redo lsn=18/15E05DC8",
+      "line_sha256": "4fbb72f3b13094b0da418260d10995fa8a63cc8b9926d99550ba6e4260763699"
+    },
+    {
+      "wall_ns": 1792540361040000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:52:41.040 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "82f750013420ccc6cf42b65506b9e351778b8edfc507aeb10822d96126576c9e"
+    },
+    {
+      "wall_ns": 1792540361060000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:52:41.060 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.003 s, sync=0.004 s, total=0.020 s; sync files=2, longest=0.002 s, average=0.002 s; distance=7086 kB, estimate=511273 kB; lsn=18/164F17D8, redo lsn=18/164F1780",
+      "line_sha256": "fabc52084214c6282034e001192095ce27e79810a2ea7f2347f07744a6a432e8"
+    },
+    {
+      "wall_ns": 1792540365025000192,
+      "pid": 3795615,
+      "line": "2026-10-20 19:52:45.025 EDT [3795615] LOG:  checkpoints are occurring too frequently (4 seconds apart)",
+      "line_sha256": "5ee99f4761a4fad20cb454690aba30026cd4a06e3ceb21cb03969ae1cf42f7e6"
+    },
+    {
+      "wall_ns": 1792540365025000192,
+      "pid": 3795615,
+      "line": "2026-10-20 19:52:45.025 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "bc59c3a1a240c47812780147f96a99d91c2e1125ac1c1899b0db1666fe2ad884"
+    },
+    {
+      "wall_ns": 1792540374003000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:52:54.003 EDT [3795615] LOG:  checkpoint complete: wrote 233 buffers (1.4%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=7.663 s, sync=0.800 s, total=8.979 s; sync files=48, longest=0.432 s, average=0.017 s; distance=539750 kB, estimate=539750 kB; lsn=18/59AE6890, redo lsn=18/3740B170",
+      "line_sha256": "1cdfde6be2f35b233bc3ee9f73506dc76ab29ceea1b4d58bd5c91d118abc5659"
+    },
+    {
+      "wall_ns": 1792540374003000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:52:54.003 EDT [3795615] LOG:  checkpoints are occurring too frequently (9 seconds apart)",
+      "line_sha256": "24a859702833684efb9920795fb8aee39f56ce6e59c689eb8670774c45aa63bf"
+    },
+    {
+      "wall_ns": 1792540396782000128,
+      "pid": 3795615,
+      "line": "2026-10-20 19:53:16.782 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "25285bd78c4518d9f34f6120edf38785f46e6587bfe5825c23eeb0f09ffed6d2"
+    },
+    {
+      "wall_ns": 1792540396891000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:53:16.891 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.004 s, sync=0.006 s, total=0.109 s; sync files=4, longest=0.002 s, average=0.002 s; distance=566697 kB, estimate=566697 kB; lsn=18/59D758D0, redo lsn=18/59D75878",
+      "line_sha256": "e226134ffa1d98281854395badb0b5b8e9ac3afe1406121ddd5143a654f85e36"
+    },
+    {
+      "wall_ns": 1792540402991000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:53:22.991 EDT [3795615] LOG:  checkpoints are occurring too frequently (6 seconds apart)",
+      "line_sha256": "1be57bc6be9721719e35db882c2c56bff428ef1da5cf22a652f94671590542c4"
+    },
+    {
+      "wall_ns": 1792540402991000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:53:22.991 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "fcd8e9ed2cb77ab32b36f0ecd0ce49bc11de7f9383dacd817fc673b91c9d1740"
+    },
+    {
+      "wall_ns": 1792540409793999872,
+      "pid": 3795615,
+      "line": "2026-10-20 19:53:29.794 EDT [3795615] LOG:  checkpoint complete: wrote 105 buffers (0.6%), wrote 1 SLRU buffers; 0 WAL file(s) added, 5 removed, 28 recycled; write=5.518 s, sync=0.561 s, total=6.803 s; sync files=48, longest=0.423 s, average=0.012 s; distance=531014 kB, estimate=563129 kB; lsn=18/9D36AAE0, redo lsn=18/7A407088",
+      "line_sha256": "88c21277ea6306e3dfd34616db4454b009d09612d7651cd1f827268d034468e2"
+    },
+    {
+      "wall_ns": 1792540409793999872,
+      "pid": 3795615,
+      "line": "2026-10-20 19:53:29.794 EDT [3795615] LOG:  checkpoints are occurring too frequently (7 seconds apart)",
+      "line_sha256": "99229496459843cf0c62a3620cec35b639e8e4bf87cec3a47d7eafe2762af5a6"
+    },
+    {
+      "wall_ns": 1792540432180999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:53:52.181 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "3bc33d840b44fd216a7cec1f0b93d7382d6fedee62e07fe09ed52a0b67f6296c"
+    },
+    {
+      "wall_ns": 1792540432290999808,
+      "pid": 3795615,
+      "line": "2026-10-20 19:53:52.291 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=0.004 s, sync=0.006 s, total=0.111 s; sync files=4, longest=0.002 s, average=0.002 s; distance=573007 kB, estimate=573007 kB; lsn=18/9D39ADF0, redo lsn=18/9D39AD98",
+      "line_sha256": "f400e67c502a9fdf7b4cfd6708b7b8f644c97de47cfcd57d721cb8f11a4771da"
+    },
+    {
+      "wall_ns": 1792540440388000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:54:00.388 EDT [3795615] LOG:  checkpoints are occurring too frequently (8 seconds apart)",
+      "line_sha256": "274e462179c7d492968e55ce30ed7770135992d25930774b63c10595b072b208"
+    },
+    {
+      "wall_ns": 1792540440388000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:54:00.388 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "ecaea13d1c2a354d4b843a8ec9f5f9dac8894423659b2b1aad0e97538c47bb71"
+    },
+    {
+      "wall_ns": 1792540447856000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:54:07.856 EDT [3795615] LOG:  checkpoint complete: wrote 226 buffers (1.4%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=4.758 s, sync=0.706 s, total=7.468 s; sync files=49, longest=0.435 s, average=0.015 s; distance=541123 kB, estimate=569818 kB; lsn=18/E0990148, redo lsn=18/BE40BA60",
+      "line_sha256": "c0906b004c8b167f77051234aa77b684fbc425f8a4205ea78725cb840e5427e5"
+    },
+    {
+      "wall_ns": 1792540447856000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:54:07.856 EDT [3795615] LOG:  checkpoints are occurring too frequently (7 seconds apart)",
+      "line_sha256": "b411b1ceebf6b84d41b51141eeb28f6195b7e7ae70ba8c8c91c4b288696fb281"
+    },
+    {
+      "wall_ns": 1792540447856000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:54:07.856 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "457fa433e9764d6bf08eb3d90cf75fb7f8429322e9d878c9e4faeb355361635d"
+    },
+    {
+      "wall_ns": 1792540456811000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:54:16.811 EDT [3795615] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.213 s, sync=7.119 s, total=8.955 s; sync files=309, longest=0.994 s, average=0.024 s; distance=562708 kB, estimate=569107 kB; lsn=18/E0AD1C38, redo lsn=18/E0990BC8",
+      "line_sha256": "a95d88d3fe33361fb6512c069e6e5ec62ab82d6c17b5d3f425ce44d0b262f1da"
+    },
+    {
+      "wall_ns": 1792540470072999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:54:30.073 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "abde43b4237878b10416b9813c2e4953fe637982970ce2d2d52fbcb59b203161"
+    },
+    {
+      "wall_ns": 1792540470092000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:54:30.092 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.005 s, total=0.020 s; sync files=3, longest=0.002 s, average=0.002 s; distance=1291 kB, estimate=512326 kB; lsn=18/E0AD39F8, redo lsn=18/E0AD39A0",
+      "line_sha256": "d1cfef7c5d862b3691a7d1e3d549d9b25a2c16ee3b821018e81a2fbbc1d298ab"
+    },
+    {
+      "wall_ns": 1792540471089999872,
+      "pid": 3795615,
+      "line": "2026-10-20 19:54:31.090 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "23044ce88e44a051803e367fc278e865166dcf505dbb40a3d87877d42543d427"
+    },
+    {
+      "wall_ns": 1792540471089999872,
+      "pid": 3795615,
+      "line": "2026-10-20 19:54:31.090 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "0e062a47207c2c95b745e93fd3379dca613969ff46a358aa36b0bcb616102d44"
+    },
+    {
+      "wall_ns": 1792540477224999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:54:37.225 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 5 removed, 28 recycled; write=0.822 s, sync=4.092 s, total=6.135 s; sync files=48, longest=1.310 s, average=0.086 s; distance=533717 kB, estimate=533717 kB; lsn=19/240C8EA8, redo lsn=19/1409108",
+      "line_sha256": "c01bbc8eacaebe1d26315f31422eaee57490be4066a650eb86c2bf1ca33c9405"
+    },
+    {
+      "wall_ns": 1792540477224999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:54:37.225 EDT [3795615] LOG:  checkpoints are occurring too frequently (6 seconds apart)",
+      "line_sha256": "49c1ddf7da7a6e5b3cfddc4d515ca460ede3e0415b3ce6f23b3aa5a2aeb1e233"
+    },
+    {
+      "wall_ns": 1792540477224999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:54:37.225 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "fbd9176419a46adb27391fe646c85e268f0c2168b177c612dbbf2ba359516971"
+    },
+    {
+      "wall_ns": 1792540484555000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:54:44.555 EDT [3795615] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=0.225 s, sync=6.688 s, total=7.330 s; sync files=312, longest=0.742 s, average=0.022 s; distance=570114 kB, estimate=570114 kB; lsn=19/241FEBB0, redo lsn=19/240C9A78",
+      "line_sha256": "56384d8cdbf72b0633c92f2c40f82c2b435ef07b65a04b845c71638105d1d1aa"
+    },
+    {
+      "wall_ns": 1792540501352000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:55:01.352 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "e2b6afc30a7b8b988ef1375e07d6fecbee85c65fe1cd69537916b04986ae84ff"
+    },
+    {
+      "wall_ns": 1792540501371000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:55:01.371 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.006 s, total=0.020 s; sync files=4, longest=0.002 s, average=0.002 s; distance=1243 kB, estimate=513227 kB; lsn=19/242009F8, redo lsn=19/242009A0",
+      "line_sha256": "807ca2a3c2b497a6cd7cab3152ecf0ac38f6b10e0a6a254eaaa6afcf7c097958"
+    },
+    {
+      "wall_ns": 1792540502387000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:55:02.387 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "26f1b3acd85504c5f53f64bbac9a5e89b7e7725850c74ece2e039f03b4210186"
+    },
+    {
+      "wall_ns": 1792540502387000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:55:02.387 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "e767e4c07757bdb818007554b0eb7684245afbb85f3de7e1a8c4b4faf382961c"
+    },
+    {
+      "wall_ns": 1792540513585999872,
+      "pid": 3795615,
+      "line": "2026-10-20 19:55:13.586 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.810 s, sync=8.951 s, total=11.199 s; sync files=48, longest=6.233 s, average=0.187 s; distance=542795 kB, estimate=542795 kB; lsn=19/677F5870, redo lsn=19/45413948",
+      "line_sha256": "c6e687315225d3c5512043bc9608307708473b5992f7f8f0a11a346fdbd8b1fb"
+    },
+    {
+      "wall_ns": 1792540513585999872,
+      "pid": 3795615,
+      "line": "2026-10-20 19:55:13.586 EDT [3795615] LOG:  checkpoints are occurring too frequently (11 seconds apart)",
+      "line_sha256": "d88f59215aa9b77b4debd28b5c77455a446cb758cc4c77d7eb3188737c386462"
+    },
+    {
+      "wall_ns": 1792540513585999872,
+      "pid": 3795615,
+      "line": "2026-10-20 19:55:13.586 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "978519327cc3268faf2cc2f7074c5bfac5b00571f967b91240f45e001610c7e0"
+    },
+    {
+      "wall_ns": 1792540515602999808,
+      "pid": 3795615,
+      "line": "2026-10-20 19:55:15.603 EDT [3795615] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.220 s, sync=1.622 s, total=2.018 s; sync files=311, longest=0.578 s, average=0.006 s; distance=561035 kB, estimate=561035 kB; lsn=19/677FEC60, redo lsn=19/677F6788",
+      "line_sha256": "d3a34db345c7605e3110fd0ba953df8b8490f1d6c4278ff38398f0f3546b48f2"
+    },
+    {
+      "wall_ns": 1792540534691000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:55:34.691 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "c7b3f3a8a3dabfc889c39d65555a6453aea3dbaabb0d9918b73476a0b66a397d"
+    },
+    {
+      "wall_ns": 1792540534712999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:55:34.713 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.004 s, sync=0.006 s, total=0.023 s; sync files=4, longest=0.002 s, average=0.002 s; distance=14523 kB, estimate=506384 kB; lsn=19/68625560, redo lsn=19/68625508",
+      "line_sha256": "abf97e83b1eef15015c40dcdca5fb77cc0fe993c3a1289b66f6f00316b0c83f9"
+    },
+    {
+      "wall_ns": 1792540535727000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:55:35.727 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "efea0a3966a7d841533a36c79a31ebf733f3f2550c74a6c2614665907c960e6a"
+    },
+    {
+      "wall_ns": 1792540535727000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:55:35.727 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "a257eeca1156542c04b35c2a9c29b15bffa6962df10845378f9aa8c07f6f3dcf"
+    },
+    {
+      "wall_ns": 1792540548592000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:55:48.592 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.806 s, sync=11.951 s, total=12.866 s; sync files=48, longest=9.680 s, average=0.249 s; distance=538504 kB, estimate=538504 kB; lsn=19/ABC19DA8, redo lsn=19/89407858",
+      "line_sha256": "e8f2a184fc04a957fdde958ee2bfe3fc4e660e8abdd82445a2387ad8071e4a7a"
+    },
+    {
+      "wall_ns": 1792540548592999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:55:48.593 EDT [3795615] LOG:  checkpoints are occurring too frequently (13 seconds apart)",
+      "line_sha256": "a82d02e773a58beedadd0fab04a34e4a8a4334e97345d71d45f56c72f1f31483"
+    },
+    {
+      "wall_ns": 1792540570211000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:56:10.211 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "a6c226444e05b2db22add897af2ed20115410aed05ccfdb67390997bd70f39c7"
+    },
+    {
+      "wall_ns": 1792540570328000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:56:10.328 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.004 s, sync=0.006 s, total=0.117 s; sync files=4, longest=0.002 s, average=0.002 s; distance=565503 kB, estimate=565503 kB; lsn=19/ABC47510, redo lsn=19/ABC474B8",
+      "line_sha256": "30d40a524f6aa71bceb350384787e3e110e430359a92b97c19c75143111e0f8b"
+    },
+    {
+      "wall_ns": 1792540571328999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:56:11.329 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "4955de82471cb9feea7d7917c52510d559061d4bd347797c9df4eb0053a7bccb"
+    },
+    {
+      "wall_ns": 1792540571328999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:56:11.329 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "1fd678321c7208eeade2642a4ace6382dea5b7441b03c6c1f79bff2d129ef565"
+    },
+    {
+      "wall_ns": 1792540584340000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:56:24.340 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.812 s, sync=11.979 s, total=13.012 s; sync files=48, longest=11.810 s, average=0.250 s; distance=532246 kB, estimate=562177 kB; lsn=19/EE403150, redo lsn=19/CC40CFE8",
+      "line_sha256": "505b9cbf9f39a90131aa69a44378bedd964d61edd508f07e7c5ce255a4e201a3"
+    },
+    {
+      "wall_ns": 1792540584341000192,
+      "pid": 3795615,
+      "line": "2026-10-20 19:56:24.341 EDT [3795615] LOG:  checkpoints are occurring too frequently (13 seconds apart)",
+      "line_sha256": "e16fe166588be9c5c83872c522c0c86b78e7ade3438a368ec9afd4055f761a85"
+    },
+    {
+      "wall_ns": 1792540584341000192,
+      "pid": 3795615,
+      "line": "2026-10-20 19:56:24.341 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "6249ecbd9f1e24ea840aebef6e7b1a2d33f6a41cbb5ecab7f925c2a9f40603e1"
+    },
+    {
+      "wall_ns": 1792540607244999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:56:47.245 EDT [3795615] LOG:  checkpoint complete: wrote 9 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=22.792 s, sync=0.007 s, total=22.904 s; sync files=4, longest=0.004 s, average=0.002 s; distance=571579 kB, estimate=571579 kB; lsn=19/EF918C98, redo lsn=19/EF23BF38",
+      "line_sha256": "61ee2440a287ae7935be8397de99bd498b4ed2329a81f42d0a7f206af4b672c7"
+    },
+    {
+      "wall_ns": 1792540607244999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:56:47.245 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "34137bf55829e9073de22d5a9147c3d7941c5bd4790a517638300f41667eebe6"
+    },
+    {
+      "wall_ns": 1792540607260000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:56:47.260 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.004 s, total=0.016 s; sync files=2, longest=0.002 s, average=0.002 s; distance=7027 kB, estimate=515124 kB; lsn=19/EF918D68, redo lsn=19/EF918D10",
+      "line_sha256": "617fc938148fadf1d896e05fdc3b9b6069cf9d6aa6d9b32fbb298ce5db2d7eff"
+    },
+    {
+      "wall_ns": 1792540608303000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:56:48.303 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "a8d2c0bf1241600754a7b1d879a020ad14b372966059403762de76c6bd51b6a9"
+    },
+    {
+      "wall_ns": 1792540608303000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:56:48.303 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "82ffe00bbd3fb6ef8c1263d28ae030528dfe16377a1c7c2c0fe44fe225da54dd"
+    },
+    {
+      "wall_ns": 1792540620344000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:57:00.344 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=1.410 s, sync=10.492 s, total=12.042 s; sync files=48, longest=6.674 s, average=0.219 s; distance=534661 kB, estimate=534661 kB; lsn=1A/32F0C470, redo lsn=1A/1033A1B8",
+      "line_sha256": "a6bb87f09b9dbc8b2cb312cab09866391861501be6466cf3d84835ccc330ad08"
+    },
+    {
+      "wall_ns": 1792540620344999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:57:00.345 EDT [3795615] LOG:  checkpoints are occurring too frequently (12 seconds apart)",
+      "line_sha256": "1fc5653d17a252fe54326711c6a4131bd59d280cc149486ef0b5b171fb774e56"
+    },
+    {
+      "wall_ns": 1792540620344999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:57:00.345 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "24ae35e96a39800032210cc60a8982cae69b66e40108639543f5acb63680c1eb"
+    },
+    {
+      "wall_ns": 1792540644552000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:57:24.552 EDT [3795615] LOG:  checkpoint complete: wrote 12 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=22.828 s, sync=0.051 s, total=24.208 s; sync files=5, longest=0.014 s, average=0.011 s; distance=569165 kB, estimate=569165 kB; lsn=1A/34029408, redo lsn=1A/32F0D8C8",
+      "line_sha256": "f1444b38840d7c9923bb5b84c0ff54293bf20d4344cc4d143469660dfc743ac5"
+    },
+    {
+      "wall_ns": 1792540644552000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:57:24.552 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "1c0ba553a43959b940884dc3997aca071d858e89ef382e3553f6ca5f5b4cf7be"
+    },
+    {
+      "wall_ns": 1792540644831000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:57:24.831 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 2 recycled; write=0.036 s, sync=0.032 s, total=0.279 s; sync files=2, longest=0.022 s, average=0.016 s; distance=17518 kB, estimate=514001 kB; lsn=1A/34029510, redo lsn=1A/340294B8",
+      "line_sha256": "866b6513cf10aeb693cffcbfa52883242be75124832c6caf146072e9f99b9250"
+    },
+    {
+      "wall_ns": 1792540653118000128,
+      "pid": 3795615,
+      "line": "2026-10-20 19:57:33.118 EDT [3795615] LOG:  checkpoints are occurring too frequently (9 seconds apart)",
+      "line_sha256": "c2394cba878338f856ee31957232aa50321ecf4bd44948bf63dfa3a4f595500b"
+    },
+    {
+      "wall_ns": 1792540653118000128,
+      "pid": 3795615,
+      "line": "2026-10-20 19:57:33.118 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "16a4a0fa51fbf8d86f1d01013de1d9723ecd92d692355c45abfb12626ec7a26f"
+    },
+    {
+      "wall_ns": 1792540666025000192,
+      "pid": 3795615,
+      "line": "2026-10-20 19:57:46.025 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.811 s, sync=11.725 s, total=12.908 s; sync files=48, longest=10.667 s, average=0.245 s; distance=544662 kB, estimate=544662 kB; lsn=1A/7761B558, redo lsn=1A/5540ECC8",
+      "line_sha256": "02b1d8ddfbc041342bd47b0e93e72aad9c001299c73f5fccf9b24a1ce482c488"
+    },
+    {
+      "wall_ns": 1792540666025000192,
+      "pid": 3795615,
+      "line": "2026-10-20 19:57:46.025 EDT [3795615] LOG:  checkpoints are occurring too frequently (13 seconds apart)",
+      "line_sha256": "638fae9431d22efb6f1e4d0863372a24aaf266e472e1494b9c1b9139a315cff5"
+    },
+    {
+      "wall_ns": 1792540666025000192,
+      "pid": 3795615,
+      "line": "2026-10-20 19:57:46.025 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "fd666c71f69a97d860b3850983a7bfdc9bbf265b542f51b12776e017df4f92fb"
+    },
+    {
+      "wall_ns": 1792540670918999808,
+      "pid": 3795615,
+      "line": "2026-10-20 19:57:50.919 EDT [3795615] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=4.108 s, sync=0.688 s, total=4.895 s; sync files=315, longest=0.025 s, average=0.003 s; distance=559165 kB, estimate=559165 kB; lsn=1A/7775FA70, redo lsn=1A/7761E1E0",
+      "line_sha256": "fb21c6e693b70ea04511d540698f0dcd4ddda5b2918dab883611c28accb37543"
+    },
+    {
+      "wall_ns": 1792540688316999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:58:08.317 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "692e1863e2cf65d1743322e7222bfa1f7fbbe7e72a1b83599160d5c5b9b07271"
+    },
+    {
+      "wall_ns": 1792540688336000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:58:08.336 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.006 s, total=0.020 s; sync files=4, longest=0.002 s, average=0.002 s; distance=1292 kB, estimate=503377 kB; lsn=1A/777613F0, redo lsn=1A/77761398",
+      "line_sha256": "71c0e9dabc2b6b9ff6ee4e8138c054830bfa8f9c40bb75908e68d1380dc71d5f"
+    },
+    {
+      "wall_ns": 1792540689352000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:58:09.352 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "20b69c5e86f7b13e75ab53371b7aac85db8405763a75c584041bc2012275014b"
+    },
+    {
+      "wall_ns": 1792540689352000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:58:09.352 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "23601d49b84d5c745e3e635bc26d132ac5c92072229e9e5e129b959ddffd7a1a"
+    },
+    {
+      "wall_ns": 1792540696068000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:58:16.068 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.812 s, sync=5.736 s, total=6.717 s; sync files=48, longest=5.576 s, average=0.120 s; distance=537245 kB, estimate=537245 kB; lsn=1A/BA40C0B0, redo lsn=1A/98408B90",
+      "line_sha256": "5850bb3a0f849aeefc18d23d9d1f2b17bd36679223c4761832ce2dabb00ac631"
+    },
+    {
+      "wall_ns": 1792540696068000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:58:16.068 EDT [3795615] LOG:  checkpoints are occurring too frequently (7 seconds apart)",
+      "line_sha256": "ff9963357b0cb6c53e10e3274663b3dd31610a8b7c5ae723bb312bf1d5886301"
+    },
+    {
+      "wall_ns": 1792540696068000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:58:16.068 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "32329afe91e882a9953c5c9e2a6050eed400f001e42dd648a2eb188046f9c63a"
+    },
+    {
+      "wall_ns": 1792540719153000192,
+      "pid": 3795615,
+      "line": "2026-10-20 19:58:39.153 EDT [3795615] LOG:  checkpoint complete: wrote 8 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=22.972 s, sync=0.008 s, total=23.085 s; sync files=7, longest=0.002 s, average=0.001 s; distance=566581 kB, estimate=566581 kB; lsn=1A/BAEA3448, redo lsn=1A/BAD56208",
+      "line_sha256": "a7539c5cef6f2e49b8ec837a4a89f558a67839c141a1f09baeed6c78d967fb6a"
+    },
+    {
+      "wall_ns": 1792540719153000192,
+      "pid": 3795615,
+      "line": "2026-10-20 19:58:39.153 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "f0d3da83685050341228e95f8633ae985ea44bf00bad3a8bf37506d262a1fa91"
+    },
+    {
+      "wall_ns": 1792540719172000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:58:39.172 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.004 s, total=0.019 s; sync files=2, longest=0.003 s, average=0.002 s; distance=1332 kB, estimate=510056 kB; lsn=1A/BAEA3518, redo lsn=1A/BAEA34C0",
+      "line_sha256": "ab7e5313b50e12699bdd878babc2194e25a17f789412f0ee8ee61fbeba259196"
+    },
+    {
+      "wall_ns": 1792540720188999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:58:40.189 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "16056be14e4cc742f16756b132e0f419ba617fdc05fa8b8564c8b65341f17b70"
+    },
+    {
+      "wall_ns": 1792540720188999936,
+      "pid": 3795615,
+      "line": "2026-10-20 19:58:40.189 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "52e17399c5d47576f032d24039e51c397aebbd991e4f0852fae212a9c9186a5f"
+    },
+    {
+      "wall_ns": 1792540733004000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:58:53.004 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 5 removed, 28 recycled; write=1.416 s, sync=11.237 s, total=12.815 s; sync files=48, longest=8.633 s, average=0.235 s; distance=529406 kB, estimate=529406 kB; lsn=1A/FE497028, redo lsn=1A/DB3A2EF8",
+      "line_sha256": "3654f37752efa674c24dbc338506ecb2899e359c7caf541473351caeb4e2122e"
+    },
+    {
+      "wall_ns": 1792540733004000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:58:53.004 EDT [3795615] LOG:  checkpoints are occurring too frequently (13 seconds apart)",
+      "line_sha256": "dc31efe301802feb664327ceaa1b7a7fbb427fa384f46ab0e8a8553bcb7e5f3c"
+    },
+    {
+      "wall_ns": 1792540733004000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:58:53.004 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "253cd962760b5f703c270d2d8006d77f819bb1ce52fc5f10e52860af4f6e2ce6"
+    },
+    {
+      "wall_ns": 1792540757212000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:59:17.212 EDT [3795615] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=24.093 s, sync=0.008 s, total=24.208 s; sync files=4, longest=0.004 s, average=0.002 s; distance=574421 kB, estimate=574421 kB; lsn=1A/FE5D0680, redo lsn=1A/FE498498",
+      "line_sha256": "45fd63e9423b1c2eb27c62de4d0d442e8014b65919c466ed23c5d5ff14caaf16"
+    },
+    {
+      "wall_ns": 1792540757212000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:59:17.212 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "5680a1921b431fbdebfd59e8820f21efaea817902d5ad48735772f7828e11915"
+    },
+    {
+      "wall_ns": 1792540757231000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:59:17.231 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.004 s, total=0.019 s; sync files=2, longest=0.003 s, average=0.002 s; distance=1248 kB, estimate=517104 kB; lsn=1A/FE5D0750, redo lsn=1A/FE5D06F8",
+      "line_sha256": "4057cf1b524640142ece608c7a3ca3b0799a7b87d675dc018dc4b78a15430d0a"
+    },
+    {
+      "wall_ns": 1792540758292000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:59:18.292 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "3baa27f108132b2ab55a18868569688a66d5790c07db63a4e7b359d6c0cd1e9f"
+    },
+    {
+      "wall_ns": 1792540758292000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:59:18.292 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "24dfd5d410322b5d657253ee1f636e11627b3bd7d7e57c154dca1ede064505de"
+    },
+    {
+      "wall_ns": 1792540770635000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:59:30.635 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 3 removed, 30 recycled; write=6.309 s, sync=5.879 s, total=12.344 s; sync files=48, longest=5.479 s, average=0.123 s; distance=538888 kB, estimate=538888 kB; lsn=1B/40E7EC30, redo lsn=1B/1F412858",
+      "line_sha256": "0f51ed0aef738874212b041c10602938f3c40d216ae081855f15944ff8c6ad28"
+    },
+    {
+      "wall_ns": 1792540770636000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:59:30.636 EDT [3795615] LOG:  checkpoints are occurring too frequently (12 seconds apart)",
+      "line_sha256": "77e4d8d717acb407541580c8c65d30ca8d4cf0a0a837549ad6892169b665426e"
+    },
+    {
+      "wall_ns": 1792540770636000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:59:30.636 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "f4e84507002da85e43ae16b3f8d5d4a1eac7e56b9a3c0d970e73c3432ead9c80"
+    },
+    {
+      "wall_ns": 1792540795816000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:59:55.816 EDT [3795615] LOG:  checkpoint complete: wrote 33 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=25.066 s, sync=0.007 s, total=25.181 s; sync files=4, longest=0.003 s, average=0.002 s; distance=564934 kB, estimate=564934 kB; lsn=1B/429FA2A0, redo lsn=1B/41BC4410",
+      "line_sha256": "0601b364db18dd2258a240f9e4c8c54b2ba9c576b1a2b548dd73fb17bab3219d"
+    },
+    {
+      "wall_ns": 1792540795816000000,
+      "pid": 3795615,
+      "line": "2026-10-20 19:59:55.816 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "afd64220893f5057d2f2ae59d35316f930cc319f673687c70c7e549ecc8ff923"
+    },
+    {
+      "wall_ns": 1792540795838000128,
+      "pid": 3795615,
+      "line": "2026-10-20 19:59:55.838 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.004 s, sync=0.004 s, total=0.022 s; sync files=2, longest=0.002 s, average=0.002 s; distance=14551 kB, estimate=509896 kB; lsn=1B/429FA3A8, redo lsn=1B/429FA350",
+      "line_sha256": "41a0adca370b37c115f9e1c3d06880cf92e77be81aea53d5e3ee58282ebeb810"
+    },
+    {
+      "wall_ns": 1792540796879000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:59:56.879 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "2e4e1fdb4cb726ff8091b063768461b07d7d67fbd010952044e9c896d79e5718"
+    },
+    {
+      "wall_ns": 1792540796879000064,
+      "pid": 3795615,
+      "line": "2026-10-20 19:59:56.879 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "511d2be2d8130d543dfcb31f887151786819cc3b9047d42eac7a7341af8a2572"
+    },
+    {
+      "wall_ns": 1792540809315000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:00:09.315 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=9.163 s, sync=3.126 s, total=12.436 s; sync files=48, longest=0.672 s, average=0.066 s; distance=533763 kB, estimate=533763 kB; lsn=1B/85FEE110, redo lsn=1B/6333B168",
+      "line_sha256": "6c9015b5386be0b1fca9fce88d28d26c1d345399c877b2be3fbe746cf0290775"
+    },
+    {
+      "wall_ns": 1792540809315000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:00:09.315 EDT [3795615] LOG:  checkpoints are occurring too frequently (13 seconds apart)",
+      "line_sha256": "29adcd4fc07f9d02b9c3a03a3928b22139841dc82dd8f8966be554da4837d5fa"
+    },
+    {
+      "wall_ns": 1792540809315000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:00:09.315 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "3d1ff859fa209b48686f5d56ec323235ef3abcfb7476ed840ee9b915e0a42678"
+    },
+    {
+      "wall_ns": 1792540833015000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:00:33.015 EDT [3795615] LOG:  checkpoint complete: wrote 7 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=23.592 s, sync=0.007 s, total=23.701 s; sync files=4, longest=0.003 s, average=0.002 s; distance=570065 kB, estimate=570065 kB; lsn=1B/8611D0F0, redo lsn=1B/85FEF568",
+      "line_sha256": "67c1c6144b7e3797ed70c4bdda246f73b508feaf5b6352f7b1b11dfb0d10d891"
+    },
+    {
+      "wall_ns": 1792540833016000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:00:33.016 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "048f7f447a36125c017e206d56f5502596dc77028a3f6eb69a690553c730c61c"
+    },
+    {
+      "wall_ns": 1792540833036999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:00:33.037 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.004 s, sync=0.004 s, total=0.022 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1207 kB, estimate=513179 kB; lsn=1B/8611D1C0, redo lsn=1B/8611D168",
+      "line_sha256": "28b61edfe04d29d1bdccca617a0242f7d47a15fa74aec334b404f3f9134e228a"
+    },
+    {
+      "wall_ns": 1792540835457999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:00:35.458 EDT [3795615] LOG:  checkpoints are occurring too frequently (2 seconds apart)",
+      "line_sha256": "6db7d663489db77ce6db3fe8e1062229a8c170ebf7cc3dd8a2d716c4355586b8"
+    },
+    {
+      "wall_ns": 1792540835457999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:00:35.458 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "31ea7640eb9c4718007da5da370dc24e8b61702e041cded2e44258d5269fe76d"
+    },
+    {
+      "wall_ns": 1792540846138000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:00:46.138 EDT [3795615] LOG:  checkpoint complete: wrote 165 buffers (1.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=7.743 s, sync=2.123 s, total=10.680 s; sync files=48, longest=0.863 s, average=0.045 s; distance=543688 kB, estimate=543688 kB; lsn=1B/C97124A0, redo lsn=1B/A740F1D8",
+      "line_sha256": "e88ade551d7df99e54baf7c55a025ca97d6949fd2a862ec744e61d76f32224e9"
+    },
+    {
+      "wall_ns": 1792540846138000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:00:46.138 EDT [3795615] LOG:  checkpoints are occurring too frequently (11 seconds apart)",
+      "line_sha256": "71777903f96f89751db76246ad707ea7de5126b7cb88bed9bf6abee4be71e77b"
+    },
+    {
+      "wall_ns": 1792540870140000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:01:10.140 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "bbe949636fe1fa07a0a72d70649f235e41128ddbfe3e5b567cd00c96b1f47203"
+    },
+    {
+      "wall_ns": 1792540870253999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:01:10.254 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.003 s, sync=0.006 s, total=0.115 s; sync files=4, longest=0.002 s, average=0.002 s; distance=561070 kB, estimate=561070 kB; lsn=1B/C97FAAA8, redo lsn=1B/C97FAA50",
+      "line_sha256": "7136f03fb7735c7185f4efe401a7f4270eef0c24f41c8cbff7a1082064df02de"
+    },
+    {
+      "wall_ns": 1792540876064000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:01:16.064 EDT [3795615] LOG:  checkpoints are occurring too frequently (6 seconds apart)",
+      "line_sha256": "08834982314dd6dd7d45884bf1f1c275b5efe344f34f855fb421a6cd6c32eb4a"
+    },
+    {
+      "wall_ns": 1792540876064000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:01:16.064 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "7ed65c0771c2efff95d178d00ee2a44ac53f741a0f3c6c4150b56e15f3d712e4"
+    },
+    {
+      "wall_ns": 1792540884092999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:01:24.093 EDT [3795615] LOG:  checkpoint complete: wrote 197 buffers (1.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=6.628 s, sync=0.917 s, total=8.029 s; sync files=48, longest=0.376 s, average=0.020 s; distance=536624 kB, estimate=558625 kB; lsn=1C/C411F18, redo lsn=1B/EA406C10",
+      "line_sha256": "e55261dca182c3579a4b2b87e6fdd98b5d4ce5befaa85248e468fa1e5fa1f11c"
+    },
+    {
+      "wall_ns": 1792540884092999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:01:24.093 EDT [3795615] LOG:  checkpoints are occurring too frequently (8 seconds apart)",
+      "line_sha256": "a32e3bba770a2eab8ffe83f2fd7d28888c30a13299de36ddbd7fde4cc48fe1bf"
+    },
+    {
+      "wall_ns": 1792540884092999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:01:24.093 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "8f02da0cf42d968749f6d8e146de1563ba73455dcf11160a4c435fd4b426867e"
+    },
+    {
+      "wall_ns": 1792540909046000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:01:49.046 EDT [3795615] LOG:  checkpoint complete: wrote 12 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=24.849 s, sync=0.007 s, total=24.954 s; sync files=4, longest=0.003 s, average=0.002 s; distance=567204 kB, estimate=567204 kB; lsn=1C/DEBCB10, redo lsn=1C/CDEFF40",
+      "line_sha256": "6e99241a5dbfc79983db9f0992203a4f74990e1dd88118d110df665aea5a5cc2"
+    },
+    {
+      "wall_ns": 1792540909046000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:01:49.046 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "e23dfb59b1842cbda3086b1f222fa5a180e8a5a8c9e1f24137bed1140285e7c5"
+    },
+    {
+      "wall_ns": 1792540909063000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:01:49.063 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.002 s, sync=0.003 s, total=0.018 s; sync files=2, longest=0.002 s, average=0.002 s; distance=17203 kB, estimate=512204 kB; lsn=1C/DEBCBE0, redo lsn=1C/DEBCB88",
+      "line_sha256": "c9867d9e58165ef5a5edf780edfcb69b37b303a1b1f7e2cb8338c5e4a2547421"
+    },
+    {
+      "wall_ns": 1792540916927000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:01:56.927 EDT [3795615] LOG:  checkpoints are occurring too frequently (7 seconds apart)",
+      "line_sha256": "b6d3ce6246ca149fa20fe4a40634a0a94265e0dfe9700f0dc5f6c348c5243caf"
+    },
+    {
+      "wall_ns": 1792540916927000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:01:56.927 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "6c4c39a7695385bdaad4fb3d3f40f97887447c3ffca25c39c7251ed2a9e73ed7"
+    },
+    {
+      "wall_ns": 1792540921787000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:02:01.787 EDT [3795615] LOG:  checkpoint complete: wrote 217 buffers (1.3%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=3.707 s, sync=0.502 s, total=4.860 s; sync files=48, longest=0.385 s, average=0.011 s; distance=529696 kB, estimate=529696 kB; lsn=1C/500314E0, redo lsn=1C/2E404F08",
+      "line_sha256": "8c39da806191859cf8c114ded6b4692d9387f289c4daf25e8a4972dbdc719149"
+    },
+    {
+      "wall_ns": 1792540921787000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:02:01.787 EDT [3795615] LOG:  checkpoints are occurring too frequently (5 seconds apart)",
+      "line_sha256": "3de86671eacdaa7dbb74181d467fae9142e77cdcc6b3f51cf9b55f94b8872890"
+    },
+    {
+      "wall_ns": 1792540921787000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:02:01.787 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "4e2b052cb3aebf8ca389514ff8769a2192683552ee0e3be238f561bdc0b2b270"
+    },
+    {
+      "wall_ns": 1792540945908000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:02:25.908 EDT [3795615] LOG:  checkpoint complete: wrote 45 buffers (0.3%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=23.833 s, sync=0.021 s, total=24.122 s; sync files=4, longest=0.008 s, average=0.006 s; distance=574127 kB, estimate=574127 kB; lsn=1C/515F4A20, redo lsn=1C/514B0DF0",
+      "line_sha256": "057275bf374251b113853aabfda751c328ca4fe34187c8e8c04ed575eedf067f"
+    },
+    {
+      "wall_ns": 1792540945908000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:02:25.908 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "258c284ffcd7ddbb0d6039fa806388ce6bfb08717c9cf00d58dde05e36129812"
+    },
+    {
+      "wall_ns": 1792540945943000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:02:25.943 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.005 s, sync=0.007 s, total=0.035 s; sync files=2, longest=0.006 s, average=0.004 s; distance=1295 kB, estimate=516844 kB; lsn=1C/515F4AF0, redo lsn=1C/515F4A98",
+      "line_sha256": "cb07bff14876a205f846d52294a7373d8e927553580bc11aaa753445b69e26cb"
+    },
+    {
+      "wall_ns": 1792540952421999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:02:32.422 EDT [3795615] LOG:  checkpoints are occurring too frequently (7 seconds apart)",
+      "line_sha256": "5c61634f46115225d5fd98a0c64474efda3953e0e0067b9676ba8876b5a17445"
+    },
+    {
+      "wall_ns": 1792540952421999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:02:32.422 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "720cfb6d332b1c8fb119b063f3a7411a7b3effa1523ed7da105c765b53a32dde"
+    },
+    {
+      "wall_ns": 1792540955730000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:02:35.730 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.811 s, sync=1.065 s, total=3.308 s; sync files=48, longest=0.528 s, average=0.023 s; distance=538731 kB, estimate=538731 kB; lsn=1C/94BE8DD0, redo lsn=1C/7240FA18",
+      "line_sha256": "15df4d57601e9739ceab2b121df5f599ff2408e3137f6aec8f93236ccd5e7c06"
+    },
+    {
+      "wall_ns": 1792540955730000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:02:35.730 EDT [3795615] LOG:  checkpoints are occurring too frequently (3 seconds apart)",
+      "line_sha256": "4c7239eb83f8c784b4461d9e55aa126f8a1c6878781045a11a34146c87aa5b3b"
+    },
+    {
+      "wall_ns": 1792540955730000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:02:35.730 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "1b10c6499c7e1471eab2cb745fe36c3af30b58c28a13c505744a8175598b0249"
+    },
+    {
+      "wall_ns": 1792540965124999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:02:45.125 EDT [3795615] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.220 s, sync=8.264 s, total=9.396 s; sync files=312, longest=1.068 s, average=0.027 s; distance=565102 kB, estimate=565102 kB; lsn=1C/94D29088, redo lsn=1C/94BEB310",
+      "line_sha256": "f309e8eddf59dce26eff5ea067d3674c408eaf78a9a0f9973ef6183524988ba4"
+    },
+    {
+      "wall_ns": 1792540981468000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:03:01.468 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "09b515586f4cf8a0c5a402a2c1026d8877c57e7b14434eba30823b14448f5554"
+    },
+    {
+      "wall_ns": 1792540981490000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:03:01.490 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.007 s, total=0.023 s; sync files=5, longest=0.002 s, average=0.002 s; distance=1278 kB, estimate=508719 kB; lsn=1C/94D2AE48, redo lsn=1C/94D2ADF0",
+      "line_sha256": "18c2535748c44ec9b3f89bc45eac86126350dfeddc07bc86978c75d141f49f7d"
+    },
+    {
+      "wall_ns": 1792540982502000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:03:02.502 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "f0ac3d5e273aa1a737bf47a849444d2cdf9f1981d0205f6c93e7d4be4581feed"
+    },
+    {
+      "wall_ns": 1792540982502000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:03:02.502 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "bfee50206251a44fe1b21f925efd07a33079f6deea34523448a1bba7730c1c90"
+    },
+    {
+      "wall_ns": 1792540991991000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:03:11.991 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 5 removed, 28 recycled; write=0.812 s, sync=7.215 s, total=9.490 s; sync files=48, longest=3.297 s, average=0.151 s; distance=531319 kB, estimate=531319 kB; lsn=1C/D831F248, redo lsn=1C/B5408DC0",
+      "line_sha256": "5555f81361ae0ce94de7f0d99fe2f2f3b0d1535b7634ed719e660492afbedce7"
+    },
+    {
+      "wall_ns": 1792540991991000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:03:11.991 EDT [3795615] LOG:  checkpoints are occurring too frequently (9 seconds apart)",
+      "line_sha256": "d4a132719135997a1fb9d53b40c47fe60c69b0ad8fe7a60165adfc1667e53d71"
+    },
+    {
+      "wall_ns": 1792540991991000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:03:11.991 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "4484031358242480255fe6c196169e737dffd1685d98fbb392c20538dc3b386e"
+    },
+    {
+      "wall_ns": 1792540994940000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:03:14.940 EDT [3795615] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=0.230 s, sync=2.490 s, total=2.949 s; sync files=312, longest=0.375 s, average=0.008 s; distance=572515 kB, estimate=572515 kB; lsn=1C/D832C2C0, redo lsn=1C/D83219C0",
+      "line_sha256": "3a3c8dd8e67a84d1b8d593527d79da790ac345c301afcb6d67804c82dbe54a10"
+    },
+    {
+      "wall_ns": 1792541015320000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:03:35.320 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "3ac13a876425e5547c5c1e129f0fd06857b590a9ad2227efb0bfd98ab6cf94ea"
+    },
+    {
+      "wall_ns": 1792541015339000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:03:35.339 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.006 s, total=0.020 s; sync files=4, longest=0.002 s, average=0.002 s; distance=1269 kB, estimate=515390 kB; lsn=1C/D845F170, redo lsn=1C/D845F118",
+      "line_sha256": "5ee52d97eb390490052f1b71899003870d515a787421facc897c9ff4fbadb83f"
+    },
+    {
+      "wall_ns": 1792541016358000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:03:36.358 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "4dcb514d758c75a6c908cd5feeb85d694d7af8113dd6700e7607eff5bec17ace"
+    },
+    {
+      "wall_ns": 1792541016358000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:03:36.358 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "c204b10169d94bc00bbfa3158f86e77ee7f8db3d526111964181077372b7c4b7"
+    },
+    {
+      "wall_ns": 1792541028312999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:03:48.313 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=5.418 s, sync=6.401 s, total=11.955 s; sync files=48, longest=6.021 s, average=0.134 s; distance=540344 kB, estimate=540344 kB; lsn=1D/1BA52FD8, redo lsn=1C/F940D3B0",
+      "line_sha256": "a678d9c4210ede0d0346dc8307f53ab943d4722a7fe7fd9fac54dd2aa07bd0b4"
+    },
+    {
+      "wall_ns": 1792541028312999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:03:48.313 EDT [3795615] LOG:  checkpoints are occurring too frequently (12 seconds apart)",
+      "line_sha256": "e6b52e3e22048d341598680748ea0b8af5a1d009df53df733ea465c6fc5e9c96"
+    },
+    {
+      "wall_ns": 1792541028312999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:03:48.313 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "14de138d01c8dfadd1003cde3f882d2da2fe84a2c32f0e97ea393a8a5068a847"
+    },
+    {
+      "wall_ns": 1792541054898000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:04:14.898 EDT [3795615] LOG:  checkpoint complete: wrote 7 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=25.299 s, sync=0.063 s, total=26.585 s; sync files=4, longest=0.024 s, average=0.016 s; distance=563484 kB, estimate=563484 kB; lsn=1D/1C839BB0, redo lsn=1D/1BA54448",
+      "line_sha256": "d82d57d743a267ae85c06712e44ace858b1e41cb80631d501044756d749d51e4"
+    },
+    {
+      "wall_ns": 1792541054898000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:04:14.898 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "962e01ebfe6a81b0b5d58c5825ff08842f5626ed55700dd18718e0407d889ad1"
+    },
+    {
+      "wall_ns": 1792541054937999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:04:14.938 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.005 s, sync=0.006 s, total=0.040 s; sync files=2, longest=0.005 s, average=0.003 s; distance=14230 kB, estimate=508558 kB; lsn=1D/1C839CB8, redo lsn=1D/1C839C60",
+      "line_sha256": "0df60ce1589df0240b5e36cf81faf2f6661d2c7b9ae3c3b16573faa6e4d47f9c"
+    },
+    {
+      "wall_ns": 1792541062713999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:04:22.714 EDT [3795615] LOG:  checkpoints are occurring too frequently (8 seconds apart)",
+      "line_sha256": "63205ffefb4868c649a7ce24e5c456969e5ac7b0a586745d14f72ec9a3e122a0"
+    },
+    {
+      "wall_ns": 1792541062713999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:04:22.714 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "bcde9c14783d88acea4b851b2c3cc9e800d83eb19e0f9cfdd549a11c43443ff6"
+    },
+    {
+      "wall_ns": 1792541073404000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:04:33.404 EDT [3795615] LOG:  checkpoint complete: wrote 98 buffers (0.6%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=4.796 s, sync=4.194 s, total=10.690 s; sync files=49, longest=0.940 s, average=0.086 s; distance=536376 kB, estimate=536376 kB; lsn=1D/5FE2E898, redo lsn=1D/3D407CE8",
+      "line_sha256": "fb5ccec495e7391b14b08e7862ca83fc94cc67b9db791e834780b960d45c53db"
+    },
+    {
+      "wall_ns": 1792541073404000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:04:33.404 EDT [3795615] LOG:  checkpoints are occurring too frequently (11 seconds apart)",
+      "line_sha256": "b24db1f66c3f3386a497d325710899edd9d3651882304e6a0aad68f455084e2e"
+    },
+    {
+      "wall_ns": 1792541073404000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:04:33.404 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "cebad3e5e71c02dbb46564c58e227d48e1f9418bc0d745917cca91419678ff94"
+    },
+    {
+      "wall_ns": 1792541080156000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:04:40.156 EDT [3795615] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.204 s, sync=6.426 s, total=6.753 s; sync files=312, longest=0.771 s, average=0.021 s; distance=567456 kB, estimate=567456 kB; lsn=1D/5FF60318, redo lsn=1D/5FE300B0",
+      "line_sha256": "8979bbc3ab8352b39393d771518ef2f6ac4165d72cbbf889a16a648dd1c79a26"
+    },
+    {
+      "wall_ns": 1792541098172000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:04:58.172 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "86f31498e0c00ede3ff786b06c8e5986a0b081e6807736ef18672ae262f4e069"
+    },
+    {
+      "wall_ns": 1792541098192000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:04:58.192 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.006 s, total=0.021 s; sync files=4, longest=0.002 s, average=0.002 s; distance=1222 kB, estimate=510833 kB; lsn=1D/5FF61AE8, redo lsn=1D/5FF61A90",
+      "line_sha256": "1f763d10e072119e7c6b97a7abc961d3958a4e7f4c63f11c0d43e42ae7fc8adf"
+    },
+    {
+      "wall_ns": 1792541099204000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:04:59.204 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "a1145c0052bf25bb6feba8b837ce829ba84cdb675e8f0eec57d177013b850571"
+    },
+    {
+      "wall_ns": 1792541099204000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:04:59.204 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "213f3c50abcc1bad661cea802fa639a726e4e2a124061cde40a65358e838f21e"
+    },
+    {
+      "wall_ns": 1792541109664000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:05:09.664 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 5 removed, 28 recycled; write=0.815 s, sync=8.012 s, total=10.461 s; sync files=48, longest=4.873 s, average=0.167 s; distance=529048 kB, estimate=529048 kB; lsn=1D/A3556830, redo lsn=1D/80407D90",
+      "line_sha256": "b59a8a0d746dd3db1fd8fb6c876ae039d3507daa8db9c1903e3828408ec8033c"
+    },
+    {
+      "wall_ns": 1792541109664000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:05:09.664 EDT [3795615] LOG:  checkpoints are occurring too frequently (10 seconds apart)",
+      "line_sha256": "2c22d6a55b83115e9502d8e9698a85de41846523e01ca13777ecbb210babb31a"
+    },
+    {
+      "wall_ns": 1792541109664000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:05:09.664 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "7280b25b45f81dff929fe6206a9970e3c3e4689e03c13bff321c1f349ca85488"
+    },
+    {
+      "wall_ns": 1792541112673000192,
+      "pid": 3795615,
+      "line": "2026-10-20 20:05:12.673 EDT [3795615] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=0.485 s, sync=2.308 s, total=3.009 s; sync files=313, longest=0.208 s, average=0.008 s; distance=574785 kB, estimate=574785 kB; lsn=1D/A372F608, redo lsn=1D/A3558290",
+      "line_sha256": "d68d32dd56ca13efafe6da4bbbc0cb308edf375e196cb8e90ae31d3e58862dce"
+    },
+    {
+      "wall_ns": 1792541132856000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:05:32.856 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "d5bfd6f13648f2bcd260b54955eca5a15b25234758a2924275929b7daba3fce1"
+    },
+    {
+      "wall_ns": 1792541132880999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:05:32.881 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.009 s, total=0.025 s; sync files=7, longest=0.003 s, average=0.002 s; distance=7204 kB, estimate=518027 kB; lsn=1D/A3C61588, redo lsn=1D/A3C61530",
+      "line_sha256": "536b7b20c58d6d149f1e5bd0931a72e7db544fe983195cc689c0095b9ee99940"
+    },
+    {
+      "wall_ns": 1792541133905999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:05:33.906 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "6f778bf70922d0d22b2127a198ec4e32c0faed36fce23964a4647434e9db4729"
+    },
+    {
+      "wall_ns": 1792541133905999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:05:33.906 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "f56a697ac6e7e7032336e0858b7db4e8df1e6818c5e4d5fcde034aa71288bc5a"
+    },
+    {
+      "wall_ns": 1792541146112000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:05:46.112 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.812 s, sync=10.238 s, total=12.207 s; sync files=48, longest=9.350 s, average=0.214 s; distance=531334 kB, estimate=531334 kB; lsn=1D/E6400A50, redo lsn=1D/C4342DA0",
+      "line_sha256": "6155d302d3cef33793bca77a66fb6843f5389bc162f154af212d6db31c3402c6"
+    },
+    {
+      "wall_ns": 1792541146112999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:05:46.113 EDT [3795615] LOG:  checkpoints are occurring too frequently (13 seconds apart)",
+      "line_sha256": "fe250f4c113d5eff3acdae4a80a585a852d919fdd5fc012b1ec8468ada0f9276"
+    },
+    {
+      "wall_ns": 1792541146112999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:05:46.113 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "16ae182bcee17990a2e2408f52482162422934077b4122d488f1bb0d42edb348"
+    },
+    {
+      "wall_ns": 1792541147240000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:05:47.240 EDT [3795615] LOG:  checkpoint complete: wrote 0 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=0.005 s, sync=1.005 s, total=1.128 s; sync files=310, longest=0.128 s, average=0.004 s; distance=572493 kB, estimate=572493 kB; lsn=1D/E7258410, redo lsn=1D/E7256490",
+      "line_sha256": "b25bdaee5eb6b79a006131d0079fe2e164a295f21b34664bf949478995a0b05e"
+    },
+    {
+      "wall_ns": 1792541170257999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:06:10.258 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "cee3d647f185b9ab0aab21eb6a104092a203fb81360337ac6cd78ae99cc4035a"
+    },
+    {
+      "wall_ns": 1792541170283000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:06:10.283 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.004 s, sync=0.007 s, total=0.026 s; sync files=4, longest=0.003 s, average=0.002 s; distance=17568 kB, estimate=517001 kB; lsn=1D/E837E898, redo lsn=1D/E837E840",
+      "line_sha256": "a515d967de905c020f3d737e30b582f5965360c0540f1bb682bafecb9247b586"
+    },
+    {
+      "wall_ns": 1792541171346999808,
+      "pid": 3795615,
+      "line": "2026-10-20 20:06:11.347 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "efb66c833cb9b0ae6e4fc5ec33309ecffc56e7ba7cd5453aeec03356c69d84a7"
+    },
+    {
+      "wall_ns": 1792541171346999808,
+      "pid": 3795615,
+      "line": "2026-10-20 20:06:11.347 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "ab1ded84411c941564cc3bcec02044d0d27fe33217984c905a09b5519953e043"
+    },
+    {
+      "wall_ns": 1792541184234999808,
+      "pid": 3795615,
+      "line": "2026-10-20 20:06:24.235 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.811 s, sync=11.939 s, total=12.888 s; sync files=48, longest=10.722 s, average=0.249 s; distance=541250 kB, estimate=541250 kB; lsn=1E/2B409E98, redo lsn=1E/940F3D0",
+      "line_sha256": "3671914f59b5b71100a6f14d846a9cecf6df22cae82898efb158551006511060"
+    },
+    {
+      "wall_ns": 1792541184234999808,
+      "pid": 3795615,
+      "line": "2026-10-20 20:06:24.235 EDT [3795615] LOG:  checkpoints are occurring too frequently (13 seconds apart)",
+      "line_sha256": "5c343085ca10314dce1178e12cf3cbc6b33e118773783b0a600780809b6aba90"
+    },
+    {
+      "wall_ns": 1792541184234999808,
+      "pid": 3795615,
+      "line": "2026-10-20 20:06:24.235 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "3feaa683c541586d7151983e773bef4d6c61e3d4a20230e657d618384a3dafeb"
+    },
+    {
+      "wall_ns": 1792541208595000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:06:48.595 EDT [3795615] LOG:  checkpoint complete: wrote 17 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=24.258 s, sync=0.006 s, total=24.361 s; sync files=4, longest=0.003 s, average=0.002 s; distance=562577 kB, estimate=562577 kB; lsn=1E/2BAAD7B0, redo lsn=1E/2B9738D0",
+      "line_sha256": "f94a8ccd70ccf84afc5c2402959274379cced2b2a98a068e081dfac19a068a8d"
+    },
+    {
+      "wall_ns": 1792541208595000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:06:48.595 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "3cea312b91fb26f2f702343d8766a7bde8e57d1510378fc04a0e1e3e96561299"
+    },
+    {
+      "wall_ns": 1792541208616000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:06:48.616 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.008 s, sync=0.003 s, total=0.021 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1255 kB, estimate=506445 kB; lsn=1E/2BAAD880, redo lsn=1E/2BAAD828",
+      "line_sha256": "e77849aad418805dc33bd20bc3ae9fd2763eee54be681ed2f7a48323e9bf7ecc"
+    },
+    {
+      "wall_ns": 1792541209624999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:06:49.625 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "c6ea656deac1228bcb6c09a68d11e239825e826667badb892862bed1895ab334"
+    },
+    {
+      "wall_ns": 1792541209624999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:06:49.625 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "0ff9ce16801dd678486e140226fbe38038180d4b20272abc6d19f4bb2b18636e"
+    },
+    {
+      "wall_ns": 1792541222400000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:07:02.400 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=3.715 s, sync=8.897 s, total=12.775 s; sync files=48, longest=5.032 s, average=0.186 s; distance=533870 kB, estimate=533870 kB; lsn=1E/6EAF8D58, redo lsn=1E/4C409140",
+      "line_sha256": "454a5ef786a4f271b6827c67e7c8c611197f3a086c4cc0f7c791399b79ad18d2"
+    },
+    {
+      "wall_ns": 1792541222400000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:07:02.400 EDT [3795615] LOG:  checkpoints are occurring too frequently (13 seconds apart)",
+      "line_sha256": "06736a8cc511c6221e3ed75ea507eac46b131c0da67daee422040225af02ca98"
+    },
+    {
+      "wall_ns": 1792541222400000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:07:02.400 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "aa0e83aa05ac3a1dba17d2f538665d837c840a6c9b9a3f8aa647f1a98feba0aa"
+    },
+    {
+      "wall_ns": 1792541247324999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:07:27.325 EDT [3795615] LOG:  checkpoint complete: wrote 20 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=24.801 s, sync=0.009 s, total=24.926 s; sync files=4, longest=0.004 s, average=0.003 s; distance=569958 kB, estimate=569958 kB; lsn=1E/6F1D8390, redo lsn=1E/6F0A2A28",
+      "line_sha256": "3177ec24cca871bc3abbb4eae87188e44ad06600eff8dfca027f620a2bec7be7"
+    },
+    {
+      "wall_ns": 1792541247325999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:07:27.326 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "a75eee45d65f9f463cf46ba79938de9c96a57a9cfc8e07e8516c0c813ff96e1a"
+    },
+    {
+      "wall_ns": 1792541247342000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:07:27.342 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.003 s, total=0.017 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1238 kB, estimate=513086 kB; lsn=1E/6F1D8460, redo lsn=1E/6F1D8408",
+      "line_sha256": "4b2a782f2fbe9c07b75e3ba7f61f27180a14c2c4914aa3c59339eea12bc32406"
+    },
+    {
+      "wall_ns": 1792541248375000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:07:28.375 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "97c0e5a159bfb520c4700a8754df4d6d042a217d71dc9814e1ab21f59e463768"
+    },
+    {
+      "wall_ns": 1792541248375000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:07:28.375 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "9294d45ced1edc27de8104d27acdc28cc5b96ee431b77c62975c0460716994e2"
+    },
+    {
+      "wall_ns": 1792541260543000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:07:40.543 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=7.421 s, sync=4.613 s, total=12.168 s; sync files=48, longest=2.648 s, average=0.097 s; distance=542923 kB, estimate=542923 kB; lsn=1E/B27CA9B8, redo lsn=1E/9040B238",
+      "line_sha256": "9e50f4496e11235a0e0a5472aa67965bfae3cda2db6a9a35da54f6ed69f69947"
+    },
+    {
+      "wall_ns": 1792541260543000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:07:40.543 EDT [3795615] LOG:  checkpoints are occurring too frequently (12 seconds apart)",
+      "line_sha256": "1f115eec75f4e063728912e5e254957fcdb75ee78b35cde1bef3ae183edecd95"
+    },
+    {
+      "wall_ns": 1792541260543000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:07:40.543 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "850e14e8a407086606246489d5203061e233780b974e6f4d66e2cc851318b6ed"
+    },
+    {
+      "wall_ns": 1792541290296000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:08:10.296 EDT [3795615] LOG:  checkpoint complete: wrote 24 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=29.647 s, sync=0.007 s, total=29.753 s; sync files=4, longest=0.003 s, average=0.002 s; distance=560905 kB, estimate=560905 kB; lsn=1E/B29042D0, redo lsn=1E/B27CD738",
+      "line_sha256": "edf670e1f5d583558b10eb48760b2b5e7f2da03ea7c112f63816c7ff8ae51ec1"
+    },
+    {
+      "wall_ns": 1792541290296000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:08:10.296 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "424f99e2b8b6d257715b0468614bf6677e4925ac6746e1acf518672ac0f5117e"
+    },
+    {
+      "wall_ns": 1792541290311000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:08:10.311 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.003 s, total=0.016 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1243 kB, estimate=504939 kB; lsn=1E/B29043A0, redo lsn=1E/B2904348",
+      "line_sha256": "2d489f4db66a77f12a8abfc617ec3ae005c42deeed3c0dd0b701e3ea39c2a5d5"
+    },
+    {
+      "wall_ns": 1792541293795000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:08:13.795 EDT [3795615] LOG:  checkpoints are occurring too frequently (3 seconds apart)",
+      "line_sha256": "b20a7c9be4c468b9e1c73d3a44bd2a82e520f7b06e49f55a7bbd44084e927d22"
+    },
+    {
+      "wall_ns": 1792541293795000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:08:13.795 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "9194f4da65061c2a88b291d34cd2492d4e998bde7a676a7e182a03b346f25cc8"
+    },
+    {
+      "wall_ns": 1792541304460000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:08:24.460 EDT [3795615] LOG:  checkpoint complete: wrote 145 buffers (0.9%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=7.518 s, sync=2.386 s, total=10.665 s; sync files=48, longest=0.840 s, average=0.050 s; distance=535567 kB, estimate=535567 kB; lsn=1E/F5EF9748, redo lsn=1E/D34080A8",
+      "line_sha256": "e58f820ab84f63133aee3bb80dbc321359f90e275368df84e2ec51e40183b924"
+    },
+    {
+      "wall_ns": 1792541304460000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:08:24.460 EDT [3795615] LOG:  checkpoints are occurring too frequently (11 seconds apart)",
+      "line_sha256": "442eb2aff3fd4a3ba2f1282a6c268de1d50e4b4840ede43293e38be4d5bb01ef"
+    },
+    {
+      "wall_ns": 1792541312684999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:08:32.685 EDT [3795615] LOG:  checkpoints are occurring too frequently (8 seconds apart)",
+      "line_sha256": "d4e806f8d398d7551d6c97b91e6d04fa480a98492a145b2b4971db1173c28723"
+    },
+    {
+      "wall_ns": 1792541312684999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:08:32.685 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "eee18ec31cb008754b14ff07fe4baa479fc3b97dbd9bd4b1125599d192140b7d"
+    },
+    {
+      "wall_ns": 1792541336365999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:08:56.366 EDT [3795615] LOG:  checkpoint complete: wrote 54 buffers (0.3%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=23.570 s, sync=0.010 s, total=23.682 s; sync files=7, longest=0.003 s, average=0.002 s; distance=569338 kB, estimate=569338 kB; lsn=1E/F67E8218, redo lsn=1E/F6006A40",
+      "line_sha256": "92c18a979dcc3bc3372e12c69184c8482c7a4f59ad5691b0b097e7f761552e81"
+    },
+    {
+      "wall_ns": 1792541336365999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:08:56.366 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "7024fa77edbdc9c249cc9f4c02edf48e3b3b01d4bcc924ae1598d6230b0c1fd2"
+    },
+    {
+      "wall_ns": 1792541336381999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:08:56.382 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.003 s, total=0.016 s; sync files=2, longest=0.002 s, average=0.002 s; distance=8070 kB, estimate=513211 kB; lsn=1E/F67E82E8, redo lsn=1E/F67E8290",
+      "line_sha256": "6c9e40da3e1941baf4995d094b1318629b5c88413b12b228c0514ec5e1f9fc4e"
+    },
+    {
+      "wall_ns": 1792541343799000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:09:03.799 EDT [3795615] LOG:  checkpoints are occurring too frequently (7 seconds apart)",
+      "line_sha256": "5390e74d45f56889b7a83a322fc960b5197d3d7926436985ae9ae2566c0b0535"
+    },
+    {
+      "wall_ns": 1792541343799000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:09:03.799 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "b363b21433966d0f5752f011cdc0f001e76312d558abfe274ff900144e99ee25"
+    },
+    {
+      "wall_ns": 1792541349387000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:09:09.387 EDT [3795615] LOG:  checkpoint complete: wrote 196 buffers (1.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=4.410 s, sync=0.530 s, total=5.588 s; sync files=49, longest=0.401 s, average=0.011 s; distance=536714 kB, estimate=536714 kB; lsn=1F/39DDD7E8, redo lsn=1F/1740AE30",
+      "line_sha256": "a99c85d999a204a1851bd767f4d7fa219d7085d735b341cebdc9f2f5be6df3c8"
+    },
+    {
+      "wall_ns": 1792541349387000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:09:09.387 EDT [3795615] LOG:  checkpoints are occurring too frequently (6 seconds apart)",
+      "line_sha256": "b9d04e3be31dc92a97de333501b04d1cdeea0d27acf27bef158f357c345236e1"
+    },
+    {
+      "wall_ns": 1792541376750999808,
+      "pid": 3795615,
+      "line": "2026-10-20 20:09:36.751 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "1ab6e9c767270712a04c4dda5fc21d9ffbf7b20dd4c8788db7771dfabc74bd28"
+    },
+    {
+      "wall_ns": 1792541377398999808,
+      "pid": 3795615,
+      "line": "2026-10-20 20:09:37.399 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.038 s, sync=0.069 s, total=0.648 s; sync files=4, longest=0.026 s, average=0.018 s; distance=567299 kB, estimate=567299 kB; lsn=1F/39E0BCE8, redo lsn=1F/39E0BC90",
+      "line_sha256": "db3a5dce79a1591bc49104b6e573cda9813ad5340276f2468f406fa82bd8aebb"
+    },
+    {
+      "wall_ns": 1792541378482000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:09:38.482 EDT [3795615] LOG:  checkpoints are occurring too frequently (2 seconds apart)",
+      "line_sha256": "4ab23aa5cbc54406177febce8a976c4ffff0a6149e74a97684d56d9cd76340da"
+    },
+    {
+      "wall_ns": 1792541378483000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:09:38.483 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "a9bf4b2aba3e159b235b7eb03daa9c528359a6d1a558cc2e4bfe329edd642bab"
+    },
+    {
+      "wall_ns": 1792541391019000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:09:51.019 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.813 s, sync=11.147 s, total=12.537 s; sync files=48, longest=10.050 s, average=0.233 s; distance=530428 kB, estimate=563612 kB; lsn=1F/7C10D130, redo lsn=1F/5A40AE80",
+      "line_sha256": "9bca2e0b35b824ab4b0f8ad7b55bb2098f87ee34f091317fc830a97294830d45"
+    },
+    {
+      "wall_ns": 1792541391019000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:09:51.019 EDT [3795615] LOG:  checkpoints are occurring too frequently (13 seconds apart)",
+      "line_sha256": "a4bd7c5aa9d601655b47c35ea4ba8697fcfb7ea8370f5cf4bad53ab2b29d454f"
+    },
+    {
+      "wall_ns": 1792541391019000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:09:51.019 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "ecf20fb96400522a8234a58e381d06dc83dfb2fb32f02ad42c0a0ef3bbbcd167"
+    },
+    {
+      "wall_ns": 1792541396476999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:09:56.477 EDT [3795615] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=4.616 s, sync=0.719 s, total=5.458 s; sync files=312, longest=0.025 s, average=0.003 s; distance=573401 kB, estimate=573401 kB; lsn=1F/7D5C04D0, redo lsn=1F/7D4013D0",
+      "line_sha256": "9e06911e5041a9212fa3bb1dede65f0c7c0283ba9dc730c29c215f1bcac57424"
+    },
+    {
+      "wall_ns": 1792541420078000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:10:20.078 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "257ceab019c4e060c20f09ea6022c874b606843aeb38469ab062410bbc5a2e2e"
+    },
+    {
+      "wall_ns": 1792541420098000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:10:20.098 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.006 s, total=0.021 s; sync files=4, longest=0.003 s, average=0.002 s; distance=7189 kB, estimate=516780 kB; lsn=1F/7DB06878, redo lsn=1F/7DB06820",
+      "line_sha256": "64cb4863aa87aa4ad1a48ca9ea9e32bd72d446813de426b97c89f3137013e4e2"
+    },
+    {
+      "wall_ns": 1792541421125999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:10:21.126 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "bedc57a9d912597d1d7fae81fe8364ebee1c58ecb19a0377cd5a3688ef67c198"
+    },
+    {
+      "wall_ns": 1792541421125999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:10:21.126 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "a3bbb7ded0829508669dd0fa056e7c105f1ba119debe3d68c7f4e6ca1cbf550f"
+    },
+    {
+      "wall_ns": 1792541434040999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:10:34.041 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 5 removed, 28 recycled; write=0.812 s, sync=11.967 s, total=12.915 s; sync files=48, longest=8.759 s, average=0.250 s; distance=532683 kB, estimate=532683 kB; lsn=1F/C10FAC48, redo lsn=1F/9E3395B8",
+      "line_sha256": "32cf985da50e09e7ee72c569f3510b434ac61346091ba55e2792da49c6245e9b"
+    },
+    {
+      "wall_ns": 1792541434040999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:10:34.041 EDT [3795615] LOG:  checkpoints are occurring too frequently (13 seconds apart)",
+      "line_sha256": "f6fa7a4bb2dcf83a6316fc0d96163bf55ad743cd76b4cb1ceae207b58f3d3b13"
+    },
+    {
+      "wall_ns": 1792541434040999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:10:34.041 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "2159ee89fea213ba7b782ed35a8904affaca74e3833ee9550a3a9f2b47583f02"
+    },
+    {
+      "wall_ns": 1792541464022000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:11:04.022 EDT [3795615] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=29.869 s, sync=0.007 s, total=29.981 s; sync files=4, longest=0.003 s, average=0.002 s; distance=571146 kB, estimate=571146 kB; lsn=1F/C21F3B40, redo lsn=1F/C10FC0B8",
+      "line_sha256": "1f9ecd59f38b01f4bf3a483b265e834a0df85ad37d136e8a84337b6c574351d5"
+    },
+    {
+      "wall_ns": 1792541464022000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:11:04.022 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "d46b1d0ece01f8c89fb16a76f2da8e00bed6034862cc7bf16b3a294ae5922819"
+    },
+    {
+      "wall_ns": 1792541464043000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:11:04.043 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.004 s, sync=0.004 s, total=0.021 s; sync files=2, longest=0.003 s, average=0.002 s; distance=17374 kB, estimate=515769 kB; lsn=1F/C21F3C10, redo lsn=1F/C21F3BB8",
+      "line_sha256": "d61b58b590448a3491769f3ac71f52fdf93acc73824a58e93522d9a0e06d7fcc"
+    },
+    {
+      "wall_ns": 1792541465072999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:11:05.073 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "edbff3315a52e882a156bae581a2be206b31f36b0517ad93d26d906c360ccea7"
+    },
+    {
+      "wall_ns": 1792541465072999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:11:05.073 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "aca59a03f48a1a842a7a4f93c23f4baafd180a058864c1c327c3dd026f2e4f23"
+    },
+    {
+      "wall_ns": 1792541477667000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:11:17.667 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=5.614 s, sync=6.837 s, total=12.594 s; sync files=48, longest=4.516 s, average=0.143 s; distance=542849 kB, estimate=542849 kB; lsn=20/57E8130, redo lsn=1F/E34141F8",
+      "line_sha256": "093854036a1a962e4226463dd427ae232e94a6acee574d67973ba50117bbdef5"
+    },
+    {
+      "wall_ns": 1792541477667000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:11:17.667 EDT [3795615] LOG:  checkpoints are occurring too frequently (12 seconds apart)",
+      "line_sha256": "d34e1f9d5a530add87403d55fabe4f610daaf25a590c5c7c4e4239adb46ed590"
+    },
+    {
+      "wall_ns": 1792541477667000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:11:17.667 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "3f6c5f869cfe547d64a83c13e68155545bfc35420e638576592f2aa8c2b9e7c0"
+    },
+    {
+      "wall_ns": 1792541505687000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:11:45.687 EDT [3795615] LOG:  checkpoint complete: wrote 21 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=27.909 s, sync=0.007 s, total=28.021 s; sync files=4, longest=0.003 s, average=0.002 s; distance=560980 kB, estimate=560980 kB; lsn=20/592BF08, redo lsn=20/57E9588",
+      "line_sha256": "b4d97032fc262b90082a2574a71c4e2e02073f1d608214fdfa80609dd9cd872a"
+    },
+    {
+      "wall_ns": 1792541505687000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:11:45.687 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "a5bc9f47de93b94fd42632810af9ef32086e36307bbcbd5b91a892a0d329d7d1"
+    },
+    {
+      "wall_ns": 1792541505704999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:11:45.705 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.004 s, total=0.018 s; sync files=2, longest=0.003 s, average=0.002 s; distance=1290 kB, estimate=505011 kB; lsn=20/592BFD8, redo lsn=20/592BF80",
+      "line_sha256": "7e60f4d5ac97271a2b3dd9cd21171794d6c84f00083146109abdc0904a15b362"
+    },
+    {
+      "wall_ns": 1792541507072000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:11:47.072 EDT [3795615] LOG:  checkpoints are occurring too frequently (2 seconds apart)",
+      "line_sha256": "6018a61f07b05ce31497294487e13813fcbb9a0baedd6f37edc2229faa82c10a"
+    },
+    {
+      "wall_ns": 1792541507072000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:11:47.072 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "f74bb6131ae8d37ec162a14b5e4dacfda01b86e5025fc184e8affe03feb79e2e"
+    },
+    {
+      "wall_ns": 1792541518872999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:11:58.873 EDT [3795615] LOG:  checkpoint complete: wrote 231 buffers (1.4%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=8.293 s, sync=2.758 s, total=11.802 s; sync files=48, longest=0.451 s, average=0.058 s; distance=535418 kB, estimate=535418 kB; lsn=20/48F20650, redo lsn=20/2640A7E8",
+      "line_sha256": "6fb3f9cea51e1f2c09ce413b15689461c09ec0a9985271841cc55ef7a989ecad"
+    },
+    {
+      "wall_ns": 1792541518872999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:11:58.873 EDT [3795615] LOG:  checkpoints are occurring too frequently (11 seconds apart)",
+      "line_sha256": "4814b466cb58dee2b9f18a43d18b4f3e067332cebffc50287560ec023bc6a616"
+    },
+    {
+      "wall_ns": 1792541518872999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:11:58.873 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "be4657c86239c2f363f5cd6d3cd6a8ab096921d61ab8329bcfc0f460350f1a21"
+    },
+    {
+      "wall_ns": 1792541546512999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:12:26.513 EDT [3795615] LOG:  checkpoint complete: wrote 12 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=27.525 s, sync=0.007 s, total=27.640 s; sync files=4, longest=0.003 s, average=0.002 s; distance=568412 kB, estimate=568412 kB; lsn=20/49063980, redo lsn=20/48F21AA8",
+      "line_sha256": "c74237600b2f21a752ba435bd491e479b86e84a52856e647f1de528e9377dafc"
+    },
+    {
+      "wall_ns": 1792541546512999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:12:26.513 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "e764b55c68e4ebd8db75a255e35ed055c452c1d81f6c2ecee832eaade4c5cf1a"
+    },
+    {
+      "wall_ns": 1792541546530999808,
+      "pid": 3795615,
+      "line": "2026-10-20 20:12:26.531 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.003 s, sync=0.003 s, total=0.019 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1287 kB, estimate=511700 kB; lsn=20/49063A50, redo lsn=20/490639F8",
+      "line_sha256": "440ae44b9ed785067691bf9ac8524e75e461541c5fe1f6e063670359d49b99e2"
+    },
+    {
+      "wall_ns": 1792541550060000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:12:30.060 EDT [3795615] LOG:  checkpoints are occurring too frequently (4 seconds apart)",
+      "line_sha256": "cb76a1f0b1ca28f526cb2849936e7bdd5b370e2f8dae99f664d37a7ca6b724cf"
+    },
+    {
+      "wall_ns": 1792541550060000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:12:30.060 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "b39600c4f55f4bd7781d37214aecac9e760d2242036752306fd3a5d1b960df3c"
+    },
+    {
+      "wall_ns": 1792541559477999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:12:39.478 EDT [3795615] LOG:  checkpoint complete: wrote 289 buffers (1.8%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=7.398 s, sync=1.229 s, total=9.418 s; sync files=48, longest=0.421 s, average=0.026 s; distance=544424 kB, estimate=544424 kB; lsn=20/8C401930, redo lsn=20/6A40DCB0",
+      "line_sha256": "01e92b5a20162e26245f53495303bffa57fbde0e158082875533be655f178186"
+    },
+    {
+      "wall_ns": 1792541559477999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:12:39.478 EDT [3795615] LOG:  checkpoints are occurring too frequently (9 seconds apart)",
+      "line_sha256": "09c5c733267e876f63c70d6a1b169e5ade8e8cd01c011558cee7df1c143291c7"
+    },
+    {
+      "wall_ns": 1792541559477999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:12:39.478 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "7f76c22dbd3aeb3f8c3fb76f126c709347cd7390de75797c25d4cd182915ec61"
+    },
+    {
+      "wall_ns": 1792541588334000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:13:08.334 EDT [3795615] LOG:  checkpoint complete: wrote 21 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=28.745 s, sync=0.008 s, total=28.856 s; sync files=7, longest=0.002 s, average=0.002 s; distance=559406 kB, estimate=559406 kB; lsn=20/8C79CB20, redo lsn=20/8C659668",
+      "line_sha256": "a089cd9715bef34ae13cbe694c5b81c10634870b910878ff0bed6ef463576e7d"
+    },
+    {
+      "wall_ns": 1792541588334000128,
+      "pid": 3795615,
+      "line": "2026-10-20 20:13:08.334 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "44ef383b8ec47e897f490e85beac6eaca4cafceab50625b2e3ae83e7684b23b6"
+    },
+    {
+      "wall_ns": 1792541588352000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:13:08.352 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.004 s, total=0.019 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1293 kB, estimate=503595 kB; lsn=20/8C79CBF0, redo lsn=20/8C79CB98",
+      "line_sha256": "7ea0b16cdef5215edbf7d10e089398a91b93875bb9bfe78ced755aa1c29ee17e"
+    },
+    {
+      "wall_ns": 1792541594220999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:13:14.221 EDT [3795615] LOG:  checkpoints are occurring too frequently (6 seconds apart)",
+      "line_sha256": "c295d5e1fd9f7c96aa4ee5a784b4a169e927011c6a6821cf6bdd0afcaad6c360"
+    },
+    {
+      "wall_ns": 1792541594220999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:13:14.221 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "3bb6d030f0d4fabc44ff6e5bb5dc34ef6fc6de30eefadc7e1b76a2ee2aae15fd"
+    },
+    {
+      "wall_ns": 1792541601326999808,
+      "pid": 3795615,
+      "line": "2026-10-20 20:13:21.327 EDT [3795615] LOG:  checkpoint complete: wrote 237 buffers (1.4%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=6.074 s, sync=0.555 s, total=7.107 s; sync files=48, longest=0.448 s, average=0.012 s; distance=537061 kB, estimate=537061 kB; lsn=20/CFD921D0, redo lsn=20/AD416088",
+      "line_sha256": "a59226f8a169053a6c45d35b0b4e274cc2b0ff74f4c0cc2a90bae38c4286598d"
+    },
+    {
+      "wall_ns": 1792541601328000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:13:21.328 EDT [3795615] LOG:  checkpoints are occurring too frequently (7 seconds apart)",
+      "line_sha256": "b518c18536234ad030dd02c4d8b678419f49d20ffef7ffff1362e0024d1ab1df"
+    },
+    {
+      "wall_ns": 1792541632512999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:13:52.513 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "5d7f853093690b43f2cc6210eb3905baf1865f4a52a6b00826168128b2752361"
+    },
+    {
+      "wall_ns": 1792541633911000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:13:53.911 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.037 s, sync=0.060 s, total=1.399 s; sync files=4, longest=0.021 s, average=0.015 s; distance=568850 kB, estimate=568850 kB; lsn=20/CFF9A950, redo lsn=20/CFF9A8F8",
+      "line_sha256": "5feeddc140d37de8b795ab624aea7abb80efbf03bcf881b23460db308d48209b"
+    },
+    {
+      "wall_ns": 1792541641621999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:14:01.622 EDT [3795615] LOG:  checkpoints are occurring too frequently (9 seconds apart)",
+      "line_sha256": "aadda32685eb28b31f1699708e3a00e482ace47b1ab6c8503ad817a1fc93b60a"
+    },
+    {
+      "wall_ns": 1792541641621999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:14:01.622 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "7e5633c91026ca2032adb073195bb685710dd456f588e8cc7b3611e28c9e4169"
+    },
+    {
+      "wall_ns": 1792541654401999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:14:14.402 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.813 s, sync=11.723 s, total=12.781 s; sync files=48, longest=10.161 s, average=0.245 s; distance=528790 kB, estimate=564844 kB; lsn=21/12E06B38, redo lsn=20/F04003D0",
+      "line_sha256": "c3d88e17964aee61dabeed0e5fe81c82d4b2c9f0b3b41e883a35dac55bf386a7"
+    },
+    {
+      "wall_ns": 1792541654401999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:14:14.402 EDT [3795615] LOG:  checkpoints are occurring too frequently (13 seconds apart)",
+      "line_sha256": "23c2407a7d5db1f7c9687e77f542618fdd3f0a5d97e2c8689c9bd81f1c5d7a44"
+    },
+    {
+      "wall_ns": 1792541654401999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:14:14.402 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "326bbd761bbb4cec56cb4871e96705a4b30334f2609003179be41ddc64cff114"
+    },
+    {
+      "wall_ns": 1792541682178999808,
+      "pid": 3795615,
+      "line": "2026-10-20 20:14:42.179 EDT [3795615] LOG:  checkpoint complete: wrote 27 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=27.661 s, sync=0.006 s, total=27.777 s; sync files=5, longest=0.002 s, average=0.002 s; distance=575032 kB, estimate=575032 kB; lsn=21/136CC650, redo lsn=21/1358E578",
+      "line_sha256": "9d227042a378c0b5f5272b61f2c423f246fdb02e84bfeea21e152571d3becd00"
+    },
+    {
+      "wall_ns": 1792541682178999808,
+      "pid": 3795615,
+      "line": "2026-10-20 20:14:42.179 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "c0131d047fbc1666e005ed1fff39cbfd42089f21fdc36d7996dafee1235069d0"
+    },
+    {
+      "wall_ns": 1792541682194999808,
+      "pid": 3795615,
+      "line": "2026-10-20 20:14:42.195 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.004 s, total=0.016 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1272 kB, estimate=517656 kB; lsn=21/136CC720, redo lsn=21/136CC6C8",
+      "line_sha256": "af54871c572512bd09de36a22e9dd537be8cb4bf523bc44bf1d649ba7ee546be"
+    },
+    {
+      "wall_ns": 1792541683220999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:14:43.221 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "59a4b4e0d9595a4e8ea059a9a2b379a7be0c9e0e619ad340122649467b863ac0"
+    },
+    {
+      "wall_ns": 1792541683220999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:14:43.221 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "e17f480b156d0906fdb5d014b40c9266934ccc343a5a2aa5453db3f85a5c627e"
+    },
+    {
+      "wall_ns": 1792541696132000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:14:56.132 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 3 removed, 30 recycled; write=0.811 s, sync=11.897 s, total=12.911 s; sync files=48, longest=11.579 s, average=0.248 s; distance=537854 kB, estimate=537854 kB; lsn=21/55B3F5A0, redo lsn=21/3440BFC8",
+      "line_sha256": "ffb50fec05cbc9d58388637fdcaf37610202e559692556aa7f4800eb1565502e"
+    },
+    {
+      "wall_ns": 1792541696132000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:14:56.132 EDT [3795615] LOG:  checkpoints are occurring too frequently (13 seconds apart)",
+      "line_sha256": "02f8ac6ae1b77b9230e98296b79ca883aa1652f7f729a044e5181dc829c8c4ff"
+    },
+    {
+      "wall_ns": 1792541696132000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:14:56.132 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "c0933aabe633b0cab2e2b6b7cf435e906e6d22cb8b6708b59968aad7308fe50f"
+    },
+    {
+      "wall_ns": 1792541725973999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:15:25.974 EDT [3795615] LOG:  checkpoint complete: wrote 8 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=29.729 s, sync=0.006 s, total=29.842 s; sync files=4, longest=0.003 s, average=0.002 s; distance=565974 kB, estimate=565974 kB; lsn=21/573B51E8, redo lsn=21/56CC1838",
+      "line_sha256": "40c2ba426004a64898b2f6aaf0956e460bf6634f9d264b3bc4b39c64fc34a22e"
+    },
+    {
+      "wall_ns": 1792541725973999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:15:25.974 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "95d0370255edf6458d7fad9eedcda3684e4f6792210a39c5025778971e06307a"
+    },
+    {
+      "wall_ns": 1792541725993999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:15:25.994 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 2 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.004 s, sync=0.003 s, total=0.021 s; sync files=2, longest=0.002 s, average=0.002 s; distance=7118 kB, estimate=510088 kB; lsn=21/573B52B8, redo lsn=21/573B5260",
+      "line_sha256": "1f26ad89228195de09f6667df6259ffd9c5e00ac418f73371747f1e75e5fc9ab"
+    },
+    {
+      "wall_ns": 1792541727025000192,
+      "pid": 3795615,
+      "line": "2026-10-20 20:15:27.025 EDT [3795615] LOG:  checkpoints are occurring too frequently (2 seconds apart)",
+      "line_sha256": "cae5b770121454ce6dedd7b8af9d2b3fe2dcd3d03f79cb75636e91833c816b7c"
+    },
+    {
+      "wall_ns": 1792541727025000192,
+      "pid": 3795615,
+      "line": "2026-10-20 20:15:27.025 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "a905129d6fc8694fa84353d960dde63d4002c4cf6ed34000c4ea2fc09e493447"
+    },
+    {
+      "wall_ns": 1792541739848000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:15:39.848 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 3 removed, 30 recycled; write=1.017 s, sync=11.649 s, total=12.823 s; sync files=48, longest=10.279 s, average=0.243 s; distance=540539 kB, estimate=540539 kB; lsn=21/99860BF8, redo lsn=21/78393ED0",
+      "line_sha256": "ea4df12df8a9361be531bc95556bb1141c34c1b0934ee50dbb833dc8bd2534e7"
+    },
+    {
+      "wall_ns": 1792541739848000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:15:39.848 EDT [3795615] LOG:  checkpoints are occurring too frequently (12 seconds apart)",
+      "line_sha256": "a898cd1a2c121538b1a50baf6b52191b20ebc4845c9c8b85a8f66425428863b2"
+    },
+    {
+      "wall_ns": 1792541739848000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:15:39.848 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "7a0e17b0838c0a22876b603d93beba169e73cd17a1d5cdbde2b6454332a422bf"
+    },
+    {
+      "wall_ns": 1792541770161999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:16:10.162 EDT [3795615] LOG:  checkpoint complete: wrote 41 buffers (0.3%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=30.180 s, sync=0.007 s, total=30.315 s; sync files=4, longest=0.003 s, average=0.002 s; distance=563289 kB, estimate=563289 kB; lsn=21/9BAA5958, redo lsn=21/9A9AA530",
+      "line_sha256": "ed187df191f8373a23a0524d8d9bf72cdd68e6b00a04d4074e1079a03355404f"
+    },
+    {
+      "wall_ns": 1792541770161999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:16:10.162 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "50ce74999914f68f68e517732b5d146cd4f713fc3ade77279446340cb24c1129"
+    },
+    {
+      "wall_ns": 1792541770180000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:16:10.180 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.002 s, sync=0.003 s, total=0.018 s; sync files=2, longest=0.002 s, average=0.002 s; distance=17389 kB, estimate=508699 kB; lsn=21/9BAA5A28, redo lsn=21/9BAA59D0",
+      "line_sha256": "a6460a3bfca687e87065bf07b75c258cfcd993a2bb5442ef540bb622a89c78d6"
+    },
+    {
+      "wall_ns": 1792541771177999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:16:11.178 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "6de94eb1f16ff92b737b90755b8d0217eac7fa87ccee100d91a79a9ca9f9ccaa"
+    },
+    {
+      "wall_ns": 1792541771177999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:16:11.178 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "20a6863312fbf96ea5dc1b39f504a7ce6652dcbf8ec7457f7b9b0ff060149dd7"
+    },
+    {
+      "wall_ns": 1792541783416999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:16:23.417 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=6.623 s, sync=5.464 s, total=12.240 s; sync files=48, longest=3.748 s, average=0.114 s; distance=533916 kB, estimate=533916 kB; lsn=21/DE4042C0, redo lsn=21/BC40CCD0",
+      "line_sha256": "e3c036553658cba5bf0b46a80f8be444b507cbc8c854206aa75ca9f817095ffd"
+    },
+    {
+      "wall_ns": 1792541783416999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:16:23.417 EDT [3795615] LOG:  checkpoints are occurring too frequently (12 seconds apart)",
+      "line_sha256": "f0037ae658662f1dc5d36de6d370cfcf5652c35117474b9590b44053b3813b2d"
+    },
+    {
+      "wall_ns": 1792541783416999936,
+      "pid": 3795615,
+      "line": "2026-10-20 20:16:23.417 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "0349c1c23bf19257db319b1a386c47191c4c1844ae7cc71896304da17903510d"
+    },
+    {
+      "wall_ns": 1792541811768000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:16:51.768 EDT [3795615] LOG:  checkpoint complete: wrote 28 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=28.224 s, sync=0.007 s, total=28.351 s; sync files=4, longest=0.003 s, average=0.002 s; distance=569912 kB, estimate=569912 kB; lsn=21/DF1D8748, redo lsn=21/DF09AE08",
+      "line_sha256": "f9a9df9666bcaafbc6131a86b07505aac64f66f53c43314a86f2d217b63eb0fc"
+    },
+    {
+      "wall_ns": 1792541811768000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:16:51.768 EDT [3795615] LOG:  checkpoint starting: immediate force wait",
+      "line_sha256": "beefca978f83b4b09a669b12cf9f93ff85f0da7d0e05edcb8f81c26772ff52a6"
+    },
+    {
+      "wall_ns": 1792541811784000000,
+      "pid": 3795615,
+      "line": "2026-10-20 20:16:51.784 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.003 s, total=0.016 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1270 kB, estimate=513048 kB; lsn=21/DF1D8818, redo lsn=21/DF1D87C0",
+      "line_sha256": "8dea67759c1aaf06702dc4ce4b443ffdf48ebe67173b737ff271eb2a30e10f04"
+    },
+    {
+      "wall_ns": 1792541812819000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:16:52.819 EDT [3795615] LOG:  checkpoints are occurring too frequently (1 second apart)",
+      "line_sha256": "664ccf301d4ad2533f6948e9d285b102b864b23c9acdc1672ab7e5dcbfd68502"
+    },
+    {
+      "wall_ns": 1792541812819000064,
+      "pid": 3795615,
+      "line": "2026-10-20 20:16:52.819 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "2945258a968a0d145d23daa9e1fe66ccaf4221654e433fb487215d2b525fc02e"
+    },
+    {
+      "wall_ns": 1792541824849999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:17:04.850 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=8.828 s, sync=3.041 s, total=12.031 s; sync files=48, longest=1.668 s, average=0.064 s; distance=542931 kB, estimate=542931 kB; lsn=22/227CC8C0, redo lsn=22/40D680",
+      "line_sha256": "639fb00c0a0455184ac81e110eaf05a331eff3a1933af40d3b3c56226fccc84c"
+    },
+    {
+      "wall_ns": 1792541824849999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:17:04.850 EDT [3795615] LOG:  checkpoints are occurring too frequently (12 seconds apart)",
+      "line_sha256": "d6350c8bbf73379b7569520c08859912ebd63ad5d4560e210f421ac6979dfdfb"
+    },
+    {
+      "wall_ns": 1792541824849999872,
+      "pid": 3795615,
+      "line": "2026-10-20 20:17:04.850 EDT [3795615] LOG:  checkpoint starting: wal",
+      "line_sha256": "161bacbe99918556609d4319eb3a909eeba890a26bf4a2ea83add023b6d46729"
+    }
+  ],
+  "checkpoint_intervals": [
+    {
+      "start_event": null,
+      "end_event": 0,
+      "start_wall_ns": null,
+      "end_wall_ns": 1792540211708000000,
+      "complete_log": "2026-10-20 19:50:11.708 EDT [3795615] LOG:  checkpoint complete: wrote 1612 buffers (9.8%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 36 recycled; write=243.011 s, sync=0.276 s, total=243.404 s; sync files=359, longest=0.002 s, average=0.001 s; distance=585822 kB, estimate=585822 kB; lsn=17/76AEB80, redo lsn=16/FE018A78"
+    },
+    {
+      "start_event": 1,
+      "end_event": 2,
+      "start_wall_ns": 1792540211708000000,
+      "end_wall_ns": 1792540212076000000,
+      "complete_log": "2026-10-20 19:50:12.076 EDT [3795615] LOG:  checkpoint complete: wrote 2401 buffers (14.7%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 9 recycled; write=0.018 s, sync=0.317 s, total=0.368 s; sync files=295, longest=0.008 s, average=0.002 s; distance=154200 kB, estimate=542660 kB; lsn=17/76AEC50, redo lsn=17/76AEBF8"
+    },
+    {
+      "start_event": 4,
+      "end_event": 5,
+      "start_wall_ns": 1792540213101999872,
+      "end_wall_ns": 1792540224776000000,
+      "complete_log": "2026-10-20 19:50:24.776 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=8.426 s, sync=3.095 s, total=11.674 s; sync files=48, longest=2.175 s, average=0.065 s; distance=537147 kB, estimate=542109 kB; lsn=17/4ACA2398, redo lsn=17/2833DB28"
+    },
+    {
+      "start_event": 7,
+      "end_event": 8,
+      "start_wall_ns": 1792540224776000000,
+      "end_wall_ns": 1792540247500000000,
+      "complete_log": "2026-10-20 19:50:47.500 EDT [3795615] LOG:  checkpoint complete: wrote 10 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=22.617 s, sync=0.007 s, total=22.724 s; sync files=4, longest=0.003 s, average=0.002 s; distance=566679 kB, estimate=566679 kB; lsn=17/4ADD6380, redo lsn=17/4ACA37F0"
+    },
+    {
+      "start_event": 9,
+      "end_event": 10,
+      "start_wall_ns": 1792540247500000000,
+      "end_wall_ns": 1792540247515000064,
+      "complete_log": "2026-10-20 19:50:47.515 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.004 s, total=0.016 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1227 kB, estimate=510133 kB; lsn=17/4ADD6450, redo lsn=17/4ADD63F8"
+    },
+    {
+      "start_event": 12,
+      "end_event": 13,
+      "start_wall_ns": 1792540252085999872,
+      "end_wall_ns": 1792540260888999936,
+      "complete_log": "2026-10-20 19:51:00.889 EDT [3795615] LOG:  checkpoint complete: wrote 162 buffers (1.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=7.233 s, sync=0.751 s, total=8.803 s; sync files=48, longest=0.432 s, average=0.016 s; distance=530632 kB, estimate=530632 kB; lsn=17/8D4041D8, redo lsn=17/6B408468"
+    },
+    {
+      "start_event": 15,
+      "end_event": 16,
+      "start_wall_ns": 1792540260888999936,
+      "end_wall_ns": 1792540283760999936,
+      "complete_log": "2026-10-20 19:51:23.761 EDT [3795615] LOG:  checkpoint complete: wrote 46 buffers (0.3%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=22.760 s, sync=0.007 s, total=22.872 s; sync files=4, longest=0.003 s, average=0.002 s; distance=573190 kB, estimate=573190 kB; lsn=17/8F1E1B38, redo lsn=17/8E3C9D88"
+    },
+    {
+      "start_event": 17,
+      "end_event": 18,
+      "start_wall_ns": 1792540283760999936,
+      "end_wall_ns": 1792540283783000064,
+      "complete_log": "2026-10-20 19:51:23.783 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.005 s, sync=0.004 s, total=0.022 s; sync files=2, longest=0.003 s, average=0.002 s; distance=14431 kB, estimate=517314 kB; lsn=17/8F1E1C08, redo lsn=17/8F1E1BB0"
+    },
+    {
+      "start_event": 20,
+      "end_event": 21,
+      "start_wall_ns": 1792540290620000000,
+      "end_wall_ns": 1792540296631000064,
+      "complete_log": "2026-10-20 19:51:36.631 EDT [3795615] LOG:  checkpoint complete: wrote 295 buffers (1.8%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=4.834 s, sync=0.540 s, total=6.011 s; sync files=49, longest=0.401 s, average=0.012 s; distance=542877 kB, estimate=542877 kB; lsn=17/D27D6A20, redo lsn=17/B0409100"
+    },
+    {
+      "start_event": 23,
+      "end_event": 24,
+      "start_wall_ns": 1792540319421999872,
+      "end_wall_ns": 1792540319706000128,
+      "complete_log": "2026-10-20 19:51:59.706 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.007 s, sync=0.024 s, total=0.285 s; sync files=7, longest=0.006 s, average=0.004 s; distance=561183 kB, estimate=561183 kB; lsn=17/D2810E08, redo lsn=17/D2810DB0"
+    },
+    {
+      "start_event": 26,
+      "end_event": 27,
+      "start_wall_ns": 1792540326174000128,
+      "end_wall_ns": 1792540338208000000,
+      "complete_log": "2026-10-20 19:52:18.208 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.816 s, sync=11.064 s, total=12.035 s; sync files=48, longest=10.914 s, average=0.231 s; distance=536533 kB, estimate=558718 kB; lsn=18/15A763D0, redo lsn=17/F3406300"
+    },
+    {
+      "start_event": 29,
+      "end_event": 30,
+      "start_wall_ns": 1792540338208000000,
+      "end_wall_ns": 1792540361040000000,
+      "complete_log": "2026-10-20 19:52:41.040 EDT [3795615] LOG:  checkpoint complete: wrote 11 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=22.722 s, sync=0.007 s, total=22.832 s; sync files=4, longest=0.003 s, average=0.002 s; distance=567294 kB, estimate=567294 kB; lsn=18/164F1708, redo lsn=18/15E05DC8"
+    },
+    {
+      "start_event": 31,
+      "end_event": 32,
+      "start_wall_ns": 1792540361040000000,
+      "end_wall_ns": 1792540361060000000,
+      "complete_log": "2026-10-20 19:52:41.060 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.003 s, sync=0.004 s, total=0.020 s; sync files=2, longest=0.002 s, average=0.002 s; distance=7086 kB, estimate=511273 kB; lsn=18/164F17D8, redo lsn=18/164F1780"
+    },
+    {
+      "start_event": 34,
+      "end_event": 35,
+      "start_wall_ns": 1792540365025000192,
+      "end_wall_ns": 1792540374003000064,
+      "complete_log": "2026-10-20 19:52:54.003 EDT [3795615] LOG:  checkpoint complete: wrote 233 buffers (1.4%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=7.663 s, sync=0.800 s, total=8.979 s; sync files=48, longest=0.432 s, average=0.017 s; distance=539750 kB, estimate=539750 kB; lsn=18/59AE6890, redo lsn=18/3740B170"
+    },
+    {
+      "start_event": 37,
+      "end_event": 38,
+      "start_wall_ns": 1792540396782000128,
+      "end_wall_ns": 1792540396891000064,
+      "complete_log": "2026-10-20 19:53:16.891 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.004 s, sync=0.006 s, total=0.109 s; sync files=4, longest=0.002 s, average=0.002 s; distance=566697 kB, estimate=566697 kB; lsn=18/59D758D0, redo lsn=18/59D75878"
+    },
+    {
+      "start_event": 40,
+      "end_event": 41,
+      "start_wall_ns": 1792540402991000064,
+      "end_wall_ns": 1792540409793999872,
+      "complete_log": "2026-10-20 19:53:29.794 EDT [3795615] LOG:  checkpoint complete: wrote 105 buffers (0.6%), wrote 1 SLRU buffers; 0 WAL file(s) added, 5 removed, 28 recycled; write=5.518 s, sync=0.561 s, total=6.803 s; sync files=48, longest=0.423 s, average=0.012 s; distance=531014 kB, estimate=563129 kB; lsn=18/9D36AAE0, redo lsn=18/7A407088"
+    },
+    {
+      "start_event": 43,
+      "end_event": 44,
+      "start_wall_ns": 1792540432180999936,
+      "end_wall_ns": 1792540432290999808,
+      "complete_log": "2026-10-20 19:53:52.291 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=0.004 s, sync=0.006 s, total=0.111 s; sync files=4, longest=0.002 s, average=0.002 s; distance=573007 kB, estimate=573007 kB; lsn=18/9D39ADF0, redo lsn=18/9D39AD98"
+    },
+    {
+      "start_event": 46,
+      "end_event": 47,
+      "start_wall_ns": 1792540440388000000,
+      "end_wall_ns": 1792540447856000000,
+      "complete_log": "2026-10-20 19:54:07.856 EDT [3795615] LOG:  checkpoint complete: wrote 226 buffers (1.4%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=4.758 s, sync=0.706 s, total=7.468 s; sync files=49, longest=0.435 s, average=0.015 s; distance=541123 kB, estimate=569818 kB; lsn=18/E0990148, redo lsn=18/BE40BA60"
+    },
+    {
+      "start_event": 49,
+      "end_event": 50,
+      "start_wall_ns": 1792540447856000000,
+      "end_wall_ns": 1792540456811000064,
+      "complete_log": "2026-10-20 19:54:16.811 EDT [3795615] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.213 s, sync=7.119 s, total=8.955 s; sync files=309, longest=0.994 s, average=0.024 s; distance=562708 kB, estimate=569107 kB; lsn=18/E0AD1C38, redo lsn=18/E0990BC8"
+    },
+    {
+      "start_event": 51,
+      "end_event": 52,
+      "start_wall_ns": 1792540470072999936,
+      "end_wall_ns": 1792540470092000000,
+      "complete_log": "2026-10-20 19:54:30.092 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.005 s, total=0.020 s; sync files=3, longest=0.002 s, average=0.002 s; distance=1291 kB, estimate=512326 kB; lsn=18/E0AD39F8, redo lsn=18/E0AD39A0"
+    },
+    {
+      "start_event": 54,
+      "end_event": 55,
+      "start_wall_ns": 1792540471089999872,
+      "end_wall_ns": 1792540477224999936,
+      "complete_log": "2026-10-20 19:54:37.225 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 5 removed, 28 recycled; write=0.822 s, sync=4.092 s, total=6.135 s; sync files=48, longest=1.310 s, average=0.086 s; distance=533717 kB, estimate=533717 kB; lsn=19/240C8EA8, redo lsn=19/1409108"
+    },
+    {
+      "start_event": 57,
+      "end_event": 58,
+      "start_wall_ns": 1792540477224999936,
+      "end_wall_ns": 1792540484555000064,
+      "complete_log": "2026-10-20 19:54:44.555 EDT [3795615] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=0.225 s, sync=6.688 s, total=7.330 s; sync files=312, longest=0.742 s, average=0.022 s; distance=570114 kB, estimate=570114 kB; lsn=19/241FEBB0, redo lsn=19/240C9A78"
+    },
+    {
+      "start_event": 59,
+      "end_event": 60,
+      "start_wall_ns": 1792540501352000000,
+      "end_wall_ns": 1792540501371000064,
+      "complete_log": "2026-10-20 19:55:01.371 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.006 s, total=0.020 s; sync files=4, longest=0.002 s, average=0.002 s; distance=1243 kB, estimate=513227 kB; lsn=19/242009F8, redo lsn=19/242009A0"
+    },
+    {
+      "start_event": 62,
+      "end_event": 63,
+      "start_wall_ns": 1792540502387000064,
+      "end_wall_ns": 1792540513585999872,
+      "complete_log": "2026-10-20 19:55:13.586 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.810 s, sync=8.951 s, total=11.199 s; sync files=48, longest=6.233 s, average=0.187 s; distance=542795 kB, estimate=542795 kB; lsn=19/677F5870, redo lsn=19/45413948"
+    },
+    {
+      "start_event": 65,
+      "end_event": 66,
+      "start_wall_ns": 1792540513585999872,
+      "end_wall_ns": 1792540515602999808,
+      "complete_log": "2026-10-20 19:55:15.603 EDT [3795615] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.220 s, sync=1.622 s, total=2.018 s; sync files=311, longest=0.578 s, average=0.006 s; distance=561035 kB, estimate=561035 kB; lsn=19/677FEC60, redo lsn=19/677F6788"
+    },
+    {
+      "start_event": 67,
+      "end_event": 68,
+      "start_wall_ns": 1792540534691000064,
+      "end_wall_ns": 1792540534712999936,
+      "complete_log": "2026-10-20 19:55:34.713 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.004 s, sync=0.006 s, total=0.023 s; sync files=4, longest=0.002 s, average=0.002 s; distance=14523 kB, estimate=506384 kB; lsn=19/68625560, redo lsn=19/68625508"
+    },
+    {
+      "start_event": 70,
+      "end_event": 71,
+      "start_wall_ns": 1792540535727000064,
+      "end_wall_ns": 1792540548592000000,
+      "complete_log": "2026-10-20 19:55:48.592 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.806 s, sync=11.951 s, total=12.866 s; sync files=48, longest=9.680 s, average=0.249 s; distance=538504 kB, estimate=538504 kB; lsn=19/ABC19DA8, redo lsn=19/89407858"
+    },
+    {
+      "start_event": 73,
+      "end_event": 74,
+      "start_wall_ns": 1792540570211000064,
+      "end_wall_ns": 1792540570328000000,
+      "complete_log": "2026-10-20 19:56:10.328 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.004 s, sync=0.006 s, total=0.117 s; sync files=4, longest=0.002 s, average=0.002 s; distance=565503 kB, estimate=565503 kB; lsn=19/ABC47510, redo lsn=19/ABC474B8"
+    },
+    {
+      "start_event": 76,
+      "end_event": 77,
+      "start_wall_ns": 1792540571328999936,
+      "end_wall_ns": 1792540584340000000,
+      "complete_log": "2026-10-20 19:56:24.340 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.812 s, sync=11.979 s, total=13.012 s; sync files=48, longest=11.810 s, average=0.250 s; distance=532246 kB, estimate=562177 kB; lsn=19/EE403150, redo lsn=19/CC40CFE8"
+    },
+    {
+      "start_event": 79,
+      "end_event": 80,
+      "start_wall_ns": 1792540584341000192,
+      "end_wall_ns": 1792540607244999936,
+      "complete_log": "2026-10-20 19:56:47.245 EDT [3795615] LOG:  checkpoint complete: wrote 9 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=22.792 s, sync=0.007 s, total=22.904 s; sync files=4, longest=0.004 s, average=0.002 s; distance=571579 kB, estimate=571579 kB; lsn=19/EF918C98, redo lsn=19/EF23BF38"
+    },
+    {
+      "start_event": 81,
+      "end_event": 82,
+      "start_wall_ns": 1792540607244999936,
+      "end_wall_ns": 1792540607260000000,
+      "complete_log": "2026-10-20 19:56:47.260 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.004 s, total=0.016 s; sync files=2, longest=0.002 s, average=0.002 s; distance=7027 kB, estimate=515124 kB; lsn=19/EF918D68, redo lsn=19/EF918D10"
+    },
+    {
+      "start_event": 84,
+      "end_event": 85,
+      "start_wall_ns": 1792540608303000064,
+      "end_wall_ns": 1792540620344000000,
+      "complete_log": "2026-10-20 19:57:00.344 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=1.410 s, sync=10.492 s, total=12.042 s; sync files=48, longest=6.674 s, average=0.219 s; distance=534661 kB, estimate=534661 kB; lsn=1A/32F0C470, redo lsn=1A/1033A1B8"
+    },
+    {
+      "start_event": 87,
+      "end_event": 88,
+      "start_wall_ns": 1792540620344999936,
+      "end_wall_ns": 1792540644552000000,
+      "complete_log": "2026-10-20 19:57:24.552 EDT [3795615] LOG:  checkpoint complete: wrote 12 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=22.828 s, sync=0.051 s, total=24.208 s; sync files=5, longest=0.014 s, average=0.011 s; distance=569165 kB, estimate=569165 kB; lsn=1A/34029408, redo lsn=1A/32F0D8C8"
+    },
+    {
+      "start_event": 89,
+      "end_event": 90,
+      "start_wall_ns": 1792540644552000000,
+      "end_wall_ns": 1792540644831000064,
+      "complete_log": "2026-10-20 19:57:24.831 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 2 recycled; write=0.036 s, sync=0.032 s, total=0.279 s; sync files=2, longest=0.022 s, average=0.016 s; distance=17518 kB, estimate=514001 kB; lsn=1A/34029510, redo lsn=1A/340294B8"
+    },
+    {
+      "start_event": 92,
+      "end_event": 93,
+      "start_wall_ns": 1792540653118000128,
+      "end_wall_ns": 1792540666025000192,
+      "complete_log": "2026-10-20 19:57:46.025 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.811 s, sync=11.725 s, total=12.908 s; sync files=48, longest=10.667 s, average=0.245 s; distance=544662 kB, estimate=544662 kB; lsn=1A/7761B558, redo lsn=1A/5540ECC8"
+    },
+    {
+      "start_event": 95,
+      "end_event": 96,
+      "start_wall_ns": 1792540666025000192,
+      "end_wall_ns": 1792540670918999808,
+      "complete_log": "2026-10-20 19:57:50.919 EDT [3795615] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=4.108 s, sync=0.688 s, total=4.895 s; sync files=315, longest=0.025 s, average=0.003 s; distance=559165 kB, estimate=559165 kB; lsn=1A/7775FA70, redo lsn=1A/7761E1E0"
+    },
+    {
+      "start_event": 97,
+      "end_event": 98,
+      "start_wall_ns": 1792540688316999936,
+      "end_wall_ns": 1792540688336000000,
+      "complete_log": "2026-10-20 19:58:08.336 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.006 s, total=0.020 s; sync files=4, longest=0.002 s, average=0.002 s; distance=1292 kB, estimate=503377 kB; lsn=1A/777613F0, redo lsn=1A/77761398"
+    },
+    {
+      "start_event": 100,
+      "end_event": 101,
+      "start_wall_ns": 1792540689352000000,
+      "end_wall_ns": 1792540696068000000,
+      "complete_log": "2026-10-20 19:58:16.068 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.812 s, sync=5.736 s, total=6.717 s; sync files=48, longest=5.576 s, average=0.120 s; distance=537245 kB, estimate=537245 kB; lsn=1A/BA40C0B0, redo lsn=1A/98408B90"
+    },
+    {
+      "start_event": 103,
+      "end_event": 104,
+      "start_wall_ns": 1792540696068000000,
+      "end_wall_ns": 1792540719153000192,
+      "complete_log": "2026-10-20 19:58:39.153 EDT [3795615] LOG:  checkpoint complete: wrote 8 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=22.972 s, sync=0.008 s, total=23.085 s; sync files=7, longest=0.002 s, average=0.001 s; distance=566581 kB, estimate=566581 kB; lsn=1A/BAEA3448, redo lsn=1A/BAD56208"
+    },
+    {
+      "start_event": 105,
+      "end_event": 106,
+      "start_wall_ns": 1792540719153000192,
+      "end_wall_ns": 1792540719172000000,
+      "complete_log": "2026-10-20 19:58:39.172 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.004 s, total=0.019 s; sync files=2, longest=0.003 s, average=0.002 s; distance=1332 kB, estimate=510056 kB; lsn=1A/BAEA3518, redo lsn=1A/BAEA34C0"
+    },
+    {
+      "start_event": 108,
+      "end_event": 109,
+      "start_wall_ns": 1792540720188999936,
+      "end_wall_ns": 1792540733004000000,
+      "complete_log": "2026-10-20 19:58:53.004 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 5 removed, 28 recycled; write=1.416 s, sync=11.237 s, total=12.815 s; sync files=48, longest=8.633 s, average=0.235 s; distance=529406 kB, estimate=529406 kB; lsn=1A/FE497028, redo lsn=1A/DB3A2EF8"
+    },
+    {
+      "start_event": 111,
+      "end_event": 112,
+      "start_wall_ns": 1792540733004000000,
+      "end_wall_ns": 1792540757212000000,
+      "complete_log": "2026-10-20 19:59:17.212 EDT [3795615] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=24.093 s, sync=0.008 s, total=24.208 s; sync files=4, longest=0.004 s, average=0.002 s; distance=574421 kB, estimate=574421 kB; lsn=1A/FE5D0680, redo lsn=1A/FE498498"
+    },
+    {
+      "start_event": 113,
+      "end_event": 114,
+      "start_wall_ns": 1792540757212000000,
+      "end_wall_ns": 1792540757231000064,
+      "complete_log": "2026-10-20 19:59:17.231 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.004 s, total=0.019 s; sync files=2, longest=0.003 s, average=0.002 s; distance=1248 kB, estimate=517104 kB; lsn=1A/FE5D0750, redo lsn=1A/FE5D06F8"
+    },
+    {
+      "start_event": 116,
+      "end_event": 117,
+      "start_wall_ns": 1792540758292000000,
+      "end_wall_ns": 1792540770635000064,
+      "complete_log": "2026-10-20 19:59:30.635 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 3 removed, 30 recycled; write=6.309 s, sync=5.879 s, total=12.344 s; sync files=48, longest=5.479 s, average=0.123 s; distance=538888 kB, estimate=538888 kB; lsn=1B/40E7EC30, redo lsn=1B/1F412858"
+    },
+    {
+      "start_event": 119,
+      "end_event": 120,
+      "start_wall_ns": 1792540770636000000,
+      "end_wall_ns": 1792540795816000000,
+      "complete_log": "2026-10-20 19:59:55.816 EDT [3795615] LOG:  checkpoint complete: wrote 33 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=25.066 s, sync=0.007 s, total=25.181 s; sync files=4, longest=0.003 s, average=0.002 s; distance=564934 kB, estimate=564934 kB; lsn=1B/429FA2A0, redo lsn=1B/41BC4410"
+    },
+    {
+      "start_event": 121,
+      "end_event": 122,
+      "start_wall_ns": 1792540795816000000,
+      "end_wall_ns": 1792540795838000128,
+      "complete_log": "2026-10-20 19:59:55.838 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.004 s, sync=0.004 s, total=0.022 s; sync files=2, longest=0.002 s, average=0.002 s; distance=14551 kB, estimate=509896 kB; lsn=1B/429FA3A8, redo lsn=1B/429FA350"
+    },
+    {
+      "start_event": 124,
+      "end_event": 125,
+      "start_wall_ns": 1792540796879000064,
+      "end_wall_ns": 1792540809315000064,
+      "complete_log": "2026-10-20 20:00:09.315 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=9.163 s, sync=3.126 s, total=12.436 s; sync files=48, longest=0.672 s, average=0.066 s; distance=533763 kB, estimate=533763 kB; lsn=1B/85FEE110, redo lsn=1B/6333B168"
+    },
+    {
+      "start_event": 127,
+      "end_event": 128,
+      "start_wall_ns": 1792540809315000064,
+      "end_wall_ns": 1792540833015000064,
+      "complete_log": "2026-10-20 20:00:33.015 EDT [3795615] LOG:  checkpoint complete: wrote 7 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=23.592 s, sync=0.007 s, total=23.701 s; sync files=4, longest=0.003 s, average=0.002 s; distance=570065 kB, estimate=570065 kB; lsn=1B/8611D0F0, redo lsn=1B/85FEF568"
+    },
+    {
+      "start_event": 129,
+      "end_event": 130,
+      "start_wall_ns": 1792540833016000000,
+      "end_wall_ns": 1792540833036999936,
+      "complete_log": "2026-10-20 20:00:33.037 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.004 s, sync=0.004 s, total=0.022 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1207 kB, estimate=513179 kB; lsn=1B/8611D1C0, redo lsn=1B/8611D168"
+    },
+    {
+      "start_event": 132,
+      "end_event": 133,
+      "start_wall_ns": 1792540835457999872,
+      "end_wall_ns": 1792540846138000128,
+      "complete_log": "2026-10-20 20:00:46.138 EDT [3795615] LOG:  checkpoint complete: wrote 165 buffers (1.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=7.743 s, sync=2.123 s, total=10.680 s; sync files=48, longest=0.863 s, average=0.045 s; distance=543688 kB, estimate=543688 kB; lsn=1B/C97124A0, redo lsn=1B/A740F1D8"
+    },
+    {
+      "start_event": 135,
+      "end_event": 136,
+      "start_wall_ns": 1792540870140000000,
+      "end_wall_ns": 1792540870253999872,
+      "complete_log": "2026-10-20 20:01:10.254 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.003 s, sync=0.006 s, total=0.115 s; sync files=4, longest=0.002 s, average=0.002 s; distance=561070 kB, estimate=561070 kB; lsn=1B/C97FAAA8, redo lsn=1B/C97FAA50"
+    },
+    {
+      "start_event": 138,
+      "end_event": 139,
+      "start_wall_ns": 1792540876064000000,
+      "end_wall_ns": 1792540884092999936,
+      "complete_log": "2026-10-20 20:01:24.093 EDT [3795615] LOG:  checkpoint complete: wrote 197 buffers (1.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=6.628 s, sync=0.917 s, total=8.029 s; sync files=48, longest=0.376 s, average=0.020 s; distance=536624 kB, estimate=558625 kB; lsn=1C/C411F18, redo lsn=1B/EA406C10"
+    },
+    {
+      "start_event": 141,
+      "end_event": 142,
+      "start_wall_ns": 1792540884092999936,
+      "end_wall_ns": 1792540909046000128,
+      "complete_log": "2026-10-20 20:01:49.046 EDT [3795615] LOG:  checkpoint complete: wrote 12 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=24.849 s, sync=0.007 s, total=24.954 s; sync files=4, longest=0.003 s, average=0.002 s; distance=567204 kB, estimate=567204 kB; lsn=1C/DEBCB10, redo lsn=1C/CDEFF40"
+    },
+    {
+      "start_event": 143,
+      "end_event": 144,
+      "start_wall_ns": 1792540909046000128,
+      "end_wall_ns": 1792540909063000064,
+      "complete_log": "2026-10-20 20:01:49.063 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.002 s, sync=0.003 s, total=0.018 s; sync files=2, longest=0.002 s, average=0.002 s; distance=17203 kB, estimate=512204 kB; lsn=1C/DEBCBE0, redo lsn=1C/DEBCB88"
+    },
+    {
+      "start_event": 146,
+      "end_event": 147,
+      "start_wall_ns": 1792540916927000064,
+      "end_wall_ns": 1792540921787000064,
+      "complete_log": "2026-10-20 20:02:01.787 EDT [3795615] LOG:  checkpoint complete: wrote 217 buffers (1.3%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=3.707 s, sync=0.502 s, total=4.860 s; sync files=48, longest=0.385 s, average=0.011 s; distance=529696 kB, estimate=529696 kB; lsn=1C/500314E0, redo lsn=1C/2E404F08"
+    },
+    {
+      "start_event": 149,
+      "end_event": 150,
+      "start_wall_ns": 1792540921787000064,
+      "end_wall_ns": 1792540945908000000,
+      "complete_log": "2026-10-20 20:02:25.908 EDT [3795615] LOG:  checkpoint complete: wrote 45 buffers (0.3%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=23.833 s, sync=0.021 s, total=24.122 s; sync files=4, longest=0.008 s, average=0.006 s; distance=574127 kB, estimate=574127 kB; lsn=1C/515F4A20, redo lsn=1C/514B0DF0"
+    },
+    {
+      "start_event": 151,
+      "end_event": 152,
+      "start_wall_ns": 1792540945908000000,
+      "end_wall_ns": 1792540945943000064,
+      "complete_log": "2026-10-20 20:02:25.943 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.005 s, sync=0.007 s, total=0.035 s; sync files=2, longest=0.006 s, average=0.004 s; distance=1295 kB, estimate=516844 kB; lsn=1C/515F4AF0, redo lsn=1C/515F4A98"
+    },
+    {
+      "start_event": 154,
+      "end_event": 155,
+      "start_wall_ns": 1792540952421999872,
+      "end_wall_ns": 1792540955730000128,
+      "complete_log": "2026-10-20 20:02:35.730 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.811 s, sync=1.065 s, total=3.308 s; sync files=48, longest=0.528 s, average=0.023 s; distance=538731 kB, estimate=538731 kB; lsn=1C/94BE8DD0, redo lsn=1C/7240FA18"
+    },
+    {
+      "start_event": 157,
+      "end_event": 158,
+      "start_wall_ns": 1792540955730000128,
+      "end_wall_ns": 1792540965124999936,
+      "complete_log": "2026-10-20 20:02:45.125 EDT [3795615] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.220 s, sync=8.264 s, total=9.396 s; sync files=312, longest=1.068 s, average=0.027 s; distance=565102 kB, estimate=565102 kB; lsn=1C/94D29088, redo lsn=1C/94BEB310"
+    },
+    {
+      "start_event": 159,
+      "end_event": 160,
+      "start_wall_ns": 1792540981468000000,
+      "end_wall_ns": 1792540981490000128,
+      "complete_log": "2026-10-20 20:03:01.490 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.007 s, total=0.023 s; sync files=5, longest=0.002 s, average=0.002 s; distance=1278 kB, estimate=508719 kB; lsn=1C/94D2AE48, redo lsn=1C/94D2ADF0"
+    },
+    {
+      "start_event": 162,
+      "end_event": 163,
+      "start_wall_ns": 1792540982502000128,
+      "end_wall_ns": 1792540991991000064,
+      "complete_log": "2026-10-20 20:03:11.991 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 5 removed, 28 recycled; write=0.812 s, sync=7.215 s, total=9.490 s; sync files=48, longest=3.297 s, average=0.151 s; distance=531319 kB, estimate=531319 kB; lsn=1C/D831F248, redo lsn=1C/B5408DC0"
+    },
+    {
+      "start_event": 165,
+      "end_event": 166,
+      "start_wall_ns": 1792540991991000064,
+      "end_wall_ns": 1792540994940000000,
+      "complete_log": "2026-10-20 20:03:14.940 EDT [3795615] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=0.230 s, sync=2.490 s, total=2.949 s; sync files=312, longest=0.375 s, average=0.008 s; distance=572515 kB, estimate=572515 kB; lsn=1C/D832C2C0, redo lsn=1C/D83219C0"
+    },
+    {
+      "start_event": 167,
+      "end_event": 168,
+      "start_wall_ns": 1792541015320000000,
+      "end_wall_ns": 1792541015339000064,
+      "complete_log": "2026-10-20 20:03:35.339 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.006 s, total=0.020 s; sync files=4, longest=0.002 s, average=0.002 s; distance=1269 kB, estimate=515390 kB; lsn=1C/D845F170, redo lsn=1C/D845F118"
+    },
+    {
+      "start_event": 170,
+      "end_event": 171,
+      "start_wall_ns": 1792541016358000128,
+      "end_wall_ns": 1792541028312999936,
+      "complete_log": "2026-10-20 20:03:48.313 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=5.418 s, sync=6.401 s, total=11.955 s; sync files=48, longest=6.021 s, average=0.134 s; distance=540344 kB, estimate=540344 kB; lsn=1D/1BA52FD8, redo lsn=1C/F940D3B0"
+    },
+    {
+      "start_event": 173,
+      "end_event": 174,
+      "start_wall_ns": 1792541028312999936,
+      "end_wall_ns": 1792541054898000128,
+      "complete_log": "2026-10-20 20:04:14.898 EDT [3795615] LOG:  checkpoint complete: wrote 7 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=25.299 s, sync=0.063 s, total=26.585 s; sync files=4, longest=0.024 s, average=0.016 s; distance=563484 kB, estimate=563484 kB; lsn=1D/1C839BB0, redo lsn=1D/1BA54448"
+    },
+    {
+      "start_event": 175,
+      "end_event": 176,
+      "start_wall_ns": 1792541054898000128,
+      "end_wall_ns": 1792541054937999872,
+      "complete_log": "2026-10-20 20:04:14.938 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.005 s, sync=0.006 s, total=0.040 s; sync files=2, longest=0.005 s, average=0.003 s; distance=14230 kB, estimate=508558 kB; lsn=1D/1C839CB8, redo lsn=1D/1C839C60"
+    },
+    {
+      "start_event": 178,
+      "end_event": 179,
+      "start_wall_ns": 1792541062713999872,
+      "end_wall_ns": 1792541073404000000,
+      "complete_log": "2026-10-20 20:04:33.404 EDT [3795615] LOG:  checkpoint complete: wrote 98 buffers (0.6%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=4.796 s, sync=4.194 s, total=10.690 s; sync files=49, longest=0.940 s, average=0.086 s; distance=536376 kB, estimate=536376 kB; lsn=1D/5FE2E898, redo lsn=1D/3D407CE8"
+    },
+    {
+      "start_event": 181,
+      "end_event": 182,
+      "start_wall_ns": 1792541073404000000,
+      "end_wall_ns": 1792541080156000000,
+      "complete_log": "2026-10-20 20:04:40.156 EDT [3795615] LOG:  checkpoint complete: wrote 2 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.204 s, sync=6.426 s, total=6.753 s; sync files=312, longest=0.771 s, average=0.021 s; distance=567456 kB, estimate=567456 kB; lsn=1D/5FF60318, redo lsn=1D/5FE300B0"
+    },
+    {
+      "start_event": 183,
+      "end_event": 184,
+      "start_wall_ns": 1792541098172000000,
+      "end_wall_ns": 1792541098192000000,
+      "complete_log": "2026-10-20 20:04:58.192 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.006 s, total=0.021 s; sync files=4, longest=0.002 s, average=0.002 s; distance=1222 kB, estimate=510833 kB; lsn=1D/5FF61AE8, redo lsn=1D/5FF61A90"
+    },
+    {
+      "start_event": 186,
+      "end_event": 187,
+      "start_wall_ns": 1792541099204000000,
+      "end_wall_ns": 1792541109664000000,
+      "complete_log": "2026-10-20 20:05:09.664 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 5 removed, 28 recycled; write=0.815 s, sync=8.012 s, total=10.461 s; sync files=48, longest=4.873 s, average=0.167 s; distance=529048 kB, estimate=529048 kB; lsn=1D/A3556830, redo lsn=1D/80407D90"
+    },
+    {
+      "start_event": 189,
+      "end_event": 190,
+      "start_wall_ns": 1792541109664000000,
+      "end_wall_ns": 1792541112673000192,
+      "complete_log": "2026-10-20 20:05:12.673 EDT [3795615] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=0.485 s, sync=2.308 s, total=3.009 s; sync files=313, longest=0.208 s, average=0.008 s; distance=574785 kB, estimate=574785 kB; lsn=1D/A372F608, redo lsn=1D/A3558290"
+    },
+    {
+      "start_event": 191,
+      "end_event": 192,
+      "start_wall_ns": 1792541132856000000,
+      "end_wall_ns": 1792541132880999936,
+      "complete_log": "2026-10-20 20:05:32.881 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.009 s, total=0.025 s; sync files=7, longest=0.003 s, average=0.002 s; distance=7204 kB, estimate=518027 kB; lsn=1D/A3C61588, redo lsn=1D/A3C61530"
+    },
+    {
+      "start_event": 194,
+      "end_event": 195,
+      "start_wall_ns": 1792541133905999872,
+      "end_wall_ns": 1792541146112000000,
+      "complete_log": "2026-10-20 20:05:46.112 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.812 s, sync=10.238 s, total=12.207 s; sync files=48, longest=9.350 s, average=0.214 s; distance=531334 kB, estimate=531334 kB; lsn=1D/E6400A50, redo lsn=1D/C4342DA0"
+    },
+    {
+      "start_event": 197,
+      "end_event": 198,
+      "start_wall_ns": 1792541146112999936,
+      "end_wall_ns": 1792541147240000000,
+      "complete_log": "2026-10-20 20:05:47.240 EDT [3795615] LOG:  checkpoint complete: wrote 0 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=0.005 s, sync=1.005 s, total=1.128 s; sync files=310, longest=0.128 s, average=0.004 s; distance=572493 kB, estimate=572493 kB; lsn=1D/E7258410, redo lsn=1D/E7256490"
+    },
+    {
+      "start_event": 199,
+      "end_event": 200,
+      "start_wall_ns": 1792541170257999872,
+      "end_wall_ns": 1792541170283000064,
+      "complete_log": "2026-10-20 20:06:10.283 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.004 s, sync=0.007 s, total=0.026 s; sync files=4, longest=0.003 s, average=0.002 s; distance=17568 kB, estimate=517001 kB; lsn=1D/E837E898, redo lsn=1D/E837E840"
+    },
+    {
+      "start_event": 202,
+      "end_event": 203,
+      "start_wall_ns": 1792541171346999808,
+      "end_wall_ns": 1792541184234999808,
+      "complete_log": "2026-10-20 20:06:24.235 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.811 s, sync=11.939 s, total=12.888 s; sync files=48, longest=10.722 s, average=0.249 s; distance=541250 kB, estimate=541250 kB; lsn=1E/2B409E98, redo lsn=1E/940F3D0"
+    },
+    {
+      "start_event": 205,
+      "end_event": 206,
+      "start_wall_ns": 1792541184234999808,
+      "end_wall_ns": 1792541208595000064,
+      "complete_log": "2026-10-20 20:06:48.595 EDT [3795615] LOG:  checkpoint complete: wrote 17 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=24.258 s, sync=0.006 s, total=24.361 s; sync files=4, longest=0.003 s, average=0.002 s; distance=562577 kB, estimate=562577 kB; lsn=1E/2BAAD7B0, redo lsn=1E/2B9738D0"
+    },
+    {
+      "start_event": 207,
+      "end_event": 208,
+      "start_wall_ns": 1792541208595000064,
+      "end_wall_ns": 1792541208616000000,
+      "complete_log": "2026-10-20 20:06:48.616 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.008 s, sync=0.003 s, total=0.021 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1255 kB, estimate=506445 kB; lsn=1E/2BAAD880, redo lsn=1E/2BAAD828"
+    },
+    {
+      "start_event": 210,
+      "end_event": 211,
+      "start_wall_ns": 1792541209624999936,
+      "end_wall_ns": 1792541222400000000,
+      "complete_log": "2026-10-20 20:07:02.400 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=3.715 s, sync=8.897 s, total=12.775 s; sync files=48, longest=5.032 s, average=0.186 s; distance=533870 kB, estimate=533870 kB; lsn=1E/6EAF8D58, redo lsn=1E/4C409140"
+    },
+    {
+      "start_event": 213,
+      "end_event": 214,
+      "start_wall_ns": 1792541222400000000,
+      "end_wall_ns": 1792541247324999936,
+      "complete_log": "2026-10-20 20:07:27.325 EDT [3795615] LOG:  checkpoint complete: wrote 20 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=24.801 s, sync=0.009 s, total=24.926 s; sync files=4, longest=0.004 s, average=0.003 s; distance=569958 kB, estimate=569958 kB; lsn=1E/6F1D8390, redo lsn=1E/6F0A2A28"
+    },
+    {
+      "start_event": 215,
+      "end_event": 216,
+      "start_wall_ns": 1792541247325999872,
+      "end_wall_ns": 1792541247342000128,
+      "complete_log": "2026-10-20 20:07:27.342 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.003 s, total=0.017 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1238 kB, estimate=513086 kB; lsn=1E/6F1D8460, redo lsn=1E/6F1D8408"
+    },
+    {
+      "start_event": 218,
+      "end_event": 219,
+      "start_wall_ns": 1792541248375000064,
+      "end_wall_ns": 1792541260543000064,
+      "complete_log": "2026-10-20 20:07:40.543 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=7.421 s, sync=4.613 s, total=12.168 s; sync files=48, longest=2.648 s, average=0.097 s; distance=542923 kB, estimate=542923 kB; lsn=1E/B27CA9B8, redo lsn=1E/9040B238"
+    },
+    {
+      "start_event": 221,
+      "end_event": 222,
+      "start_wall_ns": 1792541260543000064,
+      "end_wall_ns": 1792541290296000000,
+      "complete_log": "2026-10-20 20:08:10.296 EDT [3795615] LOG:  checkpoint complete: wrote 24 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=29.647 s, sync=0.007 s, total=29.753 s; sync files=4, longest=0.003 s, average=0.002 s; distance=560905 kB, estimate=560905 kB; lsn=1E/B29042D0, redo lsn=1E/B27CD738"
+    },
+    {
+      "start_event": 223,
+      "end_event": 224,
+      "start_wall_ns": 1792541290296000000,
+      "end_wall_ns": 1792541290311000064,
+      "complete_log": "2026-10-20 20:08:10.311 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.003 s, total=0.016 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1243 kB, estimate=504939 kB; lsn=1E/B29043A0, redo lsn=1E/B2904348"
+    },
+    {
+      "start_event": 226,
+      "end_event": 227,
+      "start_wall_ns": 1792541293795000064,
+      "end_wall_ns": 1792541304460000000,
+      "complete_log": "2026-10-20 20:08:24.460 EDT [3795615] LOG:  checkpoint complete: wrote 145 buffers (0.9%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=7.518 s, sync=2.386 s, total=10.665 s; sync files=48, longest=0.840 s, average=0.050 s; distance=535567 kB, estimate=535567 kB; lsn=1E/F5EF9748, redo lsn=1E/D34080A8"
+    },
+    {
+      "start_event": 230,
+      "end_event": 231,
+      "start_wall_ns": 1792541312684999936,
+      "end_wall_ns": 1792541336365999872,
+      "complete_log": "2026-10-20 20:08:56.366 EDT [3795615] LOG:  checkpoint complete: wrote 54 buffers (0.3%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=23.570 s, sync=0.010 s, total=23.682 s; sync files=7, longest=0.003 s, average=0.002 s; distance=569338 kB, estimate=569338 kB; lsn=1E/F67E8218, redo lsn=1E/F6006A40"
+    },
+    {
+      "start_event": 232,
+      "end_event": 233,
+      "start_wall_ns": 1792541336365999872,
+      "end_wall_ns": 1792541336381999872,
+      "complete_log": "2026-10-20 20:08:56.382 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.003 s, total=0.016 s; sync files=2, longest=0.002 s, average=0.002 s; distance=8070 kB, estimate=513211 kB; lsn=1E/F67E82E8, redo lsn=1E/F67E8290"
+    },
+    {
+      "start_event": 235,
+      "end_event": 236,
+      "start_wall_ns": 1792541343799000064,
+      "end_wall_ns": 1792541349387000064,
+      "complete_log": "2026-10-20 20:09:09.387 EDT [3795615] LOG:  checkpoint complete: wrote 196 buffers (1.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=4.410 s, sync=0.530 s, total=5.588 s; sync files=49, longest=0.401 s, average=0.011 s; distance=536714 kB, estimate=536714 kB; lsn=1F/39DDD7E8, redo lsn=1F/1740AE30"
+    },
+    {
+      "start_event": 238,
+      "end_event": 239,
+      "start_wall_ns": 1792541376750999808,
+      "end_wall_ns": 1792541377398999808,
+      "complete_log": "2026-10-20 20:09:37.399 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.038 s, sync=0.069 s, total=0.648 s; sync files=4, longest=0.026 s, average=0.018 s; distance=567299 kB, estimate=567299 kB; lsn=1F/39E0BCE8, redo lsn=1F/39E0BC90"
+    },
+    {
+      "start_event": 241,
+      "end_event": 242,
+      "start_wall_ns": 1792541378483000064,
+      "end_wall_ns": 1792541391019000064,
+      "complete_log": "2026-10-20 20:09:51.019 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.813 s, sync=11.147 s, total=12.537 s; sync files=48, longest=10.050 s, average=0.233 s; distance=530428 kB, estimate=563612 kB; lsn=1F/7C10D130, redo lsn=1F/5A40AE80"
+    },
+    {
+      "start_event": 244,
+      "end_event": 245,
+      "start_wall_ns": 1792541391019000064,
+      "end_wall_ns": 1792541396476999936,
+      "complete_log": "2026-10-20 20:09:56.477 EDT [3795615] LOG:  checkpoint complete: wrote 3 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=4.616 s, sync=0.719 s, total=5.458 s; sync files=312, longest=0.025 s, average=0.003 s; distance=573401 kB, estimate=573401 kB; lsn=1F/7D5C04D0, redo lsn=1F/7D4013D0"
+    },
+    {
+      "start_event": 246,
+      "end_event": 247,
+      "start_wall_ns": 1792541420078000128,
+      "end_wall_ns": 1792541420098000128,
+      "complete_log": "2026-10-20 20:10:20.098 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.006 s, total=0.021 s; sync files=4, longest=0.003 s, average=0.002 s; distance=7189 kB, estimate=516780 kB; lsn=1F/7DB06878, redo lsn=1F/7DB06820"
+    },
+    {
+      "start_event": 249,
+      "end_event": 250,
+      "start_wall_ns": 1792541421125999872,
+      "end_wall_ns": 1792541434040999936,
+      "complete_log": "2026-10-20 20:10:34.041 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 5 removed, 28 recycled; write=0.812 s, sync=11.967 s, total=12.915 s; sync files=48, longest=8.759 s, average=0.250 s; distance=532683 kB, estimate=532683 kB; lsn=1F/C10FAC48, redo lsn=1F/9E3395B8"
+    },
+    {
+      "start_event": 252,
+      "end_event": 253,
+      "start_wall_ns": 1792541434040999936,
+      "end_wall_ns": 1792541464022000128,
+      "complete_log": "2026-10-20 20:11:04.022 EDT [3795615] LOG:  checkpoint complete: wrote 4 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=29.869 s, sync=0.007 s, total=29.981 s; sync files=4, longest=0.003 s, average=0.002 s; distance=571146 kB, estimate=571146 kB; lsn=1F/C21F3B40, redo lsn=1F/C10FC0B8"
+    },
+    {
+      "start_event": 254,
+      "end_event": 255,
+      "start_wall_ns": 1792541464022000128,
+      "end_wall_ns": 1792541464043000064,
+      "complete_log": "2026-10-20 20:11:04.043 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.004 s, sync=0.004 s, total=0.021 s; sync files=2, longest=0.003 s, average=0.002 s; distance=17374 kB, estimate=515769 kB; lsn=1F/C21F3C10, redo lsn=1F/C21F3BB8"
+    },
+    {
+      "start_event": 257,
+      "end_event": 258,
+      "start_wall_ns": 1792541465072999936,
+      "end_wall_ns": 1792541477667000064,
+      "complete_log": "2026-10-20 20:11:17.667 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=5.614 s, sync=6.837 s, total=12.594 s; sync files=48, longest=4.516 s, average=0.143 s; distance=542849 kB, estimate=542849 kB; lsn=20/57E8130, redo lsn=1F/E34141F8"
+    },
+    {
+      "start_event": 260,
+      "end_event": 261,
+      "start_wall_ns": 1792541477667000064,
+      "end_wall_ns": 1792541505687000064,
+      "complete_log": "2026-10-20 20:11:45.687 EDT [3795615] LOG:  checkpoint complete: wrote 21 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=27.909 s, sync=0.007 s, total=28.021 s; sync files=4, longest=0.003 s, average=0.002 s; distance=560980 kB, estimate=560980 kB; lsn=20/592BF08, redo lsn=20/57E9588"
+    },
+    {
+      "start_event": 262,
+      "end_event": 263,
+      "start_wall_ns": 1792541505687000064,
+      "end_wall_ns": 1792541505704999936,
+      "complete_log": "2026-10-20 20:11:45.705 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.004 s, total=0.018 s; sync files=2, longest=0.003 s, average=0.002 s; distance=1290 kB, estimate=505011 kB; lsn=20/592BFD8, redo lsn=20/592BF80"
+    },
+    {
+      "start_event": 265,
+      "end_event": 266,
+      "start_wall_ns": 1792541507072000000,
+      "end_wall_ns": 1792541518872999936,
+      "complete_log": "2026-10-20 20:11:58.873 EDT [3795615] LOG:  checkpoint complete: wrote 231 buffers (1.4%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=8.293 s, sync=2.758 s, total=11.802 s; sync files=48, longest=0.451 s, average=0.058 s; distance=535418 kB, estimate=535418 kB; lsn=20/48F20650, redo lsn=20/2640A7E8"
+    },
+    {
+      "start_event": 268,
+      "end_event": 269,
+      "start_wall_ns": 1792541518872999936,
+      "end_wall_ns": 1792541546512999936,
+      "complete_log": "2026-10-20 20:12:26.513 EDT [3795615] LOG:  checkpoint complete: wrote 12 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=27.525 s, sync=0.007 s, total=27.640 s; sync files=4, longest=0.003 s, average=0.002 s; distance=568412 kB, estimate=568412 kB; lsn=20/49063980, redo lsn=20/48F21AA8"
+    },
+    {
+      "start_event": 270,
+      "end_event": 271,
+      "start_wall_ns": 1792541546512999936,
+      "end_wall_ns": 1792541546530999808,
+      "complete_log": "2026-10-20 20:12:26.531 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.003 s, sync=0.003 s, total=0.019 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1287 kB, estimate=511700 kB; lsn=20/49063A50, redo lsn=20/490639F8"
+    },
+    {
+      "start_event": 273,
+      "end_event": 274,
+      "start_wall_ns": 1792541550060000000,
+      "end_wall_ns": 1792541559477999872,
+      "complete_log": "2026-10-20 20:12:39.478 EDT [3795615] LOG:  checkpoint complete: wrote 289 buffers (1.8%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=7.398 s, sync=1.229 s, total=9.418 s; sync files=48, longest=0.421 s, average=0.026 s; distance=544424 kB, estimate=544424 kB; lsn=20/8C401930, redo lsn=20/6A40DCB0"
+    },
+    {
+      "start_event": 276,
+      "end_event": 277,
+      "start_wall_ns": 1792541559477999872,
+      "end_wall_ns": 1792541588334000128,
+      "complete_log": "2026-10-20 20:13:08.334 EDT [3795615] LOG:  checkpoint complete: wrote 21 buffers (0.1%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=28.745 s, sync=0.008 s, total=28.856 s; sync files=7, longest=0.002 s, average=0.002 s; distance=559406 kB, estimate=559406 kB; lsn=20/8C79CB20, redo lsn=20/8C659668"
+    },
+    {
+      "start_event": 278,
+      "end_event": 279,
+      "start_wall_ns": 1792541588334000128,
+      "end_wall_ns": 1792541588352000000,
+      "complete_log": "2026-10-20 20:13:08.352 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.004 s, sync=0.004 s, total=0.019 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1293 kB, estimate=503595 kB; lsn=20/8C79CBF0, redo lsn=20/8C79CB98"
+    },
+    {
+      "start_event": 281,
+      "end_event": 282,
+      "start_wall_ns": 1792541594220999936,
+      "end_wall_ns": 1792541601326999808,
+      "complete_log": "2026-10-20 20:13:21.327 EDT [3795615] LOG:  checkpoint complete: wrote 237 buffers (1.4%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=6.074 s, sync=0.555 s, total=7.107 s; sync files=48, longest=0.448 s, average=0.012 s; distance=537061 kB, estimate=537061 kB; lsn=20/CFD921D0, redo lsn=20/AD416088"
+    },
+    {
+      "start_event": 284,
+      "end_event": 285,
+      "start_wall_ns": 1792541632512999936,
+      "end_wall_ns": 1792541633911000064,
+      "complete_log": "2026-10-20 20:13:53.911 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=0.037 s, sync=0.060 s, total=1.399 s; sync files=4, longest=0.021 s, average=0.015 s; distance=568850 kB, estimate=568850 kB; lsn=20/CFF9A950, redo lsn=20/CFF9A8F8"
+    },
+    {
+      "start_event": 287,
+      "end_event": 288,
+      "start_wall_ns": 1792541641621999872,
+      "end_wall_ns": 1792541654401999872,
+      "complete_log": "2026-10-20 20:14:14.402 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=0.813 s, sync=11.723 s, total=12.781 s; sync files=48, longest=10.161 s, average=0.245 s; distance=528790 kB, estimate=564844 kB; lsn=21/12E06B38, redo lsn=20/F04003D0"
+    },
+    {
+      "start_event": 290,
+      "end_event": 291,
+      "start_wall_ns": 1792541654401999872,
+      "end_wall_ns": 1792541682178999808,
+      "complete_log": "2026-10-20 20:14:42.179 EDT [3795615] LOG:  checkpoint complete: wrote 27 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=27.661 s, sync=0.006 s, total=27.777 s; sync files=5, longest=0.002 s, average=0.002 s; distance=575032 kB, estimate=575032 kB; lsn=21/136CC650, redo lsn=21/1358E578"
+    },
+    {
+      "start_event": 292,
+      "end_event": 293,
+      "start_wall_ns": 1792541682178999808,
+      "end_wall_ns": 1792541682194999808,
+      "complete_log": "2026-10-20 20:14:42.195 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.003 s, sync=0.004 s, total=0.016 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1272 kB, estimate=517656 kB; lsn=21/136CC720, redo lsn=21/136CC6C8"
+    },
+    {
+      "start_event": 295,
+      "end_event": 296,
+      "start_wall_ns": 1792541683220999936,
+      "end_wall_ns": 1792541696132000000,
+      "complete_log": "2026-10-20 20:14:56.132 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 3 removed, 30 recycled; write=0.811 s, sync=11.897 s, total=12.911 s; sync files=48, longest=11.579 s, average=0.248 s; distance=537854 kB, estimate=537854 kB; lsn=21/55B3F5A0, redo lsn=21/3440BFC8"
+    },
+    {
+      "start_event": 298,
+      "end_event": 299,
+      "start_wall_ns": 1792541696132000000,
+      "end_wall_ns": 1792541725973999872,
+      "complete_log": "2026-10-20 20:15:25.974 EDT [3795615] LOG:  checkpoint complete: wrote 8 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=29.729 s, sync=0.006 s, total=29.842 s; sync files=4, longest=0.003 s, average=0.002 s; distance=565974 kB, estimate=565974 kB; lsn=21/573B51E8, redo lsn=21/56CC1838"
+    },
+    {
+      "start_event": 300,
+      "end_event": 301,
+      "start_wall_ns": 1792541725973999872,
+      "end_wall_ns": 1792541725993999872,
+      "complete_log": "2026-10-20 20:15:25.994 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 2 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.004 s, sync=0.003 s, total=0.021 s; sync files=2, longest=0.002 s, average=0.002 s; distance=7118 kB, estimate=510088 kB; lsn=21/573B52B8, redo lsn=21/573B5260"
+    },
+    {
+      "start_event": 303,
+      "end_event": 304,
+      "start_wall_ns": 1792541727025000192,
+      "end_wall_ns": 1792541739848000000,
+      "complete_log": "2026-10-20 20:15:39.848 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 3 removed, 30 recycled; write=1.017 s, sync=11.649 s, total=12.823 s; sync files=48, longest=10.279 s, average=0.243 s; distance=540539 kB, estimate=540539 kB; lsn=21/99860BF8, redo lsn=21/78393ED0"
+    },
+    {
+      "start_event": 306,
+      "end_event": 307,
+      "start_wall_ns": 1792541739848000000,
+      "end_wall_ns": 1792541770161999872,
+      "complete_log": "2026-10-20 20:16:10.162 EDT [3795615] LOG:  checkpoint complete: wrote 41 buffers (0.3%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 34 recycled; write=30.180 s, sync=0.007 s, total=30.315 s; sync files=4, longest=0.003 s, average=0.002 s; distance=563289 kB, estimate=563289 kB; lsn=21/9BAA5958, redo lsn=21/9A9AA530"
+    },
+    {
+      "start_event": 308,
+      "end_event": 309,
+      "start_wall_ns": 1792541770161999872,
+      "end_wall_ns": 1792541770180000000,
+      "complete_log": "2026-10-20 20:16:10.180 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 1 recycled; write=0.002 s, sync=0.003 s, total=0.018 s; sync files=2, longest=0.002 s, average=0.002 s; distance=17389 kB, estimate=508699 kB; lsn=21/9BAA5A28, redo lsn=21/9BAA59D0"
+    },
+    {
+      "start_event": 311,
+      "end_event": 312,
+      "start_wall_ns": 1792541771177999872,
+      "end_wall_ns": 1792541783416999936,
+      "complete_log": "2026-10-20 20:16:23.417 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=6.623 s, sync=5.464 s, total=12.240 s; sync files=48, longest=3.748 s, average=0.114 s; distance=533916 kB, estimate=533916 kB; lsn=21/DE4042C0, redo lsn=21/BC40CCD0"
+    },
+    {
+      "start_event": 314,
+      "end_event": 315,
+      "start_wall_ns": 1792541783416999936,
+      "end_wall_ns": 1792541811768000000,
+      "complete_log": "2026-10-20 20:16:51.768 EDT [3795615] LOG:  checkpoint complete: wrote 28 buffers (0.2%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 35 recycled; write=28.224 s, sync=0.007 s, total=28.351 s; sync files=4, longest=0.003 s, average=0.002 s; distance=569912 kB, estimate=569912 kB; lsn=21/DF1D8748, redo lsn=21/DF09AE08"
+    },
+    {
+      "start_event": 316,
+      "end_event": 317,
+      "start_wall_ns": 1792541811768000000,
+      "end_wall_ns": 1792541811784000000,
+      "complete_log": "2026-10-20 20:16:51.784 EDT [3795615] LOG:  checkpoint complete: wrote 1 buffers (0.0%), wrote 1 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.002 s, sync=0.003 s, total=0.016 s; sync files=2, longest=0.002 s, average=0.002 s; distance=1270 kB, estimate=513048 kB; lsn=21/DF1D8818, redo lsn=21/DF1D87C0"
+    },
+    {
+      "start_event": 319,
+      "end_event": 320,
+      "start_wall_ns": 1792541812819000064,
+      "end_wall_ns": 1792541824849999872,
+      "complete_log": "2026-10-20 20:17:04.850 EDT [3795615] LOG:  checkpoint complete: wrote 76 buffers (0.5%), wrote 1 SLRU buffers; 0 WAL file(s) added, 4 removed, 29 recycled; write=8.828 s, sync=3.041 s, total=12.031 s; sync files=48, longest=1.668 s, average=0.064 s; distance=542931 kB, estimate=542931 kB; lsn=22/227CC8C0, redo lsn=22/40D680"
+    },
+    {
+      "start_event": 322,
+      "end_event": null,
+      "start_wall_ns": 1792541824849999872,
+      "end_wall_ns": null
+    }
+  ],
+  "cells": [
+    {
+      "variant": "baseline",
+      "class": "payment_name_GC",
+      "delay_ms": 0,
+      "first_warm_request_wall_ns": 1792540228022566046,
+      "last_measured_response_wall_ns": 1792540228780381870,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        3
+      ]
+    },
+    {
+      "variant": "baseline",
+      "class": "new_order_rollback",
+      "delay_ms": 0,
+      "first_warm_request_wall_ns": 1792540264211704667,
+      "last_measured_response_wall_ns": 1792540265164513457,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        6
+      ]
+    },
+    {
+      "variant": "baseline",
+      "class": "payment_id_GC",
+      "delay_ms": 0,
+      "first_warm_request_wall_ns": 1792540299661077438,
+      "last_measured_response_wall_ns": 1792540300342013947,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": []
+    },
+    {
+      "variant": "baseline",
+      "class": "new_order_5",
+      "delay_ms": 0,
+      "first_warm_request_wall_ns": 1792540341473061584,
+      "last_measured_response_wall_ns": 1792540342308365839,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        11
+      ]
+    },
+    {
+      "variant": "baseline",
+      "class": "new_order_15",
+      "delay_ms": 0,
+      "first_warm_request_wall_ns": 1792540377184000497,
+      "last_measured_response_wall_ns": 1792540378192073024,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": []
+    },
+    {
+      "variant": "baseline",
+      "class": "payment_name_BC",
+      "delay_ms": 0,
+      "first_warm_request_wall_ns": 1792540412977236218,
+      "last_measured_response_wall_ns": 1792540413692107677,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": []
+    },
+    {
+      "variant": "baseline",
+      "class": "payment_id_BC",
+      "delay_ms": 0,
+      "first_warm_request_wall_ns": 1792540449705262810,
+      "last_measured_response_wall_ns": 1792540451387779261,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        18
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "payment_name_GC",
+      "delay_ms": 0,
+      "first_warm_request_wall_ns": 1792540479381427999,
+      "last_measured_response_wall_ns": 1792540482762215507,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        21
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "new_order_rollback",
+      "delay_ms": 0,
+      "first_warm_request_wall_ns": 1792540515310134697,
+      "last_measured_response_wall_ns": 1792540516254373649,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [
+        66
+      ],
+      "overlapping_checkpoint_intervals": [
+        24
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "payment_id_GC",
+      "delay_ms": 0,
+      "first_warm_request_wall_ns": 1792540551142631460,
+      "last_measured_response_wall_ns": 1792540551820862052,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": []
+    },
+    {
+      "variant": "final",
+      "class": "new_order_5",
+      "delay_ms": 0,
+      "first_warm_request_wall_ns": 1792540587590342987,
+      "last_measured_response_wall_ns": 1792540588465486147,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        29
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "new_order_15",
+      "delay_ms": 0,
+      "first_warm_request_wall_ns": 1792540623592018737,
+      "last_measured_response_wall_ns": 1792540624590300377,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        32
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "payment_name_BC",
+      "delay_ms": 0,
+      "first_warm_request_wall_ns": 1792540669099174033,
+      "last_measured_response_wall_ns": 1792540669826418619,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        35
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "payment_id_BC",
+      "delay_ms": 0,
+      "first_warm_request_wall_ns": 1792540699366170689,
+      "last_measured_response_wall_ns": 1792540700059948020,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        38
+      ]
+    },
+    {
+      "variant": "baseline",
+      "class": "payment_name_GC",
+      "delay_ms": 2,
+      "first_warm_request_wall_ns": 1792540736315672056,
+      "last_measured_response_wall_ns": 1792540738645929338,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        41
+      ]
+    },
+    {
+      "variant": "baseline",
+      "class": "new_order_rollback",
+      "delay_ms": 2,
+      "first_warm_request_wall_ns": 1792540773936892007,
+      "last_measured_response_wall_ns": 1792540777341568022,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        44
+      ]
+    },
+    {
+      "variant": "baseline",
+      "class": "payment_id_GC",
+      "delay_ms": 2,
+      "first_warm_request_wall_ns": 1792540812511628122,
+      "last_measured_response_wall_ns": 1792540814302706541,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        47
+      ]
+    },
+    {
+      "variant": "baseline",
+      "class": "new_order_5",
+      "delay_ms": 2,
+      "first_warm_request_wall_ns": 1792540849229092349,
+      "last_measured_response_wall_ns": 1792540851572132544,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": []
+    },
+    {
+      "variant": "baseline",
+      "class": "new_order_15",
+      "delay_ms": 2,
+      "first_warm_request_wall_ns": 1792540887397949327,
+      "last_measured_response_wall_ns": 1792540890262749511,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        52
+      ]
+    },
+    {
+      "variant": "baseline",
+      "class": "payment_name_BC",
+      "delay_ms": 2,
+      "first_warm_request_wall_ns": 1792540925099611470,
+      "last_measured_response_wall_ns": 1792540927089355623,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        55
+      ]
+    },
+    {
+      "variant": "baseline",
+      "class": "payment_id_BC",
+      "delay_ms": 2,
+      "first_warm_request_wall_ns": 1792540957774458580,
+      "last_measured_response_wall_ns": 1792540962466055237,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        58
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "payment_name_GC",
+      "delay_ms": 2,
+      "first_warm_request_wall_ns": 1792540993982762881,
+      "last_measured_response_wall_ns": 1792540996569706412,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [
+        166
+      ],
+      "overlapping_checkpoint_intervals": [
+        61
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "new_order_rollback",
+      "delay_ms": 2,
+      "first_warm_request_wall_ns": 1792541031521844642,
+      "last_measured_response_wall_ns": 1792541034878893348,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        64
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "payment_id_GC",
+      "delay_ms": 2,
+      "first_warm_request_wall_ns": 1792541075329650077,
+      "last_measured_response_wall_ns": 1792541079163707467,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        67
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "new_order_5",
+      "delay_ms": 2,
+      "first_warm_request_wall_ns": 1792541111376946441,
+      "last_measured_response_wall_ns": 1792541113860224014,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [
+        190
+      ],
+      "overlapping_checkpoint_intervals": [
+        70
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "new_order_15",
+      "delay_ms": 2,
+      "first_warm_request_wall_ns": 1792541148718102939,
+      "last_measured_response_wall_ns": 1792541151634257193,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": []
+    },
+    {
+      "variant": "final",
+      "class": "payment_name_BC",
+      "delay_ms": 2,
+      "first_warm_request_wall_ns": 1792541187533924655,
+      "last_measured_response_wall_ns": 1792541189658012388,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        76
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "payment_id_BC",
+      "delay_ms": 2,
+      "first_warm_request_wall_ns": 1792541225690224396,
+      "last_measured_response_wall_ns": 1792541227625755801,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        79
+      ]
+    },
+    {
+      "variant": "baseline",
+      "class": "payment_name_GC",
+      "delay_ms": 10,
+      "first_warm_request_wall_ns": 1792541264331574416,
+      "last_measured_response_wall_ns": 1792541271019878210,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        82
+      ]
+    },
+    {
+      "variant": "baseline",
+      "class": "new_order_rollback",
+      "delay_ms": 10,
+      "first_warm_request_wall_ns": 1792541307620204692,
+      "last_measured_response_wall_ns": 1792541317367938909,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [
+        229,
+        230
+      ],
+      "overlapping_checkpoint_intervals": [
+        85
+      ]
+    },
+    {
+      "variant": "baseline",
+      "class": "payment_id_GC",
+      "delay_ms": 10,
+      "first_warm_request_wall_ns": 1792541352496416110,
+      "last_measured_response_wall_ns": 1792541358122688181,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": []
+    },
+    {
+      "variant": "baseline",
+      "class": "new_order_5",
+      "delay_ms": 10,
+      "first_warm_request_wall_ns": 1792541394098161738,
+      "last_measured_response_wall_ns": 1792541401685391228,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [
+        245
+      ],
+      "overlapping_checkpoint_intervals": [
+        90
+      ]
+    },
+    {
+      "variant": "baseline",
+      "class": "new_order_15",
+      "delay_ms": 10,
+      "first_warm_request_wall_ns": 1792541437283785762,
+      "last_measured_response_wall_ns": 1792541445341661296,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        93
+      ]
+    },
+    {
+      "variant": "baseline",
+      "class": "payment_name_BC",
+      "delay_ms": 10,
+      "first_warm_request_wall_ns": 1792541480906743986,
+      "last_measured_response_wall_ns": 1792541487124208670,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        96
+      ]
+    },
+    {
+      "variant": "baseline",
+      "class": "payment_id_BC",
+      "delay_ms": 10,
+      "first_warm_request_wall_ns": 1792541522113124663,
+      "last_measured_response_wall_ns": 1792541527795325951,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        99
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "payment_name_GC",
+      "delay_ms": 10,
+      "first_warm_request_wall_ns": 1792541562763621556,
+      "last_measured_response_wall_ns": 1792541569376780386,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        102
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "new_order_rollback",
+      "delay_ms": 10,
+      "first_warm_request_wall_ns": 1792541604464381647,
+      "last_measured_response_wall_ns": 1792541613804161670,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": []
+    },
+    {
+      "variant": "final",
+      "class": "payment_id_GC",
+      "delay_ms": 10,
+      "first_warm_request_wall_ns": 1792541657688050631,
+      "last_measured_response_wall_ns": 1792541663344592368,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        107
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "new_order_5",
+      "delay_ms": 10,
+      "first_warm_request_wall_ns": 1792541699448497355,
+      "last_measured_response_wall_ns": 1792541707156483343,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        110
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "new_order_15",
+      "delay_ms": 10,
+      "first_warm_request_wall_ns": 1792541743214463180,
+      "last_measured_response_wall_ns": 1792541751365679553,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        113
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "payment_name_BC",
+      "delay_ms": 10,
+      "first_warm_request_wall_ns": 1792541786709907207,
+      "last_measured_response_wall_ns": 1792541792859434742,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        116
+      ]
+    },
+    {
+      "variant": "final",
+      "class": "payment_id_BC",
+      "delay_ms": 10,
+      "first_warm_request_wall_ns": 1792541828073530156,
+      "last_measured_response_wall_ns": 1792541833656701173,
+      "checkpoint_or_WAL_log_events_inside_request_envelope": [],
+      "overlapping_checkpoint_intervals": [
+        119
+      ]
+    }
+  ],
+  "interpretation": "A temporal overlap describes concurrent activity. Checkpoint completion durations aggregate its entire lifetime and do not establish per-request causal cost."
+}

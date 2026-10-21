@@ -1,0 +1,84 @@
+[
+  {
+    "family": "tpcc",
+    "workload": "payment_name_BC",
+    "arm": "jac_original",
+    "delay_ms": 0,
+    "status": "accepted",
+    "median_ms": 3.9064170000000003,
+    "timer": "compactSQLroundtrip_sum_ms",
+    "measurement_boundary": "Sum of all complete PostgreSQL exchanges from proxy frontend receive to ReadyForQuery delivery; all DB connections; prepare/control RTT included separately from SQL commands.",
+    "sample_n": 30,
+    "warmup_n": 10,
+    "sql_command_count_distribution": {
+      "11": 30
+    },
+    "response_exchange_count_distribution": {
+      "11": 30
+    },
+    "requests_artifact": "non-snb/native/tpcc-rtt-latency-payment_name_BC-0/delay-0ms/baseline/payment_name_BC/rtt-requests.json",
+    "artifact": "non-snb/native/tpcc-rtt-latency-payment_name_BC-0/rtt-summary.json",
+    "gates": {
+      "every_source_result": true,
+      "all_eight_relation_full_state": true,
+      "raw_and_exact_cents_state_hashes": true,
+      "all_connections_captured": true,
+      "complete_response_barriers": true,
+      "cleanup_and_settings_restored": true,
+      "validated_original_model_reference": "non-snb/native/tpcc-timing/delay-0ms/baseline/payment_name_BC"
+    },
+    "warm_database_pids": [
+      654792,
+      654834
+    ],
+    "measured_database_pids": [
+      654834
+    ],
+    "new_backend_pids_during_measured": [],
+    "connection_initialization_scope": "SQL initialization commands inside a request are included; PostgreSQL startup/authentication handshake is not a SQL exchange.",
+    "secondary_HTTP_client_median_ms": 6.7660295,
+    "secondary_application_server_median_ms": 5.8735,
+    "method": "latency"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_name_BC",
+    "arm": "jac_final",
+    "delay_ms": 0,
+    "status": "accepted",
+    "median_ms": 3.9659085,
+    "timer": "compactSQLroundtrip_sum_ms",
+    "measurement_boundary": "Sum of all complete PostgreSQL exchanges from proxy frontend receive to ReadyForQuery delivery; all DB connections; prepare/control RTT included separately from SQL commands.",
+    "sample_n": 30,
+    "warmup_n": 10,
+    "sql_command_count_distribution": {
+      "11": 30
+    },
+    "response_exchange_count_distribution": {
+      "11": 30
+    },
+    "requests_artifact": "non-snb/native/tpcc-rtt-latency-payment_name_BC-0/delay-0ms/final/payment_name_BC/rtt-requests.json",
+    "artifact": "non-snb/native/tpcc-rtt-latency-payment_name_BC-0/rtt-summary.json",
+    "gates": {
+      "every_source_result": true,
+      "all_eight_relation_full_state": true,
+      "raw_and_exact_cents_state_hashes": true,
+      "all_connections_captured": true,
+      "complete_response_barriers": true,
+      "cleanup_and_settings_restored": true,
+      "validated_original_model_reference": "non-snb/native/tpcc-timing/delay-0ms/final/payment_name_BC"
+    },
+    "warm_database_pids": [
+      655781,
+      655804
+    ],
+    "measured_database_pids": [
+      655804
+    ],
+    "new_backend_pids_during_measured": [],
+    "connection_initialization_scope": "SQL initialization commands inside a request are included; PostgreSQL startup/authentication handshake is not a SQL exchange.",
+    "secondary_HTTP_client_median_ms": 6.6864535,
+    "secondary_application_server_median_ms": 5.8105,
+    "method": "latency"
+  }
+]

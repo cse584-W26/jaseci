@@ -1,0 +1,14 @@
+[
+  {
+    "arm": "java_full",
+    "sql": "SELECT n.id,e.id FROM anchors e JOIN anchors n ON n.id=CASE WHEN e.src='5c72325d-05d3-4494-ad99-782a498afb97' THEN e.dst ELSE e.src END AND n.kind='NodeAnchor' AND(n.arch_type='Customer' OR n.arch_type IN(SELECT type_name FROM graph_types WHERE ancestor='Customer')) WHERE e.kind='EdgeAnchor' AND((e.src='5c72325d-05d3-4494-ad99-782a498afb97' AND(e.dst_type IS NULL OR e.dst_type='Customer' OR e.dst_type IN(SELECT type_name FROM graph_types WHERE ancestor='Customer')))OR(e.undirected=1 AND e.dst='5c72325d-05d3-4494-ad99-782a498afb97' AND(e.src_type IS NULL OR e.src_type='Customer' OR e.src_type IN(SELECT type_name FROM graph_types WHERE ancestor='Customer')))) AND n.arch_type='Customer' AND n.c_last='PRIABLEATION' ORDER BY e.seq,e.id",
+    "sql_sha256": "1cb077c580eef4a774626ff5d2dfa4b0ac4ce8db856ba8d6adc9ebaa48ab632c",
+    "expected_category": "graph.anchor_query"
+  },
+  {
+    "arm": "java_conventional",
+    "sql": "SELECT c_id,c_credit,c_data FROM customer WHERE c_w_id=1 AND c_d_id=10 AND c_last='PRIABLEATION' ORDER BY c_first",
+    "sql_sha256": "8ee8a1a1787859964551d16303f410ca816e97dfe13a447b44c538dc5929eaf3",
+    "expected_category": "relational.customer.select"
+  }
+]

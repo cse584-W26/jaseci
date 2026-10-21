@@ -1,0 +1,18 @@
+[
+  "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/java",
+  "-Xmx2g",
+  "-Dintegration.dir=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-7f767c9dfc5f-atomic-jac-seed-local-access",
+  "-Dexecution.dir={profile_output}",
+  "-Dintegration.api=Tpcc_9b70f801a482",
+  "-Dexperiment.program=conventional",
+  "-Dexperiment.pruned=false",
+  "-Dexperiment.graph.context=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/7f767c9dfc5f10d0796c6f34a7c2ff06abe5db9efb958da6f8cbe8d5bbe1a6ef/graph-context.json",
+  "-Dexperiment.mysql.url=jdbc:mysql://{endpoint}/jac_tpcc_conventional?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true",
+  "-cp",
+  "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/7f767c9dfc5f10d0796c6f34a7c2ff06abe5db9efb958da6f8cbe8d5bbe1a6ef/classes:/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/classes:/home/baichuan/jaseci/reproduction/webridge/integration/jdbc-string/combined:/home/baichuan/jaseci/reproduction/webridge/integration/sql-frontend/classes:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+  "TpccTiming",
+  "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/7f767c9dfc5f10d0796c6f34a7c2ff06abe5db9efb958da6f8cbe8d5bbe1a6ef/input.json",
+  "baseline",
+  "10",
+  "3"
+]

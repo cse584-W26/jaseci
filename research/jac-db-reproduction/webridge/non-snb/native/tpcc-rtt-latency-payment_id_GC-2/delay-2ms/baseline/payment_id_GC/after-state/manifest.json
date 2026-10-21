@@ -1,0 +1,74 @@
+{
+  "warehouse": {
+    "rows": 1,
+    "sha256": "93cccf5827da30ff111eddedcd47465ff24ae63c1dbb9b9fe8be2dd4e7df43b0",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-rtt-latency-payment_id_GC-2/delay-2ms/baseline/payment_id_GC/after-state/warehouse.jsonl.gz",
+    "sql": "SELECT 1,(props->'archetype'->>'w_ytd')::numeric FROM anchors WHERE arch_type='Warehouse' ORDER BY 1",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-rtt-latency-payment_id_GC-2/delay-2ms/baseline/payment_id_GC/after-state/warehouse.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "c26395bc82541b63e40daa7c51ce671d64bfdd6adc9e10b4c92c9c598d54e396",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "district": {
+    "rows": 10,
+    "sha256": "ddbe222721caf70bdf02e592d3e0286b2e9e4e281d90165706a5abbe4c99fd0f",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-rtt-latency-payment_id_GC-2/delay-2ms/baseline/payment_id_GC/after-state/district.jsonl.gz",
+    "sql": "SELECT 1,(props->'archetype'->>'d_id')::int,(props->'archetype'->>'d_ytd')::numeric,(props->'archetype'->>'d_next_o_id')::int FROM anchors WHERE arch_type='District' ORDER BY 1,2",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-rtt-latency-payment_id_GC-2/delay-2ms/baseline/payment_id_GC/after-state/district.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "a83465235b28ec143158eafa103a4c8343588ac9e6c31e99f29a22670252f7e0",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "customer": {
+    "rows": 30000,
+    "sha256": "a46839a1c2091494d4ecd0f86a6967d44f13f534f093773da2f29ca4bbd4c551",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-rtt-latency-payment_id_GC-2/delay-2ms/baseline/payment_id_GC/after-state/customer.jsonl.gz",
+    "sql": "SELECT 1,(d.props->'archetype'->>'d_id')::int,(c.props->'archetype'->>'c_id')::int,(c.props->'archetype'->>'c_balance')::numeric,(c.props->'archetype'->>'c_ytd_payment')::numeric,(c.props->'archetype'->>'c_payment_cnt')::int,c.props->'archetype'->>'c_data' FROM anchors c JOIN anchors e ON e.dst=c.id AND e.kind='EdgeAnchor'JOIN anchors d ON d.id=e.src AND d.arch_type='District'WHERE c.arch_type='Customer'ORDER BY 1,2,3",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-rtt-latency-payment_id_GC-2/delay-2ms/baseline/payment_id_GC/after-state/customer.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "3116bd7f3f6b104634bcf72d6db6028eadb692bb9ded78f4b5accaa65ae07923",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "stock": {
+    "rows": 100000,
+    "sha256": "0a5d05858ad3f2f69f87492ac9454921f04314f9f429d743495a817c52dcb229",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-rtt-latency-payment_id_GC-2/delay-2ms/baseline/payment_id_GC/after-state/stock.jsonl.gz",
+    "sql": "SELECT 1,(props->'archetype'->>'s_i_id')::int,(props->'archetype'->>'s_quantity')::int,(props->'archetype'->>'s_ytd')::int,(props->'archetype'->>'s_order_cnt')::int,(props->'archetype'->>'s_remote_cnt')::int FROM anchors WHERE arch_type='Stock' ORDER BY 1,2",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-rtt-latency-payment_id_GC-2/delay-2ms/baseline/payment_id_GC/after-state/stock.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "0a5d05858ad3f2f69f87492ac9454921f04314f9f429d743495a817c52dcb229",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "orders": {
+    "rows": 30000,
+    "sha256": "44cba83dae1aea9c0113c1ea6f18889fd5073c5dc70105d1a381ce2e53bdc87f",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-rtt-latency-payment_id_GC-2/delay-2ms/baseline/payment_id_GC/after-state/orders.jsonl.gz",
+    "sql": "SELECT 1,(props->'archetype'->>'o_d_id')::int,(props->'archetype'->>'o_id')::int,(props->'archetype'->>'o_c_id')::int,coalesce((props->'archetype'->>'o_carrier_id')::int,0),(props->'archetype'->>'o_ol_cnt')::int,(props->'archetype'->>'o_all_local')::int FROM anchors WHERE arch_type='Order' ORDER BY 1,2,3",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-rtt-latency-payment_id_GC-2/delay-2ms/baseline/payment_id_GC/after-state/orders.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "44cba83dae1aea9c0113c1ea6f18889fd5073c5dc70105d1a381ce2e53bdc87f",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "new_order": {
+    "rows": 9000,
+    "sha256": "fcd25286de2b35a9336565d9834495bccf12977f71fc7f1927bb9451beb06154",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-rtt-latency-payment_id_GC-2/delay-2ms/baseline/payment_id_GC/after-state/new_order.jsonl.gz",
+    "sql": "SELECT 1,(props->'archetype'->>'o_d_id')::int,(props->'archetype'->>'o_id')::int FROM anchors WHERE arch_type='Order'AND(props->'archetype'->>'new_order')::boolean ORDER BY 1,2,3",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-rtt-latency-payment_id_GC-2/delay-2ms/baseline/payment_id_GC/after-state/new_order.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "fcd25286de2b35a9336565d9834495bccf12977f71fc7f1927bb9451beb06154",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "order_line": {
+    "rows": 300754,
+    "sha256": "70f0648049b3a6f8516af4903b1295196ff61d048dbbd7754521e205cf3ea021",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-rtt-latency-payment_id_GC-2/delay-2ms/baseline/payment_id_GC/after-state/order_line.jsonl.gz",
+    "sql": "SELECT 1,(o.props->'archetype'->>'o_d_id')::int,(o.props->'archetype'->>'o_id')::int,(l.props->'archetype'->>'ol_number')::int,(l.props->'archetype'->>'ol_i_id')::int,(l.props->'archetype'->>'ol_supply_w_id')::int,(l.props->'archetype'->>'ol_quantity')::int,(l.props->'archetype'->>'ol_amount')::numeric,l.props->'archetype'->>'ol_dist_info'FROM anchors l JOIN anchors e ON e.dst=l.id AND e.kind='EdgeAnchor'JOIN anchors o ON o.id=e.src AND o.arch_type='Order'WHERE l.arch_type='OrderLine'ORDER BY 1,2,3,4",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-rtt-latency-payment_id_GC-2/delay-2ms/baseline/payment_id_GC/after-state/order_line.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "c72c878aa82685ac4e5b6c812b91af70a6769f56c9edac488575def3711466f1",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  },
+  "history": {
+    "rows": 30040,
+    "sha256": "cad6ea7ad90d20772605c152db3353c2cdb01537cc656170d325f7b014435473",
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-rtt-latency-payment_id_GC-2/delay-2ms/baseline/payment_id_GC/after-state/history.jsonl.gz",
+    "sql": "SELECT 1,(d.props->'archetype'->>'d_id')::int,(c.props->'archetype'->>'c_id')::int,(h.props->'archetype'->>'h_w_id')::int,(h.props->'archetype'->>'h_d_id')::int,(h.props->'archetype'->>'h_amount')::numeric,h.props->'archetype'->>'h_data'FROM anchors h JOIN anchors e ON e.dst=h.id AND e.kind='EdgeAnchor'JOIN anchors c ON c.id=e.src AND c.arch_type='Customer'JOIN anchors p ON p.dst=c.id AND p.kind='EdgeAnchor'JOIN anchors d ON d.id=p.src AND d.arch_type='District'WHERE h.arch_type='History'ORDER BY 1,2,3,4,5,6,7",
+    "canonical_cents_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/native/tpcc-rtt-latency-payment_id_GC-2/delay-2ms/baseline/payment_id_GC/after-state/history.canonical-cents.jsonl.gz",
+    "canonical_cents_sha256": "ce40cac4ec01208eee0727f7de01f14b2aca3d61d9bd5e2f813355893e06b9dd",
+    "money_canonicalization": "Two decimal places, exact cents equality; raw values retained separately."
+  }
+}

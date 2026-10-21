@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/reset_relations.py", line 14, in <module>
+    if a.lease_held:run()
+                    ^^^^^
+  File "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/reset_relations.py", line 13, in run
+    r=subprocess.run(['docker','exec','-i','jac-webridge-mysql57','mysql','--default-character-set=utf8mb4','-uroot'],input=sql.encode(),capture_output=True);out.open('x').write(json.dumps({'database':db,'scope':'restore pristine generic graph and projections when frozen, then conventional relations','pristine_receipt':str(pristine)if pristine.exists()else None,'initial_business_fields_sha256':json.loads((d/'mysql-business-verification.json').read_text())['actual_sha256'],'sql_sha256':hashlib.sha256(sql.encode()).hexdigest(),'returncode':r.returncode,'stdout':r.stdout.decode(),'stderr':r.stderr.decode()},indent=2));assert r.returncode==0,r.stderr
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ^^^^^^^^^^^^^^^
+AssertionError: b"ERROR 1050 (42S01) at line 10: Table 'identity_users_business' already exists\n"

@@ -1,0 +1,51 @@
+[
+  {
+    "implementation": "LittleXSql",
+    "operation": "like",
+    "tier": "t20",
+    "phase": "sp",
+    "inputs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-like-LittleXSql-sp-1792545526355071422",
+    "out": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792545526354988098/t20-like-LittleXSql-sp",
+    "commands": [
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/profile_commands.py",
+          "--tier",
+          "t20",
+          "--operation",
+          "like",
+          "--implementation",
+          "LittleXSql",
+          "--phase",
+          "sp",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-like-LittleXSql-sp-1792545526355071422",
+          "--build-snapshot",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/add606a479976d5a8bd4f1e584434e3c0deb498cbf51544ea03ba9b7cd100062",
+          "--bundle",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/bundles/1792545370229917345"
+        ],
+        "returncode": 0
+      },
+      {
+        "argv": [
+          "/home/baichuan/.pyenv/versions/3.12.11/bin/python",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile_mysql.py",
+          "--command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-like-LittleXSql-sp-1792545526355071422/command.json",
+          "--prepare-command-json",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profile-inputs/t20-like-LittleXSql-sp-1792545526355071422/prepare-command.json",
+          "--database",
+          "jac_lx_t20_20261020",
+          "--out",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/littlex-batch-1792545526354988098/t20-like-LittleXSql-sp",
+          "--delay-ms",
+          "2"
+        ],
+        "returncode": 1
+      }
+    ],
+    "status": "failed-stage"
+  }
+]

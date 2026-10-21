@@ -1,0 +1,108 @@
+[
+  {
+    "family": "tpcc",
+    "workload": "original900",
+    "arm": "jac_original",
+    "delay_ms": 0,
+    "status": "accepted",
+    "median_ms": 8.881819,
+    "timer": "compactSQLroundtrip_sum_ms",
+    "measurement_boundary": "Sum of all complete PostgreSQL exchanges from proxy frontend receive to ReadyForQuery delivery; all DB connections; prepare/control RTT included separately from SQL commands.",
+    "sample_n": 800,
+    "warmup_n": 100,
+    "sql_command_count_distribution": {
+      "12": 190,
+      "14": 437,
+      "10": 146,
+      "17": 6,
+      "11": 21
+    },
+    "response_exchange_count_distribution": {
+      "12": 185,
+      "14": 425,
+      "10": 144,
+      "17": 6,
+      "15": 6,
+      "16": 8,
+      "13": 4,
+      "11": 20,
+      "18": 2
+    },
+    "requests_artifact": "non-snb/native/tpcc-rtt-reference-original900-0/delay-0ms/baseline/original900/rtt-requests.json",
+    "artifact": "non-snb/native/tpcc-rtt-reference-original900-0/rtt-summary.json",
+    "gates": {
+      "every_source_result": true,
+      "all_eight_relation_full_state": true,
+      "raw_and_exact_cents_state_hashes": true,
+      "all_connections_captured": true,
+      "complete_response_barriers": true,
+      "cleanup_and_settings_restored": true,
+      "validated_original_model_reference": "non-snb/native/tpcc-gates/baseline"
+    },
+    "warm_database_pids": [
+      720005,
+      720028
+    ],
+    "measured_database_pids": [
+      720028
+    ],
+    "new_backend_pids_during_measured": [],
+    "connection_initialization_scope": "SQL initialization commands inside a request are included; PostgreSQL startup/authentication handshake is not a SQL exchange.",
+    "secondary_HTTP_client_median_ms": 14.428442,
+    "secondary_application_server_median_ms": null,
+    "method": "reference"
+  },
+  {
+    "family": "tpcc",
+    "workload": "original900",
+    "arm": "jac_final",
+    "delay_ms": 0,
+    "status": "accepted",
+    "median_ms": 5.645231,
+    "timer": "compactSQLroundtrip_sum_ms",
+    "measurement_boundary": "Sum of all complete PostgreSQL exchanges from proxy frontend receive to ReadyForQuery delivery; all DB connections; prepare/control RTT included separately from SQL commands.",
+    "sample_n": 800,
+    "warmup_n": 100,
+    "sql_command_count_distribution": {
+      "12": 190,
+      "14": 437,
+      "10": 146,
+      "17": 6,
+      "11": 21
+    },
+    "response_exchange_count_distribution": {
+      "12": 185,
+      "14": 425,
+      "10": 144,
+      "17": 6,
+      "15": 6,
+      "16": 8,
+      "13": 4,
+      "11": 20,
+      "18": 2
+    },
+    "requests_artifact": "non-snb/native/tpcc-rtt-reference-original900-0/delay-0ms/final/original900/rtt-requests.json",
+    "artifact": "non-snb/native/tpcc-rtt-reference-original900-0/rtt-summary.json",
+    "gates": {
+      "every_source_result": true,
+      "all_eight_relation_full_state": true,
+      "raw_and_exact_cents_state_hashes": true,
+      "all_connections_captured": true,
+      "complete_response_barriers": true,
+      "cleanup_and_settings_restored": true,
+      "validated_original_model_reference": "non-snb/native/tpcc-gates/final"
+    },
+    "warm_database_pids": [
+      722339,
+      722397
+    ],
+    "measured_database_pids": [
+      722397
+    ],
+    "new_backend_pids_during_measured": [],
+    "connection_initialization_scope": "SQL initialization commands inside a request are included; PostgreSQL startup/authentication handshake is not a SQL exchange.",
+    "secondary_HTTP_client_median_ms": 11.005554,
+    "secondary_application_server_median_ms": null,
+    "method": "reference"
+  }
+]
