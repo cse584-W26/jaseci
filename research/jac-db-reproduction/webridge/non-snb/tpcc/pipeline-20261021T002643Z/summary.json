@@ -1,0 +1,384 @@
+[
+  {
+    "family": "tpcc",
+    "workload": "payment_name_GC",
+    "system": "conventional-full-webridge",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-7f767c9dfc5f-atomic-jac-seed-local-access/baseline-20261021T002648844396Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/payment_name_GC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-7f767c9dfc5f-atomic-jac-seed-local-access/record-20261021T002702584519Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/payment_name_GC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-7f767c9dfc5f-atomic-jac-seed-local-access/replay-20261021T002705211215Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/payment_name_GC/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-7f767c9dfc5f-atomic-jac-seed-local-access/synth-20261021T002707225584Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/payment_name_GC/synth"
+      }
+    ],
+    "status": "failed-stage",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-7f767c9dfc5f-atomic-jac-seed-local-access",
+    "results": {
+      "baseline": {
+        "success": true,
+        "c_id": 329,
+        "amount": 1951.93
+      },
+      "record": {
+        "success": true,
+        "c_id": 329,
+        "amount": 1951.93
+      }
+    },
+    "failed_stage": "synth",
+    "emitted_artifacts": [
+      {
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-7f767c9dfc5f-atomic-jac-seed-local-access/replay-20261021T002705211215Z/graph.json",
+        "bytes": 72132,
+        "sha256": "4a04e2125fbc029c6621e717ec4585815d1c6dff969f9f342debcb2a9196a21a"
+      }
+    ],
+    "emitted_artifact_review": "Required before classifying capability: formal stage exit does not prove emitted artifacts unusable"
+  },
+  {
+    "family": "tpcc",
+    "workload": "new_order_rollback",
+    "system": "conventional-full-webridge",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-1d0d0b29ca44-atomic-jac-seed-local-access/baseline-20261021T002719251603Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/new_order_rollback/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-1d0d0b29ca44-atomic-jac-seed-local-access/record-20261021T002727017256Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/new_order_rollback/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-1d0d0b29ca44-atomic-jac-seed-local-access/replay-20261021T002729701197Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/new_order_rollback/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-1d0d0b29ca44-atomic-jac-seed-local-access/synth-20261021T002733185390Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/new_order_rollback/synth"
+      }
+    ],
+    "status": "failed-stage",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-1d0d0b29ca44-atomic-jac-seed-local-access",
+    "results": {
+      "baseline": {
+        "success": false,
+        "error": "item not found",
+        "rolled_back": true
+      },
+      "record": {
+        "success": false,
+        "error": "item not found",
+        "rolled_back": true
+      }
+    },
+    "failed_stage": "synth",
+    "emitted_artifacts": [
+      {
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-1d0d0b29ca44-atomic-jac-seed-local-access/replay-20261021T002729701197Z/graph.json",
+        "bytes": 13820789,
+        "sha256": "6a48f265b12f63ceea88f9cc2dc63c57040517e8cf44e84078eed1360be82c62"
+      }
+    ],
+    "emitted_artifact_review": "Required before classifying capability: formal stage exit does not prove emitted artifacts unusable"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_id_GC",
+    "system": "conventional-full-webridge",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-3477b538e4eb-atomic-jac-seed-local-access/baseline-20261021T002749646829Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/payment_id_GC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-3477b538e4eb-atomic-jac-seed-local-access/record-20261021T002757258738Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/payment_id_GC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-3477b538e4eb-atomic-jac-seed-local-access/replay-20261021T002759910786Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/payment_id_GC/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-3477b538e4eb-atomic-jac-seed-local-access/synth-20261021T002802036458Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/payment_id_GC/synth"
+      }
+    ],
+    "status": "failed-stage",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-3477b538e4eb-atomic-jac-seed-local-access",
+    "results": {
+      "baseline": {
+        "success": true,
+        "c_id": 1911,
+        "amount": 3329.91
+      },
+      "record": {
+        "success": true,
+        "c_id": 1911,
+        "amount": 3329.91
+      }
+    },
+    "failed_stage": "synth",
+    "emitted_artifacts": [
+      {
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-3477b538e4eb-atomic-jac-seed-local-access/replay-20261021T002759910786Z/graph.json",
+        "bytes": 98562,
+        "sha256": "bd61e30f268733e3c39dfb05fe44a7432154467e818754ff22fed4066dbb0856"
+      }
+    ],
+    "emitted_artifact_review": "Required before classifying capability: formal stage exit does not prove emitted artifacts unusable"
+  },
+  {
+    "family": "tpcc",
+    "workload": "new_order_5",
+    "system": "conventional-full-webridge",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-82b529973fff-atomic-jac-seed-local-access/baseline-20261021T002825574613Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/new_order_5/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-82b529973fff-atomic-jac-seed-local-access/record-20261021T002833018393Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/new_order_5/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-82b529973fff-atomic-jac-seed-local-access/replay-20261021T002835691618Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/new_order_5/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-82b529973fff-atomic-jac-seed-local-access/synth-20261021T002838042515Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/new_order_5/synth"
+      }
+    ],
+    "status": "failed-stage",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-82b529973fff-atomic-jac-seed-local-access",
+    "results": {
+      "baseline": {
+        "success": true,
+        "o_id": 3001,
+        "total": 486.63,
+        "ol_cnt": 5
+      },
+      "record": {
+        "success": true,
+        "o_id": 3001,
+        "total": 486.63,
+        "ol_cnt": 5
+      }
+    },
+    "failed_stage": "synth",
+    "emitted_artifacts": [
+      {
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-82b529973fff-atomic-jac-seed-local-access/replay-20261021T002835691618Z/graph.json",
+        "bytes": 2563118,
+        "sha256": "b09345fd6dfe919892c4fe218c90f14737d422e0e5090fbf14c369f14a8fc745"
+      }
+    ],
+    "emitted_artifact_review": "Required before classifying capability: formal stage exit does not prove emitted artifacts unusable"
+  },
+  {
+    "family": "tpcc",
+    "workload": "new_order_15",
+    "system": "conventional-full-webridge",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-5cc1c8399626-atomic-jac-seed-local-access/baseline-20261021T002844924162Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/new_order_15/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-5cc1c8399626-atomic-jac-seed-local-access/record-20261021T002902012441Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/new_order_15/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-5cc1c8399626-atomic-jac-seed-local-access/replay-20261021T002904681267Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/new_order_15/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-5cc1c8399626-atomic-jac-seed-local-access/synth-20261021T002908765416Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/new_order_15/synth"
+      }
+    ],
+    "status": "failed-stage",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-5cc1c8399626-atomic-jac-seed-local-access",
+    "results": {
+      "baseline": {
+        "success": true,
+        "o_id": 3001,
+        "total": 2466.68,
+        "ol_cnt": 15
+      },
+      "record": {
+        "success": true,
+        "o_id": 3001,
+        "total": 2466.68,
+        "ol_cnt": 15
+      }
+    },
+    "failed_stage": "synth",
+    "emitted_artifacts": [
+      {
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-5cc1c8399626-atomic-jac-seed-local-access/replay-20261021T002904681267Z/graph.json",
+        "bytes": 20350440,
+        "sha256": "d0d09acec4bff44a882a56d5845fbd7985cf6f52d23bd644377bc168f1fad355"
+      }
+    ],
+    "emitted_artifact_review": "Required before classifying capability: formal stage exit does not prove emitted artifacts unusable"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_name_BC",
+    "system": "conventional-full-webridge",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-3a1c289fe50e-atomic-jac-seed-local-access/baseline-20261021T002948452861Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/payment_name_BC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-3a1c289fe50e-atomic-jac-seed-local-access/record-20261021T003004892921Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/payment_name_BC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-3a1c289fe50e-atomic-jac-seed-local-access/replay-20261021T003007387249Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/payment_name_BC/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-3a1c289fe50e-atomic-jac-seed-local-access/synth-20261021T003009391232Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/payment_name_BC/synth"
+      }
+    ],
+    "status": "failed-stage",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-3a1c289fe50e-atomic-jac-seed-local-access",
+    "results": {
+      "baseline": {
+        "success": true,
+        "c_id": 778,
+        "amount": 4792.26
+      },
+      "record": {
+        "success": true,
+        "c_id": 778,
+        "amount": 4792.26
+      }
+    },
+    "failed_stage": "synth",
+    "emitted_artifacts": [
+      {
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-3a1c289fe50e-atomic-jac-seed-local-access/replay-20261021T003007387249Z/graph.json",
+        "bytes": 106196,
+        "sha256": "892b9ff8088d61958957be28506ce6af4783a496c1a125832bafe3d28b7354cc"
+      }
+    ],
+    "emitted_artifact_review": "Required before classifying capability: formal stage exit does not prove emitted artifacts unusable"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_id_BC",
+    "system": "conventional-full-webridge",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-4fd50b4beef0-atomic-jac-seed-local-access/baseline-20261021T003514598286Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/payment_id_BC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-4fd50b4beef0-atomic-jac-seed-local-access/record-20261021T003531732337Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/payment_id_BC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-4fd50b4beef0-atomic-jac-seed-local-access/replay-20261021T003534345489Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/payment_id_BC/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-4fd50b4beef0-atomic-jac-seed-local-access/synth-20261021T003536348412Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/payment_id_BC/synth"
+      }
+    ],
+    "status": "failed-stage",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-4fd50b4beef0-atomic-jac-seed-local-access",
+    "results": {
+      "baseline": {
+        "success": true,
+        "c_id": 2998,
+        "amount": 1150.75
+      },
+      "record": {
+        "success": true,
+        "c_id": 2998,
+        "amount": 1150.75
+      }
+    },
+    "failed_stage": "synth",
+    "emitted_artifacts": [
+      {
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-4fd50b4beef0-atomic-jac-seed-local-access/replay-20261021T003534345489Z/graph.json",
+        "bytes": 140572,
+        "sha256": "672e5304cadb171d610deaebf394a0c5717f223d7b565d2598c97205bc3d7e9f"
+      }
+    ],
+    "emitted_artifact_review": "Required before classifying capability: formal stage exit does not prove emitted artifacts unusable"
+  }
+]

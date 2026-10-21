@@ -1,0 +1,350 @@
+[
+  {
+    "family": "tpcc",
+    "workload": "new_order_rollback",
+    "system": "conventional-full-webridge",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-940e48d1eda4-tx-complete-v1/baseline-20261021T005327381050Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_rollback/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-940e48d1eda4-tx-complete-v1/record-20261021T005335115010Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_rollback/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-940e48d1eda4-tx-complete-v1/replay-20261021T005338323533Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_rollback/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-940e48d1eda4-tx-complete-v1/synth-20261021T005341995020Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_rollback/synth"
+      }
+    ],
+    "status": "failed-stage",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-940e48d1eda4-tx-complete-v1",
+    "results": {
+      "baseline": {
+        "success": false,
+        "error": "item not found",
+        "rolled_back": true
+      },
+      "record": {
+        "success": false,
+        "error": "item not found",
+        "rolled_back": true
+      }
+    },
+    "failed_stage": "synth",
+    "emitted_artifacts": [
+      {
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-940e48d1eda4-tx-complete-v1/replay-20261021T005338323533Z/graph.json",
+        "bytes": 13820944,
+        "sha256": "5305c564cf87045fe1fbed644fff8b27838fb42a6b2f04994f802952fe6827e8"
+      }
+    ],
+    "emitted_artifact_review": "Required before classifying capability: formal stage exit does not prove emitted artifacts unusable"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_id_GC",
+    "system": "conventional-full-webridge",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1/baseline-20261021T005406325991Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_GC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1/record-20261021T005413965446Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_GC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1/replay-20261021T005416630509Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_GC/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1/synth-20261021T005419016075Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_GC/synth"
+      },
+      {
+        "stage": "install",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_GC/install",
+        "sql_sha256": {
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1/generated/sql/Tpcc_76f2a04f23aa/graph-SP-function.sql": "539589a49a45f3818d312fbf6792a5a45418c11d219a7968d24f17f697d306d0",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1/generated/sql/Tpcc_76f2a04f23aa/graph-SP-Tpcc_76f2a04f23aa_sp_1_ver0.sql": "9fb47c752146ffe9731041bde35b4b72191095570670ddbc280783e85a6729ed"
+        }
+      },
+      {
+        "stage": "optimized",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1/optimized-20261021T005425687914Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_GC/optimized"
+      }
+    ],
+    "status": "success",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1",
+    "results": {
+      "baseline": {
+        "success": true,
+        "c_id": 1911,
+        "amount": 3329.91
+      },
+      "record": {
+        "success": true,
+        "c_id": 1911,
+        "amount": 3329.91
+      },
+      "optimized": {
+        "success": true,
+        "c_id": 1911,
+        "amount": 3329.91
+      }
+    },
+    "optimized_activation": {
+      "call_procedure": 1,
+      "sp_enabled_start": true,
+      "sp_enabled_end": true,
+      "server_questions": 6
+    },
+    "correctness": "Identical outputs and full normalized mutable-table states from independent initial resets"
+  },
+  {
+    "family": "tpcc",
+    "workload": "new_order_5",
+    "system": "conventional-full-webridge",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-93bcc07ede7e-tx-complete-v1/baseline-20261021T005910256077Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_5/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-93bcc07ede7e-tx-complete-v1/record-20261021T005918248396Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_5/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-93bcc07ede7e-tx-complete-v1/replay-20261021T005920889626Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_5/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-93bcc07ede7e-tx-complete-v1/synth-20261021T005923606208Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_5/synth"
+      }
+    ],
+    "status": "failed-stage",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-93bcc07ede7e-tx-complete-v1",
+    "results": {
+      "baseline": {
+        "success": true,
+        "o_id": 3001,
+        "total": 486.63,
+        "ol_cnt": 5
+      },
+      "record": {
+        "success": true,
+        "o_id": 3001,
+        "total": 486.63,
+        "ol_cnt": 5
+      }
+    },
+    "failed_stage": "synth",
+    "emitted_artifacts": [
+      {
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-93bcc07ede7e-tx-complete-v1/replay-20261021T005920889626Z/graph.json",
+        "bytes": 2859012,
+        "sha256": "8d8ec8001adc01be7d717a68384606d34c22456a916f40ec84c8558ae8c04cae"
+      }
+    ],
+    "emitted_artifact_review": "Required before classifying capability: formal stage exit does not prove emitted artifacts unusable"
+  },
+  {
+    "family": "tpcc",
+    "workload": "new_order_15",
+    "system": "conventional-full-webridge",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-c96358845032-tx-complete-v1/baseline-20261021T010015523113Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_15/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-c96358845032-tx-complete-v1/record-20261021T010023261474Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_15/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-c96358845032-tx-complete-v1/replay-20261021T010025897227Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_15/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-c96358845032-tx-complete-v1/synth-20261021T010030370823Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_15/synth"
+      }
+    ],
+    "status": "failed-stage",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-c96358845032-tx-complete-v1",
+    "results": {
+      "baseline": {
+        "success": true,
+        "o_id": 3001,
+        "total": 2466.68,
+        "ol_cnt": 15
+      },
+      "record": {
+        "success": true,
+        "o_id": 3001,
+        "total": 2466.68,
+        "ol_cnt": 15
+      }
+    },
+    "failed_stage": "synth",
+    "emitted_artifacts": [
+      {
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-c96358845032-tx-complete-v1/replay-20261021T010025897227Z/graph.json",
+        "bytes": 21083259,
+        "sha256": "c3bce25928c1f82811439c2e406eeef20f6c4682bca2981c550fe6c60433fa08"
+      }
+    ],
+    "emitted_artifact_review": "Required before classifying capability: formal stage exit does not prove emitted artifacts unusable"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_name_BC",
+    "system": "conventional-full-webridge",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-101cbefb29ff-tx-complete-v1/baseline-20261021T010510960429Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_name_BC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-101cbefb29ff-tx-complete-v1/record-20261021T010518798875Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_name_BC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-101cbefb29ff-tx-complete-v1/replay-20261021T010521483732Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_name_BC/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-101cbefb29ff-tx-complete-v1/synth-20261021T010523870328Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_name_BC/synth"
+      },
+      {
+        "stage": "install",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_name_BC/install",
+        "sql_sha256": {
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-101cbefb29ff-tx-complete-v1/generated/sql/Tpcc_88bdc414e7d6/graph-SP-function.sql": "539589a49a45f3818d312fbf6792a5a45418c11d219a7968d24f17f697d306d0",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-101cbefb29ff-tx-complete-v1/generated/sql/Tpcc_88bdc414e7d6/graph-SP-Tpcc_88bdc414e7d6_sp_1_ver0.sql": "6553f1b397174b8dd04527314e45d64ce5a0812b4436d12d6c042682007532c4"
+        }
+      }
+    ],
+    "status": "failed-stage",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-101cbefb29ff-tx-complete-v1",
+    "results": {
+      "baseline": {
+        "success": true,
+        "c_id": 778,
+        "amount": 4792.26
+      },
+      "record": {
+        "success": true,
+        "c_id": 778,
+        "amount": 4792.26
+      }
+    },
+    "failed_stage": "install"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_id_BC",
+    "system": "conventional-full-webridge",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-56180b82f4f4-tx-complete-v1/baseline-20261021T010545155718Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_BC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-56180b82f4f4-tx-complete-v1/record-20261021T010552798142Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_BC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-56180b82f4f4-tx-complete-v1/replay-20261021T010557409322Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_BC/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-56180b82f4f4-tx-complete-v1/synth-20261021T010559915149Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_BC/synth"
+      },
+      {
+        "stage": "install",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_BC/install",
+        "sql_sha256": {
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-56180b82f4f4-tx-complete-v1/generated/sql/Tpcc_ad499434bc2e/graph-SP-function.sql": "539589a49a45f3818d312fbf6792a5a45418c11d219a7968d24f17f697d306d0",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-56180b82f4f4-tx-complete-v1/generated/sql/Tpcc_ad499434bc2e/graph-SP-Tpcc_ad499434bc2e_sp_1_ver0.sql": "4b42be0e9672b56fdd6738d804d871a486b3c7ab94cda2f22350afb0d5a30c04"
+        }
+      }
+    ],
+    "status": "failed-stage",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-56180b82f4f4-tx-complete-v1",
+    "results": {
+      "baseline": {
+        "success": true,
+        "c_id": 2998,
+        "amount": 1150.75
+      },
+      "record": {
+        "success": true,
+        "c_id": 2998,
+        "amount": 1150.75
+      }
+    },
+    "failed_stage": "install"
+  }
+]

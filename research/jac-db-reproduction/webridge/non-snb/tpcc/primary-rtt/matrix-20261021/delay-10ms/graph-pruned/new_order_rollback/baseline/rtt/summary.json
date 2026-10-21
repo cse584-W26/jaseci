@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket",
+  "unit": "ms",
+  "scope": "Every command inside exact timer SHOW SESSION STATUS bounds on the uniquely identified owned JDBC connection; connection initialization and status counters excluded. CALL contributes one outer response, with all result sets consumed by protocol parser. One application connection is certified by the driver connection receipt.",
+  "n": 30,
+  "total_requests": 40,
+  "median_ms": 156.33341984357685,
+  "command_counts": {
+    "12": 30
+  },
+  "call_requests": 0,
+  "trace": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/primary-rtt/matrix-20261021/delay-10ms/graph-pruned/new_order_rollback/compact.jsonl",
+  "timer_rows": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/primary-rtt/matrix-20261021/delay-10ms/graph-pruned/new_order_rollback/baseline/rows.jsonl",
+  "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/primary-rtt/matrix-20261021/delay-10ms/graph-pruned/new_order_rollback/baseline/rtt/rows.jsonl",
+  "sql_catalog": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/primary-rtt/matrix-20261021/delay-10ms/graph-pruned/new_order_rollback/baseline/rtt/sql-catalog.json",
+  "initialization_excluded": {
+    "scope": "Frozen TpccSql.open initialization is outside exact SHOW STATUS bounds; no connection setup commands included"
+  },
+  "connection": 1,
+  "mysql_connection_id": 24746
+}

@@ -1,0 +1,39 @@
+{
+  "status": "PASS",
+  "verifier_source_sha256": "b0bac3a63d46cce99bb04c5fe114c5464817f3d5f8cc9a6de225f7b11a40b1a4",
+  "scope": "Independent seed-derived model; every request and all eight mutable business relations",
+  "requests_checked": 900,
+  "outcomes": {
+    "payment": 406,
+    "rollback": 7,
+    "new_order": 487
+  },
+  "before_rows": {
+    "warehouse": 1,
+    "district": 10,
+    "customer": 30000,
+    "stock": 100000,
+    "orders": 30000,
+    "new_order": 9000,
+    "order_line": 300754,
+    "history": 30000
+  },
+  "after_rows": {
+    "warehouse": 1,
+    "district": 10,
+    "customer": 30000,
+    "stock": 100000,
+    "orders": 30487,
+    "new_order": 9487,
+    "order_line": 305500,
+    "history": 30406
+  },
+  "money_comparison": "Two decimal places, exact cents; raw precision retained in snapshots",
+  "initial_history_projection": "jac",
+  "input_layout": "Java JDBC",
+  "input_check": "All original logical fields and ordered line entries; additional graph UUID bindings permitted",
+  "repeated_original_plan_index": null,
+  "plan_sha256": "4358d01cc7ae244d1679a6d1d1992c5f6fee6218cca7d402b341e7de68dfc641",
+  "seed_manifest_sha256": "6a65e8df4414c055f5e365d1118636d2a987b8cdfdce26e6dedaf9a8ecc1fd58",
+  "request_log_sha256": "8ee5f6586046369255d094f7d70bf39b418962cd6ad2e162763e5fd724546169"
+}

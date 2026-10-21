@@ -1,0 +1,37 @@
+{
+  "timed_out": true,
+  "limit_s": 15,
+  "timeout_receipt": {
+    "wall_ns": 1792546491789026859,
+    "reason": "active request exceeded measured wall-time limit",
+    "connection_id": 7283,
+    "request_marker": {
+      "start_wall_ms": 1792546476670,
+      "phase": "mixed",
+      "iteration": 0,
+      "warmup": true,
+      "api": "Tpcc_ad8afad4201f",
+      "watchdog_elapsed_s": 15.06709228515625
+    },
+    "verified_process": {
+      "db": "jac_tpcc_conventional",
+      "id": 7283,
+      "info": null,
+      "time": 15,
+      "state": "",
+      "command": "Sleep"
+    },
+    "action": "KILL CONNECTION 7283",
+    "returncode": 0,
+    "stderr": ""
+  },
+  "command_error": "Traceback (most recent call last):\n  File \"/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/owned_watchdog.py\", line 46, in run\n    try:future.result()\n        ^^^^^^^^^^^^^^^\n  File \"/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/concurrent/futures/_base.py\", line 456, in result\n    return self.__get_result()\n           ^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/concurrent/futures/_base.py\", line 401, in __get_result\n    raise self._exception\n  File \"/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/concurrent/futures/thread.py\", line 59, in run\n    result = self.fn(*self.args, **self.kwargs)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/baichuan/jaseci/reproduction/webridge/integration/control.py\", line 113, in command\n    if rc:raise SystemExit(rc)\n          ^^^^^^^^^^^^^^^^^^^^\nSystemExit: -15\n",
+  "final_database_cleanup": {
+    "wall_ns": 1792546510725233316,
+    "reason": "owned JDBC process ended; final server-session cleanup",
+    "connection_id": 7283,
+    "request_marker": {},
+    "verified_process": null,
+    "action": null
+  }
+}

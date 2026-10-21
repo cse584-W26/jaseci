@@ -1,0 +1,11 @@
+{
+  "label": "tpcc-whole900-actual-webridge-conventional-full",
+  "pid": 3332341,
+  "requested_utc": "2026-10-21T01:26:08.798976+00:00",
+  "lock": "/home/baichuan/jaseci/reproduction/webridge/non-snb/.measurement.lock",
+  "acquired_utc": "2026-10-21T01:29:41.382975+00:00",
+  "acquired_monotonic_ns": 1082551468699353,
+  "error": "AssertionError: {'timed_out': True, 'limit_s': 15, 'timeout_receipt': {'wall_ns': 1792546213931826405, 'reason': 'active request exceeded measured wall-time limit', 'connection_id': 6956, 'request_marker': {'start_wall_ms': 1792546198784, 'phase': 'mixed', 'iteration': 0, 'warmup': True, 'api': 'Tpcc_ad8afad4201f', 'watchdog_elapsed_s': 15.093485107421875}, 'verified_process': {'db': 'jac_tpcc_conventional', 'id': 6956, 'info': None, 'time': 15, 'state': '', 'command': 'Sleep'}, 'action': 'KILL CONNECTION 6956', 'returncode': 0, 'stderr': ''}, 'command_error': 'Traceback (most recent call last):\\n  File \"/home/baichuan/jaseci/reproduction/webridge/benchmark-comparison/owned_watchdog.py\", line 46, in run\\n    try:future.result()\\n        ^^^^^^^^^^^^^^^\\n  File \"/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/concurrent/futures/_base.py\", line 456, in result\\n    return self.__get_result()\\n           ^^^^^^^^^^^^^^^^^^^\\n  File \"/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/concurrent/futures/_base.py\", line 401, in __get_result\\n    raise self._exception\\n  File \"/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/concurrent/futures/thread.py\", line 59, in run\\n    result = self.fn(*self.args, **self.kwargs)\\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n  File \"/home/baichuan/jaseci/reproduction/webridge/integration/control.py\", line 113, in command\\n    if rc:raise SystemExit(rc)\\n          ^^^^^^^^^^^^^^^^^^^^\\nSystemExit: -15\\n', 'final_database_cleanup': {'wall_ns': 1792546320844269091, 'reason': 'owned JDBC process ended; final server-session cleanup', 'connection_id': 6956, 'request_marker': {}, 'verified_process': None, 'action': None}}",
+  "released_utc": "2026-10-21T01:32:00.893881+00:00",
+  "released_monotonic_ns": 1082690979601279
+}

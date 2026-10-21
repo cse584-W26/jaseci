@@ -1,0 +1,11 @@
+{
+  "label": "TPC-C atomic full compiler lifecycle conventional full new_order_rollback",
+  "pid": 2,
+  "requested_utc": "2026-10-21T00:26:40.466534+00:00",
+  "lock": "/home/baichuan/jaseci/reproduction/webridge/non-snb/.measurement.lock",
+  "acquired_utc": "2026-10-21T00:26:40.466578+00:00",
+  "acquired_monotonic_ns": 1078770552291126,
+  "error": "AssertionError: (PosixPath('/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002318Z/new_order_rollback/baseline-reset'), b'permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get \"http://%2Fvar%2Frun%2Fdocker.sock/v1.47/containers/jac-webridge-mysql57/json\": dial unix /var/run/docker.sock: connect: operation not permitted\\nTraceback (most recent call last):\\n  File \"/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/relational_fixture.py\", line 44, in <module>\\n    print(json.dumps(prepare(a.out)if a.action==\\'prepare\\'else load(a.out,a.database),indent=2))\\n                                                              ^^^^^^^^^^^^^^^^^^^^^^\\n  File \"/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/relational_fixture.py\", line 34, in load\\n    subprocess.run([\\'docker\\',\\'exec\\',\\'jac-webridge-mysql57\\',\\'mkdir\\',\\'-p\\',container],check=True)\\n  File \"/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/subprocess.py\", line 571, in run\\n    raise CalledProcessError(retcode, process.args,\\nsubprocess.CalledProcessError: Command \\'[\\'docker\\', \\'exec\\', \\'jac-webridge-mysql57\\', \\'mkdir\\', \\'-p\\', \\'/tmp/jac_tpcc_conventional\\']\\' returned non-zero exit status 1.\\n')",
+  "released_utc": "2026-10-21T00:26:40.512667+00:00",
+  "released_monotonic_ns": 1078770598381497
+}

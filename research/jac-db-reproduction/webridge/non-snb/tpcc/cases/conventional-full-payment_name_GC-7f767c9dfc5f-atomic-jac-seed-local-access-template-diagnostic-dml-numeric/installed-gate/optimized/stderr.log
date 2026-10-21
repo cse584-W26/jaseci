@@ -1,0 +1,53 @@
+[main] INFO webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Refreshing sp defs...
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Reading sp def[graph-Tpcc_9b70f801a482_sp_1_ver0-SpDef.data], creationTime: 2026-10-21T00:30:57.568753Z, lastAccessTime: 2026-10-21T00:30:57.567753Z, lastModifiedTime: 2026-10-21T00:30:57.568753Z
+[main] INFO webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Found 1 sp definitions
+[main] INFO webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Sp definitions: Tpcc_9b70f801a482={Tpcc_9b70f801a482_sp_1_ver0=webridge.wbridge.storedprocedure.SPDefinition@7bc1a03d}
+[main] ERROR webridge.wbridge.storedprocedure.utils.SPUtils - unable to initialize hikari proxy connection class, proxy connection seems not using HikariProxyConnection
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing stored procedure:Tpcc_9b70f801a482_sp_1_ver0
+com.mysql.jdbc.MysqlDataTruncation: Data truncation: BIGINT UNSIGNED value is out of range in '(0 - ((ascii(cast(substr(RS_q3_r2_col1@28,(0 + 1),1) as char charset utf8mb4)) + 16) & 31))'
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3974)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:871)
+	at com.mysql.jdbc.MysqlIO.readAllResults(MysqlIO.java:2373)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2739)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.invokeSP(SPInvokeManager.java:618)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteQuery(SPInvokeManager.java:159)
+	at com.mysql.jdbc.PreparedStatement.executeQuery(PreparedStatement.java:1926)
+	at TpccSql.rows(TpccSql.java:13)
+	at TpccSql.one(TpccSql.java:14)
+	at TpccSql.body(TpccSql.java:47)
+	at TpccSql.request(TpccSql.java:64)
+	at TpccWeBridge.execute(TpccWeBridge.java:44)
+	at TpccWeBridge.main(TpccWeBridge.java:48)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Rollback read-write ongoing transactions in Tpcc_9b70f801a482_sp_1_ver0
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO null
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'null' at line 1
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.invokeSP(SPInvokeManager.java:644)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteQuery(SPInvokeManager.java:159)
+	at com.mysql.jdbc.PreparedStatement.executeQuery(PreparedStatement.java:1926)
+	at TpccSql.rows(TpccSql.java:13)
+	at TpccSql.one(TpccSql.java:14)
+	at TpccSql.body(TpccSql.java:47)
+	at TpccSql.request(TpccSql.java:64)
+	at TpccWeBridge.execute(TpccWeBridge.java:44)
+	at TpccWeBridge.main(TpccWeBridge.java:48)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Invocation failure] Invoke sp failed, fallback to normal execution:Tpcc_9b70f801a482, com.mysql.jdbc.JDBC42PreparedStatement@a9cd3b1: SELECT w_name FROM warehouse WHERE w_id=1 FOR UPDATE

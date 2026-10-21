@@ -1,0 +1,1295 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  Internal Error (os_linux_zero.cpp:254), pid=3232267, tid=0x0000762e225ff640
+#  fatal error: caught unhandled signal 11
+#
+# JRE version: OpenJDK Runtime Environment (8.0) (build 1.8.0-internal-_2026_10_20_17_57-b00)
+# Java VM: OpenJDK 64-Bit Zero VM (25.71-b00 interpreted mode linux-amd64 )
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x0000762e1c00dbe0):  JavaThread "main" [_thread_in_Java, id=3232268, stack(0x0000762e21201000,0x0000762e22600000)]
+
+Stack: [0x0000762e21201000,0x0000762e22600000],  sp=0x0000762e21c02840,  free space=10246k
+Java frames:
+ 0x0000762e225fe260: stack_word[2]         = 0x0000762c00000009
+ 0x0000762e225fe268: stack_word[1]         = 0x0000762cc847e938
+ 0x0000762e225fe270: stack_word[0]         = 0x0000762c1a37e2c8
+ 0x0000762e225fe278: istate->_thread       = 0x0000762e1c00dbe0
+ 0x0000762e225fe280: istate->_bcp          = 0x0000762c1497c6bc (bci 68)
+ 0x0000762e225fe288: istate->_locals       = 0x0000762e225fe388
+ 0x0000762e225fe290: istate->_constants    = 0x0000762c1497e648
+ 0x0000762e225fe298: istate->_method       = TpccSql.rows(Ljava/sql/Connection;Ljava/lang/String;ILjava/lang/String;[Ljava/lang/Object;)Ljava/util/List;
+ 0x0000762e225fe2a0: istate->_mdx          = 0x0000000000000000
+ 0x0000762e225fe2a8: istate->_stack        = 0x0000762e225fe258
+ 0x0000762e225fe2b0: istate->_msg          = 0x0000000000000008
+ 0x0000762e225fe2b8: istate->_result       = 0x0000762c043cc1b0
+ 0x0000762e225fe2c0: (istate->_result)     = 0x0000762e1a0001a0
+ 0x0000762e225fe2c8: (istate->_result)     = 0x0000762c00000005
+ 0x0000762e225fe2d0: istate->_prev_link    = 0x0000000000000000
+ 0x0000762e225fe2d8: istate->_oop_temp     = 0x0000000000000000
+ 0x0000762e225fe2e0: istate->_stack_base   = 0x0000762e225fe278
+ 0x0000762e225fe2e8: istate->_stack_limit  = 0x0000762e225fe248
+ 0x0000762e225fe2f0: istate->_monitor_base = 0x0000762e225fe278
+ 0x0000762e225fe2f8: istate->_self_link    = 0x0000762e225fe278
+ 0x0000762e225fe300: frame_type            = INTERPRETER_FRAME
+ 0x0000762e225fe308: next_frame            = 0x0000762e225fe420
+
+ 0x0000762e225fe310: local[15]             = 0x0000000000000000
+ 0x0000762e225fe318: local[14]             = 0x0000000000000000
+ 0x0000762e225fe320: local[13]             = 0x0000000000000000
+ 0x0000762e225fe328: local[12]             = 0x0000000000000000
+ 0x0000762e225fe330: local[11]             = 0x0000762c00000009
+ 0x0000762e225fe338: local[10]             = 0x0000762c1a37e2c8
+ 0x0000762e225fe340: local[9]              = 0x0000762c1a37e298
+ 0x0000762e225fe348: local[8]              = 0x0000000000000000
+ 0x0000762e225fe350: local[7]              = 0x0000762cc847e938
+ 0x0000762e225fe358: local[6]              = 0x0000000000000000
+ 0x0000762e225fe360: local[5]              = 0x0000762c1a0fdf38
+ 0x0000762e225fe368: local[4]              = 0x0000762c1a0fde50
+ 0x0000762e225fe370: local[3]              = 0x0000762c1a0fdc98
+ 0x0000762e225fe378: local[2]              = 0x000000000000000b
+ 0x0000762e225fe380: local[1]              = 0x0000762c1a0fddd8
+ 0x0000762e225fe388: local[0]              = 0x0000762cc4f46438
+ 0x0000762e225fe390: istate->_thread       = 0x0000762e1c00dbe0
+ 0x0000762e225fe398: istate->_bcp          = 0x0000762bf70c4472 (bci 146)
+ 0x0000762e225fe3a0: istate->_locals       = 0x0000762e225fe458
+ 0x0000762e225fe3a8: istate->_constants    = 0x0000762bf70c5410
+ 0x0000762e225fe3b0: istate->_method       = TpccGraph$Session.load(Ljava/util/Collection;)Ljava/util/List;
+ 0x0000762e225fe3b8: istate->_mdx          = 0x0000000000000000
+ 0x0000762e225fe3c0: istate->_stack        = 0x0000762e225fe360
+ 0x0000762e225fe3c8: istate->_msg          = 0x0000762e00000008
+ 0x0000762e225fe3d0: istate->_result       = 0x0000762c1497c800
+ 0x0000762e225fe3d8: (istate->_result)     = 0x0000762e1a0001a0
+ 0x0000762e225fe3e0: (istate->_result)     = 0x0000000000000003
+ 0x0000762e225fe3e8: istate->_prev_link    = 0x0000000000000000
+ 0x0000762e225fe3f0: istate->_oop_temp     = 0x0000000000000000
+ 0x0000762e225fe3f8: istate->_stack_base   = 0x0000762e225fe390
+ 0x0000762e225fe400: istate->_stack_limit  = 0x0000762e225fe350
+ 0x0000762e225fe408: istate->_monitor_base = 0x0000762e225fe390
+ 0x0000762e225fe410: istate->_self_link    = 0x0000762e225fe390
+ 0x0000762e225fe418: frame_type            = INTERPRETER_FRAME
+ 0x0000762e225fe420: next_frame            = 0x0000762e225fe4f0
+
+ 0x0000762e225fe428: local[6]              = 0x0000000000000000
+ 0x0000762e225fe430: local[5]              = 0x0000000000000000
+ 0x0000762e225fe438: local[4]              = 0x0000762cc5b83448
+ 0x0000762e225fe440: local[3]              = 0x0000762c1a0fdc98
+ 0x0000762e225fe448: local[2]              = 0x0000762c1a0fd200
+ 0x0000762e225fe450: local[1]              = 0x0000762c1a0fd1d8
+ 0x0000762e225fe458: local[0]              = 0x0000762c1a0fd048
+ 0x0000762e225fe460: istate->_thread       = 0x0000762e1c00dbe0
+ 0x0000762e225fe468: istate->_bcp          = 0x0000762bf70c46dc (bci 12)
+ 0x0000762e225fe470: istate->_locals       = 0x0000762e225fe508
+ 0x0000762e225fe478: istate->_constants    = 0x0000762bf70c5410
+ 0x0000762e225fe480: istate->_method       = TpccGraph$Session.get(Ljava/lang/String;)LTpccGraph$Node;
+ 0x0000762e225fe488: istate->_mdx          = 0x0000000000000000
+ 0x0000762e225fe490: istate->_stack        = 0x0000762e225fe448
+ 0x0000762e225fe498: istate->_msg          = 0x0000762c00000008
+ 0x0000762e225fe4a0: istate->_result       = 0x0000762bf70c4548
+ 0x0000762e225fe4a8: (istate->_result)     = 0x0000762e1a0001a0
+ 0x0000762e225fe4b0: (istate->_result)     = 0x0000762e00000003
+ 0x0000762e225fe4b8: istate->_prev_link    = 0x0000000000000000
+ 0x0000762e225fe4c0: istate->_oop_temp     = 0x0000000000000000
+ 0x0000762e225fe4c8: istate->_stack_base   = 0x0000762e225fe460
+ 0x0000762e225fe4d0: istate->_stack_limit  = 0x0000762e225fe428
+ 0x0000762e225fe4d8: istate->_monitor_base = 0x0000762e225fe460
+ 0x0000762e225fe4e0: istate->_self_link    = 0x0000762e225fe460
+ 0x0000762e225fe4e8: frame_type            = INTERPRETER_FRAME
+ 0x0000762e225fe4f0: next_frame            = 0x0000762e225fe5a0
+
+ 0x0000762e225fe4f8: local[2]              = 0x0000000000000000
+ 0x0000762e225fe500: local[1]              = 0x0000762cc5b83448
+ 0x0000762e225fe508: local[0]              = 0x0000762c1a0fd048
+ 0x0000762e225fe510: istate->_thread       = 0x0000762e1c00dbe0
+ 0x0000762e225fe518: istate->_bcp          = 0x0000762c043c2b2c (bci 20)
+ 0x0000762e225fe520: istate->_locals       = 0x0000762e225fe670
+ 0x0000762e225fe528: istate->_constants    = 0x0000762c043c3730
+ 0x0000762e225fe530: istate->_method       = TpccGraph.body(Ljava/sql/Connection;Lcom/alibaba/fastjson2/JSONObject;)Lcom/alibaba/fastjson2/JSONObject;
+ 0x0000762e225fe538: istate->_mdx          = 0x0000000000000000
+ 0x0000762e225fe540: istate->_stack        = 0x0000762e225fe4f8
+ 0x0000762e225fe548: istate->_msg          = 0x0000762e00000008
+ 0x0000762e225fe550: istate->_result       = 0x0000762bf70c4700
+ 0x0000762e225fe558: (istate->_result)     = 0x0000762e1a0001a0
+ 0x0000762e225fe560: (istate->_result)     = 0x0000762e00000003
+ 0x0000762e225fe568: istate->_prev_link    = 0x0000000000000000
+ 0x0000762e225fe570: istate->_oop_temp     = 0x0000000000000000
+ 0x0000762e225fe578: istate->_stack_base   = 0x0000762e225fe510
+ 0x0000762e225fe580: istate->_stack_limit  = 0x0000762e225fe4b0
+ 0x0000762e225fe588: istate->_monitor_base = 0x0000762e225fe510
+ 0x0000762e225fe590: istate->_self_link    = 0x0000762e225fe510
+ 0x0000762e225fe598: frame_type            = INTERPRETER_FRAME
+ 0x0000762e225fe5a0: next_frame            = 0x0000762e225fe708
+
+ 0x0000762e225fe5a8: local[25]             = 0x0000000000000000
+ 0x0000762e225fe5b0: local[24]             = 0x0000000000000000
+ 0x0000762e225fe5b8: local[23]             = 0x0000000000000000
+ 0x0000762e225fe5c0: local[22]             = 0x0000000000000000
+ 0x0000762e225fe5c8: local[21]             = 0x0000000000000000
+ 0x0000762e225fe5d0: local[20]             = 0x0000000000000000
+ 0x0000762e225fe5d8: local[19]             = 0x0000000000000000
+ 0x0000762e225fe5e0: local[18]             = 0x0000000000000000
+ 0x0000762e225fe5e8: local[17]             = 0x0000000000000000
+ 0x0000762e225fe5f0: local[16]             = 0x0000000000000000
+ 0x0000762e225fe5f8: local[15]             = 0x0000000000000000
+ 0x0000762e225fe600: local[14]             = 0x0000000000000000
+ 0x0000762e225fe608: local[13]             = 0x0000000000000000
+ 0x0000762e225fe610: local[12]             = 0x0000000000000000
+ 0x0000762e225fe618: local[11]             = 0x0000000000000000
+ 0x0000762e225fe620: local[10]             = 0x0000000000000000
+ 0x0000762e225fe628: local[9]              = 0x0000000000000000
+ 0x0000762e225fe630: local[8]              = 0x0000000000000000
+ 0x0000762e225fe638: local[7]              = 0x0000000000000000
+ 0x0000762e225fe640: local[6]              = 0x0000000000000000
+ 0x0000762e225fe648: local[5]              = 0x0000000000000000
+ 0x0000762e225fe650: local[4]              = 0x0000000000000000
+ 0x0000762e225fe658: local[3]              = 0x0000000000000000
+ 0x0000762e225fe660: local[2]              = 0x0000762c1a0fd048
+ 0x0000762e225fe668: local[1]              = 0x0000762cc4d06940
+ 0x0000762e225fe670: local[0]              = 0x0000762cc4f46438
+ 0x0000762e225fe678: istate->_thread       = 0x0000762e1c00dbe0
+ 0x0000762e225fe680: istate->_bcp          = 0x0000762c1497dde4 (bci 68)
+ 0x0000762e225fe688: istate->_locals       = 0x0000762e225fe730
+ 0x0000762e225fe690: istate->_constants    = 0x0000762c1497e648
+ 0x0000762e225fe698: istate->_method       = TpccSql.request(Ljava/sql/Connection;Lcom/alibaba/fastjson2/JSONObject;)Lcom/alibaba/fastjson2/JSONObject;
+ 0x0000762e225fe6a0: istate->_mdx          = 0x0000000000000000
+ 0x0000762e225fe6a8: istate->_stack        = 0x0000762e225fe660
+ 0x0000762e225fe6b0: istate->_msg          = 0x0000762e00000008
+ 0x0000762e225fe6b8: istate->_result       = 0x0000762c043c31c0
+ 0x0000762e225fe6c0: (istate->_result)     = 0x0000762e1a0001a0
+ 0x0000762e225fe6c8: (istate->_result)     = 0x0000000000000003
+ 0x0000762e225fe6d0: istate->_prev_link    = 0x0000000000000000
+ 0x0000762e225fe6d8: istate->_oop_temp     = 0x0000000000000000
+ 0x0000762e225fe6e0: istate->_stack_base   = 0x0000762e225fe678
+ 0x0000762e225fe6e8: istate->_stack_limit  = 0x0000762e225fe648
+ 0x0000762e225fe6f0: istate->_monitor_base = 0x0000762e225fe678
+ 0x0000762e225fe6f8: istate->_self_link    = 0x0000762e225fe678
+ 0x0000762e225fe700: frame_type            = INTERPRETER_FRAME
+ 0x0000762e225fe708: next_frame            = 0x0000762e225fe7c8
+
+ 0x0000762e225fe710: local[4]              = 0x0000000000000000
+ 0x0000762e225fe718: local[3]              = 0x0000000000000000
+ 0x0000762e225fe720: local[2]              = 0x0000762c00000001
+ 0x0000762e225fe728: local[1]              = 0x0000762cc4d06940
+ 0x0000762e225fe730: local[0]              = 0x0000762cc4f46438
+ 0x0000762e225fe738: istate->_thread       = 0x0000762e1c00dbe0
+ 0x0000762e225fe740: istate->_bcp          = 0x0000762c1800261e (bci 278)
+ 0x0000762e225fe748: istate->_locals       = 0x0000762e225fe848
+ 0x0000762e225fe750: istate->_constants    = 0x0000762c18008688
+ 0x0000762e225fe758: istate->_method       = TpccWeBridge.execute([Ljava/lang/String;)V
+ 0x0000762e225fe760: istate->_mdx          = 0x0000000000000000
+ 0x0000762e225fe768: istate->_stack        = 0x0000762e225fe720
+ 0x0000762e225fe770: istate->_msg          = 0x0000762e00000008
+ 0x0000762e225fe778: istate->_result       = 0x0000762c1497deb0
+ 0x0000762e225fe780: (istate->_result)     = 0x0000762e1a0001a0
+ 0x0000762e225fe788: (istate->_result)     = 0x0000762e00000003
+ 0x0000762e225fe790: istate->_prev_link    = 0x0000000000000000
+ 0x0000762e225fe798: istate->_oop_temp     = 0x0000000000000000
+ 0x0000762e225fe7a0: istate->_stack_base   = 0x0000762e225fe738
+ 0x0000762e225fe7a8: istate->_stack_limit  = 0x0000762e225fe6f0
+ 0x0000762e225fe7b0: istate->_monitor_base = 0x0000762e225fe738
+ 0x0000762e225fe7b8: istate->_self_link    = 0x0000762e225fe738
+ 0x0000762e225fe7c0: frame_type            = INTERPRETER_FRAME
+ 0x0000762e225fe7c8: next_frame            = 0x0000762e225fe8e0
+
+ 0x0000762e225fe7d0: local[15]             = 0x0000000000000000
+ 0x0000762e225fe7d8: local[14]             = 0x0000000000000000
+ 0x0000762e225fe7e0: local[13]             = 0x0000000000000000
+ 0x0000762e225fe7e8: local[12]             = 0x0000000000000000
+ 0x0000762e225fe7f0: local[11]             = 0x0000000000000000
+ 0x0000762e225fe7f8: local[10]             = 0x0000000000000000
+ 0x0000762e225fe800: local[9]              = 0x0000000000000000
+ 0x0000762e225fe808: local[8]              = 0x0000000000000000
+ 0x0000762e225fe810: local[7]              = 0x0003d7eee5ad5248
+ 0x0000762e225fe818: local[6]              = 0x0000000000000000
+ 0x0000762e225fe820: local[5]              = 0x0000762cc4fc0048
+ 0x0000762e225fe828: local[4]              = 0x0000000000000000
+ 0x0000762e225fe830: local[3]              = 0x0000762cc4f46438
+ 0x0000762e225fe838: local[2]              = 0x0000762cc4d06940
+ 0x0000762e225fe840: local[1]              = 0x0000762cc4ae5e50
+ 0x0000762e225fe848: local[0]              = 0x0000762cc4ae5e28
+ 0x0000762e225fe850: istate->_thread       = 0x0000762e1c00dbe0
+ 0x0000762e225fe858: istate->_bcp          = 0x0000762c180028d1 (bci 1)
+ 0x0000762e225fe860: istate->_locals       = 0x0000762e225fe8f8
+ 0x0000762e225fe868: istate->_constants    = 0x0000762c18008688
+ 0x0000762e225fe870: istate->_method       = TpccWeBridge.main([Ljava/lang/String;)V
+ 0x0000762e225fe878: istate->_mdx          = 0x0000000000000000
+ 0x0000762e225fe880: istate->_stack        = 0x0000762e225fe840
+ 0x0000762e225fe888: istate->_msg          = 0x0000762e00000008
+ 0x0000762e225fe890: istate->_result       = 0x0000762c180027e0
+ 0x0000762e225fe898: (istate->_result)     = 0x0000762e1a0001a0
+ 0x0000762e225fe8a0: (istate->_result)     = 0x0000762e00000003
+ 0x0000762e225fe8a8: istate->_prev_link    = 0x0000000000000000
+ 0x0000762e225fe8b0: istate->_oop_temp     = 0x0000000000000000
+ 0x0000762e225fe8b8: istate->_stack_base   = 0x0000762e225fe850
+ 0x0000762e225fe8c0: istate->_stack_limit  = 0x0000762e225fe818
+ 0x0000762e225fe8c8: istate->_monitor_base = 0x0000762e225fe850
+ 0x0000762e225fe8d0: istate->_self_link    = 0x0000762e225fe850
+ 0x0000762e225fe8d8: frame_type            = INTERPRETER_FRAME
+ 0x0000762e225fe8e0: next_frame            = 0x0000762e225fe910
+
+ 0x0000762e225fe8e8: local[2]              = 0x0000000000000000
+ 0x0000762e225fe8f0: local[1]              = 0x0000000000000000
+ 0x0000762e225fe8f8: local[0]              = 0x0000762cc4ae5e28
+ 0x0000762e225fe900: call_wrapper          = 0x0000762e225fea50
+ 0x0000762e225fe908: frame_type            = ENTRY_FRAME
+ 0x0000762e225fe910: next_frame            = 0x0000000000000000
+
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x0000762e1c2d6080 JavaThread "Abandoned connection cleanup thread" daemon [_thread_blocked, id=3232297, stack(0x0000762c04400000,0x0000762c05800000)]
+  0x0000762e1c0b4c40 JavaThread "Service Thread" daemon [_thread_blocked, id=3232274, stack(0x0000762c05800000,0x0000762c06c00000)]
+  0x0000762e1c0b09b0 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=3232273, stack(0x0000762c06c00000,0x0000762c08000000)]
+  0x0000762e1c07ddc0 JavaThread "Finalizer" daemon [_thread_blocked, id=3232271, stack(0x0000762c15400000,0x0000762c16800000)]
+  0x0000762e1c079d90 JavaThread "Reference Handler" daemon [_thread_blocked, id=3232270, stack(0x0000762c16800000,0x0000762c17c00000)]
+=>0x0000762e1c00dbe0 JavaThread "main" [_thread_in_Java, id=3232268, stack(0x0000762e21201000,0x0000762e22600000)]
+
+Other Threads:
+  0x0000762e1c0705b0 VMThread [stack: 0x0000762e22901000,0x0000762e22a00000] [id=3232269]
+  0x0000762e1c0b6cd0 WatcherThread [stack: 0x0000762e21100000,0x0000762e211ff000] [id=3232275]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap:
+ def new generation   total 59200K, used 3580K [0x0000762c1a000000, 0x0000762c1e030000, 0x0000762cc4aa0000)
+  eden space 52672K,   6% used [0x0000762c1a000000, 0x0000762c1a37f048, 0x0000762c1d370000)
+  from space 6528K,   0% used [0x0000762c1d370000, 0x0000762c1d370000, 0x0000762c1d9d0000)
+  to   space 6528K,   0% used [0x0000762c1d9d0000, 0x0000762c1d9d0000, 0x0000762c1e030000)
+ tenured generation   total 131416K, used 78847K [0x0000762cc4aa0000, 0x0000762cccaf6000, 0x0000762e1a000000)
+   the space 131416K,  59% used [0x0000762cc4aa0000, 0x0000762cc979fed0, 0x0000762cc97a0000, 0x0000762cccaf6000)
+ Metaspace       used 16756K, capacity 17296K, committed 17580K, reserved 18432K
+
+Card table byte_map: [0x0000762c18fff000,0x0000762c1a000000] byte_map_base: 0x000075f102f2f000
+
+Polling page: 0x0000762e23e2b000
+
+CodeCache: size=32768Kb used=111Kb max_used=111Kb free=32656Kb
+ bounds [0x0000762e1a000000, 0x0000762e1a028000, 0x0000762e1c000000]
+ total_blobs=375 nmethods=0 adapters=367
+ compilation: disabled (interpreter mode)
+
+Compilation events (0 events):
+No events
+
+GC Heap History (10 events):
+Event: 1.393 GC heap before
+{Heap before GC invocations=14 (full 3):
+ def new generation   total 5184K, used 0K [0x0000762c1a000000, 0x0000762c1a5a0000, 0x0000762cc4aa0000)
+  eden space 4608K,   0% used [0x0000762c1a000000, 0x0000762c1a000240, 0x0000762c1a480000)
+  from space 576K,   0% used [0x0000762c1a480000, 0x0000762c1a480000, 0x0000762c1a510000)
+  to   space 576K,   0% used [0x0000762c1a510000, 0x0000762c1a510000, 0x0000762c1a5a0000)
+ tenured generation   total 22880K, used 18311K [0x0000762cc4aa0000, 0x0000762cc60f8000, 0x0000762e1a000000)
+   the space 22880K,  80% used [0x0000762cc4aa0000, 0x0000762cc5c81eb0, 0x0000762cc5c82000, 0x0000762cc60f8000)
+ Metaspace       used 13500K, capacity 14006K, committed 14252K, reserved 14336K
+Event: 1.401 GC heap after
+Heap after GC invocations=15 (full 4):
+ def new generation   total 12928K, used 0K [0x0000762c1a000000, 0x0000762c1ae00000, 0x0000762cc4aa0000)
+  eden space 11520K,   0% used [0x0000762c1a000000, 0x0000762c1a000000, 0x0000762c1ab40000)
+  from space 1408K,   0% used [0x0000762c1ab40000, 0x0000762c1ab40000, 0x0000762c1aca0000)
+  to   space 1408K,   0% used [0x0000762c1aca0000, 0x0000762c1aca0000, 0x0000762c1ae00000)
+ tenured generation   total 28636K, used 17179K [0x0000762cc4aa0000, 0x0000762cc6697000, 0x0000762e1a000000)
+   the space 28636K,  59% used [0x0000762cc4aa0000, 0x0000762cc5b66f38, 0x0000762cc5b67000, 0x0000762cc6697000)
+ Metaspace       used 13500K, capacity 14006K, committed 14252K, reserved 14336K
+}
+Event: 2.279 GC heap before
+{Heap before GC invocations=15 (full 4):
+ def new generation   total 12928K, used 11519K [0x0000762c1a000000, 0x0000762c1ae00000, 0x0000762cc4aa0000)
+  eden space 11520K,  99% used [0x0000762c1a000000, 0x0000762c1ab3ffe8, 0x0000762c1ab40000)
+  from space 1408K,   0% used [0x0000762c1ab40000, 0x0000762c1ab40000, 0x0000762c1aca0000)
+  to   space 1408K,   0% used [0x0000762c1aca0000, 0x0000762c1aca0000, 0x0000762c1ae00000)
+ tenured generation   total 51572K, used 40112K [0x0000762cc4aa0000, 0x0000762cc7cfd000, 0x0000762e1a000000)
+   the space 51572K,  77% used [0x0000762cc4aa0000, 0x0000762cc71cc2d8, 0x0000762cc71cc400, 0x0000762cc7cfd000)
+ Metaspace       used 13500K, capacity 14006K, committed 14252K, reserved 14336K
+Event: 2.288 GC heap after
+Heap after GC invocations=16 (full 4):
+ def new generation   total 12928K, used 1407K [0x0000762c1a000000, 0x0000762c1ae00000, 0x0000762cc4aa0000)
+  eden space 11520K,   0% used [0x0000762c1a000000, 0x0000762c1a000000, 0x0000762c1ab40000)
+  from space 1408K,  99% used [0x0000762c1aca0000, 0x0000762c1adfffe8, 0x0000762c1ae00000)
+  to   space 1408K,   0% used [0x0000762c1ab40000, 0x0000762c1ab40000, 0x0000762c1aca0000)
+ tenured generation   total 51572K, used 49647K [0x0000762cc4aa0000, 0x0000762cc7cfd000, 0x0000762e1a000000)
+   the space 51572K,  96% used [0x0000762cc4aa0000, 0x0000762cc7b1bd28, 0x0000762cc7b1be00, 0x0000762cc7cfd000)
+ Metaspace       used 13500K, capacity 14006K, committed 14252K, reserved 14336K
+}
+Event: 2.625 GC heap before
+{Heap before GC invocations=16 (full 4):
+ def new generation   total 12928K, used 12927K [0x0000762c1a000000, 0x0000762c1ae00000, 0x0000762cc4aa0000)
+  eden space 11520K,  99% used [0x0000762c1a000000, 0x0000762c1ab3ffe8, 0x0000762c1ab40000)
+  from space 1408K,  99% used [0x0000762c1aca0000, 0x0000762c1adfffe8, 0x0000762c1ae00000)
+  to   space 1408K,   0% used [0x0000762c1ab40000, 0x0000762c1ab40000, 0x0000762c1aca0000)
+ tenured generation   total 51572K, used 49647K [0x0000762cc4aa0000, 0x0000762cc7cfd000, 0x0000762e1a000000)
+   the space 51572K,  96% used [0x0000762cc4aa0000, 0x0000762cc7b1bd28, 0x0000762cc7b1be00, 0x0000762cc7cfd000)
+ Metaspace       used 13500K, capacity 14006K, committed 14252K, reserved 14336K
+Event: 2.660 GC heap after
+Heap after GC invocations=17 (full 5):
+ def new generation   total 38016K, used 0K [0x0000762c1a000000, 0x0000762c1c940000, 0x0000762cc4aa0000)
+  eden space 33792K,   0% used [0x0000762c1a000000, 0x0000762c1a000000, 0x0000762c1c100000)
+  from space 4224K,   0% used [0x0000762c1c100000, 0x0000762c1c100000, 0x0000762c1c520000)
+  to   space 4224K,   0% used [0x0000762c1c520000, 0x0000762c1c520000, 0x0000762c1c940000)
+ tenured generation   total 84436K, used 50660K [0x0000762cc4aa0000, 0x0000762cc9d15000, 0x0000762e1a000000)
+   the space 84436K,  59% used [0x0000762cc4aa0000, 0x0000762cc7c192b8, 0x0000762cc7c19400, 0x0000762cc9d15000)
+ Metaspace       used 13500K, capacity 14006K, committed 14252K, reserved 14336K
+}
+Event: 3.618 GC heap before
+{Heap before GC invocations=17 (full 5):
+ def new generation   total 38016K, used 33791K [0x0000762c1a000000, 0x0000762c1c940000, 0x0000762cc4aa0000)
+  eden space 33792K,  99% used [0x0000762c1a000000, 0x0000762c1c0fffd0, 0x0000762c1c100000)
+  from space 4224K,   0% used [0x0000762c1c100000, 0x0000762c1c100000, 0x0000762c1c520000)
+  to   space 4224K,   0% used [0x0000762c1c520000, 0x0000762c1c520000, 0x0000762c1c940000)
+ tenured generation   total 84436K, used 50660K [0x0000762cc4aa0000, 0x0000762cc9d15000, 0x0000762e1a000000)
+   the space 84436K,  59% used [0x0000762cc4aa0000, 0x0000762cc7c192b8, 0x0000762cc7c19400, 0x0000762cc9d15000)
+ Metaspace       used 13500K, capacity 14006K, committed 14252K, reserved 14336K
+Event: 3.645 GC heap after
+Heap after GC invocations=18 (full 5):
+ def new generation   total 38016K, used 4223K [0x0000762c1a000000, 0x0000762c1c940000, 0x0000762cc4aa0000)
+  eden space 33792K,   0% used [0x0000762c1a000000, 0x0000762c1a000000, 0x0000762c1c100000)
+  from space 4224K,  99% used [0x0000762c1c520000, 0x0000762c1c93ffe8, 0x0000762c1c940000)
+  to   space 4224K,   0% used [0x0000762c1c100000, 0x0000762c1c100000, 0x0000762c1c520000)
+ tenured generation   total 84436K, used 78692K [0x0000762cc4aa0000, 0x0000762cc9d15000, 0x0000762e1a000000)
+   the space 84436K,  93% used [0x0000762cc4aa0000, 0x0000762cc9779180, 0x0000762cc9779200, 0x0000762cc9d15000)
+ Metaspace       used 13500K, capacity 14006K, committed 14252K, reserved 14336K
+}
+Event: 4.711 GC heap before
+{Heap before GC invocations=18 (full 5):
+ def new generation   total 38016K, used 37952K [0x0000762c1a000000, 0x0000762c1c940000, 0x0000762cc4aa0000)
+  eden space 33792K,  99% used [0x0000762c1a000000, 0x0000762c1c0f0250, 0x0000762c1c100000)
+  from space 4224K,  99% used [0x0000762c1c520000, 0x0000762c1c93ffe8, 0x0000762c1c940000)
+  to   space 4224K,   0% used [0x0000762c1c100000, 0x0000762c1c100000, 0x0000762c1c520000)
+ tenured generation   total 84436K, used 78692K [0x0000762cc4aa0000, 0x0000762cc9d15000, 0x0000762e1a000000)
+   the space 84436K,  93% used [0x0000762cc4aa0000, 0x0000762cc9779180, 0x0000762cc9779200, 0x0000762cc9d15000)
+ Metaspace       used 16239K, capacity 16823K, committed 17068K, reserved 18432K
+Event: 4.795 GC heap after
+Heap after GC invocations=19 (full 6):
+ def new generation   total 59200K, used 0K [0x0000762c1a000000, 0x0000762c1e030000, 0x0000762cc4aa0000)
+  eden space 52672K,   0% used [0x0000762c1a000000, 0x0000762c1a000000, 0x0000762c1d370000)
+  from space 6528K,   0% used [0x0000762c1d370000, 0x0000762c1d370000, 0x0000762c1d9d0000)
+  to   space 6528K,   0% used [0x0000762c1d9d0000, 0x0000762c1d9d0000, 0x0000762c1e030000)
+ tenured generation   total 131416K, used 78847K [0x0000762cc4aa0000, 0x0000762cccaf6000, 0x0000762e1a000000)
+   the space 131416K,  59% used [0x0000762cc4aa0000, 0x0000762cc979fed0, 0x0000762cc97a0000, 0x0000762cccaf6000)
+ Metaspace       used 16239K, capacity 16823K, committed 17068K, reserved 18432K
+}
+
+Deoptimization events (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (10 events):
+Event: 0.150 Thread 0x0000762e1c00dbe0 Exception <a 'java/security/PrivilegedActionException'> (0x0000762c1a165170) thrown at [/work/webridge/SourceCode/openjdk8-webridge/hotspot/src/share/vm/prims/jvm.cpp, line 1753]
+Event: 0.150 Thread 0x0000762e1c00dbe0 Exception <a 'java/security/PrivilegedActionException'> (0x0000762c1a165748) thrown at [/work/webridge/SourceCode/openjdk8-webridge/hotspot/src/share/vm/prims/jvm.cpp, line 1753]
+Event: 0.150 Thread 0x0000762e1c00dbe0 Exception <a 'java/security/PrivilegedActionException'> (0x0000762c1a166f98) thrown at [/work/webridge/SourceCode/openjdk8-webridge/hotspot/src/share/vm/prims/jvm.cpp, line 1753]
+Event: 0.150 Thread 0x0000762e1c00dbe0 Exception <a 'java/security/PrivilegedActionException'> (0x0000762c1a167570) thrown at [/work/webridge/SourceCode/openjdk8-webridge/hotspot/src/share/vm/prims/jvm.cpp, line 1753]
+Event: 0.273 Thread 0x0000762e1c00dbe0 Exception <a 'java/lang/NoSuchMethodError': java.lang.Object.lambda$static$0(Ljava/lang/Object;)Ljava/lang/Object;> (0x0000762c1a1a87e8) thrown at [/work/webridge/SourceCode/openjdk8-webridge/hotspot/src/share/vm/interpreter/linkResolver.cpp, line 620]
+Event: 0.300 Thread 0x0000762e1c00dbe0 Exception <a 'java/lang/NoSuchFieldError': method resolution failed> (0x0000762c1a264c00) thrown at [/work/webridge/SourceCode/openjdk8-webridge/hotspot/src/share/vm/prims/methodHandles.cpp, line 1176]
+Event: 0.303 Thread 0x0000762e1c00dbe0 Exception <a 'java/lang/NoSuchFieldError': method resolution failed> (0x0000762c1a2784e0) thrown at [/work/webridge/SourceCode/openjdk8-webridge/hotspot/src/share/vm/prims/methodHandles.cpp, line 1176]
+Event: 0.994 Thread 0x0000762e1c00dbe0 Exception <a 'java/lang/ClassNotFoundException': jdk/management/jfr/internal/FlightRecorderMXBeanProvider> (0x0000762c1a33e458) thrown at [/work/webridge/SourceCode/openjdk8-webridge/hotspot/src/share/vm/classfile/systemDictionary.cpp, line 217]
+Event: 1.366 Thread 0x0000762e1c00dbe0 Exception <a 'sun/nio/fs/UnixException'> (0x0000762c1a3600c8) thrown at [/work/webridge/SourceCode/openjdk8-webridge/hotspot/src/share/vm/prims/jni.cpp, line 711]
+Event: 4.402 Thread 0x0000762e1c00dbe0 Exception <a 'java/lang/ExceptionInInitializerError'> (0x0000762c1b983410) thrown at [/work/webridge/SourceCode/openjdk8-webridge/hotspot/src/share/vm/oops/instanceKlass.cpp, line 969]
+
+Events (10 events):
+Event: 4.957 loading class com/alibaba/druid/sql/ast/expr/SQLNumberExpr
+Event: 4.957 loading class com/alibaba/druid/sql/ast/expr/SQLNumberExpr done
+Event: 4.960 loading class com/alibaba/druid/sql/ast/expr/SQLBinaryOpExprGroup
+Event: 4.960 loading class com/alibaba/druid/sql/ast/expr/SQLBinaryOpExprGroup done
+Event: 4.963 loading class org/apache/commons/lang3/tuple/Triple
+Event: 4.963 loading class org/apache/commons/lang3/tuple/Triple done
+Event: 4.966 loading class org/apache/commons/lang3/tuple/Triple$TripleAdapter
+Event: 4.966 loading class org/apache/commons/lang3/tuple/Triple$TripleAdapter done
+Event: 4.969 loading class org/apache/commons/lang3/tuple/ImmutableTriple
+Event: 4.969 loading class org/apache/commons/lang3/tuple/ImmutableTriple done
+
+
+Dynamic libraries:
+63f78ba00000-63f78ba01000 r-xp 00000000 103:02 146001                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/bin/java
+63f78bc00000-63f78bc01000 r--p 00000000 103:02 146001                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/bin/java
+63f78bc01000-63f78bc02000 rw-p 00001000 103:02 146001                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/bin/java
+63f7a20cb000-63f7a2111000 rw-p 00000000 00:00 0                          [heap]
+762bf0000000-762bf0021000 rw-p 00000000 00:00 0 
+762bf0021000-762bf4000000 ---p 00000000 00:00 0 
+762bf7000000-762bf7140000 rw-p 00000000 00:00 0 
+762bf7140000-762bf7200000 ---p 00000000 00:00 0 
+762bf7200000-762bf7400000 rw-p 00000000 00:00 0 
+762bf74cd000-762bf8000000 rw-p 00000000 00:00 0 
+762bf8000000-762bf8021000 rw-p 00000000 00:00 0 
+762bf8021000-762bfc000000 ---p 00000000 00:00 0 
+762bfc000000-762bfc021000 rw-p 00000000 00:00 0 
+762bfc021000-762c00000000 ---p 00000000 00:00 0 
+762c00000000-762c00021000 rw-p 00000000 00:00 0 
+762c00021000-762c04000000 ---p 00000000 00:00 0 
+762c04200000-762c04400000 rw-p 00000000 00:00 0 
+762c04400000-762c04403000 ---p 00000000 00:00 0 
+762c04403000-762c05800000 rw-p 00000000 00:00 0 
+762c05800000-762c05803000 ---p 00000000 00:00 0 
+762c05803000-762c06c00000 rw-p 00000000 00:00 0 
+762c06c00000-762c06c03000 ---p 00000000 00:00 0 
+762c06c03000-762c08000000 rw-p 00000000 00:00 0 
+762c08000000-762c08021000 rw-p 00000000 00:00 0 
+762c08021000-762c0c000000 ---p 00000000 00:00 0 
+762c0c000000-762c0c021000 rw-p 00000000 00:00 0 
+762c0c021000-762c10000000 ---p 00000000 00:00 0 
+762c10000000-762c101be000 rw-p 00000000 00:00 0 
+762c101be000-762c14000000 ---p 00000000 00:00 0 
+762c14200000-762c14209000 r-xp 00000000 103:02 524348                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libmanagement.so
+762c14209000-762c14408000 ---p 00009000 103:02 524348                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libmanagement.so
+762c14408000-762c14409000 r--p 00008000 103:02 524348                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libmanagement.so
+762c14409000-762c1440a000 rw-p 00009000 103:02 524348                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libmanagement.so
+762c14600000-762c147c0000 rw-p 00000000 00:00 0 
+762c147c0000-762c149f8000 rw-p 00000000 00:00 0 
+762c149f8000-762c14a00000 ---p 00000000 00:00 0 
+762c14a00000-762c14a18000 r-xp 00000000 103:02 524369                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libnet.so
+762c14a18000-762c14c17000 ---p 00018000 103:02 524369                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libnet.so
+762c14c17000-762c14c18000 r--p 00017000 103:02 524369                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libnet.so
+762c14c18000-762c14c19000 rw-p 00018000 103:02 524369                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libnet.so
+762c14e00000-762c15373000 r--p 00000000 103:02 12059606                  /usr/lib/locale/locale-archive
+762c15400000-762c15403000 ---p 00000000 00:00 0 
+762c15403000-762c16800000 rw-p 00000000 00:00 0 
+762c16800000-762c16803000 ---p 00000000 00:00 0 
+762c16803000-762c17c00000 rw-p 00000000 00:00 0 
+762c17c00000-762c183f3000 rw-p 00000000 00:00 0 
+762c183f3000-762c18400000 ---p 00000000 00:00 0 
+762c18554000-762c18595000 rw-p 00000000 00:00 0 
+762c18595000-762c18fff000 ---p 00000000 00:00 0 
+762c18fff000-762c19020000 rw-p 00000000 00:00 0 
+762c19020000-762c19554000 ---p 00000000 00:00 0 
+762c19554000-762c19595000 rw-p 00000000 00:00 0 
+762c19595000-762c19fff000 ---p 00000000 00:00 0 
+762c19fff000-762c1e030000 rw-p 00000000 00:00 0 
+762c1e030000-762cc4aa0000 ---p 00000000 00:00 0 
+762cc4aa0000-762cccaf6000 rw-p 00000000 00:00 0 
+762cccaf6000-762e1a000000 ---p 00000000 00:00 0 
+762e1a000000-762e1a028000 rwxp 00000000 00:00 0 
+762e1a028000-762e1c000000 ---p 00000000 00:00 0 
+762e1c000000-762e1c979000 rw-p 00000000 00:00 0 
+762e1c979000-762e20000000 ---p 00000000 00:00 0 
+762e20200000-762e20211000 r-xp 00000000 103:02 528529                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libnio.so
+762e20211000-762e20410000 ---p 00011000 103:02 528529                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libnio.so
+762e20410000-762e20411000 r--p 00010000 103:02 528529                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libnio.so
+762e20411000-762e20412000 rw-p 00011000 103:02 528529                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libnio.so
+762e20600000-762e2061b000 r-xp 00000000 103:02 524365                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libzip.so
+762e2061b000-762e2081a000 ---p 0001b000 103:02 524365                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libzip.so
+762e2081a000-762e2081b000 r--p 0001a000 103:02 524365                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libzip.so
+762e2081b000-762e2081c000 rw-p 0001b000 103:02 524365                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libzip.so
+762e20a00000-762e20a2a000 r-xp 00000000 103:02 528500                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libjava.so
+762e20a2a000-762e20c29000 ---p 0002a000 103:02 528500                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libjava.so
+762e20c29000-762e20c2a000 r--p 00029000 103:02 528500                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libjava.so
+762e20c2a000-762e20c2c000 rw-p 0002a000 103:02 528500                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libjava.so
+762e20dd6000-762e20de7000 r--s 001c5000 103:02 524463                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/jsse.jar
+762e20de7000-762e20dec000 r--s 002f9000 103:02 524444                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/charsets.jar
+762e20dec000-762e20df0000 r--s 0001b000 103:02 59680351                  /home/baichuan/jaseci/reproduction/webridge/deps/fastjson-2.0.9.jar
+762e20df0000-762e20df2000 r--s 0001b000 103:02 59680348                  /home/baichuan/jaseci/reproduction/webridge/deps/asm-7.1.jar
+762e20df2000-762e20df7000 r--s 00040000 103:02 59680406                  /home/baichuan/jaseci/reproduction/webridge/deps/spring-expression-5.2.8.RELEASE.jar
+762e20df7000-762e20dfa000 r--s 00015000 103:02 59680408                  /home/baichuan/jaseci/reproduction/webridge/deps/javax.servlet-api-4.0.1.jar
+762e20dfa000-762e20e00000 r--s 0004a000 103:02 59680409                  /home/baichuan/jaseci/reproduction/webridge/deps/commons-io-2.11.0.jar
+762e20e00000-762e20e0d000 r-xp 00000000 103:02 524353                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libverify.so
+762e20e0d000-762e2100c000 ---p 0000d000 103:02 524353                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libverify.so
+762e2100c000-762e2100e000 r--p 0000c000 103:02 524353                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libverify.so
+762e2100e000-762e2100f000 rw-p 0000e000 103:02 524353                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/libverify.so
+762e21010000-762e2102b000 r--s 00146000 103:02 59680407                  /home/baichuan/jaseci/reproduction/webridge/deps/spring-core-5.2.8.RELEASE.jar
+762e2102b000-762e21037000 r--s 0002d000 103:02 59680415                  /home/baichuan/jaseci/reproduction/webridge/deps/checker-qual-3.8.0.jar
+762e21037000-762e2104f000 r--s 000fa000 103:02 59680400                  /home/baichuan/jaseci/reproduction/webridge/deps/spring-boot-2.3.3.RELEASE.jar
+762e2104f000-762e21050000 r--s 00005000 103:02 59680414                  /home/baichuan/jaseci/reproduction/webridge/deps/spring-jcl-5.2.8.RELEASE.jar
+762e21050000-762e2106b000 r--s 00111000 103:02 59680401                  /home/baichuan/jaseci/reproduction/webridge/deps/spring-context-5.2.8.RELEASE.jar
+762e2106b000-762e21070000 r--s 00036000 103:02 59680339                  /home/baichuan/jaseci/reproduction/webridge/deps/commons-text-1.10.0.jar
+762e21070000-762e210a4000 r--s 0028a000 103:02 59680410                  /home/baichuan/jaseci/reproduction/webridge/deps/guava-30.1.1-jre.jar
+762e210a4000-762e210a9000 r--s 00038000 103:02 59680352                  /home/baichuan/jaseci/reproduction/webridge/deps/commons-beanutils-1.9.4.jar
+762e210a9000-762e210b2000 r--s 0005b000 103:02 59680398                  /home/baichuan/jaseci/reproduction/webridge/deps/spring-jdbc-5.2.8.RELEASE.jar
+762e210b2000-762e210bc000 r--s 00079000 103:02 59680344                  /home/baichuan/jaseci/reproduction/webridge/deps/bcel-5.2.jar
+762e210bc000-762e210ce000 r--s 00154000 103:02 59680364                  /home/baichuan/jaseci/reproduction/webridge/deps/fastjson2-2.0.9.jar
+762e210ce000-762e210f5000 r--s 001f6000 103:02 59680411                  /home/baichuan/jaseci/reproduction/webridge/deps/commons-math3-3.6.1.jar
+762e210f5000-762e210fe000 r--s 00044000 103:02 59680403                  /home/baichuan/jaseci/reproduction/webridge/deps/spring-tx-5.2.8.RELEASE.jar
+762e210fe000-762e210ff000 ---p 00000000 00:00 0 
+762e210ff000-762e211ff000 rw-p 00000000 00:00 0 
+762e211ff000-762e21200000 ---p 00000000 00:00 0 
+762e21200000-762e21201000 rw-p 00000000 00:00 0 
+762e21201000-762e21204000 ---p 00000000 00:00 0 
+762e21204000-762e22600000 rw-p 00000000 00:00 0 
+762e22600000-762e22607000 r-xp 00000000 103:02 8004760                   /home/baichuan/jaseci/reproduction/webridge/native-lib/libffi.so.6
+762e22607000-762e22806000 ---p 00007000 103:02 8004760                   /home/baichuan/jaseci/reproduction/webridge/native-lib/libffi.so.6
+762e22806000-762e22807000 r--p 00006000 103:02 8004760                   /home/baichuan/jaseci/reproduction/webridge/native-lib/libffi.so.6
+762e22807000-762e22808000 rw-p 00007000 103:02 8004760                   /home/baichuan/jaseci/reproduction/webridge/native-lib/libffi.so.6
+762e22808000-762e22809000 r--s 00003000 103:02 59680396                  /home/baichuan/jaseci/reproduction/webridge/deps/slf4j-simple-1.7.30.jar
+762e22809000-762e2280b000 r--s 00010000 103:02 59680345                  /home/baichuan/jaseci/reproduction/webridge/deps/asm-commons-7.1.jar
+762e2280b000-762e2280d000 r--s 00001000 103:02 59680358                  /home/baichuan/jaseci/reproduction/webridge/deps/j2objc-annotations-1.3.jar
+762e2280d000-762e2280e000 r--s 00000000 103:02 59680359                  /home/baichuan/jaseci/reproduction/webridge/deps/animal-sniffer-annotations-1.18.jar
+762e2280e000-762e2280f000 r--s 00004000 103:02 59680336                  /home/baichuan/jaseci/reproduction/webridge/deps/utils.jar
+762e2280f000-762e22819000 r--s 000ec000 103:02 59680365                  /home/baichuan/jaseci/reproduction/webridge/deps/mysql-connector-java-5.1.46.jar
+762e22819000-762e22823000 r--s 0006d000 103:02 59680337                  /home/baichuan/jaseci/reproduction/webridge/deps/commons-io-2.13.0.jar
+762e22823000-762e22825000 r--s 0000e000 103:02 59680362                  /home/baichuan/jaseci/reproduction/webridge/deps/commons-logging-1.2.jar
+762e22825000-762e22827000 r--s 0000b000 103:02 59680347                  /home/baichuan/jaseci/reproduction/webridge/deps/asm-tree-7.1.jar
+762e22827000-762e2282c000 r--s 00041000 103:02 59680349                  /home/baichuan/jaseci/reproduction/webridge/deps/commons-lang-2.6.jar
+762e2282c000-762e2283d000 r--s 00120000 103:02 59680342                  /home/baichuan/jaseci/reproduction/webridge/deps/javaparser-core-3.15.14.jar
+762e2283d000-762e2284a000 r--s 00091000 103:02 59680338                  /home/baichuan/jaseci/reproduction/webridge/deps/commons-configuration2-2.9.0.jar
+762e2284a000-762e2284b000 r--s 00006000 103:02 59680360                  /home/baichuan/jaseci/reproduction/webridge/deps/jakarta-regexp-1.4.jar
+762e2284b000-762e2284d000 r--s 00002000 103:02 59680417                  /home/baichuan/jaseci/reproduction/webridge/deps/tomcat-annotations-api-9.0.37.jar
+762e2284d000-762e22879000 r--s 0030f000 103:02 59680413                  /home/baichuan/jaseci/reproduction/webridge/deps/tomcat-embed-core-9.0.37.jar
+762e22879000-762e228a3000 r--s 0013f000 103:02 59680399                  /home/baichuan/jaseci/reproduction/webridge/deps/spring-boot-autoconfigure-2.3.3.RELEASE.jar
+762e228a3000-762e228ad000 r--s 00086000 103:02 59680340                  /home/baichuan/jaseci/reproduction/webridge/deps/commons-lang3-3.12.0.jar
+762e228ad000-762e228b7000 r--s 00027000 103:02 59680356                  /home/baichuan/jaseci/reproduction/webridge/deps/checker-qual-2.8.1.jar
+762e228b7000-762e228c4000 r--s 00083000 103:02 59680363                  /home/baichuan/jaseci/reproduction/webridge/deps/commons-collections-3.2.2.jar
+762e228c4000-762e228cd000 r--s 00052000 103:02 59680404                  /home/baichuan/jaseci/reproduction/webridge/deps/spring-aop-5.2.8.RELEASE.jar
+762e228cd000-762e228ff000 r--s 00270000 103:02 59680341                  /home/baichuan/jaseci/reproduction/webridge/deps/guava-28.1-jre.jar
+762e228ff000-762e22900000 ---p 00000000 00:00 0 
+762e22900000-762e22a00000 rw-p 00000000 00:00 0 
+762e22a00000-762e231ab000 r-xp 00000000 103:02 531017                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/server/libjvm.so
+762e231ab000-762e233ab000 ---p 007ab000 103:02 531017                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/server/libjvm.so
+762e233ab000-762e233ca000 r--p 007ab000 103:02 531017                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/server/libjvm.so
+762e233ca000-762e233e7000 rw-p 007ca000 103:02 531017                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/amd64/server/libjvm.so
+762e233e7000-762e23411000 rw-p 00000000 00:00 0 
+762e23411000-762e23413000 r--s 00002000 103:02 59680357                  /home/baichuan/jaseci/reproduction/webridge/deps/error_prone_annotations-2.3.2.jar
+762e23413000-762e2342f000 r--s 00144000 103:02 59680402                  /home/baichuan/jaseci/reproduction/webridge/deps/spring-web-5.2.8.RELEASE.jar
+762e2342f000-762e23600000 r--s 03ca3000 103:02 524467                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/jre/lib/rt.jar
+762e23600000-762e23628000 r--p 00000000 103:02 12059151                  /usr/lib/x86_64-linux-gnu/libc.so.6
+762e23628000-762e237bd000 r-xp 00028000 103:02 12059151                  /usr/lib/x86_64-linux-gnu/libc.so.6
+762e237bd000-762e23815000 r--p 001bd000 103:02 12059151                  /usr/lib/x86_64-linux-gnu/libc.so.6
+762e23815000-762e23816000 ---p 00215000 103:02 12059151                  /usr/lib/x86_64-linux-gnu/libc.so.6
+762e23816000-762e2381a000 r--p 00215000 103:02 12059151                  /usr/lib/x86_64-linux-gnu/libc.so.6
+762e2381a000-762e2381c000 rw-p 00219000 103:02 12059151                  /usr/lib/x86_64-linux-gnu/libc.so.6
+762e2381c000-762e23829000 rw-p 00000000 00:00 0 
+762e23829000-762e2382b000 r--s 0000b000 103:02 59680412                  /home/baichuan/jaseci/reproduction/webridge/deps/commons-csv-1.9.0.jar
+762e2382b000-762e2382d000 r--s 00000000 103:02 59680353                  /home/baichuan/jaseci/reproduction/webridge/deps/failureaccess-1.0.1.jar
+762e2382d000-762e23830000 r--s 0000e000 103:02 59680361                  /home/baichuan/jaseci/reproduction/webridge/deps/fastjson2-extension-2.0.9.jar
+762e23830000-762e23832000 r--s 00002000 103:02 59680416                  /home/baichuan/jaseci/reproduction/webridge/deps/error_prone_annotations-2.5.1.jar
+762e23832000-762e23859000 r--s 0028d000 103:02 59680350                  /home/baichuan/jaseci/reproduction/webridge/deps/druid-1.1.21.jar
+762e23859000-762e2388a000 rw-p 00000000 00:00 0 
+762e2388a000-762e238e1000 r--p 00000000 103:02 12323533                  /usr/lib/locale/C.utf8/LC_CTYPE
+762e238e1000-762e23a00000 rw-p 00000000 00:00 0 
+762e23a00000-762e23a17000 r-xp 00000000 103:02 524320                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/lib/amd64/jli/libjli.so
+762e23a17000-762e23c16000 ---p 00017000 103:02 524320                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/lib/amd64/jli/libjli.so
+762e23c16000-762e23c17000 r--p 00016000 103:02 524320                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/lib/amd64/jli/libjli.so
+762e23c17000-762e23c18000 rw-p 00017000 103:02 524320                    /home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/lib/amd64/jli/libjli.so
+762e23c18000-762e23c1a000 r--s 00003000 103:02 59680355                  /home/baichuan/jaseci/reproduction/webridge/deps/jsr305-3.0.2.jar
+762e23c1a000-762e23c27000 r--s 0009c000 103:02 59680405                  /home/baichuan/jaseci/reproduction/webridge/deps/spring-beans-5.2.8.RELEASE.jar
+762e23c27000-762e23c29000 r--s 00007000 103:02 59680346                  /home/baichuan/jaseci/reproduction/webridge/deps/asm-analysis-7.1.jar
+762e23c29000-762e23c2b000 r--s 00009000 103:02 59680397                  /home/baichuan/jaseci/reproduction/webridge/deps/slf4j-api-1.7.30.jar
+762e23c2b000-762e23c32000 r--s 0006f000 103:02 59680366                  /home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar
+762e23c32000-762e23c34000 r--s 0001a000 103:02 59680367                  /home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar
+762e23c34000-762e23c5d000 rw-p 00000000 00:00 0 
+762e23c5d000-762e23cdc000 ---p 00000000 00:00 0 
+762e23cdc000-762e23cdd000 r--p 00000000 103:02 12060688                  /usr/lib/x86_64-linux-gnu/librt.so.1
+762e23cdd000-762e23cde000 r-xp 00001000 103:02 12060688                  /usr/lib/x86_64-linux-gnu/librt.so.1
+762e23cde000-762e23cdf000 r--p 00002000 103:02 12060688                  /usr/lib/x86_64-linux-gnu/librt.so.1
+762e23cdf000-762e23ce0000 r--p 00002000 103:02 12060688                  /usr/lib/x86_64-linux-gnu/librt.so.1
+762e23ce0000-762e23ce1000 rw-p 00003000 103:02 12060688                  /usr/lib/x86_64-linux-gnu/librt.so.1
+762e23ce1000-762e23cef000 r--p 00000000 103:02 12059463                  /usr/lib/x86_64-linux-gnu/libm.so.6
+762e23cef000-762e23d6b000 r-xp 0000e000 103:02 12059463                  /usr/lib/x86_64-linux-gnu/libm.so.6
+762e23d6b000-762e23dc6000 r--p 0008a000 103:02 12059463                  /usr/lib/x86_64-linux-gnu/libm.so.6
+762e23dc6000-762e23dc7000 r--p 000e4000 103:02 12059463                  /usr/lib/x86_64-linux-gnu/libm.so.6
+762e23dc7000-762e23dc8000 rw-p 000e5000 103:02 12059463                  /usr/lib/x86_64-linux-gnu/libm.so.6
+762e23dc8000-762e23dcb000 rw-p 00000000 00:00 0 
+762e23dcb000-762e23dcc000 r--p 00000000 103:02 12060661                  /usr/lib/x86_64-linux-gnu/libpthread.so.0
+762e23dcc000-762e23dcd000 r-xp 00001000 103:02 12060661                  /usr/lib/x86_64-linux-gnu/libpthread.so.0
+762e23dcd000-762e23dce000 r--p 00002000 103:02 12060661                  /usr/lib/x86_64-linux-gnu/libpthread.so.0
+762e23dce000-762e23dcf000 r--p 00002000 103:02 12060661                  /usr/lib/x86_64-linux-gnu/libpthread.so.0
+762e23dcf000-762e23dd0000 rw-p 00003000 103:02 12060661                  /usr/lib/x86_64-linux-gnu/libpthread.so.0
+762e23dd0000-762e23dd1000 r--p 00000000 103:02 12059445                  /usr/lib/x86_64-linux-gnu/libdl.so.2
+762e23dd1000-762e23dd2000 r-xp 00001000 103:02 12059445                  /usr/lib/x86_64-linux-gnu/libdl.so.2
+762e23dd2000-762e23dd3000 r--p 00002000 103:02 12059445                  /usr/lib/x86_64-linux-gnu/libdl.so.2
+762e23dd3000-762e23dd4000 r--p 00002000 103:02 12059445                  /usr/lib/x86_64-linux-gnu/libdl.so.2
+762e23dd4000-762e23dd5000 rw-p 00003000 103:02 12059445                  /usr/lib/x86_64-linux-gnu/libdl.so.2
+762e23dd5000-762e23dd7000 rw-p 00000000 00:00 0 
+762e23dd7000-762e23dd8000 r--s 00000000 103:02 59680354                  /home/baichuan/jaseci/reproduction/webridge/deps/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar
+762e23dd8000-762e23dd9000 r--p 00000000 103:02 12323557                  /usr/lib/locale/C.utf8/LC_NUMERIC
+762e23dd9000-762e23dda000 r--p 00000000 103:02 12324355                  /usr/lib/locale/C.utf8/LC_TIME
+762e23dda000-762e23ddb000 r--p 00000000 103:02 12323529                  /usr/lib/locale/C.utf8/LC_COLLATE
+762e23ddb000-762e23ddc000 r--p 00000000 103:02 12323549                  /usr/lib/locale/C.utf8/LC_MONETARY
+762e23ddc000-762e23ddd000 r--p 00000000 103:02 12323545                  /usr/lib/locale/C.utf8/LC_MESSAGES/SYS_LC_MESSAGES
+762e23ddd000-762e23dde000 r--p 00000000 103:02 12323561                  /usr/lib/locale/C.utf8/LC_PAPER
+762e23dde000-762e23ddf000 r--p 00000000 103:02 12323553                  /usr/lib/locale/C.utf8/LC_NAME
+762e23ddf000-762e23de0000 r--p 00000000 103:02 12323525                  /usr/lib/locale/C.utf8/LC_ADDRESS
+762e23de0000-762e23de1000 r--p 00000000 103:02 12324353                  /usr/lib/locale/C.utf8/LC_TELEPHONE
+762e23de1000-762e23de2000 r--p 00000000 103:02 12323541                  /usr/lib/locale/C.utf8/LC_MEASUREMENT
+762e23de2000-762e23de9000 r--s 00000000 103:02 12754325                  /usr/lib/x86_64-linux-gnu/gconv/gconv-modules.cache
+762e23de9000-762e23dea000 r--p 00000000 103:02 12323537                  /usr/lib/locale/C.utf8/LC_IDENTIFICATION
+762e23dea000-762e23df2000 rw-s 00000000 103:02 18649346                  /tmp/hsperfdata_baichuan/3232267
+762e23df2000-762e23df4000 rw-p 00000000 00:00 0 
+762e23df4000-762e23df6000 r--p 00000000 103:02 12059049                  /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+762e23df6000-762e23e20000 r-xp 00002000 103:02 12059049                  /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+762e23e20000-762e23e2b000 r--p 0002c000 103:02 12059049                  /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+762e23e2b000-762e23e2c000 r--p 00000000 00:00 0 
+762e23e2c000-762e23e2e000 r--p 00037000 103:02 12059049                  /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+762e23e2e000-762e23e30000 rw-p 00039000 103:02 12059049                  /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+7ffc84425000-7ffc84448000 rw-p 00000000 00:00 0                          [stack]
+7ffc84500000-7ffc84504000 r--p 00000000 00:00 0                          [vvar]
+7ffc84504000-7ffc84506000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
+
+VM Arguments:
+jvm_args: -Xmx8g -Xss20m -Dintegration.dir=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_id_GC-d55da0ffb463-tx-complete-v1 -Dexecution.dir=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_id_GC-d55da0ffb463-tx-complete-v1/replay-20261021T011754519246Z -Dintegration.api=Tpcc_bf0f9c36b822 -Dintegration.scope=cold -Daligned.source=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/d55da0ffb46314f38874fd5955999a2d4ad6d671f7f36a543475f627e5ecd82a/source/TpccSql.java -Dexperiment.input=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/d55da0ffb46314f38874fd5955999a2d4ad6d671f7f36a543475f627e5ecd82a/input.json -Dexperiment.program=graph -Dexperiment.pruned=false -Dexperiment.graph.context=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/d55da0ffb46314f38874fd5955999a2d4ad6d671f7f36a543475f627e5ecd82a/graph-context.json -Dexperiment.mysql.url=jdbc:mysql://127.0.0.1:55337/jac_tpcc_graph?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true 
+java_command: TpccWeBridge replay
+java_class_path (initial): /home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/d55da0ffb46314f38874fd5955999a2d4ad6d671f7f36a543475f627e5ecd82a/compatibility/0:/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/d55da0ffb46314f38874fd5955999a2d4ad6d671f7f36a543475f627e5ecd82a/compatibility/1:/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/d55da0ffb46314f38874fd5955999a2d4ad6d671f7f36a543475f627e5ecd82a/classes:/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/classes:/home/baichuan/jaseci/reproduction/webridge/integration/jdbc-string/combined:/home/baichuan/jaseci/reproduction/webridge/integration/sql-frontend/classes:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/slf4j-api-1.7.30.jar:/home/baichuan/jaseci/reproduction/webridge/deps/guava-28.1-jre.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/druid-1.1.21.jar:/home/baichuan/jaseci/reproduction/webridge/deps/spring-web-5.2.8.RELEASE.jar:/home/baichuan/jaseci/reproduction/webridge/deps/asm-analysis-7.1.jar:/home/baichuan/jaseci/reproduction/webridge/deps/spring-beans-5.2.8.RELEASE.jar:/home/baichuan/jaseci/reproduction/webridge/deps/jsr305-3.0.2.jar:/home/baichuan/jaseci/reproduction/webridge/deps/error_prone_annotations-2.5.1.jar:/home/baichuan/jaseci/reproduction/webridge/deps/spring-aop-5.2.8.RELEASE.jar:/home/baichuan/jaseci/reproduction/webridge/deps/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/baichuan/jaseci/reproduction/webridge/deps/fastjson2-extension-2.0.9.jar:/home/baichuan/jaseci/reproduction/webridge/deps/failureaccess-1.0.1.jar:/home/baichuan/jaseci/reproduction/webridge/deps/commons-collections-3.2.2.jar:/home/baichuan/jaseci/reproduction/webridge/deps/checker-qual-2.8.1.jar:/home/baichuan/jaseci/reproduction/webridge/deps/commons-csv-1.9.0.jar:/home/baichuan/jaseci/reproduction/webridge/deps/commons-lang3-3.12.0.jar:/home/baichuan/jaseci/reproduction/webridge/deps/spring-boot-autoconfigure-2.3.3.RELEASE.jar:/home/baichuan/jaseci/reproduction/webridge/deps/tomcat-embed-core-9.0.37.jar:/home/baichuan/jaseci/reproduction/webridge/deps/error_prone_annotations-2.3.2.jar:/home/baichuan/jaseci/reproduction/webridge/deps/tomcat-annotations-api-9.0.37.jar:/home/baichuan/jaseci/reproduction/webridge/deps/jakarta-regexp-1.4.jar:/home/baichuan/jaseci/reproduction/webridge/deps/commons-configuration2-2.9.0.jar:/home/baichuan/jaseci/reproduction/webridge/deps/javaparser-core-3.15.14.jar:/home/baichuan/jaseci/reproduction/webridge/deps/commons-lang-2.6.jar:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/asm-tree-7.1.jar:/home/baichuan/jaseci/reproduction/webridge/deps/commons-logging-1.2.jar:/home/baichuan/jaseci/reproduction/webridge/deps/commons-io-2.13.0.jar:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-connector-java-5.1.46.jar:/home/baichuan/jaseci/reproduction/webridge/deps/utils.jar:/home/baichuan/jaseci/reproduction/webridge/deps/animal-sniffer-annotations-1.18.jar:/home/baichuan/jaseci/reproduction/webridge/deps/j2objc-annotations-1.3.jar:/home/baichuan/jaseci/reproduction/webridge/deps/spring-tx-5.2.8.RELEASE.jar:/home/baichuan/jaseci/reproduction/webridge/deps/commons-math3-3.6.1.jar:/home/baichuan/jaseci/reproduction/webridge/deps/fastjson2-2.0.9.jar:/home/baichuan/jaseci/reproduction/webridge/deps/asm-commons-7.1.jar:/home/baichuan/jaseci/reproduction/webridge/deps/bcel-5.2.jar:/home/baichuan/jaseci/reproduction/webridge/deps/slf4j-simple-1.7.30.jar:/home/baichuan/jaseci/reproduction/webridge/deps/spring-jdbc-5.2.8.RELEASE.jar:/home/baichuan/jaseci/reproduction/webridge/deps/commons-beanutils-1.9.4.jar:/home/baichuan/jaseci/reproduction/webridge/deps/guava-30.1.1-jre.jar:/home/baichuan/jaseci/reproduction/webridge/deps/commons-text-1.10.0.jar:/home/baichuan/jaseci/reproduction/webridge/deps/spring-context-5.2.8.RELEASE.jar:/home/baichuan/jaseci/reproduction/webridge/deps/spring-jcl-5.2.8.RELEASE.jar:/home/baichuan/jaseci/reproduction/webridge/deps/spring-boot-2.3.3.RELEASE.jar:/home/baichuan/jaseci/reproduction/webridge/deps/checker-qual-3.8.0.jar:/home/baichuan/jaseci/reproduction/webridge/deps/spring-core-5.2.8.RELEASE.jar:/home/baichuan/jaseci/reproduction/webridge/deps/commons-io-2.11.0.jar:/home/baichuan/jaseci/reproduction/webridge/deps/javax.servlet-api-4.0.1.jar:/home/baichuan/jaseci/reproduction/webridge/deps/spring-expression-5.2.8.RELEASE.jar:/home/baichuan/jaseci/reproduction/webridge/deps/asm-7.1.jar:/home/baichuan/jaseci/reproduction/webridge/deps/fastjson-2.0.9.jar
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+CLASSPATH=/opt/intel/oneapi/mpi/2021.14/share/java/mpi.jar
+PATH=/home/baichuan/.pyenv/versions/3.12.11/bin:/home/baichuan/.pyenv/libexec:/home/baichuan/.pyenv/plugins/python-build/bin:/home/baichuan/.pyenv/plugins/pyenv-virtualenv/bin:/home/baichuan/.pyenv/plugins/pyenv-update/bin:/home/baichuan/.pyenv/plugins/pyenv-doctor/bin:/home/baichuan/.codex/packages/app-server-daemon/releases/0.163.0-x86_64-unknown-linux-musl/codex-path:/home/baichuan/.pyenv/shims:/home/baichuan/.pyenv/bin:/home/baichuan/.codex/tmp/arg0-linux/codex-arg0nc0jxy:/home/baichuan/.codex/packages/app-server-daemon/releases/0.163.0-x86_64-unknown-linux-musl/codex-path:/home/baichuan/.codex/tmp/arg0/codex-arg0rGDPJK:/home/baichuan/.codex/packages/app-server-daemon/releases/0.162.1-x86_64-unknown-linux-musl/codex-path:/home/baichuan/.codex/tmp/arg0/codex-arg0smJgxX:/home/baichuan/.codex/packages/app-server-daemon/releases/0.161.0-x86_64-unknown-linux-musl/codex-path:/home/baichuan/.codex/tmp/arg0/codex-arg0ESGJiS:/home/baichuan/.codex/packages/standalone/releases/0.160.1-x86_64-unknown-linux-musl/codex-path:/home/baichuan/.pyenv/bin:/home/baichuan/.cargo/bin:/opt/intel/oneapi/vtune/2025.0/bin64:/opt/intel/oneapi/mpi/2021.14/bin:/opt/intel/oneapi/mkl/2025.0/bin:/opt/intel/oneapi/dpcpp-ct/2025.0/bin:/opt/intel/oneapi/dev-utilities/2025.0/bin:/opt/intel/oneapi/debugger/2025.0/opt/debugger/bin:/opt/intel/oneapi/compiler/2025.0/bin:/opt/intel/oneapi/advisor/2025.0/bin64:/home/baichuan/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+LD_LIBRARY_PATH=/home/baichuan/jaseci/reproduction/webridge/native-lib:/opt/intel/oneapi/tcm/1.2/lib:/opt/intel/oneapi/umf/0.9/lib:/opt/intel/oneapi/tbb/2022.0/env/../lib/intel64/gcc4.8:/opt/intel/oneapi/pti/0.10/lib:/opt/intel/oneapi/mpi/2021.14/opt/mpi/libfabric/lib:/opt/intel/oneapi/mpi/2021.14/lib:/opt/intel/oneapi/mkl/2025.0/lib:/opt/intel/oneapi/ippcp/2025.0/lib/:/opt/intel/oneapi/ipp/2022.0/lib:/opt/intel/oneapi/dnnl/2025.0/lib:/opt/intel/oneapi/debugger/2025.0/opt/debugger/lib:/opt/intel/oneapi/dal/2025.0/lib:/opt/intel/oneapi/compiler/2025.0/opt/compiler/lib:/opt/intel/oneapi/compiler/2025.0/lib:/opt/intel/oneapi/ccl/2021.14/lib/
+SHELL=/bin/bash
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0x5a3980], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGBUS: [libjvm.so+0x5a3980], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGFPE: [libjvm.so+0x469280], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGPIPE: [libjvm.so+0x469280], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGXFSZ: [libjvm.so+0x469280], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGILL: [libjvm.so+0x469280], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGUSR1: SIG_DFL, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+SIGUSR2: [libjvm.so+0x468f40], sa_mask[0]=00000000000000000000000000000000, sa_flags=SA_RESTART|SA_SIGINFO
+SIGHUP: [libjvm.so+0x464e40], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGINT: [libjvm.so+0x464e40], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGTERM: [libjvm.so+0x464e40], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGQUIT: [libjvm.so+0x464e40], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+
+
+---------------  S Y S T E M  ---------------
+
+OS:DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=22.04
+DISTRIB_CODENAME=jammy
+DISTRIB_DESCRIPTION="Ubuntu 22.04.5 LTS"
+
+uname:Linux 6.8.0-65-generic #68~22.04.1-Ubuntu SMP PREEMPT_DYNAMIC Tue Jul 15 18:06:34 UTC 2 x86_64
+libc:glibc 2.35 NPTL 2.35 
+rlimit: STACK 8192k, CORE 0k, NPROC 320961, NOFILE 1048576, AS infinity
+load average:2.19 2.50 2.38
+
+/proc/meminfo:
+MemTotal:       82253524 kB
+MemFree:        20724076 kB
+MemAvailable:   72087584 kB
+Buffers:         1723672 kB
+Cached:         47472292 kB
+SwapCached:        14156 kB
+Active:          6049924 kB
+Inactive:       49745092 kB
+Active(anon):    3268516 kB
+Inactive(anon):  4303940 kB
+Active(file):    2781408 kB
+Inactive(file): 45441152 kB
+Unevictable:          72 kB
+Mlocked:               0 kB
+SwapTotal:       2097148 kB
+SwapFree:            188 kB
+Zswap:                 0 kB
+Zswapped:              0 kB
+Dirty:             92244 kB
+Writeback:             0 kB
+AnonPages:       6585140 kB
+Mapped:          1909392 kB
+Shmem:            973404 kB
+KReclaimable:    4000380 kB
+Slab:            4638992 kB
+SReclaimable:    4000380 kB
+SUnreclaim:       638612 kB
+KernelStack:       26784 kB
+PageTables:        58852 kB
+SecPageTables:         0 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    43223908 kB
+Committed_AS:   17761972 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:      127780 kB
+VmallocChunk:          0 kB
+Percpu:            39280 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+ShmemHugePages:        0 kB
+ShmemPmdMapped:        0 kB
+FileHugePages:         0 kB
+FilePmdMapped:         0 kB
+Unaccepted:            0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+Hugetlb:               0 kB
+DirectMap4k:     6608884 kB
+DirectMap2M:    31035392 kB
+DirectMap1G:    46137344 kB
+
+
+CPU:total 20 (initial active 2) 
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 5001.452
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 0
+cpu cores	: 10
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 800.000
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 1
+cpu cores	: 10
+apicid		: 2
+initial apicid	: 2
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 2
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 800.000
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 2
+cpu cores	: 10
+apicid		: 4
+initial apicid	: 4
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 3
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 800.000
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 3
+cpu cores	: 10
+apicid		: 6
+initial apicid	: 6
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 4
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 800.000
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 4
+cpu cores	: 10
+apicid		: 8
+initial apicid	: 8
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 5
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 800.000
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 5
+cpu cores	: 10
+apicid		: 10
+initial apicid	: 10
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 6
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 4953.853
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 6
+cpu cores	: 10
+apicid		: 12
+initial apicid	: 12
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 7
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 800.000
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 7
+cpu cores	: 10
+apicid		: 14
+initial apicid	: 14
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 8
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 4990.451
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 8
+cpu cores	: 10
+apicid		: 16
+initial apicid	: 16
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 9
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 4999.987
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 9
+cpu cores	: 10
+apicid		: 18
+initial apicid	: 18
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 10
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 4999.995
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 0
+cpu cores	: 10
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 11
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 800.000
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 1
+cpu cores	: 10
+apicid		: 3
+initial apicid	: 3
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 12
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 5001.103
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 2
+cpu cores	: 10
+apicid		: 5
+initial apicid	: 5
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 13
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 4981.780
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 3
+cpu cores	: 10
+apicid		: 7
+initial apicid	: 7
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 14
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 5002.758
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 4
+cpu cores	: 10
+apicid		: 9
+initial apicid	: 9
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 15
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 5000.267
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 5
+cpu cores	: 10
+apicid		: 11
+initial apicid	: 11
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 16
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 800.000
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 6
+cpu cores	: 10
+apicid		: 13
+initial apicid	: 13
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 17
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 800.000
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 7
+cpu cores	: 10
+apicid		: 15
+initial apicid	: 15
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 18
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 800.000
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 8
+cpu cores	: 10
+apicid		: 17
+initial apicid	: 17
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+processor	: 19
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 165
+model name	: Intel(R) Core(TM) i9-10900K CPU @ 3.70GHz
+stepping	: 5
+microcode	: 0x100
+cpu MHz		: 800.000
+cache size	: 20480 KB
+physical id	: 0
+siblings	: 20
+core id		: 9
+cpu cores	: 10
+apicid		: 19
+initial apicid	: 19
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi pku ospke md_clear flush_l1d arch_capabilities
+vmx flags	: vnmi preemption_timer posted_intr invvpid ept_x_only ept_ad ept_1gb flexpriority apicv tsc_offset vtpr mtf vapic ept vpid unrestricted_guest vapic_reg vid ple shadow_vmcs pml ept_mode_based_exec
+bugs		: spectre_v1 spectre_v2 spec_store_bypass swapgs itlb_multihit srbds mmio_stale_data retbleed eibrs_pbrsb gds bhi
+bogomips	: 7399.70
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+
+
+Memory: 4k page, physical 82253524k(20724076k free), swap 2097148k(188k free)
+
+vm_info: OpenJDK 64-Bit Zero VM (25.71-b00) for linux-amd64 JRE (1.8.0-internal-_2026_10_20_17_57-b00), built on Oct 20 2026 18:05:25 by "" with gcc 6.5.0 20181026
+
+time: Tue Oct 20 21:17:59 2026
+timezone: EDT
+elapsed time: 4.975354 seconds (0d 0h 0m 4s)
+

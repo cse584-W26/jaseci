@@ -1,0 +1,2349 @@
+[
+  {
+    "family": "tpcc",
+    "workload": "payment_name_GC",
+    "program": "conventional",
+    "variant": "full",
+    "system": "conventional relational Java",
+    "status": "success",
+    "baseline_ready": true,
+    "sp_ready": true,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-7f767c9dfc5f-atomic-jac-seed-local-access",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/summary.json",
+        "failure": "synth",
+        "matches_final_sources": false
+      },
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-46cb476ddb1b-frontend-compatible",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T003630Z/summary.json",
+        "failure": "AssertionError(('payment_name_GC', 'optimized', 'posttransaction business state mismatch'))",
+        "matches_final_sources": false
+      },
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1",
+        "status": "success",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005015Z/summary.json",
+        "failure": null,
+        "matches_final_sources": true
+      },
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-f4f4c31ba90c-typed-getInt-control",
+        "status": "success",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T024020Z/summary.json",
+        "failure": null,
+        "matches_final_sources": false
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005015Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1/baseline-20261021T005056702695Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005015Z/payment_name_GC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1/record-20261021T005110785082Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005015Z/payment_name_GC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1/replay-20261021T005113430033Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005015Z/payment_name_GC/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1/synth-20261021T005115806456Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005015Z/payment_name_GC/synth"
+      },
+      {
+        "stage": "install",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005015Z/payment_name_GC/install",
+        "sql_sha256": {
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1/generated/sql/Tpcc_ad8afad4201f/graph-SP-function.sql": "539589a49a45f3818d312fbf6792a5a45418c11d219a7968d24f17f697d306d0",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1/generated/sql/Tpcc_ad8afad4201f/graph-SP-Tpcc_ad8afad4201f_sp_1_ver0.sql": "e1c7b705762e7540dbfd3316c028f75594c5772794737e7a144485b0a9c75bab"
+        }
+      },
+      {
+        "stage": "optimized",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1/optimized-20261021T005122422099Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005015Z/payment_name_GC/optimized"
+      }
+    ],
+    "metadata_sha256": "ac6d86f001f18d49bebd527056448ccd12eefac49bc7c899cfb8d8e1d7e68dba",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "add2ec7845f0f15ae3b2d4c342ebc3b377cbc548d74b46d6bd22dafca061a81a",
+      "schema_sha256": "5903ef17bf24fd5d6723a82ede26964acae29d8153b6b73cf9e150d6a3d006b5",
+      "program": "conventional",
+      "variant": "full",
+      "graph_context_sha256": null,
+      "fixture_manifest_sha256": "f33e8dce48850f01350294d801059943f29cc4a03fc938d0277e465087e76d31"
+    },
+    "optimized_activation": {
+      "call_procedure": 1,
+      "sp_enabled_start": true,
+      "sp_enabled_end": true,
+      "server_questions": 6
+    },
+    "failure": null,
+    "sp_activation_status": "active"
+  },
+  {
+    "family": "tpcc",
+    "workload": "new_order_rollback",
+    "program": "conventional",
+    "variant": "full",
+    "system": "conventional relational Java",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-1d0d0b29ca44-atomic-jac-seed-local-access",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/summary.json",
+        "failure": "synth",
+        "matches_final_sources": false
+      },
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-940e48d1eda4-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/summary.json",
+        "failure": "synth",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-940e48d1eda4-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-940e48d1eda4-tx-complete-v1/baseline-20261021T005327381050Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_rollback/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-940e48d1eda4-tx-complete-v1/record-20261021T005335115010Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_rollback/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-940e48d1eda4-tx-complete-v1/replay-20261021T005338323533Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_rollback/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-940e48d1eda4-tx-complete-v1/synth-20261021T005341995020Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_rollback/synth"
+      }
+    ],
+    "metadata_sha256": "23ee69563eebd964c8204517f56988ea8c7d7bfe982c7d96bbc1f7f491461f4e",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "3cbdd63f67225b3ed2e7ffc1ad3c7b6eef93718b1bfb43798da1e7d920ff61c8",
+      "schema_sha256": "5903ef17bf24fd5d6723a82ede26964acae29d8153b6b73cf9e150d6a3d006b5",
+      "program": "conventional",
+      "variant": "full",
+      "graph_context_sha256": null,
+      "fixture_manifest_sha256": "f33e8dce48850f01350294d801059943f29cc4a03fc938d0277e465087e76d31"
+    },
+    "optimized_activation": null,
+    "failure": "synth",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_id_GC",
+    "program": "conventional",
+    "variant": "full",
+    "system": "conventional relational Java",
+    "status": "success",
+    "baseline_ready": true,
+    "sp_ready": true,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-3477b538e4eb-atomic-jac-seed-local-access",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/summary.json",
+        "failure": "synth",
+        "matches_final_sources": false
+      },
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1",
+        "status": "success",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/summary.json",
+        "failure": null,
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1/baseline-20261021T005406325991Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_GC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1/record-20261021T005413965446Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_GC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1/replay-20261021T005416630509Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_GC/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1/synth-20261021T005419016075Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_GC/synth"
+      },
+      {
+        "stage": "install",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_GC/install",
+        "sql_sha256": {
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1/generated/sql/Tpcc_76f2a04f23aa/graph-SP-function.sql": "539589a49a45f3818d312fbf6792a5a45418c11d219a7968d24f17f697d306d0",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1/generated/sql/Tpcc_76f2a04f23aa/graph-SP-Tpcc_76f2a04f23aa_sp_1_ver0.sql": "9fb47c752146ffe9731041bde35b4b72191095570670ddbc280783e85a6729ed"
+        }
+      },
+      {
+        "stage": "optimized",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-38c0e5c0a233-tx-complete-v1/optimized-20261021T005425687914Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_GC/optimized"
+      }
+    ],
+    "metadata_sha256": "916fbcc50ee93cc39b4704a665ec5abfc1ee099adc06e575798e88ae1a5efbfa",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "865978bcc510433f57a786b4a516d1a2c868864cbf13ef6591ee5de01a1fe2a6",
+      "schema_sha256": "5903ef17bf24fd5d6723a82ede26964acae29d8153b6b73cf9e150d6a3d006b5",
+      "program": "conventional",
+      "variant": "full",
+      "graph_context_sha256": null,
+      "fixture_manifest_sha256": "f33e8dce48850f01350294d801059943f29cc4a03fc938d0277e465087e76d31"
+    },
+    "optimized_activation": {
+      "call_procedure": 1,
+      "sp_enabled_start": true,
+      "sp_enabled_end": true,
+      "server_questions": 6
+    },
+    "failure": null,
+    "sp_activation_status": "active"
+  },
+  {
+    "family": "tpcc",
+    "workload": "new_order_5",
+    "program": "conventional",
+    "variant": "full",
+    "system": "conventional relational Java",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-82b529973fff-atomic-jac-seed-local-access",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/summary.json",
+        "failure": "synth",
+        "matches_final_sources": false
+      },
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-93bcc07ede7e-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/summary.json",
+        "failure": "synth",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-93bcc07ede7e-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-93bcc07ede7e-tx-complete-v1/baseline-20261021T005910256077Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_5/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-93bcc07ede7e-tx-complete-v1/record-20261021T005918248396Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_5/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-93bcc07ede7e-tx-complete-v1/replay-20261021T005920889626Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_5/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-93bcc07ede7e-tx-complete-v1/synth-20261021T005923606208Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_5/synth"
+      }
+    ],
+    "metadata_sha256": "3a2f746c944e424101c801e7c8d63d46467c82640bcc39b25b046f39c5989425",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "4747704f2bd740fa06e9c707a84883d8e8fa3b1f872013f968c3e7f22396459d",
+      "schema_sha256": "5903ef17bf24fd5d6723a82ede26964acae29d8153b6b73cf9e150d6a3d006b5",
+      "program": "conventional",
+      "variant": "full",
+      "graph_context_sha256": null,
+      "fixture_manifest_sha256": "f33e8dce48850f01350294d801059943f29cc4a03fc938d0277e465087e76d31"
+    },
+    "optimized_activation": null,
+    "failure": "synth",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "new_order_15",
+    "program": "conventional",
+    "variant": "full",
+    "system": "conventional relational Java",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-5cc1c8399626-atomic-jac-seed-local-access",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/summary.json",
+        "failure": "synth",
+        "matches_final_sources": false
+      },
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-c96358845032-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/summary.json",
+        "failure": "synth",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-c96358845032-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-c96358845032-tx-complete-v1/baseline-20261021T010015523113Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_15/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-c96358845032-tx-complete-v1/record-20261021T010023261474Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_15/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-c96358845032-tx-complete-v1/replay-20261021T010025897227Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_15/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_15-c96358845032-tx-complete-v1/synth-20261021T010030370823Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/new_order_15/synth"
+      }
+    ],
+    "metadata_sha256": "569c0cc4b36951901b8c22507cc00f0c50cc249e61dfd091068d775159ebb48b",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "17895772a573c2aa3bdd04d545aca3a95c3d94229628df8b48b43e99812ef7dc",
+      "schema_sha256": "5903ef17bf24fd5d6723a82ede26964acae29d8153b6b73cf9e150d6a3d006b5",
+      "program": "conventional",
+      "variant": "full",
+      "graph_context_sha256": null,
+      "fixture_manifest_sha256": "f33e8dce48850f01350294d801059943f29cc4a03fc938d0277e465087e76d31"
+    },
+    "optimized_activation": null,
+    "failure": "synth",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_name_BC",
+    "program": "conventional",
+    "variant": "full",
+    "system": "conventional relational Java",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-3a1c289fe50e-atomic-jac-seed-local-access",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/summary.json",
+        "failure": "synth",
+        "matches_final_sources": false
+      },
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-101cbefb29ff-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/summary.json",
+        "failure": "install",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-101cbefb29ff-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-101cbefb29ff-tx-complete-v1/baseline-20261021T010510960429Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_name_BC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-101cbefb29ff-tx-complete-v1/record-20261021T010518798875Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_name_BC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-101cbefb29ff-tx-complete-v1/replay-20261021T010521483732Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_name_BC/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-101cbefb29ff-tx-complete-v1/synth-20261021T010523870328Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_name_BC/synth"
+      },
+      {
+        "stage": "install",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_name_BC/install",
+        "sql_sha256": {
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-101cbefb29ff-tx-complete-v1/generated/sql/Tpcc_88bdc414e7d6/graph-SP-function.sql": "539589a49a45f3818d312fbf6792a5a45418c11d219a7968d24f17f697d306d0",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-101cbefb29ff-tx-complete-v1/generated/sql/Tpcc_88bdc414e7d6/graph-SP-Tpcc_88bdc414e7d6_sp_1_ver0.sql": "6553f1b397174b8dd04527314e45d64ce5a0812b4436d12d6c042682007532c4"
+        }
+      }
+    ],
+    "metadata_sha256": "2710a7f0022c561ab65f99d4ed7200d555e314c25bf367f240574375df507277",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "0923104aaa726f36b27d081dab21e58a95d190528334a50c8a0a7a5616ccaeea",
+      "schema_sha256": "5903ef17bf24fd5d6723a82ede26964acae29d8153b6b73cf9e150d6a3d006b5",
+      "program": "conventional",
+      "variant": "full",
+      "graph_context_sha256": null,
+      "fixture_manifest_sha256": "f33e8dce48850f01350294d801059943f29cc4a03fc938d0277e465087e76d31"
+    },
+    "optimized_activation": null,
+    "failure": "install",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_id_BC",
+    "program": "conventional",
+    "variant": "full",
+    "system": "conventional relational Java",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-4fd50b4beef0-atomic-jac-seed-local-access",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T002643Z/summary.json",
+        "failure": "synth",
+        "matches_final_sources": false
+      },
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-56180b82f4f4-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/summary.json",
+        "failure": "install",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-56180b82f4f4-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-56180b82f4f4-tx-complete-v1/baseline-20261021T010545155718Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_BC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-56180b82f4f4-tx-complete-v1/record-20261021T010552798142Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_BC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-56180b82f4f4-tx-complete-v1/replay-20261021T010557409322Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_BC/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-56180b82f4f4-tx-complete-v1/synth-20261021T010559915149Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_BC/synth"
+      },
+      {
+        "stage": "install",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005209Z/payment_id_BC/install",
+        "sql_sha256": {
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-56180b82f4f4-tx-complete-v1/generated/sql/Tpcc_ad499434bc2e/graph-SP-function.sql": "539589a49a45f3818d312fbf6792a5a45418c11d219a7968d24f17f697d306d0",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_BC-56180b82f4f4-tx-complete-v1/generated/sql/Tpcc_ad499434bc2e/graph-SP-Tpcc_ad499434bc2e_sp_1_ver0.sql": "4b42be0e9672b56fdd6738d804d871a486b3c7ab94cda2f22350afb0d5a30c04"
+        }
+      }
+    ],
+    "metadata_sha256": "cdc78daab34759abfc4a6c6cb81f14c45021018b6b41e8319144818f9f1e51b6",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "be4fa50ffe759d77ef3647eb25a60eac5db5f77c268ad3b7cc6d8fd6825c1764",
+      "schema_sha256": "5903ef17bf24fd5d6723a82ede26964acae29d8153b6b73cf9e150d6a3d006b5",
+      "program": "conventional",
+      "variant": "full",
+      "graph_context_sha256": null,
+      "fixture_manifest_sha256": "f33e8dce48850f01350294d801059943f29cc4a03fc938d0277e465087e76d31"
+    },
+    "optimized_activation": null,
+    "failure": "install",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_name_GC",
+    "program": "graph",
+    "variant": "full",
+    "system": "graph Java full",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_name_GC-38379b28d62e-atomic-original-frontend",
+        "status": "running",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T003839Z/summary.json",
+        "failure": null,
+        "matches_final_sources": false
+      },
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_name_GC-bd1fe01eaf89-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/summary.json",
+        "failure": "replay",
+        "matches_final_sources": true
+      },
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_name_GC-f36f723c79f1-tx-complete-fresh-string",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T011544Z/summary.json",
+        "failure": "replay",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_name_GC-f36f723c79f1-tx-complete-fresh-string",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T011544Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_name_GC-f36f723c79f1-tx-complete-fresh-string/baseline-20261021T011816621485Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T011544Z/payment_name_GC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_name_GC-f36f723c79f1-tx-complete-fresh-string/record-20261021T011829678665Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T011544Z/payment_name_GC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 134,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_name_GC-f36f723c79f1-tx-complete-fresh-string/replay-20261021T011837119613Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T011544Z/payment_name_GC/replay"
+      }
+    ],
+    "metadata_sha256": "88a1b25ae45972002c6db6bbfc6aed6fc81365237745fb1ccaca5a939935568f",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+          "TpccWeBridge.class": "540d954684f46041d5c5a55e75fd21e20cc8e3eb7cdce760d085b489af47a4ea"
+        },
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "add2ec7845f0f15ae3b2d4c342ebc3b377cbc548d74b46d6bd22dafca061a81a",
+      "schema_sha256": "c8816cd89933b5609f2fd06b149ff1f8c4750419e9abbec78dc6417e8d3bfe22",
+      "program": "graph",
+      "variant": "full",
+      "graph_context_sha256": "6fb65f89cfed25bb9102a5edb3ac025981cca50d4e035afc8e0e8c3b6ba28e55",
+      "fixture_manifest_sha256": "c66b643c5842e3f02f1ead05f95fecca5d01f70a6d7e6f0b87c0bc3caa4ef183"
+    },
+    "optimized_activation": null,
+    "failure": "replay",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "new_order_rollback",
+    "program": "graph",
+    "variant": "full",
+    "system": "graph Java full",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-new_order_rollback-ea7b646b4670-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/summary.json",
+        "failure": "replay",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-new_order_rollback-ea7b646b4670-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-new_order_rollback-ea7b646b4670-tx-complete-v1/baseline-20261021T011418791884Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/new_order_rollback/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-new_order_rollback-ea7b646b4670-tx-complete-v1/record-20261021T011431716357Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/new_order_rollback/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 134,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-new_order_rollback-ea7b646b4670-tx-complete-v1/replay-20261021T011439227756Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/new_order_rollback/replay"
+      }
+    ],
+    "metadata_sha256": "1fb0662455b824b904fc7d45c2f0b1bb260c4fb12f05bb69e8f77cb25425fc7d",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "3cbdd63f67225b3ed2e7ffc1ad3c7b6eef93718b1bfb43798da1e7d920ff61c8",
+      "schema_sha256": "c8816cd89933b5609f2fd06b149ff1f8c4750419e9abbec78dc6417e8d3bfe22",
+      "program": "graph",
+      "variant": "full",
+      "graph_context_sha256": "6fb65f89cfed25bb9102a5edb3ac025981cca50d4e035afc8e0e8c3b6ba28e55",
+      "fixture_manifest_sha256": "c66b643c5842e3f02f1ead05f95fecca5d01f70a6d7e6f0b87c0bc3caa4ef183"
+    },
+    "optimized_activation": null,
+    "failure": "replay",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_id_GC",
+    "program": "graph",
+    "variant": "full",
+    "system": "graph Java full",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_id_GC-d55da0ffb463-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/summary.json",
+        "failure": "replay",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_id_GC-d55da0ffb463-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_id_GC-d55da0ffb463-tx-complete-v1/baseline-20261021T011733649909Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/payment_id_GC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_id_GC-d55da0ffb463-tx-complete-v1/record-20261021T011747070991Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/payment_id_GC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 134,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_id_GC-d55da0ffb463-tx-complete-v1/replay-20261021T011754519246Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/payment_id_GC/replay"
+      }
+    ],
+    "metadata_sha256": "10752be9712cf3f67f581b25412b868d4e970a062d018cd111be4e5c1c033c41",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "865978bcc510433f57a786b4a516d1a2c868864cbf13ef6591ee5de01a1fe2a6",
+      "schema_sha256": "c8816cd89933b5609f2fd06b149ff1f8c4750419e9abbec78dc6417e8d3bfe22",
+      "program": "graph",
+      "variant": "full",
+      "graph_context_sha256": "6fb65f89cfed25bb9102a5edb3ac025981cca50d4e035afc8e0e8c3b6ba28e55",
+      "fixture_manifest_sha256": "c66b643c5842e3f02f1ead05f95fecca5d01f70a6d7e6f0b87c0bc3caa4ef183"
+    },
+    "optimized_activation": null,
+    "failure": "replay",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "new_order_5",
+    "program": "graph",
+    "variant": "full",
+    "system": "graph Java full",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-new_order_5-52d6cef21380-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/summary.json",
+        "failure": "replay",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-new_order_5-52d6cef21380-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-new_order_5-52d6cef21380-tx-complete-v1/baseline-20261021T012057136023Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/new_order_5/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-new_order_5-52d6cef21380-tx-complete-v1/record-20261021T012109861455Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/new_order_5/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 134,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-new_order_5-52d6cef21380-tx-complete-v1/replay-20261021T012117212443Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/new_order_5/replay"
+      }
+    ],
+    "metadata_sha256": "8ece4ddd85cd9d2218f8b4af8b30e12498279906fda0d2e3a263db3cda7cbe09",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "4747704f2bd740fa06e9c707a84883d8e8fa3b1f872013f968c3e7f22396459d",
+      "schema_sha256": "c8816cd89933b5609f2fd06b149ff1f8c4750419e9abbec78dc6417e8d3bfe22",
+      "program": "graph",
+      "variant": "full",
+      "graph_context_sha256": "6fb65f89cfed25bb9102a5edb3ac025981cca50d4e035afc8e0e8c3b6ba28e55",
+      "fixture_manifest_sha256": "c66b643c5842e3f02f1ead05f95fecca5d01f70a6d7e6f0b87c0bc3caa4ef183"
+    },
+    "optimized_activation": null,
+    "failure": "replay",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "new_order_15",
+    "program": "graph",
+    "variant": "full",
+    "system": "graph Java full",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-new_order_15-893509ade59d-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/summary.json",
+        "failure": "replay",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-new_order_15-893509ade59d-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-new_order_15-893509ade59d-tx-complete-v1/baseline-20261021T012653798101Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/new_order_15/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-new_order_15-893509ade59d-tx-complete-v1/record-20261021T012709365903Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/new_order_15/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 134,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-new_order_15-893509ade59d-tx-complete-v1/replay-20261021T012717045850Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/new_order_15/replay"
+      }
+    ],
+    "metadata_sha256": "daca5d246bffa24f991ab9641df667f9cb531e032f069e5363928ec1890e50db",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "17895772a573c2aa3bdd04d545aca3a95c3d94229628df8b48b43e99812ef7dc",
+      "schema_sha256": "c8816cd89933b5609f2fd06b149ff1f8c4750419e9abbec78dc6417e8d3bfe22",
+      "program": "graph",
+      "variant": "full",
+      "graph_context_sha256": "6fb65f89cfed25bb9102a5edb3ac025981cca50d4e035afc8e0e8c3b6ba28e55",
+      "fixture_manifest_sha256": "c66b643c5842e3f02f1ead05f95fecca5d01f70a6d7e6f0b87c0bc3caa4ef183"
+    },
+    "optimized_activation": null,
+    "failure": "replay",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_name_BC",
+    "program": "graph",
+    "variant": "full",
+    "system": "graph Java full",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_name_BC-44c443617561-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/summary.json",
+        "failure": "replay",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_name_BC-44c443617561-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_name_BC-44c443617561-tx-complete-v1/baseline-20261021T013215823886Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/payment_name_BC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_name_BC-44c443617561-tx-complete-v1/record-20261021T013229095144Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/payment_name_BC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 134,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_name_BC-44c443617561-tx-complete-v1/replay-20261021T013236434666Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/payment_name_BC/replay"
+      }
+    ],
+    "metadata_sha256": "e0d6151d2b9dd43169bb976209bdc1fad33ba7f97c1406a83efc6b33b498185c",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "0923104aaa726f36b27d081dab21e58a95d190528334a50c8a0a7a5616ccaeea",
+      "schema_sha256": "c8816cd89933b5609f2fd06b149ff1f8c4750419e9abbec78dc6417e8d3bfe22",
+      "program": "graph",
+      "variant": "full",
+      "graph_context_sha256": "6fb65f89cfed25bb9102a5edb3ac025981cca50d4e035afc8e0e8c3b6ba28e55",
+      "fixture_manifest_sha256": "c66b643c5842e3f02f1ead05f95fecca5d01f70a6d7e6f0b87c0bc3caa4ef183"
+    },
+    "optimized_activation": null,
+    "failure": "replay",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_id_BC",
+    "program": "graph",
+    "variant": "full",
+    "system": "graph Java full",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_id_BC-e10598134a47-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/summary.json",
+        "failure": "replay",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_id_BC-e10598134a47-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_id_BC-e10598134a47-tx-complete-v1/baseline-20261021T013338359360Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/payment_id_BC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_id_BC-e10598134a47-tx-complete-v1/record-20261021T013351158828Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/payment_id_BC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 134,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_id_BC-e10598134a47-tx-complete-v1/replay-20261021T013358416345Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T010606Z/payment_id_BC/replay"
+      }
+    ],
+    "metadata_sha256": "47ee95856609ca25d74ff9c664ad906cf4749fb2b90022150dae4a6f4eeb7170",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "be4fa50ffe759d77ef3647eb25a60eac5db5f77c268ad3b7cc6d8fd6825c1764",
+      "schema_sha256": "c8816cd89933b5609f2fd06b149ff1f8c4750419e9abbec78dc6417e8d3bfe22",
+      "program": "graph",
+      "variant": "full",
+      "graph_context_sha256": "6fb65f89cfed25bb9102a5edb3ac025981cca50d4e035afc8e0e8c3b6ba28e55",
+      "fixture_manifest_sha256": "c66b643c5842e3f02f1ead05f95fecca5d01f70a6d7e6f0b87c0bc3caa4ef183"
+    },
+    "optimized_activation": null,
+    "failure": "replay",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_name_GC",
+    "program": "graph",
+    "variant": "pruned",
+    "system": "graph Java pruned",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_name_GC-513c79a8c62d-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/summary.json",
+        "failure": "replay",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_name_GC-513c79a8c62d-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_name_GC-513c79a8c62d-tx-complete-v1/baseline-20261021T013748794390Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/payment_name_GC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_name_GC-513c79a8c62d-tx-complete-v1/record-20261021T013802839814Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/payment_name_GC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 134,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_name_GC-513c79a8c62d-tx-complete-v1/replay-20261021T013810936017Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/payment_name_GC/replay"
+      }
+    ],
+    "metadata_sha256": "7fae64f88aae2573d56b11f852fe91513824485ba82849fa3b5c2abc1fd33e66",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "add2ec7845f0f15ae3b2d4c342ebc3b377cbc548d74b46d6bd22dafca061a81a",
+      "schema_sha256": "c8816cd89933b5609f2fd06b149ff1f8c4750419e9abbec78dc6417e8d3bfe22",
+      "program": "graph",
+      "variant": "pruned",
+      "graph_context_sha256": "6fb65f89cfed25bb9102a5edb3ac025981cca50d4e035afc8e0e8c3b6ba28e55",
+      "fixture_manifest_sha256": "c66b643c5842e3f02f1ead05f95fecca5d01f70a6d7e6f0b87c0bc3caa4ef183"
+    },
+    "optimized_activation": null,
+    "failure": "replay",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "new_order_rollback",
+    "program": "graph",
+    "variant": "pruned",
+    "system": "graph Java pruned",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_rollback-15abe98f5360-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/summary.json",
+        "failure": "replay",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_rollback-15abe98f5360-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_rollback-15abe98f5360-tx-complete-v1/baseline-20261021T014004657062Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/new_order_rollback/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_rollback-15abe98f5360-tx-complete-v1/record-20261021T014038652790Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/new_order_rollback/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 134,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_rollback-15abe98f5360-tx-complete-v1/replay-20261021T014046144271Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/new_order_rollback/replay"
+      }
+    ],
+    "metadata_sha256": "88a1681331f9d47f6af63c54918cf931728717eb239ff917acb713ff0f2b8d19",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "3cbdd63f67225b3ed2e7ffc1ad3c7b6eef93718b1bfb43798da1e7d920ff61c8",
+      "schema_sha256": "c8816cd89933b5609f2fd06b149ff1f8c4750419e9abbec78dc6417e8d3bfe22",
+      "program": "graph",
+      "variant": "pruned",
+      "graph_context_sha256": "6fb65f89cfed25bb9102a5edb3ac025981cca50d4e035afc8e0e8c3b6ba28e55",
+      "fixture_manifest_sha256": "c66b643c5842e3f02f1ead05f95fecca5d01f70a6d7e6f0b87c0bc3caa4ef183"
+    },
+    "optimized_activation": null,
+    "failure": "replay",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_id_GC",
+    "program": "graph",
+    "variant": "pruned",
+    "system": "graph Java pruned",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_id_GC-be88bea2f738-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/summary.json",
+        "failure": "synth",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_id_GC-be88bea2f738-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_id_GC-be88bea2f738-tx-complete-v1/baseline-20261021T014609671535Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/payment_id_GC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_id_GC-be88bea2f738-tx-complete-v1/record-20261021T014723476369Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/payment_id_GC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_id_GC-be88bea2f738-tx-complete-v1/replay-20261021T014730905444Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/payment_id_GC/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_id_GC-be88bea2f738-tx-complete-v1/synth-20261021T014737066169Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/payment_id_GC/synth"
+      }
+    ],
+    "metadata_sha256": "ebf46d8567900e5925435c0a51cfea3f47d9deb834b56f0bf5eaaee60b0ede36",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "865978bcc510433f57a786b4a516d1a2c868864cbf13ef6591ee5de01a1fe2a6",
+      "schema_sha256": "c8816cd89933b5609f2fd06b149ff1f8c4750419e9abbec78dc6417e8d3bfe22",
+      "program": "graph",
+      "variant": "pruned",
+      "graph_context_sha256": "6fb65f89cfed25bb9102a5edb3ac025981cca50d4e035afc8e0e8c3b6ba28e55",
+      "fixture_manifest_sha256": "c66b643c5842e3f02f1ead05f95fecca5d01f70a6d7e6f0b87c0bc3caa4ef183"
+    },
+    "optimized_activation": null,
+    "failure": "synth",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "new_order_5",
+    "program": "graph",
+    "variant": "pruned",
+    "system": "graph Java pruned",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_5-9060797d2f64-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/summary.json",
+        "failure": "synth",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_5-9060797d2f64-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_5-9060797d2f64-tx-complete-v1/baseline-20261021T014846396836Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/new_order_5/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_5-9060797d2f64-tx-complete-v1/record-20261021T014859336230Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/new_order_5/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_5-9060797d2f64-tx-complete-v1/replay-20261021T014906715377Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/new_order_5/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_5-9060797d2f64-tx-complete-v1/synth-20261021T014913853806Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/new_order_5/synth"
+      }
+    ],
+    "metadata_sha256": "896e8974b1b841829498aa9ae29b6b583abdc0c7dde21e430b4cb1d3eb791b76",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "4747704f2bd740fa06e9c707a84883d8e8fa3b1f872013f968c3e7f22396459d",
+      "schema_sha256": "c8816cd89933b5609f2fd06b149ff1f8c4750419e9abbec78dc6417e8d3bfe22",
+      "program": "graph",
+      "variant": "pruned",
+      "graph_context_sha256": "6fb65f89cfed25bb9102a5edb3ac025981cca50d4e035afc8e0e8c3b6ba28e55",
+      "fixture_manifest_sha256": "c66b643c5842e3f02f1ead05f95fecca5d01f70a6d7e6f0b87c0bc3caa4ef183"
+    },
+    "optimized_activation": null,
+    "failure": "synth",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "new_order_15",
+    "program": "graph",
+    "variant": "pruned",
+    "system": "graph Java pruned",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_15-c550559107d0-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/summary.json",
+        "failure": "synth",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_15-c550559107d0-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_15-c550559107d0-tx-complete-v1/baseline-20261021T015115267660Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/new_order_15/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_15-c550559107d0-tx-complete-v1/record-20261021T015128400974Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/new_order_15/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_15-c550559107d0-tx-complete-v1/replay-20261021T015135909226Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/new_order_15/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-new_order_15-c550559107d0-tx-complete-v1/synth-20261021T015145584623Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/new_order_15/synth"
+      }
+    ],
+    "metadata_sha256": "971be58d53297c008f0171628f0c25c5dc2a05ba21cb58827efcb3c1159db40b",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "17895772a573c2aa3bdd04d545aca3a95c3d94229628df8b48b43e99812ef7dc",
+      "schema_sha256": "c8816cd89933b5609f2fd06b149ff1f8c4750419e9abbec78dc6417e8d3bfe22",
+      "program": "graph",
+      "variant": "pruned",
+      "graph_context_sha256": "6fb65f89cfed25bb9102a5edb3ac025981cca50d4e035afc8e0e8c3b6ba28e55",
+      "fixture_manifest_sha256": "c66b643c5842e3f02f1ead05f95fecca5d01f70a6d7e6f0b87c0bc3caa4ef183"
+    },
+    "optimized_activation": null,
+    "failure": "synth",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_name_BC",
+    "program": "graph",
+    "variant": "pruned",
+    "system": "graph Java pruned",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_name_BC-840da733a868-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/summary.json",
+        "failure": "replay",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_name_BC-840da733a868-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_name_BC-840da733a868-tx-complete-v1/baseline-20261021T015327794384Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/payment_name_BC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_name_BC-840da733a868-tx-complete-v1/record-20261021T015341057971Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/payment_name_BC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 134,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_name_BC-840da733a868-tx-complete-v1/replay-20261021T015348456933Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/payment_name_BC/replay"
+      }
+    ],
+    "metadata_sha256": "7bdd5910b19c4b5cf2ca3d657125743b4fe66fe5e9309b071b0deac20ee4cabb",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "0923104aaa726f36b27d081dab21e58a95d190528334a50c8a0a7a5616ccaeea",
+      "schema_sha256": "c8816cd89933b5609f2fd06b149ff1f8c4750419e9abbec78dc6417e8d3bfe22",
+      "program": "graph",
+      "variant": "pruned",
+      "graph_context_sha256": "6fb65f89cfed25bb9102a5edb3ac025981cca50d4e035afc8e0e8c3b6ba28e55",
+      "fixture_manifest_sha256": "c66b643c5842e3f02f1ead05f95fecca5d01f70a6d7e6f0b87c0bc3caa4ef183"
+    },
+    "optimized_activation": null,
+    "failure": "replay",
+    "sp_activation_status": "not gated"
+  },
+  {
+    "family": "tpcc",
+    "workload": "payment_id_BC",
+    "program": "graph",
+    "variant": "pruned",
+    "system": "graph Java pruned",
+    "status": "failed-stage",
+    "baseline_ready": true,
+    "sp_ready": false,
+    "attempt_history": [
+      {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_id_BC-9d57f83b7076-tx-complete-v1",
+        "status": "failed-stage",
+        "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/summary.json",
+        "failure": "synth",
+        "matches_final_sources": true
+      }
+    ],
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_id_BC-9d57f83b7076-tx-complete-v1",
+    "pipeline": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/summary.json",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_id_BC-9d57f83b7076-tx-complete-v1/baseline-20261021T015755122909Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/payment_id_BC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_id_BC-9d57f83b7076-tx-complete-v1/record-20261021T015808097126Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/payment_id_BC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_id_BC-9d57f83b7076-tx-complete-v1/replay-20261021T015815448289Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/payment_id_BC/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_id_BC-9d57f83b7076-tx-complete-v1/synth-20261021T015821752819Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T013403Z/payment_id_BC/synth"
+      }
+    ],
+    "metadata_sha256": "962e6e03e9db11283cd3771a4f09c15b515e98c1fd882a9b3644c82b76bfa482",
+    "source_manifest": {
+      "session_configuration": {
+        "no_unsigned_subtraction": true,
+        "preserve_existing_strict_modes": true,
+        "isolation": "SERIALIZABLE",
+        "read_only": false
+      },
+      "transaction_dialect": "JDBC setAutoCommit(false)/setAutoCommit(true); real rollback plus connection restore on invalid-item abort",
+      "compatibility_classes": [
+        {
+          "NumericAliasTest.class": "45985843fc9d48f83736b0d1cdaba9b600c8d2992905274e38e1a6dd8b0bb4ce",
+          "webridge/wbridge/sql/types/SQLVarType.class": "19119f714f28c64501e351eae75a7fbbfbcefc13b3298fb3deed9e07fdc9cf2f",
+          "webridge/wbridge/storedprocedure/transformation/TypeConverter.class": "b3f2711b9d37cd57db85d110162d8e384edf6cfbdd97f8bdbae29596b598bac4"
+        },
+        {
+          "DmlTest.class": "defef4231412a84100c001c332544c4f514e7f23ce2c60fa00ad408ce276a370",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$1.class": "d8fe697754b3b293240ba4c4f95a7ca21b286340d1d3911d74fe1360e4a14b5e",
+          "webridge/wbridge/sql/ast/SQLAstVisitor$2.class": "5d9fb7e588ec07602f4bbd8cc1b2ccd1dab537efc76525aaef3e4f6f00e4e079",
+          "webridge/wbridge/sql/ast/SQLAstVisitor.class": "bef3c686a937e4f837a3f2cbce31c88a128a825588aad391ec781c3807daee69"
+        }
+      ],
+      "source": {
+        "TpccSql.java": "240569339e1ec3f2aa4cc9a4664ca1f30d6087f957535bc4f01ef88b57b378b1",
+        "TpccMixed.java": "72b44a7d07631474c28ac53a8e9195fb6d87319384db1a1bf5d70968fd453264",
+        "TpccTiming.java": "f36776b079958f112d93c7a71bac53eb0488bfb48de037c05717b80b34d00c56",
+        "TpccWeBridge.java": "26ec481069fb14813b135ecac1bff272cd1e81fcd1a50ecfd2674e64d5b21fe2",
+        "TpccGraph.java": "366380cda8a9396a166f3df0d23564a6460c21603e21265fcb629a27957c7240",
+        "TpccGraphState.java": "fc0e0f10232b6f3bf080cf2fbdf2c3cfc8db062dff161a46ed7334c8fede4594",
+        "TpccGate.java": "b8455c38bdf2cb05a0c36ff45cd4262549db816a451f76a5e64429fee24edc27",
+        "TpccState.java": "6faaa2f00486cb0a41f5b7176af9cf81f39faaf0fc01d948de4aafb8d507e40d"
+      },
+      "classes": {
+        "TpccGate.class": "c67a41dc31e9aa98ef3d7078076c690a0cba2858e3dd339c5ec40b67570d4e8a",
+        "TpccMixed$1.class": "99ee3d614463d37c3dc098968023a05cb01ad830cdfdffe2d6876e3136fc1bf6",
+        "TpccSql$1.class": "b8c3201e17296e95a5e84cbe11d5b45b780254768c6fffd40c19d67eb699f981",
+        "TpccGraph$Session.class": "252ab81eb4914d56218dde9074caee93f99e8ac691ec5c057ab960dec275996d",
+        "TpccSql$Boundary.class": "30efa12baadb6645a3a4ce2b9ac24b1ede81eab9004855f562ee894b61425ba3",
+        "TpccTiming$1.class": "f682d5d57628fe3091f462abdf49740485f48f1468967df5132ebae1cbe7561e",
+        "TpccWeBridge$1.class": "22df627477f0a87a911b8005eb2a406002677e67467e12050bb5eccf845bb1c2",
+        "TpccGraphState.class": "a19e674e066966087adfccf2c948373c7a839629453744d0a3a4ef2f541b6157",
+        "TpccState.class": "4dc078fe6f1c5be53cf70d697b15e25ca7d42e341e1c8b75eabb70b76337a00f",
+        "TpccGraphState$1.class": "3c299e84cca3015fd5d34c7dcd6e40309b7bf01616ea4cca7bbcb2a12ac70c18",
+        "TpccSql$Abort.class": "b7fdd8c28f20045588c81001bdd4905c6c008b4a86b84dd9e1988440480e7876",
+        "TpccMixed.class": "c4bc76a70c209d20d47fb1e2b304d134a2bed388d8e04ef8cfd3821d2c21cd01",
+        "TpccTiming.class": "90f61ce213fc42baf38997e5dd2307ef4157deb285b8e139433405f4eb02892d",
+        "TpccWeBridge.class": "b5badaebc2c237b189c217f2f0461a8aa931f7556977fe0d592716ef158016e1",
+        "TpccSql.class": "bb4ecf8fda6dacc0142e27ee47656c12e79534832c9e0f717216142f1aef59e4",
+        "TpccGraph.class": "31b641a7aaec78cef48efec13dd209d8397665921df40e85c7b3de8170f351f6",
+        "TpccGraph$Node.class": "f961490a204f734e02d8cbaa184e4d300035df8a3ea7d49b86eb117eeb45c93a"
+      },
+      "input_sha256": "be4fa50ffe759d77ef3647eb25a60eac5db5f77c268ad3b7cc6d8fd6825c1764",
+      "schema_sha256": "c8816cd89933b5609f2fd06b149ff1f8c4750419e9abbec78dc6417e8d3bfe22",
+      "program": "graph",
+      "variant": "pruned",
+      "graph_context_sha256": "6fb65f89cfed25bb9102a5edb3ac025981cca50d4e035afc8e0e8c3b6ba28e55",
+      "fixture_manifest_sha256": "c66b643c5842e3f02f1ead05f95fecca5d01f70a6d7e6f0b87c0bc3caa4ef183"
+    },
+    "optimized_activation": null,
+    "failure": "synth",
+    "sp_activation_status": "not gated"
+  }
+]

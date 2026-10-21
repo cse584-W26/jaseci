@@ -1,0 +1,33 @@
+import java.sql.*;
+import java.nio.file.*;
+import java.util.*;
+import java.io.*;
+import com.alibaba.fastjson2.*;
+import webridge.wbridge.storedprocedure.SPConfig;
+import webridge.wbridge.storedprocedure.invocation.SPInvokeManager;
+
+/** Whole original plan: selected genuine compiled shapes plus explicit source fallback. */
+public class TpccMixed extends AlignedWeBridge {
+ static void execute(String[]args)throws Exception{
+  Files.createDirectories(out);JSONArray plan=JSON.parseArray(new String(Files.readAllBytes(Paths.get(args[0])),"UTF-8"));JSONObject cases=JSON.parseObject(new String(Files.readAllBytes(Paths.get(args[1])),"UTF-8"));
+  JSONArray routes=JSON.parseArray(new String(Files.readAllBytes(Paths.get(args[2])),"UTF-8"));
+  for(String key:cases.keySet()){Path home=Paths.get(cases.getString(key));SPConfig.addConfig(home.resolve("aligned.conf").toFile());}
+  if(!cases.isEmpty())System.setProperty("spDefDir",System.getProperty("mixed.definitions"));
+  try(Connection c=TpccSql.open(out)){
+   save("connection-id.json",TpccSql.obj("connection_id",c.getClass().getMethod("getId").invoke(c)));TpccGate.state(c,out.resolve("before"));
+   try(BufferedWriter log=Files.newBufferedWriter(out.resolve("requests.jsonl"))){
+    for(int n=0;n<plan.size();n++){
+     JSONObject x=plan.getJSONObject(n);x.put("timestamp","2026-01-02T00:00:00Z");if(!x.containsKey("w_id"))x.put("w_id",1);String shape;
+     JSONObject route=routes.getJSONObject(n);shape=route.getString("dispatch_shape");
+     Path selected=cases.getString(shape)==null?null:Paths.get(cases.getString(shape));
+     final JSONObject metadata=selected==null?null:JSON.parseObject(new String(Files.readAllBytes(selected.resolve("metadata.json")),"UTF-8"));final Path selectedCase=selected;final boolean[] enabled={false,false};
+     TpccSql.boundary=new TpccSql.Boundary(){public void enter(Connection connection)throws Exception{if(metadata!=null){TpccWeBridge.symbols.clear();TpccWeBridge.collect(x,"");SPConfig.addConfig(selectedCase.resolve("aligned.conf").toFile());save("boundary-progress.json",TpccSql.obj("stage","before_beginApi","api",metadata.getString("api")));SPInvokeManager.beginApi(metadata.getString("api"));save("boundary-progress.json",TpccSql.obj("stage","after_beginApi"));SPInvokeManager.setInvokingSp(true);TpccWeBridge.buffer();save("boundary-progress.json",TpccSql.obj("stage","after_parameter_buffer"));enabled[0]=SPInvokeManager.isInvokingSp();}}public void leave(Connection connection)throws Exception{if(metadata!=null){enabled[1]=SPInvokeManager.isInvokingSp();SPInvokeManager.endApi();}}};
+     Map<String,Long> before=status(c);save("request-active.json",TpccSql.obj("start_wall_ms",System.currentTimeMillis(),"phase","mixed","iteration",n,"warmup",n<100,"api",metadata==null?null:metadata.getString("api")));long start=System.nanoTime();JSONObject result=TpccSql.request(c,x);double ms=(System.nanoTime()-start)/1e6;Files.delete(out.resolve("request-active.json"));Map<String,Long> after=status(c);long calls=after.get("Com_call_procedure")-before.get("Com_call_procedure");
+     JSONObject row=TpccSql.obj("idx",n,"warmup",n<100,"shape",shape,"route",route,"selected_case",selected==null?null:selected.toString(),"result",result,"ms",ms,"jdbc_calls",TpccSql.calls,"questions",after.get("Questions")-before.get("Questions")-1,"call_procedure",calls,"sp_enabled_start",enabled[0],"sp_enabled_end",enabled[1],"execution",selected==null?"source fallback: no compiled shape":enabled[1]&&calls>0?"generated procedure active":"source fallback: original WeBridge runtime disabled compiled path","categories",new LinkedHashMap<>(TpccSql.categories));log.write(row.toJSONString());log.newLine();log.flush();if(x.getBooleanValue("invalid")==result.getBooleanValue("success"))throw new IllegalStateException("Transaction outcome differs at"+n);
+    }
+   }
+   TpccGate.state(c,out.resolve("after"));
+  }
+ }
+ public static void main(String[]args){try{execute(args);System.exit(0);}catch(Throwable e){e.printStackTrace();System.exit(1);}}
+}

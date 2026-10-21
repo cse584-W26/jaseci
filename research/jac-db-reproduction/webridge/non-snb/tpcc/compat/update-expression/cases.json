@@ -1,0 +1,51 @@
+[
+  {
+    "name": "arithmetic_amount_before_where",
+    "sql": "UPDATE warehouse SET w_ytd=w_ytd+? WHERE w_id=?",
+    "expected_return_columns": 0,
+    "expected_parameter_types": [
+      "DECIMAL",
+      "INTEGER"
+    ],
+    "expected_parameter_columns": [
+      "w_ytd",
+      "w_id"
+    ]
+  },
+  {
+    "name": "repeated_amount_and_literal_increment",
+    "sql": "UPDATE customer SET c_balance=c_balance-?,c_ytd_payment=c_ytd_payment+?,c_payment_cnt=c_payment_cnt+1 WHERE c_w_id=? AND c_d_id=? AND c_id=?",
+    "expected_return_columns": 0,
+    "expected_parameter_types": [
+      "DECIMAL",
+      "DECIMAL",
+      "INTEGER",
+      "INTEGER",
+      "INTEGER"
+    ],
+    "expected_parameter_columns": [
+      "c_balance",
+      "c_ytd_payment",
+      "c_w_id",
+      "c_d_id",
+      "c_id"
+    ]
+  },
+  {
+    "name": "direct_assignment",
+    "sql": "UPDATE customer SET c_data=? WHERE c_w_id=? AND c_d_id=? AND c_id=?",
+    "expected_return_columns": 0,
+    "expected_parameter_types": [
+      "VARCHAR",
+      "INTEGER",
+      "INTEGER",
+      "INTEGER"
+    ],
+    "expected_parameter_columns": [
+      "c_data",
+      "c_w_id",
+      "c_d_id",
+      "c_id"
+    ]
+  }
+]

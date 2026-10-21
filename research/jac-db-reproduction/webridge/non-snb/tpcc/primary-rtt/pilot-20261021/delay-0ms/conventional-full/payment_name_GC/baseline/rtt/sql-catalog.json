@@ -1,0 +1,11 @@
+{
+  "96826913f9ad355698aa62ef5f886ef7c9d4e9f9f57204994c4f87c95bc11134": "SET autocommit=0",
+  "e4ca06a989d006d4df70325685e60c330255a3cd7480ebcf67e297f03007a10f": "SELECT w_name FROM warehouse WHERE w_id=1 FOR UPDATE",
+  "a6cbbec03179c0846bf58578cdabfcdc820a15c610ccacda9047f692b3f501fe": "SELECT d_name FROM district WHERE d_w_id=1 AND d_id=1 FOR UPDATE",
+  "8ee8a1a1787859964551d16303f410ca816e97dfe13a447b44c538dc5929eaf3": "SELECT c_id,c_credit,c_data FROM customer WHERE c_w_id=1 AND c_d_id=10 AND c_last='PRIABLEATION' ORDER BY c_first",
+  "9cb777711380e7751c076559fcc9e1bea4f36989588b13af8e8acecb7c653972": "UPDATE warehouse SET w_ytd=w_ytd+1951.93 WHERE w_id=1",
+  "f364b67af2eb65cb5f2d94f03212f4e8be139ead383d479a89477dacf4dfd834": "UPDATE district SET d_ytd=d_ytd+1951.93 WHERE d_w_id=1 AND d_id=1",
+  "041ab66f05c552da5ad6283e132dfa22bdafbff9c071471a8e82243def5371b5": "UPDATE customer SET c_balance=c_balance-1951.93,c_ytd_payment=c_ytd_payment+1951.93,c_payment_cnt=c_payment_cnt+1 WHERE c_w_id=1 AND c_d_id=10 AND c_id=329",
+  "f81efdb3dd7f45096286d34f495f4520e9df613d999c4b69963589965c655913": "INSERT INTO history(h_c_id,h_c_d_id,h_c_w_id,h_d_id,h_w_id,h_date,h_amount,h_data)VALUES(329,10,1,1,1,'2026-01-02T00:00:00Z',1951.93,'iqcgfkp    lhmvkmp')",
+  "177299e3e9fa0fa62f66bb35e101c3c823715aee232360e6f4f1f9341f056893": "SET autocommit=1"
+}

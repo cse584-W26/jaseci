@@ -1,0 +1,115 @@
+{
+  "original_index": 22,
+  "input": {
+    "amount": 1782.87,
+    "c_d_id": 1,
+    "c_id": null,
+    "c_last": "OUGHTOUGHTOUGHT",
+    "d_id": 10,
+    "kind": "payment"
+  },
+  "actual_source_customer_id": 1103,
+  "recorded_customer_rows": 2,
+  "live_fallback_result_rows": 3,
+  "generated_SQL": {
+    "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-f4f4c31ba90c-typed-getInt-control/generated/sql/Tpcc_0c6ac380f82e/graph-SP-Tpcc_0c6ac380f82e_sp_1_ver0.sql",
+    "sha256": "b932af86c84a62d5c4d1e5c291455012eaf60ea438f8cee7f655d072a7c2cb18",
+    "evidence": [
+      {
+        "line": 137,
+        "text": "IF cursor_cnt_3>=2 THEN"
+      },
+      {
+        "line": 143,
+        "text": "SET cursor_cnt_3 = FOUND_ROWS();"
+      },
+      {
+        "line": 172,
+        "text": "SET q7_i5 = RS_q4_r2_col1;"
+      }
+    ]
+  },
+  "actual_P_S": {
+    "profile": "/home/baichuan/jaseci/reproduction/webridge/non-snb/profiles/tpcc-typed-fallback-prefix23-1792551669399853822-sp/analysis.json",
+    "sha256": "86e78f053e09f34f5b6c615030d4965cf86233e6a14f7e9050e9aa99abc8b259",
+    "parent_CALL_event": 857,
+    "captured_direct_children": 21,
+    "missing_event_ids": [],
+    "server_commit_control_event": 877,
+    "server_commit_control_SQL": "SET autocommit=1",
+    "final_metadata_event": 878
+  },
+  "actual_wire_sequence": [
+    {
+      "command_id": 773,
+      "category": "stored_procedure.call",
+      "sql": "call Tpcc_0c6ac380f82e_sp_1_ver0('OUGHTOUGHTOUGHT', '2026-01-02T00:00:00Z', 1, 1782.87, 1, 10)",
+      "server_error": false,
+      "response_rows": 8
+    },
+    {
+      "command_id": 774,
+      "category": "framework.rollback_to_savepoint",
+      "sql": "ROLLBACK TO trace0_p4",
+      "server_error": true,
+      "response_rows": 0
+    },
+    {
+      "command_id": 775,
+      "category": "relational.customer.select",
+      "sql": "SELECT c_id,c_credit,c_data FROM customer WHERE c_w_id=1 AND c_d_id=1 AND c_last='OUGHTOUGHTOUGHT' ORDER BY c_first",
+      "server_error": false,
+      "response_rows": 3
+    },
+    {
+      "command_id": 776,
+      "category": "relational.warehouse.update",
+      "sql": "UPDATE warehouse SET w_ytd=w_ytd+1782.87 WHERE w_id=1",
+      "server_error": false,
+      "response_rows": 0
+    },
+    {
+      "command_id": 777,
+      "category": "relational.district.update",
+      "sql": "UPDATE district SET d_ytd=d_ytd+1782.87 WHERE d_w_id=1 AND d_id=10",
+      "server_error": false,
+      "response_rows": 0
+    },
+    {
+      "command_id": 778,
+      "category": "relational.customer.update",
+      "sql": "UPDATE customer SET c_balance=c_balance-1782.87,c_ytd_payment=c_ytd_payment+1782.87,c_payment_cnt=c_payment_cnt+1 WHERE c_w_id=1 AND c_d_id=1 AND c_id=1103",
+      "server_error": false,
+      "response_rows": 0
+    },
+    {
+      "command_id": 779,
+      "category": "relational.history.insert",
+      "sql": "INSERT INTO history(h_c_id,h_c_d_id,h_c_w_id,h_d_id,h_w_id,h_date,h_amount,h_data)VALUES(1103,1,1,10,1,'2026-01-02T00:00:00Z',1782.87,'iqcgfkp    pewrtd')",
+      "server_error": false,
+      "response_rows": 0
+    },
+    {
+      "command_id": 780,
+      "category": "transaction.setting",
+      "sql": "SET autocommit=1",
+      "server_error": false,
+      "response_rows": 0
+    }
+  ],
+  "extra_committed_effect": {
+    "amount": "1782.87",
+    "warehouse_id": 1,
+    "district_key": [
+      1,
+      10
+    ],
+    "customer_key": [
+      1,
+      1,
+      1103
+    ],
+    "history_extra_rows": 1
+  },
+  "conclusion": "The typed JDBC control removes the prefix 6 three-character numeric conversion. At original index 22 the procedure materializes two Customer rows for a query whose actual source result has three. The SDK detects Too few rows after the procedure has already executed SET autocommit=1. Its ROLLBACK TO trace0_p4 returns a server error; source fallback reapplies warehouse/district/customer/history writes. Paired full eight-relation snapshots and the independent original-prefix-23 model prove one extra 1782.87 payment, with identical returned outputs. This is the measured single-recorded-path transaction/guard behavior of this artifact/configuration."
+}

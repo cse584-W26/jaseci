@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/home/baichuan/jaseci/reproduction/webridge/boot-jdk8/bin/java",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/compat/parameter-string/test-classes:/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/compat/parameter-string/classes:/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/classes:/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/classes:/home/baichuan/jaseci/reproduction/webridge/integration/jdbc-string/combined:/home/baichuan/jaseci/reproduction/webridge/integration/sql-frontend/classes:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+    "ParameterStringTest"
+  ],
+  "returncode": 1,
+  "stdout": "",
+  "stderr": "Exception in thread \"main\" java.lang.ExceptionInInitializerError\n\tat ParameterStringTest.main(ParameterStringTest.java:3)\nCaused by: java.lang.NullPointerException\n\tat sun.nio.fs.UnixPath.normalizeAndCheck(UnixPath.java:77)\n\tat sun.nio.fs.UnixPath.<init>(UnixPath.java:71)\n\tat sun.nio.fs.UnixFileSystem.getPath(UnixFileSystem.java:281)\n\tat java.nio.file.Paths.get(Paths.java:84)\n\tat AlignedWeBridge.<clinit>(AlignedWeBridge.java:17)\n\t... 1 more\n"
+}

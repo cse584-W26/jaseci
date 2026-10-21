@@ -1,0 +1,64 @@
+Adding disable concolic handler for class com/fasterxml/jackson/core/json/UTF8JsonGenerator
+Adding disable concolic handler for class com/fasterxml/jackson/databind/ser/BeanPropertyWriter
+Adding disable concolic handler for class net/sf/jsqlparser/parser/CCJSqlParser
+Adding disable concolic handler for class freemarker/core/FMParserTokenManager
+Adding disable concolic handler for class org/apache/ibatis/ognl/OgnlParser
+Adding disable concolic handler for class org/apache/ibatis/ognl/Ognl
+Adding disable concolic handler for class org/attoparser/MarkupParser
+Adding disable concolic handler for class org/thymeleaf/TemplateEngine
+Adding disable concolic handler for class org/apache/http/impl/execchain/ProtocolExec
+Starting concolic execution
+Symbolize!
+ symbolize field value rid:1 index:11 type:D offset:24
+Symbolize!
+ symbolize field value rid:2 index:3 type:J offset:24
+Symbolize!
+Symbolize!
+ symbolize field value rid:4 index:3 type:J offset:24
+Symbolize!
+Symbolize!
+ symbolize field value rid:6 index:3 type:J offset:24
+Symbolize!
+Symbolize!
+Symbolize!
+Symbolize!
+ symbolize field value rid:10 index:3 type:J offset:24
+Symbolize!
+ symbolize field value rid:11 index:3 type:J offset:24
+Symbolize!
+ symbolize field value rid:12 index:3 type:J offset:24
+Symbolize!
+ symbolize field value rid:13 index:3 type:J offset:24
+Symbolize!
+ symbolize field value rid:14 index:3 type:J offset:24
+Symbolize!
+Symbolize!
+Symbolize!
+ symbolize field value rid:17 index:3 type:J offset:24
+[Txn] set_auto_commit: 0s, conn_id:7176
+static jobject java.lang.String.join(jobject, jobject) handled by SymString, need recording N
+SymStmt.invoke_method_helper: Invoking setObject
+SymStmt.invoke_method_helper: Invoking checkClosed
+[SymbolicStatement] checkClosed unhandled by SymStmt
+SymStmt.invoke_method_helper: Invoking setObject
+SymStmt.invoke_method_helper: Invoking checkClosed
+[SymbolicStatement] checkClosed unhandled by SymStmt
+SymStmt.invoke_method_helper: Invoking setString
+SymStmt.invoke_method_helper: Invoking executeQuery
+SymResSet.invoke_method_helper: Invoking next for rs: 0x71dcbc96ab40
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  Internal Error (os_linux_zero.cpp:254), pid=3369708, tid=0x000071dcc4bff640
+#  fatal error: caught unhandled signal 11
+#
+# JRE version: OpenJDK Runtime Environment (8.0) (build 1.8.0-internal-_2026_10_20_17_57-b00)
+# Java VM: OpenJDK 64-Bit Zero VM (25.71-b00 interpreted mode linux-amd64 )
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# An error report file with more information is saved as:
+# /home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_id_BC-e10598134a47-tx-complete-v1/replay-20261021T013358416345Z/hs_err_pid3369708.log
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+#

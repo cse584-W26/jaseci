@@ -1,0 +1,74 @@
+[
+  {
+    "family": "tpcc",
+    "workload": "payment_name_GC",
+    "system": "conventional-full-webridge",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1/baseline-20261021T005056702695Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005015Z/payment_name_GC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1/record-20261021T005110785082Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005015Z/payment_name_GC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1/replay-20261021T005113430033Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005015Z/payment_name_GC/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1/synth-20261021T005115806456Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005015Z/payment_name_GC/synth"
+      },
+      {
+        "stage": "install",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005015Z/payment_name_GC/install",
+        "sql_sha256": {
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1/generated/sql/Tpcc_ad8afad4201f/graph-SP-function.sql": "539589a49a45f3818d312fbf6792a5a45418c11d219a7968d24f17f697d306d0",
+          "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1/generated/sql/Tpcc_ad8afad4201f/graph-SP-Tpcc_ad8afad4201f_sp_1_ver0.sql": "e1c7b705762e7540dbfd3316c028f75594c5772794737e7a144485b0a9c75bab"
+        }
+      },
+      {
+        "stage": "optimized",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1/optimized-20261021T005122422099Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T005015Z/payment_name_GC/optimized"
+      }
+    ],
+    "status": "success",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_GC-cb84bd502b50-tx-complete-v1",
+    "results": {
+      "baseline": {
+        "success": true,
+        "c_id": 329,
+        "amount": 1951.93
+      },
+      "record": {
+        "success": true,
+        "c_id": 329,
+        "amount": 1951.93
+      },
+      "optimized": {
+        "success": true,
+        "c_id": 329,
+        "amount": 1951.93
+      }
+    },
+    "optimized_activation": {
+      "call_procedure": 1,
+      "sp_enabled_start": true,
+      "sp_enabled_end": true,
+      "server_questions": 6
+    },
+    "correctness": "Identical outputs and full normalized mutable-table states from independent initial resets"
+  }
+]

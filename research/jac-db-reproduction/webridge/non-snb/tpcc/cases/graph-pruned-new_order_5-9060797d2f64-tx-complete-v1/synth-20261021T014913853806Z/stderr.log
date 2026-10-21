@@ -1,0 +1,19 @@
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:0 -> 0
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:0 -> 0
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:0 -> 0
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:314 -> 314
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:628 -> 628
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:1448 -> 1448
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:1448 -> 1448
+java.lang.NumberFormatException: For input string: "inf"
+	at sun.misc.FloatingDecimal.readJavaFormatString(FloatingDecimal.java:2043)
+	at sun.misc.FloatingDecimal.parseFloat(FloatingDecimal.java:122)
+	at java.lang.Float.parseFloat(Float.java:451)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.parsePCJsonObjectExpression(StoredProcedureManager.java:314)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.parsePCJsonObjectConstraint(StoredProcedureManager.java:614)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.parsePathCondition(StoredProcedureManager.java:892)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.parseFromRecordedJSON(StoredProcedureManager.java:791)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.generateStoredProcedure(StoredProcedureManager.java:930)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.run(StoredProcedureManager.java:921)
+	at TpccWeBridge.execute(TpccWeBridge.java:25)
+	at TpccWeBridge.main(TpccWeBridge.java:48)

@@ -1,0 +1,234 @@
+{
+  "initial_database": "jac_tpcc_graph_initial",
+  "working_database": "jac_tpcc_graph",
+  "start_wall_ns": 1792538781166798167,
+  "end_wall_ns": 1792539144083971817,
+  "checks": "1281535\t0\n0\n",
+  "export": {
+    "database": "jac_non_snb_tpcc_seed_20261020",
+    "snapshot": "jac_non_snb_tpcc_initial_20261020",
+    "tables": {
+      "anchors": {
+        "rows": 1281535,
+        "bytes": 875767269,
+        "sha256": "e32cd44acf972e1dc92dbc237d5d5c3a6bce623e8bec92f27aa27dc96d5df09d",
+        "query": "SELECT id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props::text,xmin::text,seq,src_type,dst_type FROM anchors ORDER BY id",
+        "columns": [
+          [
+            "id",
+            "uuid",
+            "uuid"
+          ],
+          [
+            "kind",
+            "text",
+            "text"
+          ],
+          [
+            "arch_type",
+            "text",
+            "text"
+          ],
+          [
+            "arch_module",
+            "text",
+            "text"
+          ],
+          [
+            "fingerprint",
+            "text",
+            "text"
+          ],
+          [
+            "root_id",
+            "uuid",
+            "uuid"
+          ],
+          [
+            "src",
+            "uuid",
+            "uuid"
+          ],
+          [
+            "dst",
+            "uuid",
+            "uuid"
+          ],
+          [
+            "undirected",
+            "boolean",
+            "bool"
+          ],
+          [
+            "props",
+            "jsonb",
+            "jsonb"
+          ],
+          [
+            "format_version",
+            "integer",
+            "int4"
+          ],
+          [
+            "updated_at",
+            "timestamp with time zone",
+            "timestamptz"
+          ],
+          [
+            "seq",
+            "bigint",
+            "int8"
+          ],
+          [
+            "src_type",
+            "text",
+            "text"
+          ],
+          [
+            "dst_type",
+            "text",
+            "text"
+          ],
+          [
+            "g_customer_c_last",
+            "text",
+            "text"
+          ]
+        ]
+      },
+      "graph_types": {
+        "rows": 12,
+        "bytes": 180,
+        "sha256": "174e7360f0f3062fe59b60fdc7ce31fe26a6ca979f1cf94dbb84b98c138eaa8b",
+        "query": "SELECT type_name,ancestor FROM graph_types ORDER BY 1,2",
+        "columns": [
+          [
+            "type_name",
+            "text",
+            "text"
+          ],
+          [
+            "ancestor",
+            "text",
+            "text"
+          ]
+        ]
+      },
+      "identity_users": {
+        "rows": 5,
+        "bytes": 3082,
+        "sha256": "513cb63fa487802f3b53e0e3fb8d330943007df1b328eddfea808c99b1eb9d9d",
+        "query": "SELECT * FROM identity_users ORDER BY 1",
+        "columns": [
+          [
+            "user_id",
+            "text",
+            "text"
+          ],
+          [
+            "doc",
+            "jsonb",
+            "jsonb"
+          ]
+        ]
+      },
+      "identity_lookups": {
+        "rows": 5,
+        "bytes": 233,
+        "sha256": "8ac51dd7be5ffa0e8d8a4e7bd3f11ffe9d056d4bc088b79daaacdef5dfaad462",
+        "query": "SELECT * FROM identity_lookups ORDER BY 1",
+        "columns": [
+          [
+            "value_normalized",
+            "text",
+            "text"
+          ],
+          [
+            "user_id",
+            "text",
+            "text"
+          ]
+        ]
+      },
+      "kv_state": {
+        "rows": 1,
+        "bytes": 79,
+        "sha256": "6ed2e3152fc599c55606ea34dc7dc17ebbca0414739e1f5b6fc0757dea8cd401",
+        "query": "SELECT * FROM kv_state ORDER BY 1",
+        "columns": [
+          [
+            "key",
+            "text",
+            "text"
+          ],
+          [
+            "value",
+            "text",
+            "text"
+          ],
+          [
+            "expires_at",
+            "timestamp with time zone",
+            "timestamptz"
+          ],
+          [
+            "updated_at",
+            "timestamp with time zone",
+            "timestamptz"
+          ]
+        ]
+      }
+    },
+    "wall_ns": 1792538452696493603,
+    "types": [
+      [
+        "Customer",
+        30000
+      ],
+      [
+        "District",
+        10
+      ],
+      [
+        "GenericEdge",
+        560765
+      ],
+      [
+        "History",
+        30000
+      ],
+      [
+        "Item",
+        100000
+      ],
+      [
+        "Of",
+        100000
+      ],
+      [
+        "Order",
+        30000
+      ],
+      [
+        "OrderLine",
+        300754
+      ],
+      [
+        "Placed",
+        30000
+      ],
+      [
+        "Root",
+        5
+      ],
+      [
+        "Stock",
+        100000
+      ],
+      [
+        "Warehouse",
+        1
+      ]
+    ]
+  }
+}

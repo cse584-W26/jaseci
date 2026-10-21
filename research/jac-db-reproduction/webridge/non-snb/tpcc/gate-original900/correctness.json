@@ -1,0 +1,116 @@
+{
+  "status": "PASS",
+  "requests": 900,
+  "rollbacks": 7,
+  "row_deltas": {
+    "warehouse": 0,
+    "district": 0,
+    "customer": 0,
+    "stock": 0,
+    "orders": 487,
+    "new_order": 487,
+    "order_line": 4746,
+    "history": 406
+  },
+  "before": {
+    "warehouse": {
+      "rows": 1,
+      "sha256": "c0cfb9c0ef4504fb4022a511f830cad4ec6cbb8653d972635a84756a085a3dbd",
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/gate-original900/results/before/warehouse.jsonl",
+      "sql": "SELECT w_id,w_ytd FROM warehouse ORDER BY w_id"
+    },
+    "district": {
+      "rows": 10,
+      "sha256": "e5fa1baad83c2fec7c3f71deb503485d88c36230ac7fe2900b2ecf4c0bbb31aa",
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/gate-original900/results/before/district.jsonl",
+      "sql": "SELECT d_w_id,d_id,d_ytd,d_next_o_id FROM district ORDER BY d_w_id,d_id"
+    },
+    "customer": {
+      "rows": 30000,
+      "sha256": "2329accfe3dca87b402e664c3ec1f9bbabeae96396b35ca0c11cc9e4dd9204fd",
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/gate-original900/results/before/customer.jsonl",
+      "sql": "SELECT c_w_id,c_d_id,c_id,c_balance,c_ytd_payment,c_payment_cnt,c_data FROM customer ORDER BY c_w_id,c_d_id,c_id"
+    },
+    "stock": {
+      "rows": 100000,
+      "sha256": "0a5d05858ad3f2f69f87492ac9454921f04314f9f429d743495a817c52dcb229",
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/gate-original900/results/before/stock.jsonl",
+      "sql": "SELECT s_w_id,s_i_id,s_quantity,s_ytd,s_order_cnt,s_remote_cnt FROM stock ORDER BY s_w_id,s_i_id"
+    },
+    "orders": {
+      "rows": 30000,
+      "sha256": "44cba83dae1aea9c0113c1ea6f18889fd5073c5dc70105d1a381ce2e53bdc87f",
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/gate-original900/results/before/orders.jsonl",
+      "sql": "SELECT o_w_id,o_d_id,o_id,o_c_id,COALESCE(o_carrier_id,0),o_ol_cnt,o_all_local FROM orders ORDER BY o_w_id,o_d_id,o_id"
+    },
+    "new_order": {
+      "rows": 9000,
+      "sha256": "fcd25286de2b35a9336565d9834495bccf12977f71fc7f1927bb9451beb06154",
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/gate-original900/results/before/new_order.jsonl",
+      "sql": "SELECT no_w_id,no_d_id,no_o_id FROM new_order ORDER BY no_w_id,no_d_id,no_o_id"
+    },
+    "order_line": {
+      "rows": 300754,
+      "sha256": "70f0648049b3a6f8516af4903b1295196ff61d048dbbd7754521e205cf3ea021",
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/gate-original900/results/before/order_line.jsonl",
+      "sql": "SELECT ol_w_id,ol_d_id,ol_o_id,ol_number,ol_i_id,ol_supply_w_id,ol_quantity,ol_amount,ol_dist_info FROM order_line ORDER BY ol_w_id,ol_d_id,ol_o_id,ol_number"
+    },
+    "history": {
+      "rows": 30000,
+      "sha256": "20845495542248c34f8b9f1d4d60e6a5b71f8885c24467a6090d341fb0692264",
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/gate-original900/results/before/history.jsonl",
+      "sql": "SELECT h_c_w_id,h_c_d_id,h_c_id,h_w_id,h_d_id,h_amount,h_data FROM history ORDER BY h_c_w_id,h_c_d_id,h_c_id,h_w_id,h_d_id,h_amount,h_data"
+    }
+  },
+  "after": {
+    "warehouse": {
+      "rows": 1,
+      "sha256": "5e2747e20d9009288e452f79ece12f09ad7f85021ddd017fd7baee9532a532ff",
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/gate-original900/results/after/warehouse.jsonl",
+      "sql": "SELECT w_id,w_ytd FROM warehouse ORDER BY w_id"
+    },
+    "district": {
+      "rows": 10,
+      "sha256": "0e933a9c538c25ddf1ee9b32c8e03a916f7312adb11278242c0d8073cc31bf1d",
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/gate-original900/results/after/district.jsonl",
+      "sql": "SELECT d_w_id,d_id,d_ytd,d_next_o_id FROM district ORDER BY d_w_id,d_id"
+    },
+    "customer": {
+      "rows": 30000,
+      "sha256": "1c94c87556dc252f034a61bfbb94d6fdf61607ebb1418b984d290e5a04111393",
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/gate-original900/results/after/customer.jsonl",
+      "sql": "SELECT c_w_id,c_d_id,c_id,c_balance,c_ytd_payment,c_payment_cnt,c_data FROM customer ORDER BY c_w_id,c_d_id,c_id"
+    },
+    "stock": {
+      "rows": 100000,
+      "sha256": "7b8cb0a33c0dfc46be1254c59a05af42698e7c1f955319cdf071dc3b61a8d6db",
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/gate-original900/results/after/stock.jsonl",
+      "sql": "SELECT s_w_id,s_i_id,s_quantity,s_ytd,s_order_cnt,s_remote_cnt FROM stock ORDER BY s_w_id,s_i_id"
+    },
+    "orders": {
+      "rows": 30487,
+      "sha256": "be1c0a984eb61155b04c3ce78c1264483fa9abee33556124ea0c2d6954879152",
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/gate-original900/results/after/orders.jsonl",
+      "sql": "SELECT o_w_id,o_d_id,o_id,o_c_id,COALESCE(o_carrier_id,0),o_ol_cnt,o_all_local FROM orders ORDER BY o_w_id,o_d_id,o_id"
+    },
+    "new_order": {
+      "rows": 9487,
+      "sha256": "281025225a699ba845af648614273436d202e193b7df47829e75e192d3a5d830",
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/gate-original900/results/after/new_order.jsonl",
+      "sql": "SELECT no_w_id,no_d_id,no_o_id FROM new_order ORDER BY no_w_id,no_d_id,no_o_id"
+    },
+    "order_line": {
+      "rows": 305500,
+      "sha256": "364944626050fd350450a09d4d1e89ebdfbea595ebbb19e2dfbe06f752e3298d",
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/gate-original900/results/after/order_line.jsonl",
+      "sql": "SELECT ol_w_id,ol_d_id,ol_o_id,ol_number,ol_i_id,ol_supply_w_id,ol_quantity,ol_amount,ol_dist_info FROM order_line ORDER BY ol_w_id,ol_d_id,ol_o_id,ol_number"
+    },
+    "history": {
+      "rows": 30406,
+      "sha256": "ac6ec53bf57950f63d28147c86624e15474c5d9b5dadd5d6dfc20bb7f08a4abe",
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/gate-original900/results/after/history.jsonl",
+      "sql": "SELECT h_c_w_id,h_c_d_id,h_c_id,h_w_id,h_d_id,h_amount,h_data FROM history ORDER BY h_c_w_id,h_c_d_id,h_c_id,h_w_id,h_d_id,h_amount,h_data"
+    }
+  },
+  "cross_native_state_comparison": "pending native owner export"
+}

@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/java",
+    "-Xmx8g",
+    "-Xss20m",
+    "-Dintegration.dir=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-3477b538e4eb-atomic-jac-seed-local-access",
+    "-Dexecution.dir=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_id_GC-3477b538e4eb-atomic-jac-seed-local-access/record-20261021T002757258738Z",
+    "-Dintegration.api=Tpcc_b835b263e62b",
+    "-Dintegration.scope=cold",
+    "-Daligned.source=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/3477b538e4ebd1a69edab3203b5db874ff2b4d2e3da4cccfdd7d9d7e459dc639/source/TpccSql.java",
+    "-Dexperiment.input=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/3477b538e4ebd1a69edab3203b5db874ff2b4d2e3da4cccfdd7d9d7e459dc639/input.json",
+    "-Dexperiment.program=conventional",
+    "-Dexperiment.pruned=false",
+    "-Dexperiment.graph.context=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/3477b538e4ebd1a69edab3203b5db874ff2b4d2e3da4cccfdd7d9d7e459dc639/graph-context.json",
+    "-Dexperiment.mysql.url=jdbc:mysql://127.0.0.1:55337/jac_tpcc_conventional?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/3477b538e4ebd1a69edab3203b5db874ff2b4d2e3da4cccfdd7d9d7e459dc639/classes:/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/classes:/home/baichuan/jaseci/reproduction/webridge/integration/jdbc-string/combined:/home/baichuan/jaseci/reproduction/webridge/integration/sql-frontend/classes:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+    "TpccWeBridge",
+    "record"
+  ],
+  "cpu_affinity": "9,19",
+  "utc": "20261021T002757258857Z",
+  "timeout_s": 300
+}

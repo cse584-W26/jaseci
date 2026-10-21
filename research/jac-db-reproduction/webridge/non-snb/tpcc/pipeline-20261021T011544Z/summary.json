@@ -1,0 +1,44 @@
+[
+  {
+    "family": "tpcc",
+    "workload": "payment_name_GC",
+    "system": "graph-full-webridge",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_name_GC-f36f723c79f1-tx-complete-fresh-string/baseline-20261021T011816621485Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T011544Z/payment_name_GC/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_name_GC-f36f723c79f1-tx-complete-fresh-string/record-20261021T011829678665Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T011544Z/payment_name_GC/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 134,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_name_GC-f36f723c79f1-tx-complete-fresh-string/replay-20261021T011837119613Z",
+        "command_logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/pipeline-20261021T011544Z/payment_name_GC/replay"
+      }
+    ],
+    "status": "failed-stage",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-full-payment_name_GC-f36f723c79f1-tx-complete-fresh-string",
+    "results": {
+      "baseline": {
+        "success": true,
+        "c_id": 329,
+        "amount": 1951.93
+      },
+      "record": {
+        "success": true,
+        "c_id": 329,
+        "amount": 1951.93
+      }
+    },
+    "failed_stage": "replay",
+    "emitted_artifacts": [],
+    "emitted_artifact_review": "Required before classifying capability: formal stage exit does not prove emitted artifacts unusable"
+  }
+]

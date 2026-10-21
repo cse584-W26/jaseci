@@ -1,0 +1,143 @@
+{
+  "case": "reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-940e48d1eda4-tx-complete-v1",
+  "stage": "synthesis before procedure emission",
+  "native_replay_scales": [
+    {
+      "line": 325,
+      "text": "newScale:2, curScale:47"
+    },
+    {
+      "line": 469,
+      "text": "newScale:2, curScale:45"
+    },
+    {
+      "line": 613,
+      "text": "newScale:2, curScale:0"
+    },
+    {
+      "line": 757,
+      "text": "newScale:2, curScale:43"
+    },
+    {
+      "line": 901,
+      "text": "newScale:2, curScale:43"
+    },
+    {
+      "line": 1045,
+      "text": "newScale:2, curScale:44"
+    },
+    {
+      "line": 1189,
+      "text": "newScale:2, curScale:46"
+    },
+    {
+      "line": 1333,
+      "text": "newScale:2, curScale:45"
+    },
+    {
+      "line": 1477,
+      "text": "newScale:2, curScale:44"
+    },
+    {
+      "line": 1621,
+      "text": "newScale:2, curScale:41"
+    },
+    {
+      "line": 1765,
+      "text": "newScale:2, curScale:47"
+    },
+    {
+      "line": 1909,
+      "text": "newScale:2, curScale:47"
+    }
+  ],
+  "native_replay_path": "reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-940e48d1eda4-tx-complete-v1/replay-20261021T005338323533Z/stdout.log",
+  "native_replay_sha256": "caab7de39b4960fe83f74fed6115f70816cc03f86fe4a8f63e7f54e3631a2e24",
+  "actual_emitted_parameter_expression": [
+    "EXPRESSION_DIAGNOSTIC class MAIN { void METHOD() { TARGET = (CONVERT((CAST_AS_D_M_J_field_REQUEST_PARAM_lines_0_quantity_java_lang_Long_value*CAST_AS_D_EC_94-4-1-Y_I_48*Y_I_10+EC_94-4-2-Y_I_48*Y_I_10+EC_94-4-3-Y_I_48*Y_I_10+EC_94-4-4-Y_I_48@Y_D_1.000000e+02_intCompact / -9223372036854775808), DECIMAL) / 100.0); }}"
+  ],
+  "diagnostic_path": "reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_rollback-940e48d1eda4-tx-complete-v1-expression-diagnostic/synth-diagnostic/stderr.log",
+  "upstream_model_source": "webridge/SourceCode/openjdk8-webridge/hotspot/src/share/vm/concolic/reference/symbolicBigDecimal.cpp",
+  "upstream_model_sha256": "a23d04e92c30ec1678cefe014b768d07e33fe3f94ab31b4af4413c5a342fc427",
+  "double_constructor_source": {
+    "start_line": 210,
+    "lines": [
+      "  } else if (signature == \"java.math.BigDecimal.<init>(D)V\") {",
+      "    Expression *param = handle.get_param_list()[1];",
+      "    guarantee(param != NULL, \"Should not be null\");",
+      "    oop thisDecimal = handle.get_param<oop>(0);",
+      "    assert(thisDecimal != NULL, \"should not be null\");",
+      "    SymBigDecimal *symObj = reinterpret_cast<SymBigDecimal *>(",
+      "        ConcolicMngr::ctx->get_or_alloc_sym_inst(thisDecimal)",
+      "    );",
+      "    // TODO: seems there's symbolic lose in this way: param is not correctly related with symBigdecimal",
+      "    symObj->symbolize_bigDecimal(thisDecimal, param);",
+      "  } else if (signature == \"java.math.BigDecimal.<init>(Ljava/math/BigInteger;JII)V\") {",
+      "    Expression *intValExp = handle.get_param_list()[2];"
+    ]
+  },
+  "setScale_model_source": {
+    "start_line": 233,
+    "lines": [
+      "  } else if (signature == \"java.math.BigDecimal.setScale(II)Ljava/math/BigDecimal;\") {",
+      "    jint newScale = handle.get_param<jint>(1);",
+      "    assert(newScale >= 0, \"Scale should >= 0\");",
+      "    assert(handle.get_param_list().size() == 3, \"size should be 3\");",
+      "    guarantee(handle.get_param_list()[1] == NULL || handle.get_param_list()[2],",
+      "              \"currently only handle concrete scaling\");",
+      "    oop thisDecimal = handle.get_param<oop>(0);",
+      "    oop resultDecimal = handle.get_result<oop>(T_OBJECT);",
+      "    assert(thisDecimal->klass()->name() == vmSymbols::java_math_BigDecimal(), \"should be\");",
+      "    assert(resultDecimal->klass()->name() == vmSymbols::java_math_BigDecimal(), \"should be\");",
+      "    SymBigDecimal *symThisDecimal = reinterpret_cast<SymBigDecimal *>(ConcolicMngr::ctx->get_sym_inst(thisDecimal));",
+      "    SymBigDecimal *symResDecimal = reinterpret_cast<SymBigDecimal *>(ConcolicMngr::ctx->get_or_alloc_sym_inst(",
+      "        resultDecimal));",
+      "    guarantee(symThisDecimal != NULL, \"Only handle symbolic decimal case[symThisDecimal]\");",
+      "    guarantee(symResDecimal != NULL, \"Only handle symbolic decimal case[symResDecimal]\");",
+      "    int intCmpFldOffset = symThisDecimal->_int_compact_offset;",
+      "    int scaleFldOffset = symThisDecimal->_scale_offset;",
+      "    Expression *intCmpExp = symThisDecimal->get(intCmpFldOffset);",
+      "    Expression *scaleExp = symThisDecimal->get(scaleFldOffset);",
+      "    if (intCmpExp == NULL && scaleExp == NULL) {",
+      "      // not a correctly initialized symbolic decimal",
+      "      ShouldNotCallThis();",
+      "    }",
+      "",
+      "    int curScale = thisDecimal->int_field(scaleFldOffset);",
+      "    guarantee(newScale == resultDecimal->int_field(scaleFldOffset), \"newScale in parameter should equals to result decimal's scale\");",
+      "    Expression* newScaleExp = new ConExpression(newScale);",
+      "    newScaleExp->inc_ref();",
+      "    symResDecimal->set_sym_exp(",
+      "        scaleFldOffset,",
+      "        newScaleExp",
+      "    );",
+      "    tty->print_cr(\"newScale:%d, curScale:%d\", newScale, curScale);",
+      "    if (newScale > curScale) {",
+      "      long num = std::pow(10, newScale - curScale);",
+      "      symResDecimal->set_sym_exp(",
+      "          intCmpFldOffset,",
+      "          new OpSymExpression(intCmpExp, new ConExpression(num), op_mul)",
+      "      );",
+      "    } else if (newScale < curScale) {",
+      "      long num = std::pow(10, curScale - newScale);",
+      "      symResDecimal->set_sym_exp(",
+      "          intCmpFldOffset,",
+      "          new OpSymExpression(intCmpExp, new ConExpression(num), op_div)",
+      "      );",
+      "    } else {",
+      "      // scale not changed",
+      "      symResDecimal->set_sym_exp(",
+      "          intCmpFldOffset,",
+      "          intCmpExp",
+      "      );",
+      "    }"
+    ]
+  },
+  "observations": [
+    "Captured parameter expression contains an at-sign field marker and denominator -9223372036854775808",
+    "Recorded scales include47\u21922,45\u21922,43\u21922",
+    "Upstream setScale models scale reduction as integer division by a long computed from std::pow",
+    "The captured setScale handler reads the new scale and applies no rounding-mode rule"
+  ],
+  "classification": "JDK symbolic BigDecimal numeric-model boundary"
+}

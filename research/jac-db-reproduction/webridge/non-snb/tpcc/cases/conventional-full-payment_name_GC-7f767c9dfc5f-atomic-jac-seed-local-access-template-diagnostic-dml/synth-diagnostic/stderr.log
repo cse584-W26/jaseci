@@ -1,0 +1,16 @@
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:1 -> 1
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:3 -> 3
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:5 -> 5
+java.lang.RuntimeException: not expected type: numeric
+	at webridge.wbridge.sql.types.SQLVarType.of(SQLVarType.java:37)
+	at webridge.wbridge.sql.ast.SQLAstVisitor.handleUpdateSetItem(SQLAstVisitor.java:128)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at webridge.wbridge.sql.ast.SQLAstVisitor.endVisit(SQLAstVisitor.java:116)
+	at com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlUpdateStatement.accept0(MySqlUpdateStatement.java:72)
+	at com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlUpdateStatement.accept0(MySqlUpdateStatement.java:58)
+	at com.alibaba.druid.sql.ast.SQLObjectImpl.accept(SQLObjectImpl.java:40)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.parseFromRecordedJSON(StoredProcedureManager.java:789)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.generateStoredProcedure(StoredProcedureManager.java:930)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.run(StoredProcedureManager.java:921)
+	at TpccWeBridge.execute(TpccWeBridge.java:25)
+	at TpccWeBridge.main(TpccWeBridge.java:48)

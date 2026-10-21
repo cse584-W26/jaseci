@@ -1,0 +1,24 @@
+{
+  "argv": [
+    "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-zero-release/images/j2sdk-image/bin/java",
+    "-Xmx8g",
+    "-Xss20m",
+    "-Dintegration.dir=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-3a1c289fe50e-atomic-jac-seed-local-access",
+    "-Dexecution.dir=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-payment_name_BC-3a1c289fe50e-atomic-jac-seed-local-access/replay-20261021T003007387249Z",
+    "-Dintegration.api=Tpcc_c764890fbd65",
+    "-Dintegration.scope=cold",
+    "-Daligned.source=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/3a1c289fe50e544cb786e14ac338f6c871d395c5f6252105dde330c71b08acb0/source/TpccSql.java",
+    "-Dexperiment.input=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/3a1c289fe50e544cb786e14ac338f6c871d395c5f6252105dde330c71b08acb0/input.json",
+    "-Dexperiment.program=conventional",
+    "-Dexperiment.pruned=false",
+    "-Dexperiment.graph.context=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/3a1c289fe50e544cb786e14ac338f6c871d395c5f6252105dde330c71b08acb0/graph-context.json",
+    "-Dexperiment.mysql.url=jdbc:mysql://127.0.0.1:55337/jac_tpcc_conventional?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/3a1c289fe50e544cb786e14ac338f6c871d395c5f6252105dde330c71b08acb0/classes:/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/classes:/home/baichuan/jaseci/reproduction/webridge/integration/jdbc-string/combined:/home/baichuan/jaseci/reproduction/webridge/integration/sql-frontend/classes:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+    "TpccWeBridge",
+    "replay"
+  ],
+  "cpu_affinity": "9,19",
+  "utc": "20261021T003007387414Z",
+  "timeout_s": 300
+}

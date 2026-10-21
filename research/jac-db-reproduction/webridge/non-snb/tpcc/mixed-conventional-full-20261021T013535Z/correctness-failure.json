@@ -1,0 +1,123 @@
+{
+  "status": "REJECTED: full900 mutable-state correctness gate failed",
+  "requests": 900,
+  "counter": [
+    {
+      "shape": "payment_name_GC",
+      "calls": 1,
+      "enabled_end": true,
+      "execution": "generated procedure active",
+      "n": 28
+    },
+    {
+      "shape": "new_order_rollback",
+      "calls": 0,
+      "enabled_end": false,
+      "execution": "source fallback: no compiled shape",
+      "n": 7
+    },
+    {
+      "shape": "new_order_10",
+      "calls": 0,
+      "enabled_end": false,
+      "execution": "source fallback: no compiled shape",
+      "n": 50
+    },
+    {
+      "shape": "payment_id_GC",
+      "calls": 1,
+      "enabled_end": true,
+      "execution": "generated procedure active",
+      "n": 102
+    },
+    {
+      "shape": "new_order_12",
+      "calls": 0,
+      "enabled_end": false,
+      "execution": "source fallback: no compiled shape",
+      "n": 49
+    },
+    {
+      "shape": "payment_name_GC",
+      "calls": 1,
+      "enabled_end": false,
+      "execution": "source fallback: original WeBridge runtime disabled compiled path",
+      "n": 214
+    },
+    {
+      "shape": "new_order_11",
+      "calls": 0,
+      "enabled_end": false,
+      "execution": "source fallback: no compiled shape",
+      "n": 54
+    },
+    {
+      "shape": "new_order_13",
+      "calls": 0,
+      "enabled_end": false,
+      "execution": "source fallback: no compiled shape",
+      "n": 47
+    },
+    {
+      "shape": "new_order_7",
+      "calls": 0,
+      "enabled_end": false,
+      "execution": "source fallback: no compiled shape",
+      "n": 53
+    },
+    {
+      "shape": "new_order_6",
+      "calls": 0,
+      "enabled_end": false,
+      "execution": "source fallback: no compiled shape",
+      "n": 37
+    },
+    {
+      "shape": "payment_id_GC",
+      "calls": 1,
+      "enabled_end": false,
+      "execution": "source fallback: original WeBridge runtime disabled compiled path",
+      "n": 62
+    },
+    {
+      "shape": "new_order_5",
+      "calls": 0,
+      "enabled_end": false,
+      "execution": "source fallback: no compiled shape",
+      "n": 51
+    },
+    {
+      "shape": "new_order_15",
+      "calls": 0,
+      "enabled_end": false,
+      "execution": "source fallback: no compiled shape",
+      "n": 36
+    },
+    {
+      "shape": "new_order_9",
+      "calls": 0,
+      "enabled_end": false,
+      "execution": "source fallback: no compiled shape",
+      "n": 41
+    },
+    {
+      "shape": "new_order_8",
+      "calls": 0,
+      "enabled_end": false,
+      "execution": "source fallback: no compiled shape",
+      "n": 45
+    },
+    {
+      "shape": "new_order_14",
+      "calls": 0,
+      "enabled_end": false,
+      "execution": "source fallback: no compiled shape",
+      "n": 24
+    }
+  ],
+  "expected_history_delta": 406,
+  "actual_history_delta": 586,
+  "result_mismatches": [],
+  "first_result_mismatch": null,
+  "evidence": "All actual900 request rows and full8 before/after state preserved; no accepted latency inferred from this mixed execution"
+}

@@ -1,0 +1,10 @@
+permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get "http://%2Fvar%2Frun%2Fdocker.sock/v1.47/containers/jac-webridge-mysql57/json": dial unix /var/run/docker.sock: connect: operation not permitted
+Traceback (most recent call last):
+  File "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/relational_fixture.py", line 44, in <module>
+    print(json.dumps(prepare(a.out)if a.action=='prepare'else load(a.out,a.database),indent=2))
+                                                              ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/relational_fixture.py", line 34, in load
+    subprocess.run(['docker','exec','jac-webridge-mysql57','mkdir','-p',container],check=True)
+  File "/home/baichuan/.pyenv/versions/3.12.11/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['docker', 'exec', 'jac-webridge-mysql57', 'mkdir', '-p', '/tmp/jac_tpcc_conventional']' returned non-zero exit status 1.

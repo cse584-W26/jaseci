@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "taskset",
+    "-c",
+    "9,19",
+    "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/java",
+    "-Xmx2g",
+    "-Dintegration.dir=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/conventional-full-new_order_5-93bcc07ede7e-tx-complete-v1",
+    "-Dexecution.dir=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/primary-rtt/matrix-20261021/delay-0ms/conventional-full/new_order_5/baseline",
+    "-Dintegration.api=Tpcc_2f130e3275f3",
+    "-Dexperiment.program=conventional",
+    "-Dexperiment.pruned=false",
+    "-Dexperiment.graph.context=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/93bcc07ede7ef61f8e6ef8ee339260fe65461a6e0ee277a4b04dd7672329779b/graph-context.json",
+    "-Dexperiment.mysql.url=jdbc:mysql://127.0.0.1:18637/jac_tpcc_conventional?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/93bcc07ede7ef61f8e6ef8ee339260fe65461a6e0ee277a4b04dd7672329779b/compatibility/0:/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/93bcc07ede7ef61f8e6ef8ee339260fe65461a6e0ee277a4b04dd7672329779b/compatibility/1:/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/93bcc07ede7ef61f8e6ef8ee339260fe65461a6e0ee277a4b04dd7672329779b/classes:/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/classes:/home/baichuan/jaseci/reproduction/webridge/integration/jdbc-string/combined:/home/baichuan/jaseci/reproduction/webridge/integration/sql-frontend/classes:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+    "TpccTiming",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/93bcc07ede7ef61f8e6ef8ee339260fe65461a6e0ee277a4b04dd7672329779b/input.json",
+    "baseline",
+    "10",
+    "30"
+  ],
+  "cpu_affinity": "9,19",
+  "utc": "20261021T045839471356Z",
+  "timeout_s": 900
+}
