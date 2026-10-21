@@ -1,0 +1,16 @@
+[
+  "/usr/bin/time",
+  "-v",
+  "-o",
+  "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/streaming-oracle-validation-1792542414592392708/run/resource-usage.txt",
+  "taskset",
+  "-c",
+  "9,19",
+  "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/java",
+  "-Xmx2g",
+  "-Dexperiment.mysql.url=jdbc:mysql://127.0.0.1:55337/jac_tpcc_graph?useSSL=false&useUnicode=true&characterEncoding=UTF-8",
+  "-cp",
+  "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/classes:/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/classes:/home/baichuan/jaseci/reproduction/webridge/integration/jdbc-string/combined:/home/baichuan/jaseci/reproduction/webridge/integration/sql-frontend/classes:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+  "TpccGraphState",
+  "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/streaming-oracle-validation-1792542414592392708/state"
+]

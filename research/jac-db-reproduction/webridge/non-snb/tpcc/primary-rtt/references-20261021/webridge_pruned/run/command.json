@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "taskset",
+    "-c",
+    "9,19",
+    "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/java",
+    "-Xmx2g",
+    "-Dintegration.dir=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/cases/graph-pruned-payment_name_GC-513c79a8c62d-tx-complete-v1",
+    "-Dexecution.dir=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/primary-rtt/references-20261021/webridge_pruned/run",
+    "-Dintegration.api=Tpcc_a4740bed35c2",
+    "-Dexperiment.program=graph",
+    "-Dexperiment.pruned=true",
+    "-Dexperiment.graph.context=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/513c79a8c62dfe89dbecdf23f240e182ceb588b750450293d31362af9216b375/graph-context.json",
+    "-Dexperiment.mysql.url=jdbc:mysql://127.0.0.1:18638/jac_tpcc_graph?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true",
+    "-Dmixed.definitions=/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/mixed-graph-pruned-20261021T013930Z/definitions",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/mixed-graph-pruned-20261021T013930Z/harness/classes:/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/513c79a8c62dfe89dbecdf23f240e182ceb588b750450293d31362af9216b375/compatibility/0:/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/513c79a8c62dfe89dbecdf23f240e182ceb588b750450293d31362af9216b375/compatibility/1:/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/snapshots/513c79a8c62dfe89dbecdf23f240e182ceb588b750450293d31362af9216b375/classes:/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/classes:/home/baichuan/jaseci/reproduction/webridge/integration/jdbc-string/combined:/home/baichuan/jaseci/reproduction/webridge/integration/sql-frontend/classes:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+    "TpccMixed",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc-plan-900.json",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/primary-rtt/references-20261021/webridge_pruned/cases.json",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/mixed-graph-pruned-20261021T013930Z/routes.json"
+  ],
+  "cpu_affinity": "9,19",
+  "utc": "20261021T050357026782Z",
+  "timeout_s": 1200
+}

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/baichuan/jaseci/reproduction/webridge/non-snb/verify_tpcc_model.py", line 269, in <module>
+    main()
+  File "/home/baichuan/jaseci/reproduction/webridge/non-snb/verify_tpcc_model.py", line 251, in main
+    after_counts = compare(after_folder, expected, scoped=bool(args.profile_case))
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/baichuan/jaseci/reproduction/webridge/non-snb/verify_tpcc_model.py", line 72, in compare
+    assert (not (found - rows) if scoped else found == rows), (str(folder), table,
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('/home/baichuan/jaseci/reproduction/webridge/non-snb/tpcc/primary-rtt/references-20261021/webridge_conventional/run/after', 'warehouse', 'missing', [(('1', '1362049.86'), 1)], 'extra', [(('1', '1548363.83'), 1)])
