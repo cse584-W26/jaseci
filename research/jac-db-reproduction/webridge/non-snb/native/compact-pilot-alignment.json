@@ -1,0 +1,54 @@
+{
+  "PASS": true,
+  "scope": "First three warmed inputs match the retained fully instrumented protocol SQL IDs/order/counts; all30new requests have independent complete-response metadata and source-state gates. Original comparison2ms versus compact0ms is a counting check, not a latency equivalence claim.",
+  "comparisons": [
+    {
+      "variant": "baseline",
+      "full_protocol_request": "request-baseline-t20-W1-feed-10",
+      "compact_request": "request-baseline-t20-W1-feed-10",
+      "exact_SQL_order_and_count_equal": true,
+      "SQL_count": 18,
+      "complete_response_exchanges": 18
+    },
+    {
+      "variant": "baseline",
+      "full_protocol_request": "request-baseline-t20-W1-feed-11",
+      "compact_request": "request-baseline-t20-W1-feed-11",
+      "exact_SQL_order_and_count_equal": true,
+      "SQL_count": 18,
+      "complete_response_exchanges": 18
+    },
+    {
+      "variant": "baseline",
+      "full_protocol_request": "request-baseline-t20-W1-feed-12",
+      "compact_request": "request-baseline-t20-W1-feed-12",
+      "exact_SQL_order_and_count_equal": true,
+      "SQL_count": 18,
+      "complete_response_exchanges": 18
+    },
+    {
+      "variant": "final",
+      "full_protocol_request": "request-final-t20-W1-feed-10",
+      "compact_request": "request-final-t20-W1-feed-10",
+      "exact_SQL_order_and_count_equal": true,
+      "SQL_count": 14,
+      "complete_response_exchanges": 14
+    },
+    {
+      "variant": "final",
+      "full_protocol_request": "request-final-t20-W1-feed-11",
+      "compact_request": "request-final-t20-W1-feed-11",
+      "exact_SQL_order_and_count_equal": true,
+      "SQL_count": 14,
+      "complete_response_exchanges": 14
+    },
+    {
+      "variant": "final",
+      "full_protocol_request": "request-final-t20-W1-feed-12",
+      "compact_request": "request-final-t20-W1-feed-12",
+      "exact_SQL_order_and_count_equal": true,
+      "SQL_count": 14,
+      "complete_response_exchanges": 14
+    }
+  ]
+}

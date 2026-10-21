@@ -1,0 +1,282 @@
+{
+  "selected": {
+    "LittleXSql": {
+      "follow": {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/follow-81c23bf22da8-final-sdk-genuine-batch-1792545279155873050-follow",
+        "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792545447642255378/summary.json",
+        "tier": "t20",
+        "frontend": {
+          "kind": "explicit frontend compatibility repair",
+          "details": {
+            "original_failure": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/follow-81c23bf22da8-final-sdk-genuine-batch-1792545279155873050-follow/synth-20261021T013331225784Z",
+            "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/e51966e0c4a82870907a7ef053bfc4562ee33721fd7d4dc894f7c7ff48337128/classes",
+            "scope": "explicit compatibility repair; original business SQL unchanged"
+          }
+        }
+      },
+      "feed_page": {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-9eff172912a8-final-sdk-genuine-batch-1792545279155873050-feed_page",
+        "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547358979136577/summary.json",
+        "tier": "t200",
+        "frontend": {
+          "kind": "original compiler frontend"
+        }
+      },
+      "create_tweet": {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/create_tweet-be9c5f667937-final-sdk-reset-boundary-retry-create_tweet",
+        "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547508170006055/summary.json",
+        "tier": "t20",
+        "frontend": {
+          "kind": "explicit frontend compatibility repair",
+          "details": {
+            "original_failure": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/create_tweet-be9c5f667937-final-sdk-reset-boundary-retry-create_tweet/synth-20261021T015308188196Z",
+            "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/e51966e0c4a82870907a7ef053bfc4562ee33721fd7d4dc894f7c7ff48337128/classes",
+            "scope": "explicit compatibility repair; original business SQL unchanged"
+          }
+        }
+      },
+      "feed": {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-7e7525717a6c-final-sdk-genuine-batch-1792545279155873050-feed",
+        "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547548119829988/summary.json",
+        "tier": "t20",
+        "frontend": {
+          "kind": "original compiler frontend"
+        }
+      },
+      "like": {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like",
+        "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/emitted-recovery-1792552605643944047/summary.json",
+        "tier": "t20",
+        "frontend": {
+          "kind": "actual emitted-artifact recovery after synthesis process failure",
+          "original_failure": [
+            {
+              "stage": "baseline",
+              "returncode": 0,
+              "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like/baseline-20261021T005428378248Z",
+              "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792544032037512821/like/baseline"
+            },
+            {
+              "stage": "record",
+              "returncode": 0,
+              "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like/record-20261021T005926236118Z",
+              "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792544032037512821/like/record"
+            },
+            {
+              "stage": "replay",
+              "returncode": 0,
+              "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like/replay-20261021T010044492364Z",
+              "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792544032037512821/like/replay"
+            },
+            {
+              "stage": "synth",
+              "returncode": 1,
+              "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like/synth-20261021T010538675678Z",
+              "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792544032037512821/like/synth"
+            },
+            {
+              "stage": "synth-frontend-fix",
+              "returncode": 1,
+              "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like/synth-20261021T010539292608Z",
+              "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792544032037512821/like/synth-frontend-fix"
+            }
+          ],
+          "frontend": {
+            "original_failure": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like/synth-20261021T010538675678Z",
+            "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/71a586a115a1f4da887a939d21929016ea24b0a608f387f1fb918cdc2c1a110c/classes",
+            "scope": "explicit compatibility repair; original business SQL unchanged"
+          }
+        }
+      }
+    },
+    "LittleXPruned": {
+      "create_tweet": {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/create_tweet-c537627871d3-final-sdk-genuine-batch-1792545279155873050-create_tweet",
+        "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551088757165144/summary.json",
+        "tier": "t20",
+        "frontend": {
+          "kind": "original compiler frontend"
+        }
+      },
+      "feed_page/business": {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-4ebec776fdf5-final-sdk-genuine-batch-1792545279155873050-feed_page",
+        "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/emitted-recovery-1792552605643944047/summary.json",
+        "tier": "t200",
+        "frontend": {
+          "kind": "actual emitted-artifact recovery after synthesis process failure",
+          "original_failure": [
+            {
+              "stage": "baseline",
+              "returncode": 0,
+              "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-4ebec776fdf5-final-sdk-genuine-batch-1792545279155873050-feed_page/baseline-20261021T030105175803Z",
+              "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551356796576357/feed_page/baseline"
+            },
+            {
+              "stage": "record",
+              "returncode": 0,
+              "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-4ebec776fdf5-final-sdk-genuine-batch-1792545279155873050-feed_page/record-20261021T030112487155Z",
+              "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551356796576357/feed_page/record"
+            },
+            {
+              "stage": "replay",
+              "returncode": 0,
+              "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-4ebec776fdf5-final-sdk-genuine-batch-1792545279155873050-feed_page/replay-20261021T030119953045Z",
+              "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551356796576357/feed_page/replay"
+            },
+            {
+              "stage": "synth",
+              "returncode": 1,
+              "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-4ebec776fdf5-final-sdk-genuine-batch-1792545279155873050-feed_page/synth-20261021T030139143088Z",
+              "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551356796576357/feed_page/synth"
+            },
+            {
+              "stage": "synth-frontend-fix",
+              "returncode": 1,
+              "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-4ebec776fdf5-final-sdk-genuine-batch-1792545279155873050-feed_page/synth-20261021T030202152929Z",
+              "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551356796576357/feed_page/synth-frontend-fix"
+            }
+          ],
+          "frontend": {
+            "original_failure": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-4ebec776fdf5-final-sdk-genuine-batch-1792545279155873050-feed_page/synth-20261021T030139143088Z",
+            "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/e51966e0c4a82870907a7ef053bfc4562ee33721fd7d4dc894f7c7ff48337128/classes",
+            "scope": "explicit compatibility repair; original business SQL unchanged"
+          }
+        }
+      }
+    }
+  },
+  "original_and_repaired_stage_evidence": [
+    {
+      "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792542799767816223/summary.json",
+      "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/create_tweet-207fcc4dec82-full-original-page-create_tweet",
+      "status": "superseded body-only capture; stopped before next stage",
+      "failed_stage": null,
+      "error": null,
+      "frontend_repair": null
+    },
+    {
+      "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792544032037512821/summary.json",
+      "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like",
+      "status": "failed-stage",
+      "failed_stage": "synth",
+      "error": null,
+      "frontend_repair": {
+        "original_failure": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like/synth-20261021T010538675678Z",
+        "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/71a586a115a1f4da887a939d21929016ea24b0a608f387f1fb918cdc2c1a110c/classes",
+        "scope": "explicit compatibility repair; original business SQL unchanged"
+      }
+    },
+    {
+      "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547266124135127/summary.json",
+      "case": null,
+      "status": "failed-stage",
+      "failed_stage": "baseline",
+      "error": null,
+      "frontend_repair": null
+    },
+    {
+      "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547660401910245/summary.json",
+      "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/follow-3a7873a37478-final-sdk-genuine-batch-1792545279155873050-follow",
+      "status": "failed-stage",
+      "failed_stage": "replay",
+      "error": null,
+      "frontend_repair": null
+    },
+    {
+      "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547918649919249/summary.json",
+      "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/create_tweet-da9f4612addb-final-sdk-genuine-batch-1792545279155873050-create_tweet",
+      "status": "failed-stage",
+      "failed_stage": "replay",
+      "error": null,
+      "frontend_repair": null
+    },
+    {
+      "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547977107700949/summary.json",
+      "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-81732a3dc6ac-final-sdk-genuine-batch-1792545279155873050-like",
+      "status": "failed-stage",
+      "failed_stage": "replay",
+      "error": null,
+      "frontend_repair": null
+    },
+    {
+      "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792550095373151693/summary.json",
+      "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-e982f34a800a-final-sdk-genuine-batch-1792545279155873050-feed_page-dispatch",
+      "status": "failed-stage",
+      "failed_stage": "replay",
+      "error": null,
+      "frontend_repair": null
+    },
+    {
+      "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792550095373151693/summary.json",
+      "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-b02c19b4aa30-final-sdk-genuine-batch-1792545279155873050-feed_page-business",
+      "status": "failed-stage",
+      "failed_stage": "synth",
+      "error": null,
+      "frontend_repair": {
+        "original_failure": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-b02c19b4aa30-final-sdk-genuine-batch-1792545279155873050-feed_page-business/synth-20261021T024355216579Z",
+        "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/e51966e0c4a82870907a7ef053bfc4562ee33721fd7d4dc894f7c7ff48337128/classes",
+        "scope": "explicit compatibility repair; original business SQL unchanged"
+      }
+    },
+    {
+      "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792550636833574208/summary.json",
+      "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-b3ab29f2bd81-final-sdk-genuine-batch-1792545279155873050-feed-dispatch",
+      "status": "failed-stage",
+      "failed_stage": "replay",
+      "error": null,
+      "frontend_repair": null
+    },
+    {
+      "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792550636833574208/summary.json",
+      "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-0a96935ac622-final-sdk-genuine-batch-1792545279155873050-feed-business",
+      "status": "failed-stage",
+      "failed_stage": "synth",
+      "error": null,
+      "frontend_repair": {
+        "original_failure": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-0a96935ac622-final-sdk-genuine-batch-1792545279155873050-feed-business/synth-20261021T024914405818Z",
+        "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/e51966e0c4a82870907a7ef053bfc4562ee33721fd7d4dc894f7c7ff48337128/classes",
+        "scope": "explicit compatibility repair; original business SQL unchanged"
+      }
+    },
+    {
+      "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792550963720019095/summary.json",
+      "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/follow-f53f9550d081-final-sdk-genuine-batch-1792545279155873050-follow",
+      "status": "failed-stage",
+      "failed_stage": "replay",
+      "error": null,
+      "frontend_repair": null
+    },
+    {
+      "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551310403726030/summary.json",
+      "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-af3acfd4ab99-final-sdk-genuine-batch-1792545279155873050-like",
+      "status": "failed-stage",
+      "failed_stage": "replay",
+      "error": null,
+      "frontend_repair": null
+    },
+    {
+      "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551356796576357/summary.json",
+      "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-4ebec776fdf5-final-sdk-genuine-batch-1792545279155873050-feed_page",
+      "status": "failed-stage",
+      "failed_stage": "synth",
+      "error": null,
+      "frontend_repair": {
+        "original_failure": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-4ebec776fdf5-final-sdk-genuine-batch-1792545279155873050-feed_page/synth-20261021T030139143088Z",
+        "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/e51966e0c4a82870907a7ef053bfc4562ee33721fd7d4dc894f7c7ff48337128/classes",
+        "scope": "explicit compatibility repair; original business SQL unchanged"
+      }
+    },
+    {
+      "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551745280557903/summary.json",
+      "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-f84348a4ad38-final-sdk-genuine-batch-1792545279155873050-feed",
+      "status": "failed-stage",
+      "failed_stage": "synth",
+      "error": null,
+      "frontend_repair": {
+        "original_failure": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-f84348a4ad38-final-sdk-genuine-batch-1792545279155873050-feed/synth-20261021T030642777877Z",
+        "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/e51966e0c4a82870907a7ef053bfc4562ee33721fd7d4dc894f7c7ff48337128/classes",
+        "scope": "explicit compatibility repair; original business SQL unchanged"
+      }
+    }
+  ]
+}

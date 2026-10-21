@@ -1,0 +1,34 @@
+{
+  "selected": {
+    "LittleXSql": {
+      "like": {
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like",
+        "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compiler-retry-1792545171627057209/summary.json",
+        "tier": "t20",
+        "frontend_overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/e51966e0c4a82870907a7ef053bfc4562ee33721fd7d4dc894f7c7ff48337128/classes"
+      }
+    }
+  },
+  "original_and_repaired_stage_evidence": [
+    {
+      "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792542799767816223/summary.json",
+      "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/create_tweet-207fcc4dec82-full-original-page-create_tweet",
+      "status": "superseded body-only capture; stopped before next stage",
+      "failed_stage": null,
+      "error": null,
+      "frontend_repair": null
+    },
+    {
+      "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792544032037512821/summary.json",
+      "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like",
+      "status": "failed-stage",
+      "failed_stage": "synth",
+      "error": null,
+      "frontend_repair": {
+        "original_failure": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like/synth-20261021T010538675678Z",
+        "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/71a586a115a1f4da887a939d21929016ea24b0a608f387f1fb918cdc2c1a110c/classes",
+        "scope": "explicit compatibility repair; original business SQL unchanged"
+      }
+    }
+  ]
+}

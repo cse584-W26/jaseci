@@ -1,0 +1,59 @@
+{
+  "status": "PASS",
+  "checked_requests": 40,
+  "per_operation_counts": {
+    "like": 40
+  },
+  "scope": "every returned field and feed order against independent immutable source-fixture state, evolved after every operation",
+  "source_fixture": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/fixtures/t20/anchors.tsv",
+  "source_fixture_sha256": "21f4a6942ecf9461110fc4ca7c4fb95881ad84467d421148c441938fb5b3b0e0",
+  "plan_sha256": "0ba64abaf7f0561643a5abd53e70707d3aaa0f740f9a0d8eeaa6269f87802ecd",
+  "full_results": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/timing/complete-1792554707641182932/latency-0ms-t20-LittleXPruned/delay-0ms/t20/W2-like-latency/LittleXPruned/baseline/full-results.jsonl.gz",
+  "full_results_sha256": "13cbe2175411f213b704ea6b9bec8f3b367da6ba53583a90340085d11aa8389a",
+  "final_expected_state": {
+    "profiles": {
+      "rows": 100,
+      "sha256": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931"
+    },
+    "follows": {
+      "rows": 5000,
+      "sha256": "92c28d76807be8cac7cf24b28b5c3ff09fa0d7793a5edd9cc432d00f9a06eb5d"
+    },
+    "tweets": {
+      "rows": 2000,
+      "sha256": "2fe5f19b245074ac38ed018b4d9a8e4af04383d0d7c5d98fc25d7d6aba23b90a"
+    }
+  },
+  "UUID_policy": "Only native metadata _jac_id is supplied from the exact preallocated Java request ID for the shared oracle; business fields are checked as returned",
+  "initial_expected_common_state": {
+    "profiles": {
+      "rows": 100,
+      "sha256": "d301f59681744ec2545fba31257bfc340efe665fb38a4464ca850d9c089bc8fd"
+    },
+    "follows": {
+      "rows": 5000,
+      "sha256": "8a1dbf76372511ac8f17361a532be1603a0fe5412c46be1d2c5b3b36be27d07b"
+    },
+    "tweets": {
+      "rows": 2000,
+      "sha256": "1503eced7bcf46cd79b2c0bba301e999a15151b476761bfe5e0b26000d454dd2"
+    }
+  },
+  "final_expected_common_state": {
+    "profiles": {
+      "rows": 100,
+      "sha256": "d301f59681744ec2545fba31257bfc340efe665fb38a4464ca850d9c089bc8fd"
+    },
+    "follows": {
+      "rows": 5000,
+      "sha256": "8a1dbf76372511ac8f17361a532be1603a0fe5412c46be1d2c5b3b36be27d07b"
+    },
+    "tweets": {
+      "rows": 2000,
+      "sha256": "1890c6af2db4b31b49d2854a3921e578dc34b0e7e5b28b3d9341068091ebde06"
+    }
+  },
+  "common_state_scope": "Profiles(id,username), Follow rows with multiplicity, Tweets(id,seed_id,content,author,created_at,likes,comments)",
+  "full_results_logical_monolith": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/timing/complete-1792554707641182932/latency-0ms-t20-LittleXPruned/delay-0ms/t20/W2-like-latency/LittleXPruned/baseline/full-results.jsonl.gz",
+  "public_chunk_index": null
+}

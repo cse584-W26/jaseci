@@ -1,0 +1,55 @@
+{
+  "create_tweet": {
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/create_tweet-c537627871d3-final-sdk-genuine-batch-1792545279155873050-create_tweet",
+    "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551088757165144/summary.json",
+    "tier": "t20",
+    "frontend": {
+      "kind": "original compiler frontend"
+    }
+  },
+  "feed_page/business": {
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-4ebec776fdf5-final-sdk-genuine-batch-1792545279155873050-feed_page",
+    "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/emitted-recovery-1792552605643944047/summary.json",
+    "tier": "t200",
+    "frontend": {
+      "kind": "actual emitted-artifact recovery after synthesis process failure",
+      "original_failure": [
+        {
+          "stage": "baseline",
+          "returncode": 0,
+          "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-4ebec776fdf5-final-sdk-genuine-batch-1792545279155873050-feed_page/baseline-20261021T030105175803Z",
+          "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551356796576357/feed_page/baseline"
+        },
+        {
+          "stage": "record",
+          "returncode": 0,
+          "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-4ebec776fdf5-final-sdk-genuine-batch-1792545279155873050-feed_page/record-20261021T030112487155Z",
+          "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551356796576357/feed_page/record"
+        },
+        {
+          "stage": "replay",
+          "returncode": 0,
+          "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-4ebec776fdf5-final-sdk-genuine-batch-1792545279155873050-feed_page/replay-20261021T030119953045Z",
+          "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551356796576357/feed_page/replay"
+        },
+        {
+          "stage": "synth",
+          "returncode": 1,
+          "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-4ebec776fdf5-final-sdk-genuine-batch-1792545279155873050-feed_page/synth-20261021T030139143088Z",
+          "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551356796576357/feed_page/synth"
+        },
+        {
+          "stage": "synth-frontend-fix",
+          "returncode": 1,
+          "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-4ebec776fdf5-final-sdk-genuine-batch-1792545279155873050-feed_page/synth-20261021T030202152929Z",
+          "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551356796576357/feed_page/synth-frontend-fix"
+        }
+      ],
+      "frontend": {
+        "original_failure": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-4ebec776fdf5-final-sdk-genuine-batch-1792545279155873050-feed_page/synth-20261021T030139143088Z",
+        "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/e51966e0c4a82870907a7ef053bfc4562ee33721fd7d4dc894f7c7ff48337128/classes",
+        "scope": "explicit compatibility repair; original business SQL unchanged"
+      }
+    }
+  }
+}

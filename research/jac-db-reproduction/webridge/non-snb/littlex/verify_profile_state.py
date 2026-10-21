@@ -1,0 +1,11 @@
+#!/usr/bin/env python3
+"""Verify every returned response and actual committed common state against source Oracle."""
+import pathlib,argparse,json,sys,subprocess,hashlib
+H=pathlib.Path(__file__).resolve().parent;sys.path.insert(0,str(H.parent));from measurement_lease import lease
+from business_state import snapshot,assert_expected
+p=argparse.ArgumentParser();p.add_argument('--tier',required=True);p.add_argument('--implementation',required=True);p.add_argument('--plan',required=True,type=pathlib.Path);p.add_argument('--results',required=True,type=pathlib.Path);p.add_argument('--out',required=True,type=pathlib.Path);p.add_argument('--lease-held',action='store_true');a=p.parse_args();a.out.parent.mkdir(parents=True,exist_ok=True)
+def check():
+ response=a.out.with_name(a.out.stem+'-responses.json');argv=[sys.executable,str(H/'verify_outputs.py'),'--tier',a.tier,'--plan',str(a.plan),'--results',str(a.results),'--out',str(response),'--expected-rows',str(a.out.with_name(a.out.stem+'-expected-rows.json.gz'))];subprocess.run(argv,check=True);oracle=json.loads(response.read_text());actual=snapshot('jac_lx_'+a.tier+'_20261020',a.implementation!='LittleXSql',a.out.with_name(a.out.stem+'-actual-rows.json.gz'));a.out.with_name(a.out.stem+'-state-before-assert.json').write_text(json.dumps({'actual':actual,'expected':oracle['final_expected_common_state']},indent=2)+'\n');matched=assert_expected(actual,oracle['final_expected_common_state']);r={'status':'PASS','response_oracle':str(response),'checked_requests':oracle['checked_requests'],'actual_committed_state':actual,'independent_expected_state':oracle['final_expected_common_state'],'matched':matched,'initial_fixture_expected_state':oracle['initial_expected_common_state'],'scope':oracle['common_state_scope'],'follow_multiplicity':'All graph Follow edges counted; duplicate rows change count/hash'};r['helper_sha256']={str(f):hashlib.sha256(f.read_bytes()).hexdigest()for f in [H/'verify_profile_state.py',H/'verify_outputs.py',H/'business_state.py',H/'result_chunks.py',H.parent/'native/littlex_oracle.py']};a.out.write_text(json.dumps(r,indent=2)+'\n');print(a.out)
+if a.lease_held:check()
+else:
+ with lease('littlex independent committed profile-state oracle',a.out.with_suffix('.lease.json')):check()

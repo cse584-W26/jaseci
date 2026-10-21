@@ -1,0 +1,141 @@
+{
+  "workloads": {
+    "W1": {
+      "operation": "full feed",
+      "tiers": [
+        "t20",
+        "t50",
+        "t100",
+        "t200"
+      ],
+      "historical_timed_requests": 500,
+      "historical_warmup": 110
+    },
+    "W2": {
+      "operations": [
+        "create_tweet",
+        "follow",
+        "like"
+      ],
+      "tiers": [
+        "t20",
+        "t50",
+        "t100",
+        "t200"
+      ],
+      "historical_timed_requests": 500,
+      "historical_warmup": 110,
+      "protocols": {
+        "canonical_fresh_matrix": "fresh cohort per operation",
+        "historical_original_recipe": "one tier/server cohort shared across like, follow, create_tweet in that order"
+      }
+    },
+    "W3": {
+      "operation": "paged feed plus deterministic writes",
+      "tiers": [
+        "t200"
+      ],
+      "write_fraction_percent": [
+        0,
+        5,
+        15,
+        30
+      ],
+      "write_mix_weights": {
+        "create_tweet": 10,
+        "like": 4,
+        "follow": 1
+      },
+      "historical_timed_requests": 1000,
+      "historical_warmup": 110
+    }
+  },
+  "sources": {
+    "historical-app-source/app.jac": {
+      "path": "/home/baichuan/jaseci/reproduction/littlex/historical-app-source/app.jac",
+      "sha256": "89366720a196c275712ccda73c2db06b17ea509c645a87c87ef84e5409821df0"
+    },
+    "postgres/app.py": {
+      "path": "/home/baichuan/jaseci/reproduction/littlex/postgres/app.py",
+      "sha256": "72ca936e91bd3dfcfef37cf198d8177b54d1ac0342a1ce0224657dc11df86d7e"
+    },
+    "harness/write_run.py": {
+      "path": "/home/baichuan/jaseci/reproduction/littlex/harness/write_run.py",
+      "sha256": "c8dae8fb87d48b81ed2c2f87ad54e8f4e67030f2e591314214375561a0b35516"
+    },
+    "harness/mix_run.py": {
+      "path": "/home/baichuan/jaseci/reproduction/littlex/harness/mix_run.py",
+      "sha256": "12a6bc42827e9712c2915410a62f45ba3b81a0d70888badcf5107506e61048b2"
+    },
+    "harness/oracle.py": {
+      "path": "/home/baichuan/jaseci/reproduction/littlex/harness/oracle.py",
+      "sha256": "4815e75bb48fe86fa184c40457a8628f352afb578956de2fc563bc5b9bb34ade"
+    },
+    "harness/run.py": {
+      "path": "/home/baichuan/jaseci/reproduction/littlex/harness/run.py",
+      "sha256": "cd5c14aa25ff789174f34f8fc34b97b47b5f656b2b58e4130f390609892dae45"
+    }
+  },
+  "tiers": {
+    "t20": {
+      "seed": "/home/baichuan/jaseci/reproduction/littlex/dataset/t20_seed.json",
+      "seed_sha256": "5052348d3cf8afa6feff17dbc620ed146ccc85b72afdc9905a265dfe507c0ebe",
+      "historical_snapshot": "lx_repro_snapshot_t20_9144848be024",
+      "fixture_manifest": "/home/baichuan/jaseci/reproduction/littlex/fixtures/t20/9144848be024/fixture.json",
+      "fixture_manifest_sha256": "019c8f0c332731195180fc9dd762a7210cdf48949637494a5dcb7e9af83467ba",
+      "profiles": 100,
+      "follows": 5000,
+      "tweets": 2000,
+      "likes": 0,
+      "feed_counts": [
+        1020
+      ],
+      "oracle_payload_sha256": "e389a34cc15e7cd6bc67228b204550cc1f2d16200d1db1db7d8b3c9a74566024"
+    },
+    "t50": {
+      "seed": "/home/baichuan/jaseci/reproduction/littlex/dataset/uniform_seed.json",
+      "seed_sha256": "2aab7a50cec9d197c7f5507701c25fd90aad5d57ddd6eb1ff9961cffc1bd05ea",
+      "historical_snapshot": "lx_repro_snapshot_t50_28ab256ed845",
+      "fixture_manifest": "/home/baichuan/jaseci/reproduction/littlex/fixtures/t50/28ab256ed845/fixture.json",
+      "fixture_manifest_sha256": "fb308bf131bf4bcb4159bdd28caee231ad2f34be8269241ae78fdfcc6df11396",
+      "profiles": 100,
+      "follows": 5000,
+      "tweets": 5000,
+      "likes": 0,
+      "feed_counts": [
+        2550
+      ],
+      "oracle_payload_sha256": "060e964fd187f3d79154f1da7c7d97164b5742eeaafeea263956c52ed121f513"
+    },
+    "t100": {
+      "seed": "/home/baichuan/jaseci/reproduction/littlex/dataset/t100_seed.json",
+      "seed_sha256": "036cb2334c3be5b6163f3675796534c7bd8feb13d361647f44ace3cbb9f86387",
+      "historical_snapshot": "lx_repro_snapshot_t100_470b05360351",
+      "fixture_manifest": "/home/baichuan/jaseci/reproduction/littlex/fixtures/t100/470b05360351/fixture.json",
+      "fixture_manifest_sha256": "d5f8e140456bad544bfc1a58b6a74133f941052bf065ce197644a8755556f168",
+      "profiles": 100,
+      "follows": 5000,
+      "tweets": 10000,
+      "likes": 0,
+      "feed_counts": [
+        5100
+      ],
+      "oracle_payload_sha256": "a943a03fbe8393fa359d97178b192f7c5457eb51fac9f62b75158e0061113aea"
+    },
+    "t200": {
+      "seed": "/home/baichuan/jaseci/reproduction/littlex/dataset/t200_seed.json",
+      "seed_sha256": "41d78eab8269cb9c079480115eff212c7534296262ef045fa474cc6cac836d96",
+      "historical_snapshot": "lx_repro_snapshot_t200_fc1ffda7943f",
+      "fixture_manifest": "/home/baichuan/jaseci/reproduction/littlex/fixtures/t200/fc1ffda7943f/fixture.json",
+      "fixture_manifest_sha256": "27dc33a76e480944121ea734491a4f0d9b2b727913664495d892123e0e57020a",
+      "profiles": 100,
+      "follows": 5000,
+      "tweets": 20000,
+      "likes": 0,
+      "feed_counts": [
+        10200
+      ],
+      "oracle_payload_sha256": "8e597c43cb3ff19e0987e36eb26b4d7454b98cd272be8ff86db474f2c99ea47b"
+    }
+  }
+}

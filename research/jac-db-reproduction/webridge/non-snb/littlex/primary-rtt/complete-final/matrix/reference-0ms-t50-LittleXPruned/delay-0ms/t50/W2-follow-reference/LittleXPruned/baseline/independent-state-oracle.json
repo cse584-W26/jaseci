@@ -1,0 +1,67 @@
+{
+  "status": "PASS",
+  "scope": "Profiles(id,username), Follow rows with multiplicity, Tweets(id,seed_id,content,author,created_at,likes,comments)",
+  "initial_actual": {
+    "profiles": {
+      "rows": 100,
+      "sha256": "f104627ecef1f9ae7a449ff0cded77121430d876aff5218c35a818656dbdb5e5",
+      "query": "SELECT id,JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.username')) FROM anchors WHERE kind='NodeAnchor' AND arch_type='Profile' ORDER BY id"
+    },
+    "follows": {
+      "rows": 5000,
+      "sha256": "7acc9edf591c886e206e4b8257568ead71346de776e0d4a25cb191060450cf60",
+      "query": "SELECT src,dst FROM anchors WHERE kind='EdgeAnchor' AND arch_type='Follow' ORDER BY src,dst"
+    },
+    "tweets": {
+      "rows": 5000,
+      "sha256": "5da9d60c3c8f46e6431b95e208237777d469db6c317f578da876f735e971f5b9",
+      "query": "SELECT id,JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.seed_id')),JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.content')),JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.author_username')),JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.created_at')),JSON_EXTRACT(props,'$.archetype.likes'),JSON_EXTRACT(props,'$.archetype.comments') FROM anchors WHERE kind='NodeAnchor' AND arch_type='Tweet' ORDER BY id"
+    }
+  },
+  "initial_expected": {
+    "profiles": {
+      "rows": 100,
+      "sha256": "f104627ecef1f9ae7a449ff0cded77121430d876aff5218c35a818656dbdb5e5"
+    },
+    "follows": {
+      "rows": 5000,
+      "sha256": "7acc9edf591c886e206e4b8257568ead71346de776e0d4a25cb191060450cf60"
+    },
+    "tweets": {
+      "rows": 5000,
+      "sha256": "5da9d60c3c8f46e6431b95e208237777d469db6c317f578da876f735e971f5b9"
+    }
+  },
+  "final_actual": {
+    "profiles": {
+      "rows": 100,
+      "sha256": "f104627ecef1f9ae7a449ff0cded77121430d876aff5218c35a818656dbdb5e5",
+      "query": "SELECT id,JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.username')) FROM anchors WHERE kind='NodeAnchor' AND arch_type='Profile' ORDER BY id"
+    },
+    "follows": {
+      "rows": 5610,
+      "sha256": "c65ef9d27d2083be9b753eea2ae22b308411ff0aedca5f25e7c2988f51043452",
+      "query": "SELECT src,dst FROM anchors WHERE kind='EdgeAnchor' AND arch_type='Follow' ORDER BY src,dst"
+    },
+    "tweets": {
+      "rows": 5000,
+      "sha256": "5da9d60c3c8f46e6431b95e208237777d469db6c317f578da876f735e971f5b9",
+      "query": "SELECT id,JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.seed_id')),JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.content')),JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.author_username')),JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.created_at')),JSON_EXTRACT(props,'$.archetype.likes'),JSON_EXTRACT(props,'$.archetype.comments') FROM anchors WHERE kind='NodeAnchor' AND arch_type='Tweet' ORDER BY id"
+    }
+  },
+  "final_expected": {
+    "profiles": {
+      "rows": 100,
+      "sha256": "f104627ecef1f9ae7a449ff0cded77121430d876aff5218c35a818656dbdb5e5"
+    },
+    "follows": {
+      "rows": 5610,
+      "sha256": "c65ef9d27d2083be9b753eea2ae22b308411ff0aedca5f25e7c2988f51043452"
+    },
+    "tweets": {
+      "rows": 5000,
+      "sha256": "5da9d60c3c8f46e6431b95e208237777d469db6c317f578da876f735e971f5b9"
+    }
+  },
+  "response_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/reference-0ms-t50-LittleXPruned/delay-0ms/t50/W2-follow-reference/LittleXPruned/baseline/source-oracle.json"
+}

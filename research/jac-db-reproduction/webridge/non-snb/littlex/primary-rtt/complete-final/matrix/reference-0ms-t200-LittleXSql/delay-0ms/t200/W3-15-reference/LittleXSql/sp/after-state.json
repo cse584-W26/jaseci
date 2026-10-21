@@ -1,0 +1,17 @@
+{
+  "profiles": {
+    "rows": 100,
+    "sha256": "644e5b4f1ac063b6722d3f406e766d3ffd27ce85540a498f61f828636eccc4f5",
+    "query": "SELECT id,username FROM lx_profiles ORDER BY id"
+  },
+  "follows": {
+    "rows": 5011,
+    "sha256": "538230870d4b82be7ee514da52e2f5cf6e14e39cb1787a5f534c84ff81701cc3",
+    "query": "SELECT follower_id,followee_id FROM lx_follows ORDER BY follower_id,followee_id"
+  },
+  "tweets": {
+    "rows": 20112,
+    "sha256": "6e39db1627e920b60bf76cfda426a6b795dfd4c14c855012a68e89bcd753682d",
+    "query": "SELECT t.id,t.seed_id,t.content,p.username,t.created_at,t.likes,t.comments FROM lx_tweets t JOIN lx_profiles p ON p.id=t.author_id ORDER BY t.id"
+  }
+}

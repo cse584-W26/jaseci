@@ -1,0 +1,21 @@
+{
+  "argv": [
+    "taskset",
+    "-c",
+    "9,19",
+    "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/java",
+    "-Xmx2g",
+    "-Dlittlex.implementation=LittleXPruned",
+    "-Dlittlex.templates=/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/dd34016fb2a497d7df442715318bfbe1588fbaadf95144e4f70c7e7aae432971/native-templates.json",
+    "-Dlittlex.url=jdbc:mysql://127.0.0.1:18537/jac_lx_t20_20261020?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/dd34016fb2a497d7df442715318bfbe1588fbaadf95144e4f70c7e7aae432971/classes:/home/baichuan/jaseci/reproduction/webridge/integration/recorded-bind-types/classes:/home/baichuan/jaseci/reproduction/webridge/integration/json-type-compat/classes:/home/baichuan/jaseci/reproduction/webridge/integration/numeric-width/classes:/home/baichuan/jaseci/reproduction/webridge/integration/jdbc-string/combined:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+    "LittleXTiming",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t20-W2-follow-latency.json",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/timing/complete-1792552799038277631/latency-0ms-t20-LittleXPruned/delay-0ms/t20/W2-follow-latency/LittleXPruned/baseline",
+    "baseline"
+  ],
+  "cpu_affinity": "9,19",
+  "utc": "20261021T032820970353Z",
+  "timeout_s": 7200
+}

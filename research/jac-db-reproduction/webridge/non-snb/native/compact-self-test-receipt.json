@@ -1,0 +1,14 @@
+{
+  "recorded_utc": "2026-10-21T05:09:32.166163+00:00",
+  "command": "reproduction/runtime/venv314/bin/python non-snb/native/test_compact_proxy.py",
+  "result": "PASS:2offline tests",
+  "test_cases": [
+    "10,000backend DataRows produce one SQL flight record only after complete response delivery",
+    "Startup is excluded; Parse+Sync alone is zeroSQL and one prepare-only exchange"
+  ],
+  "source_sha256": {
+    "compact_proxy.py": "51d4855e098d007af4179e6112fc332fd6c754c9f15c3a385a60b5480d0e5fc7",
+    "test_compact_proxy.py": "9e742cb0de20a3c0759f51e7e72ba82131c8d39d7de7543863b6a0a0d741b812"
+  },
+  "scope": "Metadata-output scaling and exact message-state behavior; not a claim of zero parsing overhead or a live observer-cost benchmark."
+}

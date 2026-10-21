@@ -1,0 +1,4 @@
+set autocommit=0
+UPDATE lx_tweets t JOIN lx_profiles p ON p.id = ? SET t.likes = JSON_ARRAY_APPEND(t.likes, '$', p.username) WHERE t.id = ? AND NOT JSON_CONTAINS(t.likes, JSON_QUOTE(p.username))
+SELECT JSON_LENGTH(likes) AS likes_count FROM lx_tweets WHERE id = ?
+set autocommit=1
