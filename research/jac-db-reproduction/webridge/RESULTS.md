@@ -1,5 +1,7 @@
 # Seven-query comparison
 
+TPC-C and littleX: [English DB-call RTT slides](non-snb/jac-webridge-tpcc-littlex-comparison.pdf), [measured report](non-snb/REPORT.md), [RTT / SQL-count CSV](non-snb/results.csv), and [original-schedule references](non-snb/rtt-reference-results.csv). This extension uses compact command-to-complete-response captures at 0 / +2 / +10 ms added response delay.
+
 The [integrated English PDF](benchmark-comparison/jac-webridge-snb-comparison.pdf), [six-query extension report](benchmark-comparison/REPORT.md) and [machine-readable matrix](benchmark-comparison/results.json) cover the colleague's seven SNB queries across the eight configurations. The following sections retain the IC5 cohorts and original-paper reproduction.
 
 # WeBridge reproduction and Jac baseline alignment

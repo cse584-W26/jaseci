@@ -1,0 +1,144 @@
+{
+  "status": "PASS",
+  "coverage_scope": "Available subset only",
+  "primary_metric": "Per-request sum of complete SQL command-response RTT",
+  "latency_cells": 16,
+  "reference_entries": 0,
+  "accepted_values_verified": 12,
+  "measured_requests_verified": 360,
+  "source_sha256": "cf08ae767ee4fda5126fc51b96ed41c0320534d57e5575a4096f0d434e9b5311",
+  "values": [
+    {
+      "family": "littlex",
+      "workload": "feed",
+      "arm": "java_conventional",
+      "delay_ms": 0,
+      "sample_n": 30,
+      "warmup_n": 10,
+      "median_ms": 9.516119142062962,
+      "requests_artifact": "littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/baseline/primary-rtt/rows.jsonl",
+      "requests_sha256": "1482f3eaf7051466e6de687d11ec5ac0f587960c887468f57199e166b2450486"
+    },
+    {
+      "family": "littlex",
+      "workload": "feed",
+      "arm": "webridge_conventional",
+      "delay_ms": 0,
+      "sample_n": 30,
+      "warmup_n": 10,
+      "median_ms": 9.180519380606711,
+      "requests_artifact": "littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/sp/primary-rtt/rows.jsonl",
+      "requests_sha256": "fd2d1fc6fa4ec5885340ce9747f4aad754437cf611b37bdfc34bf5c099b3c88e"
+    },
+    {
+      "family": "littlex",
+      "workload": "like",
+      "arm": "java_conventional",
+      "delay_ms": 0,
+      "sample_n": 30,
+      "warmup_n": 10,
+      "median_ms": 3.607029444538057,
+      "requests_artifact": "littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/baseline/primary-rtt/rows.jsonl",
+      "requests_sha256": "6324262cb472b2caacf444a04ebe7c7a3523acce420d65c47ee59de109a68b90"
+    },
+    {
+      "family": "littlex",
+      "workload": "like",
+      "arm": "webridge_conventional",
+      "delay_ms": 0,
+      "sample_n": 30,
+      "warmup_n": 10,
+      "median_ms": 3.032015752978623,
+      "requests_artifact": "littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/sp/primary-rtt/rows.jsonl",
+      "requests_sha256": "828bf5622ad8f1e99a6657ccca16f2abb6fd60e226c87f4dce0ba7888d4a61c4"
+    },
+    {
+      "family": "littlex",
+      "workload": "follow",
+      "arm": "java_conventional",
+      "delay_ms": 0,
+      "sample_n": 30,
+      "warmup_n": 10,
+      "median_ms": 3.5557012306526303,
+      "requests_artifact": "littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/baseline/primary-rtt/rows.jsonl",
+      "requests_sha256": "a090958ee33764859cc11b2b199d2aea667052f9a85292e045b653b0e5ede310"
+    },
+    {
+      "family": "littlex",
+      "workload": "follow",
+      "arm": "webridge_conventional",
+      "delay_ms": 0,
+      "sample_n": 30,
+      "warmup_n": 10,
+      "median_ms": 3.037619055248797,
+      "requests_artifact": "littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/sp/primary-rtt/rows.jsonl",
+      "requests_sha256": "6f907eb680a80201ed0a7ae61bd141277953de84472accea1f7610d99fe9e279"
+    },
+    {
+      "family": "littlex",
+      "workload": "create_tweet",
+      "arm": "java_conventional",
+      "delay_ms": 0,
+      "sample_n": 30,
+      "warmup_n": 10,
+      "median_ms": 3.297370974905789,
+      "requests_artifact": "littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/baseline/primary-rtt/rows.jsonl",
+      "requests_sha256": "3e127975dd200540a37aa722d3191844e71291cd19a6eb28d9845347e8b04111"
+    },
+    {
+      "family": "littlex",
+      "workload": "create_tweet",
+      "arm": "webridge_conventional",
+      "delay_ms": 0,
+      "sample_n": 30,
+      "warmup_n": 10,
+      "median_ms": 3.71430569794029,
+      "requests_artifact": "littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/sp/primary-rtt/rows.jsonl",
+      "requests_sha256": "7a2e067879c4c87ab8f12e9cdeffc5e491b9322ee8b19a10a400192c53bfc48e"
+    },
+    {
+      "family": "littlex",
+      "workload": "feed",
+      "arm": "java_full",
+      "delay_ms": 0,
+      "sample_n": 30,
+      "warmup_n": 10,
+      "median_ms": 74.16183839086443,
+      "requests_artifact": "littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXFull/delay-0ms/t20/W1-feed-latency/LittleXFull/baseline/primary-rtt/rows.jsonl",
+      "requests_sha256": "0ce04115f5637d31c7cc7db84288a2b1d20959d11dbf2cf0ede817383f8bb9f9"
+    },
+    {
+      "family": "littlex",
+      "workload": "like",
+      "arm": "java_full",
+      "delay_ms": 0,
+      "sample_n": 30,
+      "warmup_n": 10,
+      "median_ms": 15.404024394229054,
+      "requests_artifact": "littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXFull/delay-0ms/t20/W2-like-latency/LittleXFull/baseline/primary-rtt/rows.jsonl",
+      "requests_sha256": "fbd04285dc49de8ae07ab4cc53c00a0944518fde7fb6480b90b9e77aa08357df"
+    },
+    {
+      "family": "littlex",
+      "workload": "follow",
+      "arm": "java_full",
+      "delay_ms": 0,
+      "sample_n": 30,
+      "warmup_n": 10,
+      "median_ms": 24.857698008418083,
+      "requests_artifact": "littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXFull/delay-0ms/t20/W2-follow-latency/LittleXFull/baseline/primary-rtt/rows.jsonl",
+      "requests_sha256": "ff1db8696459b01b696c1b6fbff6f1a9884bbcefeef1548398b340b3c5abb2d4"
+    },
+    {
+      "family": "littlex",
+      "workload": "create_tweet",
+      "arm": "java_full",
+      "delay_ms": 0,
+      "sample_n": 30,
+      "warmup_n": 10,
+      "median_ms": 15.174137311987579,
+      "requests_artifact": "littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXFull/delay-0ms/t20/W2-create_tweet-latency/LittleXFull/baseline/primary-rtt/rows.jsonl",
+      "requests_sha256": "59c547b12180baa870454f78925fdabb11032ed20b0a92aee31d9772f822e5fe"
+    }
+  ]
+}

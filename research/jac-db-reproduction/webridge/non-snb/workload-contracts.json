@@ -1,0 +1,94 @@
+{
+  "littlex": {
+    "counts_per_100": {
+      "0": {
+        "feed_page": 100
+      },
+      "15": {
+        "create_tweet": 10,
+        "feed_page": 85,
+        "follow": 1,
+        "like": 4
+      },
+      "30": {
+        "create_tweet": 20,
+        "feed_page": 70,
+        "follow": 2,
+        "like": 8
+      },
+      "5": {
+        "create_tweet": 3,
+        "feed_page": 95,
+        "follow": 1,
+        "like": 1
+      }
+    },
+    "initial_follows": 5000,
+    "profiles": 100,
+    "schedule_file_sha256": "4a99af1f12372cd2807556463278d7107c9f65a80f35eb507252c52cd0e9b923",
+    "schedule_slots": 100,
+    "tiers": {
+      "100": {
+        "full_feed_per_user": 5100,
+        "tweets": 10000,
+        "tweets_per_user": 100
+      },
+      "20": {
+        "full_feed_per_user": 1020,
+        "tweets": 2000,
+        "tweets_per_user": 20
+      },
+      "200": {
+        "full_feed_per_user": 10200,
+        "tweets": 20000,
+        "tweets_per_user": 200
+      },
+      "50": {
+        "full_feed_per_user": 2550,
+        "tweets": 5000,
+        "tweets_per_user": 50
+      }
+    }
+  },
+  "source_sha256": {
+    "benchmark/scripts/tpcc_run.py": "1184fe44e774b06505029d74652d9b5d6cb61defe5d95e317c79a6a07b76def2",
+    "benchmark/tpcc/data/manifest.json": "6a65e8df4414c055f5e365d1118636d2a987b8cdfdce26e6dedaf9a8ecc1fd58",
+    "benchmark/tpcc/jaseci-pg/app.jac": "4f3f4c2dfd36b2b3cf0737f16197ceefcbcc0f79f075118170b7a58b9648bb1a",
+    "benchmark/tpcc/postgres/app.py": "cb666f972d4ffbd25486771a46000b3aacd536c179f6e4280c5dcd7a699795a1",
+    "littlex/harness/mix_run.py": "12a6bc42827e9712c2915410a62f45ba3b81a0d70888badcf5107506e61048b2",
+    "littlex/harness/oracle.py": "4815e75bb48fe86fa184c40457a8628f352afb578956de2fc563bc5b9bb34ade",
+    "littlex/harness/write_run.py": "c8dae8fb87d48b81ed2c2f87ad54e8f4e67030f2e591314214375561a0b35516",
+    "littlex/historical-app-source/app.jac": "89366720a196c275712ccda73c2db06b17ea509c645a87c87ef84e5409821df0",
+    "littlex/postgres/app.py": "72ca936e91bd3dfcfef37cf198d8177b54d1ac0342a1ce0224657dc11df86d7e",
+    "scripts/tpcc_gate.py": "e68d7a723cf1662c2b98653c104ead22a84761d84a1e1e1144bac586e90f4c1a"
+  },
+  "tpcc": {
+    "all_requests": {
+      "new_order": 487,
+      "order_lines": 4746,
+      "payment": 406,
+      "payment_amount": 1062049.86,
+      "requests": 900,
+      "rollback": 7
+    },
+    "canonical_plan_sha256": "769147b46ac2a157a378e061089b7f8e043d5f261c361aebbe9ce9a196cf8501",
+    "measured": {
+      "new_order": 437,
+      "order_lines": 4259,
+      "payment": 357,
+      "payment_amount": 929693.63,
+      "requests": 800,
+      "rollback": 6
+    },
+    "plan_file_sha256": "4358d01cc7ae244d1679a6d1d1992c5f6fee6218cca7d402b341e7de68dfc641",
+    "seed": 4242,
+    "warmup": {
+      "new_order": 50,
+      "order_lines": 487,
+      "payment": 49,
+      "payment_amount": 132356.23,
+      "requests": 100,
+      "rollback": 1
+    }
+  }
+}

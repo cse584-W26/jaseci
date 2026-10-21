@@ -90,8 +90,8 @@
   },
   "active_exec_sessions": {},
   "timing_rule": "All measurements complete; injected delay restored; own application processes exited. Dedicated databases retained.",
-  "repositories": "Original WeBridge source and repair patch are local; no new commits/pushes during this task yet",
-  "status": "completed: baseline alignment, declared ablations, actual WeBridge small-input comparison and My-Blog paper-condition experiment",
+  "repositories": "Measured reproduction archives, collectors, reports and verification receipts are published on pg/bench-int.",
+  "status": "completed: original-paper reproduction, SNB comparison, and TPC-C/littleX primary DB-call RTT study",
   "overall_report": "RESULTS.md",
   "native_jac_comparison": {
     "state": "passed",
@@ -168,5 +168,16 @@
     "pdf": "benchmark-comparison/jac-webridge-snb-comparison.pdf",
     "verified": "benchmark-comparison/combined-java-timing-verified.json",
     "censor_protocol": "Fresh first-SP requests, strict owned-session absence verified before each subsequent primary attempt"
+  },
+  "tpcc_littlex_primary_rtt": {
+    "status": "completed",
+    "latency_cells": 648,
+    "accepted_latency_cells": 495,
+    "compiler_stage_failure_cells": 153,
+    "original_schedule_reference_cells": 168,
+    "metric": "Per-request sum of database command-to-complete-response RTT across all owned connections",
+    "report": "non-snb/REPORT.md",
+    "pdf": "non-snb/jac-webridge-tpcc-littlex-comparison.pdf",
+    "data": "non-snb/results.csv"
   }
 }

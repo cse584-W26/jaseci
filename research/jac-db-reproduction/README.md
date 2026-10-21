@@ -4,6 +4,8 @@ Reproduce the colleague's database experiments on clarity3, starting 2026-10-19.
 
 **Jac / WeBridge comparison:** [seven existing SNB workloads across eight configurations](webridge/benchmark-comparison/REPORT.md), [English PDF](webridge/benchmark-comparison/jac-webridge-snb-comparison.pdf), [verified matrix](webridge/benchmark-comparison/results.json), [archive guide](webridge/ARCHIVE.md).
 
+**TPC-C / littleX DB-call RTT comparison:** [English PDF](webridge/non-snb/jac-webridge-tpcc-littlex-comparison.pdf), [report](webridge/non-snb/REPORT.md), [RTT and SQL-count matrix](webridge/non-snb/results.csv). The compact-proxy RTT metric sums complete database calls per request.
+
 **Main report:** [REPORT.md](REPORT.md). **Stage status:** [scripts/STATUS.md](scripts/STATUS.md).
 
 ## Targets

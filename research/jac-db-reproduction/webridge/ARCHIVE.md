@@ -1,5 +1,7 @@
 # WeBridge comparison archive
 
+TPC-C and littleX: [English DB-call RTT slides](non-snb/jac-webridge-tpcc-littlex-comparison.pdf), [measured report](non-snb/REPORT.md), [RTT / SQL-count CSV](non-snb/results.csv), and [original-schedule references](non-snb/rtt-reference-results.csv). This extension uses compact command-to-complete-response captures at 0 / +2 / +10 ms added response delay.
+
 Start with [the seven-query comparison](benchmark-comparison/REPORT.md) and its [English PDF](benchmark-comparison/jac-webridge-snb-comparison.pdf). The PDF presents the six-query extension and appends the completed IC5 study. The machine-readable latency and synchronization matrix is [results.json](benchmark-comparison/results.json), with a CSV counterpart.
 
 ## Experiments

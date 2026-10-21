@@ -1,0 +1,987 @@
+{
+  "before": [
+    {
+      "title": "Jac DB and WeBridge: TPC-C + littleX",
+      "subtitle": "Measured SQL round-trip cost and query fusion",
+      "source": "Source: workload-contracts.json; coverage-contract.json; runtime-provenance.json",
+      "paragraphs": [
+        "Research problem: which database operations can each system combine across a complete application request?",
+        "Compare the colleague's transactional and social-network workloads using native Jac and three independently checked Java forms, each paired with actual WeBridge compilation.",
+        "Compare summed SQL round-trip time and command counts from the same requests, then use executed SQL and stored-program profiles to explain the work that remains."
+      ]
+    },
+    {
+      "title": "Example: one Payment updates four business relations",
+      "subtitle": "TPC-C: identify a customer, update balances, append History, commit atomically",
+      "source": "Source: tpcc-plan-900.json; workload-contracts.json; verify_tpcc_model.py",
+      "diagram": {
+        "nodes": [
+          {
+            "id": "input",
+            "label": "Warehouse / district\nCustomer ID or last name\nAmount",
+            "x": 0.12,
+            "y": 0.62,
+            "width": 0.21,
+            "height": 0.25
+          },
+          {
+            "id": "read",
+            "label": "Read warehouse\nRead district\nSelect customer",
+            "x": 0.4,
+            "y": 0.62,
+            "width": 0.21,
+            "height": 0.25
+          },
+          {
+            "id": "write",
+            "label": "Update 3 balances\nInsert History",
+            "x": 0.68,
+            "y": 0.62,
+            "width": 0.21,
+            "height": 0.25
+          },
+          {
+            "id": "commit",
+            "label": "Commit\nReturn result",
+            "x": 0.89,
+            "y": 0.22,
+            "width": 0.16,
+            "height": 0.2
+          },
+          {
+            "id": "bc",
+            "label": "Bad credit: update c_data\nwith source-faithful amount formatting",
+            "x": 0.44,
+            "y": 0.16,
+            "width": 0.43,
+            "height": 0.19,
+            "color": "#fef3c7"
+          }
+        ],
+        "edges": [
+          {
+            "from": "input",
+            "to": "read"
+          },
+          {
+            "from": "read",
+            "to": "write"
+          },
+          {
+            "from": "write",
+            "to": "commit"
+          },
+          {
+            "from": "read",
+            "to": "bc"
+          },
+          {
+            "from": "bc",
+            "to": "commit"
+          }
+        ]
+      }
+    },
+    {
+      "title": "Three Java forms isolate different representation costs",
+      "subtitle": "Each direct / WeBridge pair uses the same application source, SQL and MySQL fixture",
+      "source": "Source: tpcc/TpccSql.java; tpcc/TpccGraph.java; littlex/LittleXSql.java; littlex/LittleXFull.java; littlex/LittleXPruned.java; native/REPORT.md",
+      "table": {
+        "headers": [
+          "Form",
+          "Database representation and request behavior",
+          "What the pair measures"
+        ],
+        "rows": [
+          [
+            "Full",
+            "Graph anchors, types, access checks, hydration and mutations; matches the measured warm native access sequence",
+            "WeBridge's ability to combine the full access path"
+          ],
+          [
+            "Pruned",
+            "Same business results with explicitly listed graph-framework work removed",
+            "WeBridge after reducing graph-framework overhead"
+          ],
+          [
+            "Conventional",
+            "Direct relational tables and source-faithful business reads / writes; littleX feeds use set-oriented SQL",
+            "WeBridge on a conventional SQL application"
+          ],
+          [
+            "Native Jac",
+            "PostgreSQL 18, original and final runtime source trees",
+            "Effect of the Jac changes on the original workload"
+          ]
+        ],
+        "widths": [
+          0.16,
+          0.49,
+          0.35
+        ]
+      }
+    },
+    {
+      "title": "Example solution: Payment's hot path becomes one CALL",
+      "subtitle": "Accepted conventional, good-credit, last-name Payment; separate +2 ms instrumented profile",
+      "source": "Source: profiles/tpcc-final-payment-name-GC-sp-1792543948055566958/paired-results-and-state.json; corresponding baseline / SP analysis.json",
+      "table": {
+        "headers": [
+          "Observed location",
+          "Direct Java",
+          "Actual WeBridge procedure"
+        ],
+        "rows": [
+          [
+            "Complete wire synchronization cycles",
+            "9 / 9 / 9 measured requests",
+            "1 / 1 / 1 measured requests"
+          ],
+          [
+            "Business reads and writes",
+            "3 SELECTs + 4 writes sent separately",
+            "3 cursor SELECTs + 4 writes inside CALL"
+          ],
+          [
+            "Transaction controls",
+            "2 SET autocommit commands on wire",
+            "2 transaction SET statements inside CALL"
+          ],
+          [
+            "Generated procedure work",
+            "Application issues direct SQL",
+            "4 SAVEPOINTs; 4 metadata/result SELECTs; 4 scalar returns"
+          ],
+          [
+            "Correctness",
+            "13 evolving request results and retained affected rows",
+            "Matches direct results, 8 relation snapshots and global counts"
+          ]
+        ],
+        "widths": [
+          0.27,
+          0.3,
+          0.43
+        ]
+      }
+    },
+    {
+      "title": "Workloads preserve the colleague's original behavior",
+      "subtitle": "Frozen inputs and independent result / state models precede timing",
+      "source": "Source: workload-contracts.json; tpcc-plan-900.json; littlex-schedules.json; coverage-contract.json",
+      "table": {
+        "headers": [
+          "Workload",
+          "Original reference",
+          "Latency matrix"
+        ],
+        "rows": [
+          [
+            "TPC-C",
+            "Seed-42 warehouse; seed-4242 plan; 900 requests including 7 real invalid-item rollbacks",
+            "7 representative requests; 10 warmup + 30 measured repetitions; fresh initial fixture per cell"
+          ],
+          [
+            "littleX W1 / W2",
+            "100 users; 5,000 follows; 20 / 50 / 100 / 200 tweets per user; full feed and 3 writes",
+            "16 workloads; original deterministic targets; 10 warmup + 30 measured requests"
+          ],
+          [
+            "littleX W3",
+            "Paged feed mixed with 0 / 5 / 15 / 30% writes; original 110 warmup + 1,000 measured schedule",
+            "4 workloads; 110 warmup + 100 measured requests; one complete original 100-slot schedule"
+          ],
+          [
+            "Coverage",
+            "8 configurations per workload",
+            "27 workloads \u00d7 8 configurations \u00d7 3 delay settings = 648 cells"
+          ]
+        ],
+        "widths": [
+          0.18,
+          0.42,
+          0.4
+        ]
+      }
+    },
+    {
+      "title": "Primary timing measures complete SQL round trips",
+      "subtitle": "Frontend command arrival \u2192 complete response delivery; summed per application request",
+      "source": "Source: RTT_MEASUREMENT_PLAN.md; METHODS.md; compact collector sources and per-request RTT records",
+      "paragraphs": [
+        "Compact protocol collectors record complete exchanges at 0 / 2 / 10 ms added database-response delay. Every primary request supplies both its summed SQL round-trip time and its actual command counts.",
+        "The boundary includes database execution and response transfer. Application computation between calls stays outside. All request-owned connections contribute, including native identity lookups; a WeBridge CALL is counted once.",
+        "Compilers, profilers and timing runs share an exclusive host lease. Complete returned results and final committed state gate the measured values. Separate deep profiles retain nested SQL; application and database-server timings retain their own scopes."
+      ]
+    },
+    {
+      "title": "RTT and SQL counts use the same measured requests",
+      "subtitle": "Original workload schedules and explicit initialization / observer boundaries",
+      "source": "Source: coverage-contract.json; RTT_MEASUREMENT_PLAN.md; normalized-rtt source files; rtt-cycle-evidence.json",
+      "table": {
+        "headers": [
+          "Measurement",
+          "Request scope"
+        ],
+        "widths": [
+          0.33,
+          0.67
+        ],
+        "size": 12,
+        "rows": [
+          [
+            "TPC-C latency cells",
+            "Ten mutating warmups + thirty measured repetitions per representative transaction, arm and delay."
+          ],
+          [
+            "littleX pure-operation latency",
+            "Ten warmups + thirty measured requests per tier, operation, arm and delay."
+          ],
+          [
+            "littleX mixed latency",
+            "110 warmups + a complete 100-slot measured schedule at each write ratio."
+          ],
+          [
+            "Original-schedule references",
+            "TPC-C: 100 warmup + 800 measured. littleX W1/W2: 110 + 500; W3: 110 + 1,000."
+          ],
+          [
+            "SQL-work attribution",
+            "Separate instrumented profiles identify internal statements, transactions, runtime metadata and fallback. Their actual sample windows remain stated."
+          ]
+        ]
+      }
+    },
+    {
+      "title": "Actual WeBridge results include integration provenance",
+      "subtitle": "Record \u2192 native replay \u2192 synthesis \u2192 install \u2192 active execution \u2192 result / state gate",
+      "source": "Source: tpcc/case-status.json; littlex/cases; compatibility sources, tests, build manifests and stage logs",
+      "paragraphs": [
+        "Every compiled result identifies the original frontend outcome, applied compatibility changes, captured transaction boundary and immutable source / class hashes.",
+        "Final captures use the SDK's JDBC transaction boundary. MySQL sessions and procedure creation retain strict modes and add NO_UNSIGNED_SUBTRACTION; global SQL mode stays unchanged.",
+        "Stage failures retain the generated artifacts and exact error. Procedure timing, activation and fallback come from executed requests and wire traces."
+      ]
+    }
+  ],
+  "after": [
+    {
+      "title": "TPC-C: statement batching and request fusion have different boundaries",
+      "subtitle": "Earlier warm-path SQL profiles; actual same-request RTT counts appear in the primary tables",
+      "source": "Source: native/protocol-summary.json; native/tpcc-census/SQL-map.json; tpcc-prefetch-verification.json; profiles/tpcc-final-payment-name-GC-sp-1792543948055566958/analysis.json",
+      "table": {
+        "headers": [
+          "Observed work",
+          "Native Jac original / final",
+          "Conventional Java / accepted WeBridge"
+        ],
+        "widths": [
+          0.22,
+          0.39,
+          0.39
+        ],
+        "rows": [
+          [
+            "NewOrder Item + Stock reads",
+            "One hydration statement binds all 10 or 30 IDs; six hydration statements total per successful request.",
+            "Three NewOrder compiler attempts fail during synthesis; no accepted generated path."
+          ],
+          [
+            "Payment object writes",
+            "One anchor batch upsert contains Warehouse, District, Customer, History and graph edge; one separate type-registry write.",
+            "Four business write statements remain four SQL statements inside the accepted good-credit procedure."
+          ],
+          [
+            "Complete good-credit Payment",
+            "Representative by-ID input: 10 SQL / 10 wire cycles; last-name input: 12 / 12. Reads, batch flush and transaction controls remain separate.",
+            "Nine steady direct wire commands become one CALL; three reads, four writes and transaction controls execute inside."
+          ],
+          [
+            "Remaining generated coverage",
+            "Native state and result gates pass for all seven latency classes.",
+            "Bad-credit and NewOrder compiler failures retain stage evidence. Whole900 conventional procedure use is separately state-rejected."
+          ]
+        ]
+      }
+    },
+    {
+      "title": "littleX: which SQL combines, and which stays separate",
+      "subtitle": "Earlier t20 three-request SQL profiles; accepted procedures retain their business SQL",
+      "source": "Source: native/littlex-cycle-evidence.json; profiles/littlex-batch-1792547993708251332; profiles/littlex-batch-1792547997581462562; business-verification.json in each profile",
+      "table": {
+        "headers": [
+          "Observed work",
+          "Native Jac original \u2192 final",
+          "Conventional Java \u2192 WeBridge"
+        ],
+        "widths": [
+          0.21,
+          0.42,
+          0.37
+        ],
+        "rows": [
+          [
+            "Feed graph traversal",
+            "Two one-hop projections + one two-hop projection: 3 \u2192 3 SQL.",
+            "One set-oriented feed SELECT stays one business SELECT inside CALL."
+          ],
+          [
+            "Feed framework reads",
+            "Ancestry (2), root permissions (3), guest identity (2): 7 \u2192 7. Hydration: 2 \u2192 1.",
+            "Conventional form directly reads business tables; its result and committed state match the source model."
+          ],
+          [
+            "Feed transaction controls",
+            "6 \u2192 3 controls; with hydration reduction, 18 \u2192 14 complete cycles.",
+            "5 \u2192 3 cycles. CALL contains autocommit controls and SELECT; two setup commands stay outside."
+          ],
+          [
+            "Like / create_tweet writes",
+            "One anchor batch upsert + one type-registry statement remain separate from reads and transaction controls.",
+            "UPDATE + SELECT / INSERT + SELECT remain two business statements inside CALL; 6 \u2192 3 wire cycles."
+          ],
+          [
+            "Follow write",
+            "One anchor upsert + one registry statement remain separate SQL.",
+            "One INSERT IGNORE moves inside CALL; 5 \u2192 3 wire cycles."
+          ]
+        ]
+      }
+    },
+    {
+      "title": "Profiling separates fewer round trips from faster SQL",
+      "subtitle": "Secondary rich-trace diagnostic: 85 actual feed_page requests in the 15% write schedule; +2 ms response delay",
+      "source": "Source: profiles/paged-feed-cost-analysis/paged-feed-w15-subset.json; EXPLANATION.md; exact wire, PostgreSQL phase and MySQL P_S event joins",
+      "table": {
+        "headers": [
+          "Configuration",
+          "Summed RTT ms",
+          "Exchanges / request",
+          "Server phase / statement sum ms"
+        ],
+        "widths": [
+          0.39,
+          0.2,
+          0.18,
+          0.23
+        ],
+        "size": 13,
+        "rows": [
+          [
+            "Jac original",
+            "62.9308",
+            "18",
+            "3.8300"
+          ],
+          [
+            "Jac optimized",
+            "49.6738",
+            "14",
+            "3.7160"
+          ],
+          [
+            "Original SQL Java",
+            "45.9708",
+            "5",
+            "34.2933"
+          ],
+          [
+            "WeBridge, original SQL Java",
+            "41.1059",
+            "3",
+            "33.9501"
+          ],
+          [
+            "Pruned Java",
+            "191.3729",
+            "7",
+            "174.3429"
+          ],
+          [
+            "WeBridge, pruned Java",
+            "182.5899",
+            "3",
+            "174.8731"
+          ]
+        ]
+      }
+    },
+    {
+      "title": "The remaining feed SELECT accounts for measured server work",
+      "subtitle": "Same secondary +2 ms rich-trace diagnostic; conventional Java and its generated procedure",
+      "source": "Source: profiles/paged-feed-cost-analysis/EXPLANATION.md; mysql-request-rows.json; SELECT event IDs and generated SQL in the retained profiles",
+      "paragraphs": [
+        "Conventional Java executes one business SELECT per feed page. WeBridge moves that SELECT into CALL and reduces five complete client exchanges to three.",
+        "The SELECT takes a median 34.1725 ms directly and 33.7765 ms inside the procedure; it returns 20 rows and examines a median 20,110 rows. Two setup commands remain outside CALL.",
+        "The pruned graph form retains three wrapped top-K SELECTs: seven client exchanges become three, while inclusive server work remains about 174 ms. The profile distinguishes query work from command bundling."
+      ]
+    },
+    {
+      "title": "A set-oriented feed already uses one business SELECT",
+      "subtitle": "littleX full feed, 20 tweets/user; all 1,020 returned rows and committed state verified",
+      "source": "Source: profiles/littlex-batch-1792547993708251332/t20-feed-LittleXSql-baseline/analysis.json; profiles/littlex-batch-1792547997581462562/t20-feed-LittleXSql-sp/analysis.json",
+      "table": {
+        "headers": [
+          "Measured operation",
+          "Direct Java",
+          "Generated procedure path"
+        ],
+        "rows": [
+          [
+            "External transaction/session settings",
+            "4",
+            "2"
+          ],
+          [
+            "External business SELECT",
+            "1",
+            "0"
+          ],
+          [
+            "External CALL",
+            "0",
+            "1"
+          ],
+          [
+            "Total complete wire responses",
+            "5",
+            "3"
+          ],
+          [
+            "Inside CALL: transaction settings",
+            "\u2014",
+            "2"
+          ],
+          [
+            "Inside CALL: business SELECT",
+            "\u2014",
+            "1"
+          ],
+          [
+            "Inside CALL: result materialization / metadata",
+            "\u2014",
+            "1"
+          ]
+        ],
+        "widths": [
+          0.53,
+          0.2,
+          0.27
+        ],
+        "size": 12
+      }
+    },
+    {
+      "title": "littleX: which business SQL actually runs inside CALL",
+      "subtitle": "Final conventional Java; three measured wire profiles per operation, with full result and state gates",
+      "source": "Source: profiles/littlex-batch-1792547993708251332 and littlex-batch-1792547997581462562; per-operation analysis.json + business-verification.json",
+      "table": {
+        "headers": [
+          "Operation",
+          "Direct wire cycles",
+          "WB wire cycles",
+          "Business SQL inside CALL"
+        ],
+        "rows": [
+          [
+            "Full feed (t20)",
+            "5",
+            "3",
+            "1 feed SELECT"
+          ],
+          [
+            "Like (t20)",
+            "6",
+            "3",
+            "1 tweet UPDATE + 1 tweet SELECT"
+          ],
+          [
+            "Follow (t20)",
+            "5",
+            "3",
+            "1 INSERT IGNORE into follows"
+          ],
+          [
+            "Create tweet (t20)",
+            "6",
+            "3",
+            "1 tweet INSERT + 1 tweet SELECT"
+          ],
+          [
+            "Feed page (t200)",
+            "5",
+            "3",
+            "1 page SELECT"
+          ]
+        ],
+        "widths": [
+          0.25,
+          0.17,
+          0.17,
+          0.41
+        ],
+        "size": 13
+      }
+    },
+    {
+      "title": "A complete mixed schedule executes all generated APIs",
+      "subtitle": "littleX W3, 15% writes; 110 warmup + 100 measured requests; verified complete-bundle deployment",
+      "source": "Source: profiles/littlex-batch-1792549904262819171 and littlex-batch-1792550987625646491; protocol + P_S + independent state gates",
+      "table": {
+        "headers": [
+          "Operation",
+          "Requests",
+          "Direct cycles",
+          "WB cycles",
+          "Procedure active"
+        ],
+        "rows": [
+          [
+            "create_tweet",
+            10,
+            "6",
+            "3",
+            10
+          ],
+          [
+            "feed_page",
+            85,
+            "5",
+            "3",
+            85
+          ],
+          [
+            "follow",
+            1,
+            "5",
+            "3",
+            1
+          ],
+          [
+            "like",
+            4,
+            "6",
+            "3",
+            4
+          ]
+        ],
+        "widths": [
+          0.28,
+          0.16,
+          0.18,
+          0.18,
+          0.2
+        ],
+        "size": 14
+      }
+    },
+    {
+      "title": "Pruned mixed workload: fusion follows the available regions",
+      "subtitle": "Complete t200 15% write schedule: 110 warmup + 100 measured requests; all responses and final common state pass",
+      "source": "Source: profiles/littlex-batch-1792555546513752376; profiles/littlex-batch-1792555553389885692; profiles/finish-mixed-1792555750399490880; per-request analysis.json and business-verification.json",
+      "table": {
+        "headers": [
+          "Operation",
+          "Count",
+          "Direct wire cycles",
+          "WeBridge path and cycles"
+        ],
+        "widths": [
+          0.2,
+          0.1,
+          0.22,
+          0.48
+        ],
+        "rows": [
+          [
+            "Paged feed",
+            85,
+            7,
+            "85 call-only requests; 3 cycles each."
+          ],
+          [
+            "Create Tweet",
+            10,
+            6,
+            "10 CALL + source-SQL requests; 6 cycles. Actual ROLLBACK TO fails, then source upsert completes."
+          ],
+          [
+            "Like",
+            4,
+            7,
+            "No generated region; 4 source fallbacks, 7 cycles each."
+          ],
+          [
+            "Follow",
+            1,
+            8,
+            "No generated region; 1 source fallback, 8 cycles."
+          ],
+          [
+            "Whole measured schedule",
+            100,
+            "0 CALLs",
+            "95 requests issue CALL; 85 finish with SDK enabled. These record different execution outcomes."
+          ]
+        ]
+      }
+    },
+    {
+      "title": "Full Java alignment exposes the transaction-control difference",
+      "subtitle": "Earlier t20 three-request warm traces; identical business rows, measured transaction-control differences",
+      "source": "Source: native/littlex-cycle-evidence.json; profiles/littlex-batch-1792549879927774846; final SQL text and category audits",
+      "table": {
+        "headers": [
+          "Executed SQL category",
+          "Jac original / PG",
+          "Full Java / MySQL",
+          "Jac final / PG"
+        ],
+        "rows": [
+          [
+            "Transaction controls",
+            "6",
+            "8",
+            "3"
+          ],
+          [
+            "Full-anchor hydration",
+            "2",
+            "2",
+            "1"
+          ],
+          [
+            "Ancestry + root permissions",
+            "5",
+            "5",
+            "5"
+          ],
+          [
+            "Guest identity reads",
+            "2",
+            "2",
+            "2"
+          ],
+          [
+            "Projected traversal stages",
+            "3",
+            "3",
+            "3"
+          ],
+          [
+            "Total commands / wire cycles",
+            "18",
+            "20",
+            "14"
+          ]
+        ],
+        "widths": [
+          0.43,
+          0.19,
+          0.19,
+          0.19
+        ],
+        "size": 12
+      }
+    },
+    {
+      "title": "Jac TPC-C already batches NewOrder's loop reads",
+      "subtitle": "Earlier original / final protocol census; equal base SQL and synchronization counts",
+      "source": "Source: native/protocol-summary.json; original pyast_gen_pass.impl.jac prefetch lowering; native source audit; tpcc-prefetch-verification.json (24 raw request logs)",
+      "table": {
+        "headers": [
+          "Request class",
+          "Observed warm SQL / synchronization cycles",
+          "Mechanism"
+        ],
+        "rows": [
+          [
+            "Payment by last name, GC / BC",
+            "12 / 12 and 11 / 11",
+            "Customer selection, framework reads, flush and commit remain visible"
+          ],
+          [
+            "Payment by ID, GC / BC",
+            "10 / 10 and 10 / 10",
+            "Same base count in original and final"
+          ],
+          [
+            "NewOrder, 5 or 15 lines",
+            "14 / 14 for either size",
+            "Original compiler already prefetches Items and Stocks across the loop"
+          ],
+          [
+            "Invalid-item rollback",
+            "17 SQL / 18 complete exchanges",
+            "One separate Parse + Sync exchange is observed in the request trace"
+          ]
+        ],
+        "widths": [
+          0.3,
+          0.3,
+          0.4
+        ]
+      }
+    },
+    {
+      "title": "SQL traces identify the deferred-setup reduction",
+      "subtitle": "Original ad469 versus final32 defaults; earlier census, source audit and pilot request distributions",
+      "source": "Source: native corrected littleX SQL censuses; context.impl.jac source audit; runtime-provenance.json; native/littlex-pilot-like/certified-requests.json; native/littlex-like-alignment.json",
+      "table": {
+        "headers": [
+          "Operation",
+          "Early graph-backend SQL: original \u2192 final",
+          "Measured / source-matched change"
+        ],
+        "rows": [
+          [
+            "Full feed / original paged feed",
+            "16 \u2192 12",
+            "Graph setup removes global-root hydration and SERIALIZABLE prologue. Base all-DB feed count includes2 guest identity reads:18 \u219214."
+          ],
+          [
+            "Like",
+            "11 \u2192 10",
+            "Deferred global-root initialization"
+          ],
+          [
+            "Follow",
+            "12 \u2192 11",
+            "Deferred global-root initialization"
+          ],
+          [
+            "Create tweet",
+            "9 \u2192 8",
+            "Deferred global-root initialization"
+          ],
+          [
+            "Business read traversal",
+            "Same 3 projected query stages in both",
+            "Root \u2192 Profile; own tweets; Follow \u2192 Profile \u2192 tweets. Both retain ancestry and access checks."
+          ],
+          [
+            "LIKE: 3 post-warmup targets",
+            "[10,11,11] \u2192 [9,10,10]",
+            "First target owns the Tweet: permission check returns before owner-root hydration. Other two targets have different owners."
+          ],
+          [
+            "Periodic schema guard",
+            "+1 in some t100/t200 profiles",
+            "Actual to_regclass table-presence check; all-DB ranges18\u201319 \u219214\u201315 retain this extra request."
+          ]
+        ],
+        "widths": [
+          0.21,
+          0.28,
+          0.51
+        ],
+        "size": 12
+      }
+    },
+    {
+      "title": "COMMIT cost varies even when SQL and wire counts stay fixed",
+      "subtitle": "Separate +2 ms ID-Payment diagnostic; 30 measured requests per cell",
+      "source": "Source: native/tpcc-outlier-diagnostic/analysis.json; native/tpcc-wal-diagnostic/WAL-analysis.json",
+      "table": {
+        "headers": [
+          "Measured quantity",
+          "Original GC / BC",
+          "Final GC / BC"
+        ],
+        "rows": [
+          [
+            "SQL / complete response cycles",
+            "10 / 10 for every measured request",
+            "10 / 10 for every measured request"
+          ],
+          [
+            "PostgreSQL COMMIT execution median",
+            "13.467 ms / 1.288 ms",
+            "1.566 ms / 1.620 ms"
+          ],
+          [
+            "Later WAL-instrumented original probe",
+            "GC: 1.689 ms; BC: 1.626 ms",
+            "23 sampled COMMIT WalSync waits in each original class"
+          ],
+          [
+            "Interpretation",
+            "Observed slow COMMIT is inside PostgreSQL execution",
+            "Later probe observes normal commit WALSync work; earlier outlier attribution stays open"
+          ]
+        ],
+        "widths": [
+          0.32,
+          0.34,
+          0.34
+        ]
+      }
+    },
+    {
+      "title": "A longer +10 ms trace checks NewOrder15 over time",
+      "subtitle": "Secondary diagnostic: 10 warmup + 60 measured requests per runtime",
+      "source": "Source: native/tpcc-ttl-diagnostic/certified-requests.json; native/tpcc-ttl-diagnostic/count-distribution.json",
+      "paragraphs": [
+        "All 120 measured requests execute 14 SQL commands and 14 complete delivered-response exchanges. The trace spans more than five seconds per runtime.",
+        "This class-specific diagnostic retains its complete timeline and complements the primary compact RTT collections at 0 / +2 / +10 ms."
+      ]
+    },
+    {
+      "title": "Source-faithful money handling exposes a numerical model boundary",
+      "subtitle": "Observed NewOrder synthesis failures and bad-credit Payment installation failures",
+      "source": "Source: tpcc/numeric-model-boundary.json; tpcc/stage-failures.json; case-linked original symbolicBigDecimal.cpp and SPParser diagnostics",
+      "paragraphs": [
+        "The Java port preserves Python's round(float, 2) through BigDecimal(double) and HALF_EVEN. Native symbolic replay reaches scales 45\u201347 before setScale(2).",
+        "The symbolic model forms a long divisor from pow(10, scale difference); the observed expression contains -9223372036854775808. The source model also leaves the rounding-mode argument unused.",
+        "NewOrder's emitted symbolic expression fails Java-expression parsing. Bad-credit Payment emits the expression as a procedure formal parameter and MySQL rejects installation. Exact stage artifacts identify each affected case."
+      ]
+    },
+    {
+      "title": "Whole-plan references record actual procedure coverage",
+      "subtitle": "Each configuration executes the original 900 requests; guarded fallback and source-only paths are counted separately",
+      "source": "Source: tpcc/reference-900-index.json; tpcc/mixed-results.json; typed control routing, raw request and state receipts",
+      "table": {
+        "headers": [
+          "WeBridge configuration",
+          "CALL requests",
+          "SDK enabled at end",
+          "Guard fallback",
+          "Source-only requests"
+        ],
+        "rows": [
+          [
+            "Full graph",
+            "0",
+            "0",
+            "0",
+            "900"
+          ],
+          [
+            "Pruned graph",
+            "0",
+            "0",
+            "0",
+            "900"
+          ],
+          [
+            "Conventional / String IDs",
+            "406",
+            "130",
+            "276",
+            "494"
+          ],
+          [
+            "Conventional / typed IDs control",
+            "242",
+            "64",
+            "178",
+            "658"
+          ]
+        ],
+        "widths": [
+          0.3,
+          0.16,
+          0.17,
+          0.17,
+          0.2
+        ],
+        "size": 12
+      }
+    },
+    {
+      "title": "Whole-plan correctness catches a late-fallback state error",
+      "subtitle": "Tested JDBC getString \u2192 Integer.parseInt port; all900 requests finish, committed-state gate rejects the run",
+      "source": "Source: tpcc/mixed-results.json; tpcc/mixed-conventional-full-20261021T013535Z/correctness-failure.json; tpcc/mixed-first-fallback-prefix6/observed-state.json",
+      "table": {
+        "headers": [
+          "Observed gate",
+          "Result",
+          "Evidence"
+        ],
+        "rows": [
+          [
+            "Returned business values",
+            "All900 equal the original direct execution",
+            "Per-request source-golden comparison"
+          ],
+          [
+            "History inserts",
+            "586 observed;406 required",
+            "Full eight-relation state comparison"
+          ],
+          [
+            "First divergent request: idx5",
+            "Expected customer2700; generated path uses270",
+            "Captured customer329 used three character positions in emitted integer conversion"
+          ],
+          [
+            "Exact first-fallback state",
+            "Both customer270 and2700 debit2432.68;4History rows for3Payments",
+            "Fresh original six-request prefix; warehouse total equals3Payments exactly"
+          ],
+          [
+            "Protocol and server order",
+            "Procedure writes + SET autocommit=1; then failed ROLLBACK TO; then source customer/history writes",
+            "Complete CALL events and wire responses; tested SDK and session configuration retained"
+          ]
+        ],
+        "widths": [
+          0.29,
+          0.37,
+          0.34
+        ]
+      }
+    },
+    {
+      "title": "Typed-ID control exposes a result-cardinality boundary",
+      "subtitle": "Same business SQL with JDBC getInt customer IDs; original ordered workload and actual protocol evidence",
+      "source": "Source: tpcc/controls/typed-customer-id/reference-20261021T024832Z; profiles/tpcc-typed-fallback-prefix23-1792551669399853822-sp/analysis.json; tpcc/controls/typed-customer-id/first-fallback-prefix23/observed-state.json",
+      "table": {
+        "headers": [
+          "Observed boundary",
+          "Measured result"
+        ],
+        "rows": [
+          [
+            "Typed prefix0..5",
+            "All six outputs and eight initial/final business relations match fresh direct execution."
+          ],
+          [
+            "Typed original900",
+            "All 900 outputs match; committed History adds 488 rows for 406 Payments."
+          ],
+          [
+            "First changed result shape",
+            "Original index22: emitted customer materialization caps at two rows; the live SELECT returns three."
+          ],
+          [
+            "Stored-program order",
+            "All 21 nested events captured. SET autocommit=1 (event877) precedes final metadata SELECT (event878)."
+          ],
+          [
+            "Actual fallback",
+            "ROLLBACK TO trace0_p4 fails. Direct customer SELECT and Warehouse / District / Customer / History writes follow outside CALL."
+          ],
+          [
+            "Exact prefix23 state gap",
+            "One extra 1,782.87 Payment in Warehouse / District / Customer(1,1,1103); History adds 11 rows for 10 Payments. Direct model passes; independent model rejects SP state."
+          ]
+        ],
+        "widths": [
+          0.31,
+          0.69
+        ],
+        "size": 12
+      }
+    },
+    {
+      "title": "What the evidence bundle preserves",
+      "subtitle": "Re-run scripts, per-request observations, independent oracles and source identities",
+      "source": "Source: PUBLIC_FILES manifests; archive-manifest.json; verify_archive.py; results.json",
+      "paragraphs": [
+        "Every reported cell points to raw request timings or a concrete compiler-stage failure, plus its fixture reset, effective settings and correctness receipts.",
+        "SQL/protocol profiles retain command text, complete response ordering, actual procedure activation, server statement events and explicit category totals.",
+        "Large identical state payloads share one gzip object through relative links. The archive ledger verifies the original uncompressed bytes, stored object hashes and each logical evidence path."
+      ]
+    }
+  ]
+}

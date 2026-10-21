@@ -1,0 +1,89 @@
+{
+  "status": "PASS",
+  "coverage_scope": "Available subset only",
+  "primary_metric": "Per-request sum of complete SQL command-response RTT",
+  "latency_cells": 2,
+  "reference_entries": 6,
+  "accepted_values_verified": 7,
+  "measured_requests_verified": 4060,
+  "source_sha256": "2744e8f2d0f45cdba4b894ea2f43e6a7b22ae3673dbe1fd105c58ccb30495459",
+  "values": [
+    {
+      "family": "littlex",
+      "workload": "feed",
+      "arm": "jac_final",
+      "delay_ms": 0,
+      "sample_n": 30,
+      "warmup_n": 10,
+      "median_ms": 13.1674155,
+      "requests_artifact": "native/littlex-rtt-pilot/delay-0ms/final/t20/W1-feed/rtt-requests.json",
+      "requests_sha256": "da9241c0efe10d70d439c441422b4c3c1b8d446ef5820c9661af31ffa177eb1f"
+    },
+    {
+      "family": "littlex",
+      "workload": "feed",
+      "arm": "jac_final",
+      "delay_ms": 10,
+      "sample_n": 30,
+      "warmup_n": 10,
+      "median_ms": 173.62930749999998,
+      "requests_artifact": "native/littlex-rtt-latency-t20-W1-feed-10/delay-10ms/final/t20/W1-feed/rtt-requests.json",
+      "requests_sha256": "8c30e946d361f8ec52637547d7ebe9a675e039923e4ec4b4ed2cb8d900841460"
+    },
+    {
+      "family": "tpcc",
+      "workload": "original900",
+      "arm": "java_conventional",
+      "delay_ms": null,
+      "sample_n": 800,
+      "warmup_n": 100,
+      "median_ms": 7.511481526307762,
+      "requests_artifact": "tpcc/primary-rtt/references-20261021/java_conventional/rtt/rows.jsonl",
+      "requests_sha256": "8a25dff91a52fa6cc174132ae652eb65f15e29ffce83f857fac663c8708e4135"
+    },
+    {
+      "family": "tpcc",
+      "workload": "original900",
+      "arm": "java_full",
+      "delay_ms": null,
+      "sample_n": 800,
+      "warmup_n": 100,
+      "median_ms": 14.735854230821133,
+      "requests_artifact": "tpcc/primary-rtt/references-20261021/java_full/rtt/rows.jsonl",
+      "requests_sha256": "0c5bdd109c3f1676f415bc0f5b36bf7a959cbab398c3a10975fadb7da1871da2"
+    },
+    {
+      "family": "tpcc",
+      "workload": "original900",
+      "arm": "webridge_full",
+      "delay_ms": null,
+      "sample_n": 800,
+      "warmup_n": 100,
+      "median_ms": 12.014892417937517,
+      "requests_artifact": "tpcc/primary-rtt/references-20261021/webridge_full/rtt/rows.jsonl",
+      "requests_sha256": "505fbf84a1db4ebfed6598f20ebfbfd79eebf397a81357448b160c636e7c2139"
+    },
+    {
+      "family": "tpcc",
+      "workload": "original900",
+      "arm": "java_pruned",
+      "delay_ms": null,
+      "sample_n": 800,
+      "warmup_n": 100,
+      "median_ms": 10.248406906612217,
+      "requests_artifact": "tpcc/primary-rtt/references-20261021/java_pruned/rtt/rows.jsonl",
+      "requests_sha256": "b2396bcdfdd82dffa767ce4845fd22568493a4530b4a9d8471cf862449f75e6f"
+    },
+    {
+      "family": "tpcc",
+      "workload": "original900",
+      "arm": "webridge_pruned",
+      "delay_ms": null,
+      "sample_n": 800,
+      "warmup_n": 100,
+      "median_ms": 11.500036693178117,
+      "requests_artifact": "tpcc/primary-rtt/references-20261021/webridge_pruned/rtt/rows.jsonl",
+      "requests_sha256": "45d2544d5cabcb81a808e21395e6081c34d6c4922f6d56ffa2d6b6808dff63c9"
+    }
+  ]
+}
