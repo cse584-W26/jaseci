@@ -1,0 +1,37 @@
+{
+  "tier": "t200",
+  "workload": "W3",
+  "operation": "30",
+  "method": "latency",
+  "warmup": 110,
+  "measured": 100,
+  "per_operation_counts": {
+    "warmup": {
+      "create_tweet": 23,
+      "feed_page": 77,
+      "like": 8,
+      "follow": 2
+    },
+    "measured": {
+      "create_tweet": 20,
+      "feed_page": 70,
+      "like": 8,
+      "follow": 2
+    }
+  },
+  "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W3-30-latency.json",
+  "sha256": "e89cb95cce819e3d64467c7a65cd0d8faf7e76d7fa33794d7541e6b39e95d485",
+  "reset_scope": "fresh state per cell; TargetPlan survives warmup\u2192measurement; schedule and user indices restart at0",
+  "instrumented": false,
+  "selected_requests": 210,
+  "original_plan_sha256": "e89cb95cce819e3d64467c7a65cd0d8faf7e76d7fa33794d7541e6b39e95d485",
+  "source_template": "lx_repro_snapshot_t200_fc1ffda7943f",
+  "HTTP_routes": {
+    "feed": "load_feed_chain",
+    "feed_page": "load_feed_page",
+    "like": "like_tweet",
+    "follow": "follow_user",
+    "create_tweet": "create_tweet"
+  },
+  "clock_uuid_policy": "Native original HTTP generates UUID and clock values; source oracle verifies exact observed values and canonicalizes only newly generated values across runs"
+}

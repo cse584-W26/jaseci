@@ -1,0 +1,70 @@
+[
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "follow",
+    "method": "latency",
+    "variant": "baseline",
+    "delay_ms": 10,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 93.3375,
+    "client_median_ms": 147.3499425,
+    "app_cpu_total_ms": 200.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "follow": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5040,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "2376da2d97f9a63e467f0d055a18ffc01ed1cf8b72cbadff9ca5aa5f3429cd6d",
+        "tweets": "ecabe349afad1d90b692d526baeb1da684ef7f5deb2fe3709c40ab6b0407527e"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-rtt-latency-t20-W2-follow-10/delay-10ms/baseline/t20/W2-follow",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t20",
+    "workload": "W2",
+    "operation": "follow",
+    "method": "latency",
+    "variant": "final",
+    "delay_ms": 10,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 127.5135,
+    "client_median_ms": 137.169104,
+    "app_cpu_total_ms": 180.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "follow": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5040,
+        "tweets": 2000
+      },
+      "sha256": {
+        "profiles": "abccb97f131397f0c09530faacfae95b3dd42dff6d1b20314ac67c16a8ad4931",
+        "follows": "2376da2d97f9a63e467f0d055a18ffc01ed1cf8b72cbadff9ca5aa5f3429cd6d",
+        "tweets": "ecabe349afad1d90b692d526baeb1da684ef7f5deb2fe3709c40ab6b0407527e"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-rtt-latency-t20-W2-follow-10/delay-10ms/final/t20/W2-follow",
+    "all_request_oracles_verified": true
+  }
+]

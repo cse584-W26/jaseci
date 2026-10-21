@@ -1,0 +1,127 @@
+[
+  {
+    "family": "littlex",
+    "workload": "mixed",
+    "tweets_per_user": 200,
+    "arm": "jac_original",
+    "delay_ms": 0,
+    "status": "accepted",
+    "median_ms": 4.85036,
+    "timer": "compactSQLroundtrip_sum_ms",
+    "measurement_boundary": "Sum of complete database protocol exchanges from first frontend bytes received by proxy through ReadyForQuery bytes delivered to database client; all application database connections. Includes prepare-only/control exchanges; excludes HTTP/Python/Java time outside these exchanges.",
+    "sample_n": 100,
+    "warmup_n": 110,
+    "sql_command_count_distribution": {
+      "9": 10,
+      "18": 85,
+      "11": 4,
+      "12": 1
+    },
+    "response_exchange_count_distribution": {
+      "9": 10,
+      "18": 85,
+      "11": 4,
+      "12": 1
+    },
+    "requests_artifact": "non-snb/native/littlex-rtt-latency-t200-W3-15-0/delay-0ms/baseline/t200/W3-15/rtt-requests.json",
+    "artifact": "non-snb/native/littlex-rtt-latency-t200-W3-15-0/rtt-summary.json",
+    "gates": {
+      "all_source_results": true,
+      "full_business_state": true,
+      "all_connections_captured": true,
+      "actual_complete_response_barriers": true,
+      "settings_and_owned_cleanup": true,
+      "source_oracle_verification": "non-snb/native/littlex-rtt-latency-t200-W3-15-0/independent-offline-verification.json"
+    },
+    "warm_database_pids": [
+      604195,
+      604232,
+      604234,
+      604235,
+      604236,
+      604238,
+      604242,
+      604262,
+      604264,
+      604265,
+      604285,
+      604327,
+      604330,
+      604347,
+      604367
+    ],
+    "measured_database_pids": [
+      604195,
+      604232
+    ],
+    "new_backend_pids_during_measured": [],
+    "connection_initialization_scope": "SQL initialization commands are included when inside a tagged request; PostgreSQL startup/authentication handshake is not a SQL exchange.",
+    "secondary_HTTP_client_median_ms": 8.968108,
+    "secondary_application_server_median_ms": 6.6155,
+    "method": "latency",
+    "write_percent": 15
+  },
+  {
+    "family": "littlex",
+    "workload": "mixed",
+    "tweets_per_user": 200,
+    "arm": "jac_final",
+    "delay_ms": 0,
+    "status": "accepted",
+    "median_ms": 4.541716,
+    "timer": "compactSQLroundtrip_sum_ms",
+    "measurement_boundary": "Sum of complete database protocol exchanges from first frontend bytes received by proxy through ReadyForQuery bytes delivered to database client; all application database connections. Includes prepare-only/control exchanges; excludes HTTP/Python/Java time outside these exchanges.",
+    "sample_n": 100,
+    "warmup_n": 110,
+    "sql_command_count_distribution": {
+      "8": 10,
+      "14": 85,
+      "10": 4,
+      "11": 1
+    },
+    "response_exchange_count_distribution": {
+      "8": 10,
+      "14": 85,
+      "10": 4,
+      "11": 1
+    },
+    "requests_artifact": "non-snb/native/littlex-rtt-latency-t200-W3-15-0/delay-0ms/final/t200/W3-15/rtt-requests.json",
+    "artifact": "non-snb/native/littlex-rtt-latency-t200-W3-15-0/rtt-summary.json",
+    "gates": {
+      "all_source_results": true,
+      "full_business_state": true,
+      "all_connections_captured": true,
+      "actual_complete_response_barriers": true,
+      "settings_and_owned_cleanup": true,
+      "source_oracle_verification": "non-snb/native/littlex-rtt-latency-t200-W3-15-0/independent-offline-verification.json"
+    },
+    "warm_database_pids": [
+      604446,
+      604470,
+      604471,
+      604472,
+      604473,
+      604491,
+      604512,
+      604514,
+      604536,
+      604537,
+      604538,
+      604539,
+      604586,
+      604607,
+      604609,
+      604627
+    ],
+    "measured_database_pids": [
+      604446,
+      604470
+    ],
+    "new_backend_pids_during_measured": [],
+    "connection_initialization_scope": "SQL initialization commands are included when inside a tagged request; PostgreSQL startup/authentication handshake is not a SQL exchange.",
+    "secondary_HTTP_client_median_ms": 8.1593555,
+    "secondary_application_server_median_ms": 7.054,
+    "method": "latency",
+    "write_percent": 15
+  }
+]

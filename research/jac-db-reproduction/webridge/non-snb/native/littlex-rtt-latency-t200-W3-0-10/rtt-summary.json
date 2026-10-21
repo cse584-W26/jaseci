@@ -1,0 +1,121 @@
+[
+  {
+    "family": "littlex",
+    "workload": "mixed",
+    "tweets_per_user": 200,
+    "arm": "jac_original",
+    "delay_ms": 10,
+    "status": "accepted",
+    "median_ms": 203.095508,
+    "timer": "compactSQLroundtrip_sum_ms",
+    "measurement_boundary": "Sum of complete database protocol exchanges from first frontend bytes received by proxy through ReadyForQuery bytes delivered to database client; all application database connections. Includes prepare-only/control exchanges; excludes HTTP/Python/Java time outside these exchanges.",
+    "sample_n": 100,
+    "warmup_n": 110,
+    "sql_command_count_distribution": {
+      "18": 96,
+      "19": 4
+    },
+    "response_exchange_count_distribution": {
+      "18": 96,
+      "20": 1,
+      "19": 3
+    },
+    "requests_artifact": "non-snb/native/littlex-rtt-latency-t200-W3-0-10/delay-10ms/baseline/t200/W3-0/rtt-requests.json",
+    "artifact": "non-snb/native/littlex-rtt-latency-t200-W3-0-10/rtt-summary.json",
+    "gates": {
+      "all_source_results": true,
+      "full_business_state": true,
+      "all_connections_captured": true,
+      "actual_complete_response_barriers": true,
+      "settings_and_owned_cleanup": true,
+      "source_oracle_verification": "non-snb/native/littlex-rtt-latency-t200-W3-0-10/independent-offline-verification.json"
+    },
+    "warm_database_pids": [
+      594718,
+      594741,
+      594743,
+      594744,
+      594763,
+      594765,
+      594786,
+      594789,
+      594814,
+      594815,
+      594832,
+      594894,
+      594897,
+      594916,
+      594919
+    ],
+    "measured_database_pids": [
+      594718,
+      594741
+    ],
+    "new_backend_pids_during_measured": [],
+    "connection_initialization_scope": "SQL initialization commands are included when inside a tagged request; PostgreSQL startup/authentication handshake is not a SQL exchange.",
+    "secondary_HTTP_client_median_ms": 216.9000355,
+    "secondary_application_server_median_ms": 169.923,
+    "method": "latency",
+    "write_percent": 0
+  },
+  {
+    "family": "littlex",
+    "workload": "mixed",
+    "tweets_per_user": 200,
+    "arm": "jac_final",
+    "delay_ms": 10,
+    "status": "accepted",
+    "median_ms": 158.175774,
+    "timer": "compactSQLroundtrip_sum_ms",
+    "measurement_boundary": "Sum of complete database protocol exchanges from first frontend bytes received by proxy through ReadyForQuery bytes delivered to database client; all application database connections. Includes prepare-only/control exchanges; excludes HTTP/Python/Java time outside these exchanges.",
+    "sample_n": 100,
+    "warmup_n": 110,
+    "sql_command_count_distribution": {
+      "14": 97,
+      "15": 3
+    },
+    "response_exchange_count_distribution": {
+      "14": 97,
+      "15": 2,
+      "16": 1
+    },
+    "requests_artifact": "non-snb/native/littlex-rtt-latency-t200-W3-0-10/delay-10ms/final/t200/W3-0/rtt-requests.json",
+    "artifact": "non-snb/native/littlex-rtt-latency-t200-W3-0-10/rtt-summary.json",
+    "gates": {
+      "all_source_results": true,
+      "full_business_state": true,
+      "all_connections_captured": true,
+      "actual_complete_response_barriers": true,
+      "settings_and_owned_cleanup": true,
+      "source_oracle_verification": "non-snb/native/littlex-rtt-latency-t200-W3-0-10/independent-offline-verification.json"
+    },
+    "warm_database_pids": [
+      596904,
+      596928,
+      596930,
+      596931,
+      596932,
+      596952,
+      596969,
+      596990,
+      596992,
+      597012,
+      597013,
+      597015,
+      597059,
+      597102,
+      597103,
+      597123
+    ],
+    "measured_database_pids": [
+      596904,
+      596928
+    ],
+    "new_backend_pids_during_measured": [],
+    "connection_initialization_scope": "SQL initialization commands are included when inside a tagged request; PostgreSQL startup/authentication handshake is not a SQL exchange.",
+    "secondary_HTTP_client_median_ms": 170.6827495,
+    "secondary_application_server_median_ms": 167.0075,
+    "method": "latency",
+    "write_percent": 0
+  }
+]

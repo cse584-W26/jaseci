@@ -1,0 +1,70 @@
+[
+  {
+    "family": "littlex",
+    "workload": "feed",
+    "tweets_per_user": 20,
+    "arm": "jac_original",
+    "delay_ms": 2,
+    "status": "accepted",
+    "median_ms": 59.895469000000006,
+    "timer": "compactSQLroundtrip_sum_ms",
+    "measurement_boundary": "Sum of complete database protocol exchanges from first frontend bytes received by proxy through ReadyForQuery bytes delivered to database client; all application database connections. Includes prepare-only/control exchanges; excludes HTTP/Python/Java time outside these exchanges.",
+    "sample_n": 30,
+    "warmup_n": 10,
+    "sql_command_count_distribution": {
+      "18": 10,
+      "19": 20
+    },
+    "response_exchange_count_distribution": {
+      "18": 10,
+      "19": 20
+    },
+    "requests_artifact": "non-snb/native/littlex-rtt-latency-t20-W1-feed-2/delay-2ms/baseline/t20/W1-feed/rtt-requests.json",
+    "artifact": "non-snb/native/littlex-rtt-latency-t20-W1-feed-2/rtt-summary.json",
+    "gates": {
+      "all_source_results": true,
+      "full_business_state": true,
+      "all_connections_captured": true,
+      "actual_complete_response_barriers": true,
+      "settings_and_owned_cleanup": true,
+      "source_oracle_verification": "non-snb/native/littlex-rtt-latency-t20-W1-feed-2/independent-offline-verification.json"
+    },
+    "secondary_HTTP_client_median_ms": 83.834224,
+    "secondary_application_server_median_ms": 59.677,
+    "method": "latency"
+  },
+  {
+    "family": "littlex",
+    "workload": "feed",
+    "tweets_per_user": 20,
+    "arm": "jac_final",
+    "delay_ms": 2,
+    "status": "accepted",
+    "median_ms": 46.5013745,
+    "timer": "compactSQLroundtrip_sum_ms",
+    "measurement_boundary": "Sum of complete database protocol exchanges from first frontend bytes received by proxy through ReadyForQuery bytes delivered to database client; all application database connections. Includes prepare-only/control exchanges; excludes HTTP/Python/Java time outside these exchanges.",
+    "sample_n": 30,
+    "warmup_n": 10,
+    "sql_command_count_distribution": {
+      "14": 10,
+      "15": 20
+    },
+    "response_exchange_count_distribution": {
+      "14": 10,
+      "15": 20
+    },
+    "requests_artifact": "non-snb/native/littlex-rtt-latency-t20-W1-feed-2/delay-2ms/final/t20/W1-feed/rtt-requests.json",
+    "artifact": "non-snb/native/littlex-rtt-latency-t20-W1-feed-2/rtt-summary.json",
+    "gates": {
+      "all_source_results": true,
+      "full_business_state": true,
+      "all_connections_captured": true,
+      "actual_complete_response_barriers": true,
+      "settings_and_owned_cleanup": true,
+      "source_oracle_verification": "non-snb/native/littlex-rtt-latency-t20-W1-feed-2/independent-offline-verification.json"
+    },
+    "secondary_HTTP_client_median_ms": 65.983773,
+    "secondary_application_server_median_ms": 54.462999999999994,
+    "method": "latency"
+  }
+]

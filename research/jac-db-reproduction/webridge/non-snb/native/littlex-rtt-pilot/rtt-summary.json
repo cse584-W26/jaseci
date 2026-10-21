@@ -1,0 +1,70 @@
+[
+  {
+    "family": "littlex",
+    "workload": "feed",
+    "tweets_per_user": 20,
+    "arm": "jac_original",
+    "delay_ms": 0,
+    "status": "accepted",
+    "median_ms": 13.6353535,
+    "timer": "compactSQLroundtrip_sum_ms",
+    "measurement_boundary": "Sum of complete database protocol exchanges from first frontend bytes received by proxy through ReadyForQuery bytes delivered to database client; all application database connections. Includes prepare-only/control exchanges; excludes HTTP/Python/Java time outside these exchanges.",
+    "sample_n": 30,
+    "warmup_n": 10,
+    "sql_command_count_distribution": {
+      "18": 10,
+      "19": 20
+    },
+    "response_exchange_count_distribution": {
+      "18": 10,
+      "19": 20
+    },
+    "requests_artifact": "non-snb/native/littlex-rtt-pilot/delay-0ms/baseline/t20/W1-feed/rtt-requests.json",
+    "artifact": "non-snb/native/littlex-rtt-pilot/rtt-summary.json",
+    "gates": {
+      "all_source_results": true,
+      "full_business_state": true,
+      "all_connections_captured": true,
+      "actual_complete_response_barriers": true,
+      "settings_and_owned_cleanup": true,
+      "source_oracle_verification": "non-snb/native/littlex-rtt-pilot/independent-offline-verification.json"
+    },
+    "secondary_HTTP_client_median_ms": 27.7022695,
+    "secondary_application_server_median_ms": 19.5715,
+    "method": "latency"
+  },
+  {
+    "family": "littlex",
+    "workload": "feed",
+    "tweets_per_user": 20,
+    "arm": "jac_final",
+    "delay_ms": 0,
+    "status": "accepted",
+    "median_ms": 13.1674155,
+    "timer": "compactSQLroundtrip_sum_ms",
+    "measurement_boundary": "Sum of complete database protocol exchanges from first frontend bytes received by proxy through ReadyForQuery bytes delivered to database client; all application database connections. Includes prepare-only/control exchanges; excludes HTTP/Python/Java time outside these exchanges.",
+    "sample_n": 30,
+    "warmup_n": 10,
+    "sql_command_count_distribution": {
+      "14": 10,
+      "15": 20
+    },
+    "response_exchange_count_distribution": {
+      "14": 10,
+      "15": 20
+    },
+    "requests_artifact": "non-snb/native/littlex-rtt-pilot/delay-0ms/final/t20/W1-feed/rtt-requests.json",
+    "artifact": "non-snb/native/littlex-rtt-pilot/rtt-summary.json",
+    "gates": {
+      "all_source_results": true,
+      "full_business_state": true,
+      "all_connections_captured": true,
+      "actual_complete_response_barriers": true,
+      "settings_and_owned_cleanup": true,
+      "source_oracle_verification": "non-snb/native/littlex-rtt-pilot/independent-offline-verification.json"
+    },
+    "secondary_HTTP_client_median_ms": 27.0283805,
+    "secondary_application_server_median_ms": 20.4625,
+    "method": "latency"
+  }
+]

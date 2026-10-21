@@ -1,0 +1,94 @@
+[
+  {
+    "family": "littlex",
+    "workload": "like",
+    "tweets_per_user": 200,
+    "arm": "jac_original",
+    "delay_ms": 2,
+    "status": "accepted",
+    "median_ms": 30.6481865,
+    "timer": "compactSQLroundtrip_sum_ms",
+    "measurement_boundary": "Sum of complete database protocol exchanges from first frontend bytes received by proxy through ReadyForQuery bytes delivered to database client; all application database connections. Includes prepare-only/control exchanges; excludes HTTP/Python/Java time outside these exchanges.",
+    "sample_n": 30,
+    "warmup_n": 10,
+    "sql_command_count_distribution": {
+      "10": 1,
+      "11": 9,
+      "12": 20
+    },
+    "response_exchange_count_distribution": {
+      "10": 1,
+      "11": 9,
+      "12": 20
+    },
+    "requests_artifact": "non-snb/native/littlex-rtt-latency-t200-W2-like-2/delay-2ms/baseline/t200/W2-like/rtt-requests.json",
+    "artifact": "non-snb/native/littlex-rtt-latency-t200-W2-like-2/rtt-summary.json",
+    "gates": {
+      "all_source_results": true,
+      "full_business_state": true,
+      "all_connections_captured": true,
+      "actual_complete_response_barriers": true,
+      "settings_and_owned_cleanup": true,
+      "source_oracle_verification": "non-snb/native/littlex-rtt-latency-t200-W2-like-2/independent-offline-verification.json"
+    },
+    "warm_database_pids": [
+      585870,
+      585875
+    ],
+    "measured_database_pids": [
+      585870,
+      585875
+    ],
+    "new_backend_pids_during_measured": [],
+    "connection_initialization_scope": "SQL initialization commands are included when inside a tagged request; PostgreSQL startup/authentication handshake is not a SQL exchange.",
+    "secondary_HTTP_client_median_ms": 36.116116,
+    "secondary_application_server_median_ms": 20.3915,
+    "method": "latency"
+  },
+  {
+    "family": "littlex",
+    "workload": "like",
+    "tweets_per_user": 200,
+    "arm": "jac_final",
+    "delay_ms": 2,
+    "status": "accepted",
+    "median_ms": 29.603768,
+    "timer": "compactSQLroundtrip_sum_ms",
+    "measurement_boundary": "Sum of complete database protocol exchanges from first frontend bytes received by proxy through ReadyForQuery bytes delivered to database client; all application database connections. Includes prepare-only/control exchanges; excludes HTTP/Python/Java time outside these exchanges.",
+    "sample_n": 30,
+    "warmup_n": 10,
+    "sql_command_count_distribution": {
+      "9": 1,
+      "10": 9,
+      "11": 20
+    },
+    "response_exchange_count_distribution": {
+      "9": 1,
+      "10": 9,
+      "11": 20
+    },
+    "requests_artifact": "non-snb/native/littlex-rtt-latency-t200-W2-like-2/delay-2ms/final/t200/W2-like/rtt-requests.json",
+    "artifact": "non-snb/native/littlex-rtt-latency-t200-W2-like-2/rtt-summary.json",
+    "gates": {
+      "all_source_results": true,
+      "full_business_state": true,
+      "all_connections_captured": true,
+      "actual_complete_response_barriers": true,
+      "settings_and_owned_cleanup": true,
+      "source_oracle_verification": "non-snb/native/littlex-rtt-latency-t200-W2-like-2/independent-offline-verification.json"
+    },
+    "warm_database_pids": [
+      585970,
+      586011
+    ],
+    "measured_database_pids": [
+      585970,
+      586011
+    ],
+    "new_backend_pids_during_measured": [],
+    "connection_initialization_scope": "SQL initialization commands are included when inside a tagged request; PostgreSQL startup/authentication handshake is not a SQL exchange.",
+    "secondary_HTTP_client_median_ms": 35.1451845,
+    "secondary_application_server_median_ms": 32.1015,
+    "method": "latency"
+  }
+]

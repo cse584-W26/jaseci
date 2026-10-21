@@ -1,0 +1,70 @@
+[
+  {
+    "instrumented": false,
+    "tier": "t50",
+    "workload": "W2",
+    "operation": "create_tweet",
+    "method": "latency",
+    "variant": "baseline",
+    "delay_ms": 10,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 62.537499999999994,
+    "client_median_ms": 118.4665925,
+    "app_cpu_total_ms": 220.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "create_tweet": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 5040
+      },
+      "sha256": {
+        "profiles": "17e9ea4c4e005160af3ac77624671150e519ee7d1a5f2c37588516bf4b4654d2",
+        "follows": "816ec338cc232a039e0a1062211e54fc8a9e509672515280b9d2265e340b3035",
+        "tweets": "ba9cc9670df710dfc66e777a725c85db8b4bf534a1fa2d2f384b35290886009b"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-rtt-latency-t50-W2-create_tweet-10/delay-10ms/baseline/t50/W2-create_tweet",
+    "all_request_oracles_verified": true
+  },
+  {
+    "instrumented": false,
+    "tier": "t50",
+    "workload": "W2",
+    "operation": "create_tweet",
+    "method": "latency",
+    "variant": "final",
+    "delay_ms": 10,
+    "warm": 10,
+    "n": 30,
+    "server_median_ms": 91.179,
+    "client_median_ms": 103.5378935,
+    "app_cpu_total_ms": 190.0,
+    "CPU_tick_ms": 10.0,
+    "measured_operation_counts": {
+      "create_tweet": 30
+    },
+    "state": {
+      "exact_business_state_verified": true,
+      "rows": {
+        "profiles": 100,
+        "follows": 5000,
+        "tweets": 5040
+      },
+      "sha256": {
+        "profiles": "17e9ea4c4e005160af3ac77624671150e519ee7d1a5f2c37588516bf4b4654d2",
+        "follows": "816ec338cc232a039e0a1062211e54fc8a9e509672515280b9d2265e340b3035",
+        "tweets": "ba9cc9670df710dfc66e777a725c85db8b4bf534a1fa2d2f384b35290886009b"
+      },
+      "generated_uuid_and_clock_normalization": "new Tweet keyed by seed_id, new timestamp replaced by GENERATED_TIME; raw response retained"
+    },
+    "path": "littlex-rtt-latency-t50-W2-create_tweet-10/delay-10ms/final/t50/W2-create_tweet",
+    "all_request_oracles_verified": true
+  }
+]
