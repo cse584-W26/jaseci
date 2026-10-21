@@ -1,0 +1,49 @@
+Adding disable concolic handler for class com/fasterxml/jackson/core/json/UTF8JsonGenerator
+Adding disable concolic handler for class com/fasterxml/jackson/databind/ser/BeanPropertyWriter
+Adding disable concolic handler for class net/sf/jsqlparser/parser/CCJSqlParser
+Adding disable concolic handler for class freemarker/core/FMParserTokenManager
+Adding disable concolic handler for class org/apache/ibatis/ognl/OgnlParser
+Adding disable concolic handler for class org/apache/ibatis/ognl/Ognl
+Adding disable concolic handler for class org/attoparser/MarkupParser
+Adding disable concolic handler for class org/thymeleaf/TemplateEngine
+Adding disable concolic handler for class org/apache/http/impl/execchain/ProtocolExec
+Starting concolic execution
+Symbolize!
+Symbolize!
+Symbolize!
+Symbolize!
+Symbolize!
+Symbolize!
+Symbolize!
+Symbolize!
+Symbolize!
+Symbolize!
+Symbolize!
+Symbolize!
+[Txn] set_auto_commit: 0s, conn_id:7821
+SymStmt.invoke_method_helper: Invoking setString
+SymStmt.invoke_method_helper: Invoking setString
+SymStmt.invoke_method_helper: Invoking setString
+SymStmt.invoke_method_helper: Invoking setString
+SymStmt.invoke_method_helper: Invoking setString
+SymStmt.invoke_method_helper: Invoking executeUpdate
+SymStmt.invoke_method_helper: Invoking close
+[SymbolicStatement] close unhandled by SymStmt
+SymStmt.invoke_method_helper: Invoking setString
+SymStmt.invoke_method_helper: Invoking executeQuery
+SymResSet.invoke_method_helper: Invoking next for rs: 0x73368497e840
+SymResSet.invoke_method_helper: Invoking next for rs: 0x73368497e840
+SymStmt.invoke_method_helper: Invoking close
+[SymbolicStatement] close unhandled by SymStmt
+[Txn] set_auto_commit: 1s, conn_id:7821
+[WeBridge] Received 4 SQL Statements
+SQL 0 used 0.004000 ms to serialize
+SQL 1 used 0.020000 ms to serialize
+SQL 2 used 0.006000 ms to serialize
+SQL 3 used 0.026000 ms to serialize
+[WeBridge] Finished serialization
+[WeBridge] Saving result to tmp location:/tmp/webridgeMngr.tmp.sp.string
+[WeBridge] Successfully Saved result to tmp location:/tmp/webridgeMngr.tmp.sp.string
+Cleaning 56 dangling expressions
+Checking memory leaks for Expression, 0 remains...
+{"mode":"replay","result":{"tweet":{"seed_id":"w2_-1","content":"write bench tweet -1 #bench","author_username":"t20_sim_user_0","created_at":"2026-10-20T23:00:00.000000Z","likes":[],"comments":[]}},"ms":754.187485,"jdbc_calls":6,"categories":["SET SESSION innodb_lock_wait_timeout=10","SET TRANSACTION ISOLATION LEVEL SERIALIZABLE, READ WRITE","set autocommit=0","INSERT INTO lx_tweets(id,seed_id,author_id,content,created_at,likes,comments) SELECT ?,?,p.id,?,?, '[]','[]' FROM lx_profiles p WHERE p.id=?","SELECT t.seed_id,t.content,p.username,t.created_at,t.likes,t.comments FROM lx_tweets t JOIN lx_profiles p ON p.id=t.author_id WHERE t.id=?","set autocommit=1"],"region":{"selected_region":"","calls_before":2,"started_wall_ms":1792547587288,"source_calls":4,"recorded_results_consumed":4},"session_status_delta":{"Bytes_received":284,"Bytes_sent":363,"Com_begin":0,"Com_call_procedure":0,"Com_commit":0,"Com_select":0,"Com_stmt_execute":0,"Queries":3,"Questions":3},"server_questions":2}

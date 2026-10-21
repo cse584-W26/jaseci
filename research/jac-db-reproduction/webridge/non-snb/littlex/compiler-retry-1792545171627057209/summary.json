@@ -1,0 +1,58 @@
+{
+  "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like",
+  "graph": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like/replay-20261021T010044492364Z/graph.json",
+  "graph_sha256": "03ef661451abc16b3e281d11bab0e21470e7103a6c4b93d34687e0aa9253ba45",
+  "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/e51966e0c4a82870907a7ef053bfc4562ee33721fd7d4dc894f7c7ff48337128/classes",
+  "status": "PASS with explicit frontend compatibility overlay",
+  "stages": [
+    {
+      "stage": "synth",
+      "returncode": 0,
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like/synth-20261021T011512613527Z"
+    },
+    {
+      "stage": "baseline",
+      "returncode": 0,
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like/baseline-20261021T011513572794Z"
+    },
+    {
+      "stage": "optimized",
+      "returncode": 0,
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like/optimized-20261021T011516189259Z"
+    }
+  ],
+  "generated_sources": [
+    {
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like/generated/sql/LittleX_081eb97974a1/graph-SP-function.sql",
+      "sha256": "539589a49a45f3818d312fbf6792a5a45418c11d219a7968d24f17f697d306d0"
+    },
+    {
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-1d142f64ea45-jdbc-transaction-signed-v1-like/generated/sql/LittleX_081eb97974a1/graph-SP-LittleX_081eb97974a1_sp_1_ver0.sql",
+      "sha256": "13518100b33b4d0d3771d861a182191b8bccbb59f441d6f459246c9496cf4403"
+    }
+  ],
+  "result": {
+    "success": true,
+    "likes_count": 1
+  },
+  "activation": {
+    "selected_region": "",
+    "calls_before": 2,
+    "sp_enabled_at_start": true,
+    "source_calls": 4,
+    "sp_enabled_at_end": true
+  },
+  "session_status_delta": {
+    "Bytes_received": 404,
+    "Bytes_sent": 962,
+    "Com_begin": 0,
+    "Com_call_procedure": 1,
+    "Com_commit": 0,
+    "Com_select": 3,
+    "Com_stmt_execute": 0,
+    "Queries": 35,
+    "Questions": 4
+  },
+  "actual_questions": 3,
+  "correctness": "Exact returned result and complete canonical business state after independent pristine resets"
+}

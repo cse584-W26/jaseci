@@ -1,0 +1,71 @@
+[
+  {
+    "family": "littlex",
+    "tier": "t20",
+    "operation": "feed",
+    "implementation": "LittleXSql",
+    "region": "",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-7e7525717a6c-final-sdk-genuine-batch-1792545279155873050-feed/baseline-20261021T015402921234Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547548119829988/feed/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-7e7525717a6c-final-sdk-genuine-batch-1792545279155873050-feed/record-20261021T015405535822Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547548119829988/feed/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-7e7525717a6c-final-sdk-genuine-batch-1792545279155873050-feed/replay-20261021T015408157507Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547548119829988/feed/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-7e7525717a6c-final-sdk-genuine-batch-1792545279155873050-feed/synth-20261021T015412569816Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547548119829988/feed/synth"
+      },
+      {
+        "stage": "install",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547548119829988/feed/install",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547548119829988/feed/install"
+      },
+      {
+        "stage": "optimized",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-7e7525717a6c-final-sdk-genuine-batch-1792545279155873050-feed/optimized-20261021T015417532977Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547548119829988/feed/optimized"
+      }
+    ],
+    "status": "success",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-7e7525717a6c-final-sdk-genuine-batch-1792545279155873050-feed",
+    "activation": {
+      "region": {
+        "selected_region": "",
+        "calls_before": 2,
+        "sp_enabled_at_start": true,
+        "source_calls": 3,
+        "sp_enabled_at_end": true
+      },
+      "status_delta": {
+        "Bytes_received": 366,
+        "Bytes_sent": 166337,
+        "Com_begin": 0,
+        "Com_call_procedure": 1,
+        "Com_commit": 0,
+        "Com_select": 2,
+        "Com_stmt_execute": 0,
+        "Queries": 24,
+        "Questions": 4
+      },
+      "server_questions": 3
+    },
+    "correctness": "Identical result and normalized complete business state after independent initial resets"
+  }
+]

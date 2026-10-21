@@ -1,0 +1,50 @@
+DROP PROCEDURE IF EXISTS `LittleX_d8488d5a0a5b_sp_1_ver0`;
+DELIMITER $$
+CREATE PROCEDURE LittleX_d8488d5a0a5b_sp_1_ver0 (IN M_L_String__REQUEST_PARAM_seed_id VARCHAR(512), IN M_L_String__REQUEST_PARAM_created_at VARCHAR(512), IN M_L_String__REQUEST_PARAM_actor_id VARCHAR(512), IN M_L_String__REQUEST_PARAM_new_id VARCHAR(512), IN M_L_String__REQUEST_PARAM_content VARCHAR(512))
+BEGIN
+
+DECLARE QUERY_ID_0_TXN INT DEFAULT NULL;
+DECLARE q2_i1 LONGTEXT DEFAULT NULL;
+DECLARE q2_i2 LONGTEXT DEFAULT NULL;
+DECLARE q2_i3 LONGTEXT DEFAULT NULL;
+DECLARE q2_i4 LONGTEXT DEFAULT NULL;
+DECLARE q2_i5 VARCHAR(512) DEFAULT NULL;
+DECLARE QUERY_ID_1 INT DEFAULT NULL;
+DECLARE M_I_RS_13_rowCount INT DEFAULT NULL;
+DECLARE cursor_cnt_1 INT DEFAULT NULL;
+DECLARE q3_i1 VARCHAR(512) DEFAULT NULL;
+DECLARE QUERY_ID_2 INT DEFAULT NULL;
+DECLARE M_I_RS_3_size INT DEFAULT NULL;
+DECLARE cursor_cnt_2 INT DEFAULT NULL;
+DECLARE QUERY_ID_3_TXN INT DEFAULT NULL;
+
+IF TRUE THEN
+SET QUERY_ID_0_TXN = 0;
+set autocommit=0;
+END IF;
+IF TRUE THEN
+SET q2_i1 = M_L_String__REQUEST_PARAM_new_id;
+SET q2_i2 = M_L_String__REQUEST_PARAM_seed_id;
+SET q2_i3 = M_L_String__REQUEST_PARAM_content;
+SET q2_i4 = M_L_String__REQUEST_PARAM_created_at;
+SET q2_i5 = M_L_String__REQUEST_PARAM_actor_id;
+SET QUERY_ID_1 = 1;
+SAVEPOINT trace0_p1;
+INSERT INTO lx_tweets (id, seed_id, author_id, content, created_at , likes, comments) SELECT q2_i1, q2_i2, p.id, q2_i3, q2_i4 , '[]', '[]' FROM lx_profiles p WHERE p.id = q2_i5;
+SET M_I_RS_13_rowCount = ROW_COUNT();
+SELECT M_I_RS_13_rowCount;
+END IF;
+IF TRUE THEN
+SET q3_i1 = M_L_String__REQUEST_PARAM_new_id;
+SET QUERY_ID_2 = 2;
+SELECT t.seed_id, t.content, p.username, t.created_at, t.likes , t.comments FROM lx_tweets t JOIN lx_profiles p ON p.id = t.author_id WHERE t.id = q3_i1;
+SET M_I_RS_3_size = FOUND_ROWS();
+END IF;
+IF TRUE THEN
+SET QUERY_ID_3_TXN = 3;
+set autocommit=1;
+END IF;
+SELECT QUERY_ID_0_TXN,QUERY_ID_1,q2_i1,q2_i2,q2_i3,q2_i4,q2_i5,QUERY_ID_2,q3_i1,QUERY_ID_3_TXN;
+
+END $$
+DELIMITER ;

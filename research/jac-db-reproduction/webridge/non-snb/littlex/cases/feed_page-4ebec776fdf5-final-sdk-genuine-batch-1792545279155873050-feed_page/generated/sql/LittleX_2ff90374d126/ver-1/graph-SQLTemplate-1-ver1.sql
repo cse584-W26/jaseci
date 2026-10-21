@@ -1,0 +1,30 @@
+SqlNo=1
+SQLNode {
+    sqlTemplate='set autocommit=0',
+    parameters={},
+    retVals={}
+}
+SqlNo=2
+SQLNode {
+    sqlTemplate='SELECT * FROM ( SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag , n1.f_created_at, f0.ord AS _tk1, e1.seq AS _tk2, e1.id AS _tk3 FROM ( SELECT ? AS id, 1 AS ord ) f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = ? OR e1.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = ? )))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = ? OR e1.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = ? )))))) JOIN g_n_profile_d2a57d n1 ON n1.id = CASE  WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END ORDER BY n1.f_created_at DESC, f0.ord, e1.seq, e1.id LIMIT ? ) _topk ORDER BY _tk1, _tk2, _tk3',
+    parameters={M_L_String__REQUEST_PARAM_actor_root_id:VARCHAR, "Profile":VARCHAR, "Profile":VARCHAR, "Profile":VARCHAR, "Profile":VARCHAR, 28:BIGINT},
+    retVals={}
+}
+SqlNo=3
+SQLNode {
+    sqlTemplate='SELECT * FROM ( SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag , n1.f_created_at, f0.ord AS _tk1, e1.seq AS _tk2, e1.id AS _tk3 FROM ( SELECT ? AS id, 1 AS ord ) f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = ? OR e1.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = ? )))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = ? OR e1.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = ? )))))) JOIN g_n_tweet_d2a57d n1 ON n1.id = CASE  WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END ORDER BY n1.f_created_at DESC, f0.ord, e1.seq, e1.id LIMIT ? ) _topk ORDER BY _tk1, _tk2, _tk3',
+    parameters={M_L_String__REQUEST_PARAM_actor_id:VARCHAR, "Tweet":VARCHAR, "Tweet":VARCHAR, "Tweet":VARCHAR, "Tweet":VARCHAR, 28:BIGINT},
+    retVals={}
+}
+SqlNo=4
+SQLNode {
+    sqlTemplate='SELECT * FROM ( SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag , n2.f_created_at, f0.ord AS _tk1, e1.seq AS _tk2, e1.id AS _tk3, e2.seq AS _tk4 , e2.id AS _tk5 FROM ( SELECT ? AS id, 1 AS ord ) f0 LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = ? OR e1.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = ? )))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = ? OR e1.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = ? )))))) AND (e1.arch_type = ? OR e1.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = ? )) JOIN anchors n1 ON n1.id = CASE  WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = ? OR n1.arch_type IN ( SELECT type_name FROM graph_types WHERE ancestor = ? )) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = ? OR e2.dst_type IN ( SELECT type_name FROM graph_types WHERE ancestor = ? )))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = ? OR e2.src_type IN ( SELECT type_name FROM graph_types WHERE ancestor = ? )))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE  WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END ORDER BY n2.f_created_at DESC, f0.ord, e1.seq, e1.id, e2.seq, e2.id LIMIT ? ) _topk ORDER BY _tk1, _tk2, _tk3, _tk4, _tk5',
+    parameters={M_L_String__REQUEST_PARAM_actor_id:VARCHAR, "Profile":VARCHAR, "Profile":VARCHAR, "Profile":VARCHAR, "Profile":VARCHAR, "Follow":VARCHAR, "Follow":VARCHAR, "Profile":VARCHAR, "Profile":VARCHAR, "Tweet":VARCHAR, "Tweet":VARCHAR, "Tweet":VARCHAR, "Tweet":VARCHAR, 28:BIGINT},
+    retVals={}
+}
+SqlNo=5
+SQLNode {
+    sqlTemplate='set autocommit=1',
+    parameters={},
+    retVals={}
+}

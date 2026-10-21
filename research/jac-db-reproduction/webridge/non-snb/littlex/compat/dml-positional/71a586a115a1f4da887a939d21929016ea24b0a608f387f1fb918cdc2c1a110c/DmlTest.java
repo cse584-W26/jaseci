@@ -1,0 +1,19 @@
+import java.nio.file.*;import java.util.*;import com.alibaba.fastjson2.*;import com.alibaba.druid.sql.SQLUtils;import com.alibaba.druid.sql.ast.SQLStatement;import com.alibaba.druid.util.JdbcConstants;import webridge.wbridge.sql.ast.SQLAstVisitor;import webridge.wbridge.sql.ast.SqlVisitorUtils;
+public class DmlTest{
+ static JSONObject check(String name,String sql,List<String>types,int count,String schema)throws Exception{
+  SQLStatement ast=SQLUtils.parseSingleStatement(sql,JdbcConstants.MYSQL);String before=ast.toString();SQLAstVisitor v=new SQLAstVisitor(SQLUtils.formatMySql(sql));SqlVisitorUtils.populateVisitorWithSchemaInfo(v,schema);v.setRecordedParameterJavaTypes(types);ast.accept(v);if(!before.equals(ast.toString()))throw new AssertionError("SQL changed "+name);if(v.getArgTypeLst().size()!=count)throw new AssertionError(name+" count "+v.getArgTypeLst());for(int i=0;i<count;i++)if(!v.getArgExprLst().get(i).getLeft().equals("parameter_"+i))throw new AssertionError("order "+name);JSONObject out=new JSONObject();out.put("name",name);List<String>sqlTypes=new ArrayList<>();v.getArgTypeLst().forEach(t->sqlTypes.add(t.name()));out.put("parameter_types",sqlTypes);out.put("count",count);out.put("sql_unchanged",true);return out;
+ }
+ public static void main(String[]args)throws Exception{
+  Path schema=Files.createTempFile("littlex-dml-test", ".sql");String ddl=new String(Files.readAllBytes(Paths.get(args[0])),"UTF-8")+"\nCREATE TABLE warehouse(w_id INT,w_ytd NUMERIC(12,2));CREATE TABLE customer(c_id INT,c_balance NUMERIC(12,2),c_ytd_payment NUMERIC(12,2),c_payment_cnt INT);";Files.write(schema,ddl.getBytes("UTF-8"));JSONArray rows=new JSONArray();
+  try{
+   rows.add(check("actual-like-join-json","UPDATE lx_tweets t JOIN lx_profiles p ON p.id=? SET t.likes=JSON_ARRAY_APPEND(t.likes,'$',p.username) WHERE t.id=? AND NOT JSON_CONTAINS(t.likes,JSON_QUOTE(p.username))",Arrays.asList("java/lang/String","java/lang/String"),2,schema.toString()));
+   JSONObject numeric=check("warehouse-arithmetic","UPDATE warehouse SET w_ytd=w_ytd+? WHERE w_id=?",Arrays.asList("D","I"),2,schema.toString());if(!numeric.getJSONArray("parameter_types").getString(0).toUpperCase().contains("DECIMAL"))throw new AssertionError("numeric column inference "+numeric);rows.add(numeric);
+   rows.add(check("customer-multiple-arithmetic","UPDATE customer SET c_balance=c_balance-?,c_ytd_payment=c_ytd_payment+?,c_payment_cnt=c_payment_cnt+1 WHERE c_id=?",Arrays.asList("D","D","I"),3,schema.toString()));
+   rows.add(check("insert-select-function","INSERT INTO lx_tweets(id,seed_id,author_id,content,created_at,likes,comments) SELECT ?,?,p.id,?,?, '[]','[]' FROM lx_profiles p WHERE p.id=?",Arrays.asList("java/lang/String","java/lang/String","java/lang/String","java/lang/String","java/lang/String"),5,schema.toString()));
+   rows.add(check("insert-duplicate-key","INSERT INTO lx_profiles(id,username) VALUES(?,?) ON DUPLICATE KEY UPDATE username=VALUES(username)",Arrays.asList("java/lang/String","java/lang/String"),2,schema.toString()));
+   rows.add(check("json-function-parameters","DELETE FROM lx_tweets WHERE JSON_CONTAINS(?,?)",Arrays.asList("java/lang/String","java/lang/String"),2,schema.toString()));
+   boolean rejected=false;try{check("unknown-json-parameters","DELETE FROM lx_tweets WHERE JSON_CONTAINS(?,?)",Collections.<String>emptyList(),2,schema.toString());}catch(IllegalArgumentException expected){rejected=true;}if(!rejected)throw new AssertionError("Untyped unknown binds must reject");
+   Files.write(Paths.get(args[1]),rows.toJSONString().getBytes("UTF-8"));System.out.println("PASS six DML ordered-metadata/AST-preservation cases and unknown-type rejection");
+  }finally{Files.deleteIfExists(schema);}
+ }
+}

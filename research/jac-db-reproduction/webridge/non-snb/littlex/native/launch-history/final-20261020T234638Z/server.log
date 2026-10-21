@@ -1,0 +1,33 @@
+INFO - Admin portal endpoints registered at /admin
+INFO - LLM telemetry: litellm not available, skipping litellm callback
+INFO - LLM telemetry: byllm agent callback registered
+INFO - LLM telemetry endpoints registered: /admin/llm/telemetry/{summary,traces,traces/{id},filters}
+INFO - Log query endpoints registered: /admin/logs/{,services,trace/{id}}
+INFO - Trace query endpoints registered: /admin/traces/{,services,{id}}
+INFO - Ops self-check endpoint registered: /admin/ops/health
+INFO - Deploy-health endpoint registered: /admin/ops/deploy
+INFO - Network endpoint registered: /admin/ops/network
+INFO - Pod-env endpoint registered: /admin/ops/podenv
+INFO - No emailer provider configured - email features disabled. Set [scale.emailer] provider = 'smtp' (or a custom 'module.path:ClassName') in jac.toml to enable.
+INFO - Initializing scheduler subsystem
+INFO - APScheduler not installed — dynamic scheduling disabled. Enable the 'scheduler' capability and run 'jac install'.
+INFO - No static scheduled tasks registered
+INFO - Scheduler subsystem ready
+
+  JAC DEV SERVER v0.36.1
+
+  ➜  Local:     http://localhost:18134/
+  ➜  Network:   http://141.212.48.138:18134/
+
+  Server ready
+
+  jac dev server v0.36.1
+
+  ➜  Local:     http://localhost:18134/
+  ➜  Network:   http://141.212.48.138:18134/
+
+  Server ready (no client)
+
+{"ts": "2026-10-20T23:46:35.437828Z", "level": "INFO", "service": "unknown", "trace_id": "5defda04-3e25-4f78-af85-fa47ee3e7bcc", "msg": "[trace=5defda04] JAC_SQL_ACL engaged: mirror reads now carry the access predicate as SQL (rows with per-anchor grants and shared-root rows are still re-checked in python)"}
+{"ts": "2026-10-20T23:46:35.981269Z", "level": "WARNING", "service": "unknown", "trace_id": "7974448e-5f58-4b1e-8e80-790007383b57", "msg": "[trace=7974448e] mirror endpoint column for Profile: refused (probe 1: not exactly one inbound edge type)"}
+{"ts": "2026-10-20T23:46:38.538476Z", "level": "WARNING", "service": "unknown", "trace_id": null, "msg": "drain: started (timeout=10.0s, inflight=0)"}

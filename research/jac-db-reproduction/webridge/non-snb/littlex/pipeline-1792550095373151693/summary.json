@@ -1,0 +1,79 @@
+[
+  {
+    "family": "littlex",
+    "tier": "t200",
+    "operation": "feed_page",
+    "implementation": "LittleXFull",
+    "region": "feed_page/dispatch",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-e982f34a800a-final-sdk-genuine-batch-1792545279155873050-feed_page-dispatch/baseline-20261021T023646571727Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792550095373151693/feed_page-dispatch/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-e982f34a800a-final-sdk-genuine-batch-1792545279155873050-feed_page-dispatch/record-20261021T023653540344Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792550095373151693/feed_page-dispatch/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 134,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-e982f34a800a-final-sdk-genuine-batch-1792545279155873050-feed_page-dispatch/replay-20261021T023700864318Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792550095373151693/feed_page-dispatch/replay"
+      }
+    ],
+    "status": "failed-stage",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-e982f34a800a-final-sdk-genuine-batch-1792545279155873050-feed_page-dispatch",
+    "failed_stage": "replay"
+  },
+  {
+    "family": "littlex",
+    "tier": "t200",
+    "operation": "feed_page",
+    "implementation": "LittleXFull",
+    "region": "feed_page/business",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-b02c19b4aa30-final-sdk-genuine-batch-1792545279155873050-feed_page-business/baseline-20261021T024333563686Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792550095373151693/feed_page-business/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-b02c19b4aa30-final-sdk-genuine-batch-1792545279155873050-feed_page-business/record-20261021T024340679691Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792550095373151693/feed_page-business/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-b02c19b4aa30-final-sdk-genuine-batch-1792545279155873050-feed_page-business/replay-20261021T024347708244Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792550095373151693/feed_page-business/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-b02c19b4aa30-final-sdk-genuine-batch-1792545279155873050-feed_page-business/synth-20261021T024355216579Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792550095373151693/feed_page-business/synth"
+      },
+      {
+        "stage": "synth-frontend-fix",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-b02c19b4aa30-final-sdk-genuine-batch-1792545279155873050-feed_page-business/synth-20261021T024356023665Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792550095373151693/feed_page-business/synth-frontend-fix"
+      }
+    ],
+    "status": "failed-stage",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-b02c19b4aa30-final-sdk-genuine-batch-1792545279155873050-feed_page-business",
+    "frontend_repair": {
+      "original_failure": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-b02c19b4aa30-final-sdk-genuine-batch-1792545279155873050-feed_page-business/synth-20261021T024355216579Z",
+      "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/e51966e0c4a82870907a7ef053bfc4562ee33721fd7d4dc894f7c7ff48337128/classes",
+      "scope": "explicit compatibility repair; original business SQL unchanged"
+    },
+    "failed_stage": "synth"
+  }
+]

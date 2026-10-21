@@ -1,0 +1,36 @@
+{
+  "status": "measured compatibility fix",
+  "cause": "Default extended JDBC connection negotiated character_set_connection=utf8 (three-byte); the existing utf8mb4 column rejected the original four-byte emoji. Explicit connectionCollation=utf8mb4_bin changes connection charset to utf8mb4 and the same prepared JSON INSERT passes on all four tiers.",
+  "scope": "Connection initialization before API/request timer; actual JDBC URL retained in command receipts. Business SQL and original workload Unicode unchanged. No schema/data rewrite.",
+  "probe": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-probe/1792554356040858093",
+  "observed_default": {
+    "client": "utf8",
+    "connection": "utf8",
+    "props_column": "utf8mb4",
+    "emoji_insert": "failed"
+  },
+  "observed_explicit_collation": {
+    "client": "utf8",
+    "connection": "utf8mb4",
+    "props_column": "utf8mb4",
+    "emoji_insert": "PASS"
+  },
+  "changed_sources": [
+    {
+      "path": "reproduction/webridge/non-snb/littlex/timing_command.py",
+      "before_sha256": "56b18f0176dcb4b8d962d1f8c310b50c1f84a96c5202a40d50655b468a25ccf1",
+      "after_sha256": "a31380a506a017d81126dec53e6a709e773385d3230cbb42953161b374400a16"
+    },
+    {
+      "path": "reproduction/webridge/non-snb/littlex/control.py",
+      "before_sha256": "21caf8e0ad2848c8654828e62fcf32dc5bead810e3534b60d401c5c7b95bb71e",
+      "after_sha256": "e83fd49a3b6babec555c443a72e77728ec5b892c99486a68e013d9e8082dbee5"
+    },
+    {
+      "path": "reproduction/webridge/non-snb/littlex/resume_case.py",
+      "before_sha256": "ee24f1837e89a0a26ed08988e6ce2d162f956632fb5f5eae3a2e3ddb52aeffdd",
+      "after_sha256": "694227e6cecd777d7948c422ef85dca07643dadb499530f1412a202e0fde6e16"
+    }
+  ],
+  "wall_ns": 1792554667036133469
+}

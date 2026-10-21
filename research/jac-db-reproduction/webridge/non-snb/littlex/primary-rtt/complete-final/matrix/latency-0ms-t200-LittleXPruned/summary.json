@@ -1,0 +1,1079 @@
+[
+  {
+    "family": "littlex",
+    "workload": "W1",
+    "operation": "feed",
+    "tier": "t200",
+    "system": "LittleXPruned",
+    "phase": "baseline",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 10,
+    "measured_count_requested": 30,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W1-feed-latency.json",
+    "plan_sha256": "815b8c44842e262a8f31855b73bcefd5b57b8713eafa9d12db3823b3f7811db1",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": null,
+    "frontend_selection": null,
+    "status": "measured",
+    "n": 30,
+    "thread_cpu_median_ms": 22.718974,
+    "questions": [
+      7
+    ],
+    "call_procedure": [
+      0
+    ],
+    "call_requests": 0,
+    "call_fraction": 0.0,
+    "sdk_enabled_at_end_requests": 0,
+    "sdk_enabled_at_end_fraction": 0.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "feed": {
+        "requests": 30,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W1-feed-latency/LittleXPruned/baseline/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W1-feed-latency/LittleXPruned/baseline/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W1-feed-latency/LittleXPruned/baseline/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W1-feed-latency/LittleXPruned/baseline/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W1-feed-latency/LittleXPruned/baseline/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W1-feed-latency/LittleXPruned/baseline/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "feed": 10
+      },
+      "measured": {
+        "feed": 30
+      }
+    },
+    "start_wall_ns": 1792560215755630710,
+    "end_wall_ns": 1792560246698866049,
+    "application_median_ms_secondary": 402.41346350000003,
+    "application_p95_ms_secondary": 413.4187773,
+    "median_ms": 380.95698738470674,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W1-feed-latency/LittleXPruned/baseline/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W1-feed-latency/LittleXPruned/baseline/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W1",
+    "operation": "feed",
+    "tier": "t200",
+    "system": "LittleXPruned + WeBridge",
+    "phase": "sp",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 10,
+    "measured_count_requested": 30,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W1-feed-latency.json",
+    "plan_sha256": "815b8c44842e262a8f31855b73bcefd5b57b8713eafa9d12db3823b3f7811db1",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXPruned-bundle",
+    "frontend_selection": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXPruned-bundle/selection-provenance.json",
+    "status": "failed-pipeline; synth",
+    "failed_stage": "synth",
+    "pipeline_evidence": [
+      {
+        "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551745280557903/summary.json",
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-f84348a4ad38-final-sdk-genuine-batch-1792545279155873050-feed",
+        "status": "failed-stage",
+        "failed_stage": "synth",
+        "error": null,
+        "frontend_repair": {
+          "original_failure": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-f84348a4ad38-final-sdk-genuine-batch-1792545279155873050-feed/synth-20261021T030642777877Z",
+          "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/e51966e0c4a82870907a7ef053bfc4562ee33721fd7d4dc894f7c7ff48337128/classes",
+          "scope": "explicit compatibility repair; original business SQL unchanged"
+        }
+      }
+    ],
+    "stage_manifest": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/manifest.json",
+    "n": 0,
+    "median_ms": null
+  },
+  {
+    "family": "littlex",
+    "workload": "W2",
+    "operation": "like",
+    "tier": "t200",
+    "system": "LittleXPruned",
+    "phase": "baseline",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 10,
+    "measured_count_requested": 30,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W2-like-latency.json",
+    "plan_sha256": "6aa29b028e4a6865c51887184a552bce8689be7fe87f10654400805379093b2f",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": null,
+    "frontend_selection": null,
+    "status": "measured",
+    "n": 30,
+    "thread_cpu_median_ms": 1.372262,
+    "questions": [
+      7
+    ],
+    "call_procedure": [
+      0
+    ],
+    "call_requests": 0,
+    "call_fraction": 0.0,
+    "sdk_enabled_at_end_requests": 0,
+    "sdk_enabled_at_end_fraction": 0.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "like": {
+        "requests": 30,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-like-latency/LittleXPruned/baseline/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-like-latency/LittleXPruned/baseline/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-like-latency/LittleXPruned/baseline/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-like-latency/LittleXPruned/baseline/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-like-latency/LittleXPruned/baseline/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-like-latency/LittleXPruned/baseline/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "like": 10
+      },
+      "measured": {
+        "like": 30
+      }
+    },
+    "start_wall_ns": 1792560246710400074,
+    "end_wall_ns": 1792560257545463002,
+    "application_median_ms_secondary": 41.032491,
+    "application_p95_ms_secondary": 52.44716535,
+    "median_ms": 39.19319820124656,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-like-latency/LittleXPruned/baseline/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-like-latency/LittleXPruned/baseline/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W2",
+    "operation": "like",
+    "tier": "t200",
+    "system": "LittleXPruned + WeBridge",
+    "phase": "sp",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 10,
+    "measured_count_requested": 30,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W2-like-latency.json",
+    "plan_sha256": "6aa29b028e4a6865c51887184a552bce8689be7fe87f10654400805379093b2f",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXPruned-bundle",
+    "frontend_selection": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXPruned-bundle/selection-provenance.json",
+    "status": "failed-pipeline; replay",
+    "failed_stage": "replay",
+    "pipeline_evidence": [
+      {
+        "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551310403726030/summary.json",
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/like-af3acfd4ab99-final-sdk-genuine-batch-1792545279155873050-like",
+        "status": "failed-stage",
+        "failed_stage": "replay",
+        "error": null,
+        "frontend_repair": null
+      }
+    ],
+    "stage_manifest": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/manifest.json",
+    "n": 0,
+    "median_ms": null
+  },
+  {
+    "family": "littlex",
+    "workload": "W2",
+    "operation": "follow",
+    "tier": "t200",
+    "system": "LittleXPruned",
+    "phase": "baseline",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 10,
+    "measured_count_requested": 30,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W2-follow-latency.json",
+    "plan_sha256": "49aa8913b5ba0c801f591b2d43f19f7bb5b23784df91714b34cd5b5889ceac97",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": null,
+    "frontend_selection": null,
+    "status": "measured",
+    "n": 30,
+    "thread_cpu_median_ms": 1.5584475,
+    "questions": [
+      8
+    ],
+    "call_procedure": [
+      0
+    ],
+    "call_requests": 0,
+    "call_fraction": 0.0,
+    "sdk_enabled_at_end_requests": 0,
+    "sdk_enabled_at_end_fraction": 0.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "follow": {
+        "requests": 30,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-follow-latency/LittleXPruned/baseline/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-follow-latency/LittleXPruned/baseline/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-follow-latency/LittleXPruned/baseline/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-follow-latency/LittleXPruned/baseline/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-follow-latency/LittleXPruned/baseline/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-follow-latency/LittleXPruned/baseline/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "follow": 10
+      },
+      "measured": {
+        "follow": 30
+      }
+    },
+    "start_wall_ns": 1792560257560782303,
+    "end_wall_ns": 1792560278773091634,
+    "application_median_ms_secondary": 74.9352155,
+    "application_p95_ms_secondary": 78.71596319999999,
+    "median_ms": 72.69972038920969,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-follow-latency/LittleXPruned/baseline/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-follow-latency/LittleXPruned/baseline/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W2",
+    "operation": "follow",
+    "tier": "t200",
+    "system": "LittleXPruned + WeBridge",
+    "phase": "sp",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 10,
+    "measured_count_requested": 30,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W2-follow-latency.json",
+    "plan_sha256": "49aa8913b5ba0c801f591b2d43f19f7bb5b23784df91714b34cd5b5889ceac97",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXPruned-bundle",
+    "frontend_selection": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXPruned-bundle/selection-provenance.json",
+    "status": "failed-pipeline; replay",
+    "failed_stage": "replay",
+    "pipeline_evidence": [
+      {
+        "receipt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792550963720019095/summary.json",
+        "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/follow-f53f9550d081-final-sdk-genuine-batch-1792545279155873050-follow",
+        "status": "failed-stage",
+        "failed_stage": "replay",
+        "error": null,
+        "frontend_repair": null
+      }
+    ],
+    "stage_manifest": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/manifest.json",
+    "n": 0,
+    "median_ms": null
+  },
+  {
+    "family": "littlex",
+    "workload": "W2",
+    "operation": "create_tweet",
+    "tier": "t200",
+    "system": "LittleXPruned",
+    "phase": "baseline",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 10,
+    "measured_count_requested": 30,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W2-create_tweet-latency.json",
+    "plan_sha256": "85c187c749c01f37051c9dfa09c3382af37fa8a51cfa110fec1c829646465be7",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": null,
+    "frontend_selection": null,
+    "status": "measured",
+    "n": 30,
+    "thread_cpu_median_ms": 1.2505635000000002,
+    "questions": [
+      6
+    ],
+    "call_procedure": [
+      0
+    ],
+    "call_requests": 0,
+    "call_fraction": 0.0,
+    "sdk_enabled_at_end_requests": 0,
+    "sdk_enabled_at_end_fraction": 0.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "create_tweet": {
+        "requests": 30,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/baseline/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/baseline/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/baseline/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/baseline/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/baseline/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/baseline/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "create_tweet": 10
+      },
+      "measured": {
+        "create_tweet": 30
+      }
+    },
+    "start_wall_ns": 1792560278793172548,
+    "end_wall_ns": 1792560289310995173,
+    "application_median_ms_secondary": 40.7483615,
+    "application_p95_ms_secondary": 46.76420295,
+    "median_ms": 38.99683756753802,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/baseline/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/baseline/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W2",
+    "operation": "create_tweet",
+    "tier": "t200",
+    "system": "LittleXPruned + WeBridge",
+    "phase": "sp",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 10,
+    "measured_count_requested": 30,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W2-create_tweet-latency.json",
+    "plan_sha256": "85c187c749c01f37051c9dfa09c3382af37fa8a51cfa110fec1c829646465be7",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXPruned-bundle",
+    "frontend_selection": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXPruned-bundle/selection-provenance.json",
+    "status": "measured",
+    "n": 30,
+    "thread_cpu_median_ms": 2.3175045,
+    "questions": [
+      6
+    ],
+    "call_procedure": [
+      1
+    ],
+    "call_requests": 30,
+    "call_fraction": 1.0,
+    "sdk_enabled_at_end_requests": 0,
+    "sdk_enabled_at_end_fraction": 0.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "create_tweet": {
+        "requests": 30,
+        "call_requests": 30,
+        "sdk_enabled_at_end_requests": 0
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/sp/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/sp/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/sp/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/sp/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/sp/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/sp/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "create_tweet": 10
+      },
+      "measured": {
+        "create_tweet": 30
+      }
+    },
+    "start_wall_ns": 1792560289332203965,
+    "end_wall_ns": 1792560300374647545,
+    "correctness": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/correctness.json",
+    "application_median_ms_secondary": 45.158485999999996,
+    "application_p95_ms_secondary": 57.007849,
+    "median_ms": 41.97208792902529,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/sp/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W2-create_tweet-latency/LittleXPruned/sp/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W3",
+    "operation": "0",
+    "tier": "t200",
+    "system": "LittleXPruned",
+    "phase": "baseline",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 110,
+    "measured_count_requested": 100,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W3-0-latency.json",
+    "plan_sha256": "ab03c238a3f29c045be7778184cc224741e04468e9cf0c01a4be1fd469d4f41d",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": null,
+    "frontend_selection": null,
+    "status": "measured",
+    "n": 100,
+    "thread_cpu_median_ms": 0.8460449999999999,
+    "questions": [
+      7
+    ],
+    "call_procedure": [
+      0
+    ],
+    "call_requests": 0,
+    "call_fraction": 0.0,
+    "sdk_enabled_at_end_requests": 0,
+    "sdk_enabled_at_end_fraction": 0.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "feed_page": {
+        "requests": 100,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/baseline/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/baseline/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/baseline/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/baseline/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/baseline/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/baseline/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "feed_page": 110
+      },
+      "measured": {
+        "feed_page": 100
+      }
+    },
+    "start_wall_ns": 1792560300400372951,
+    "end_wall_ns": 1792560347336277342,
+    "application_median_ms_secondary": 168.76698,
+    "application_p95_ms_secondary": 174.3538922,
+    "median_ms": 167.5706614041701,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/baseline/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/baseline/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W3",
+    "operation": "0",
+    "tier": "t200",
+    "system": "LittleXPruned + WeBridge",
+    "phase": "sp",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 110,
+    "measured_count_requested": 100,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W3-0-latency.json",
+    "plan_sha256": "ab03c238a3f29c045be7778184cc224741e04468e9cf0c01a4be1fd469d4f41d",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXPruned-bundle",
+    "frontend_selection": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXPruned-bundle/selection-provenance.json",
+    "status": "measured",
+    "n": 100,
+    "thread_cpu_median_ms": 1.166767,
+    "questions": [
+      3
+    ],
+    "call_procedure": [
+      1
+    ],
+    "call_requests": 100,
+    "call_fraction": 1.0,
+    "sdk_enabled_at_end_requests": 100,
+    "sdk_enabled_at_end_fraction": 1.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "feed_page": {
+        "requests": 100,
+        "call_requests": 100,
+        "sdk_enabled_at_end_requests": 100
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/sp/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/sp/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/sp/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/sp/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/sp/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/sp/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "feed_page": 110
+      },
+      "measured": {
+        "feed_page": 100
+      }
+    },
+    "start_wall_ns": 1792560347395935394,
+    "end_wall_ns": 1792560393850872909,
+    "correctness": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/correctness.json",
+    "application_median_ms_secondary": 169.1982695,
+    "application_p95_ms_secondary": 175.68481325000002,
+    "median_ms": 167.68086096271873,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/sp/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-0-latency/LittleXPruned/sp/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W3",
+    "operation": "5",
+    "tier": "t200",
+    "system": "LittleXPruned",
+    "phase": "baseline",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 110,
+    "measured_count_requested": 100,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W3-5-latency.json",
+    "plan_sha256": "42620f7cbb4bf576cf462f0b43b03d49afb505ae7c80f88313c4759ce23c8c08",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": null,
+    "frontend_selection": null,
+    "status": "measured",
+    "n": 100,
+    "thread_cpu_median_ms": 0.851056,
+    "questions": [
+      6,
+      7,
+      8
+    ],
+    "call_procedure": [
+      0
+    ],
+    "call_requests": 0,
+    "call_fraction": 0.0,
+    "sdk_enabled_at_end_requests": 0,
+    "sdk_enabled_at_end_fraction": 0.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "create_tweet": {
+        "requests": 3,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      },
+      "feed_page": {
+        "requests": 95,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      },
+      "follow": {
+        "requests": 1,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      },
+      "like": {
+        "requests": 1,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/baseline/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/baseline/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/baseline/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/baseline/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/baseline/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/baseline/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "create_tweet": 4,
+        "feed_page": 104,
+        "like": 1,
+        "follow": 1
+      },
+      "measured": {
+        "create_tweet": 3,
+        "feed_page": 95,
+        "like": 1,
+        "follow": 1
+      }
+    },
+    "start_wall_ns": 1792560393912755360,
+    "end_wall_ns": 1792560439118754429,
+    "application_median_ms_secondary": 169.02903750000002,
+    "application_p95_ms_secondary": 174.85085875,
+    "median_ms": 167.85794752649963,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/baseline/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/baseline/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W3",
+    "operation": "5",
+    "tier": "t200",
+    "system": "LittleXPruned + WeBridge",
+    "phase": "sp",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 110,
+    "measured_count_requested": 100,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W3-5-latency.json",
+    "plan_sha256": "42620f7cbb4bf576cf462f0b43b03d49afb505ae7c80f88313c4759ce23c8c08",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXPruned-bundle",
+    "frontend_selection": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXPruned-bundle/selection-provenance.json",
+    "status": "measured",
+    "n": 100,
+    "thread_cpu_median_ms": 1.1515805000000001,
+    "questions": [
+      3,
+      6,
+      7,
+      8
+    ],
+    "call_procedure": [
+      0,
+      1
+    ],
+    "call_requests": 98,
+    "call_fraction": 0.98,
+    "sdk_enabled_at_end_requests": 95,
+    "sdk_enabled_at_end_fraction": 0.95,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "create_tweet": {
+        "requests": 3,
+        "call_requests": 3,
+        "sdk_enabled_at_end_requests": 0
+      },
+      "feed_page": {
+        "requests": 95,
+        "call_requests": 95,
+        "sdk_enabled_at_end_requests": 95
+      },
+      "follow": {
+        "requests": 1,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      },
+      "like": {
+        "requests": 1,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/sp/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/sp/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/sp/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/sp/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/sp/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/sp/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "create_tweet": 4,
+        "feed_page": 104,
+        "like": 1,
+        "follow": 1
+      },
+      "measured": {
+        "create_tweet": 3,
+        "feed_page": 95,
+        "like": 1,
+        "follow": 1
+      }
+    },
+    "start_wall_ns": 1792560439210354777,
+    "end_wall_ns": 1792560484719591227,
+    "correctness": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/correctness.json",
+    "application_median_ms_secondary": 168.099465,
+    "application_p95_ms_secondary": 175.11239675000002,
+    "median_ms": 166.79144371300936,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/sp/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-5-latency/LittleXPruned/sp/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W3",
+    "operation": "15",
+    "tier": "t200",
+    "system": "LittleXPruned",
+    "phase": "baseline",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 110,
+    "measured_count_requested": 100,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W3-15-latency.json",
+    "plan_sha256": "c33218bb7366c785e6d34750eda89361cabe0cc2385583cc11f4f0faa61120a6",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": null,
+    "frontend_selection": null,
+    "status": "measured",
+    "n": 100,
+    "thread_cpu_median_ms": 0.8675875,
+    "questions": [
+      6,
+      7,
+      8
+    ],
+    "call_procedure": [
+      0
+    ],
+    "call_requests": 0,
+    "call_fraction": 0.0,
+    "sdk_enabled_at_end_requests": 0,
+    "sdk_enabled_at_end_fraction": 0.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "create_tweet": {
+        "requests": 10,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      },
+      "feed_page": {
+        "requests": 85,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      },
+      "follow": {
+        "requests": 1,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      },
+      "like": {
+        "requests": 4,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/baseline/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/baseline/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/baseline/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/baseline/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/baseline/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/baseline/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "create_tweet": 12,
+        "feed_page": 93,
+        "like": 4,
+        "follow": 1
+      },
+      "measured": {
+        "create_tweet": 10,
+        "feed_page": 85,
+        "like": 4,
+        "follow": 1
+      }
+    },
+    "start_wall_ns": 1792560484817467509,
+    "end_wall_ns": 1792560530018989323,
+    "application_median_ms_secondary": 169.30365749999999,
+    "application_p95_ms_secondary": 181.06368785,
+    "median_ms": 167.97046968713403,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/baseline/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/baseline/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W3",
+    "operation": "15",
+    "tier": "t200",
+    "system": "LittleXPruned + WeBridge",
+    "phase": "sp",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 110,
+    "measured_count_requested": 100,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W3-15-latency.json",
+    "plan_sha256": "c33218bb7366c785e6d34750eda89361cabe0cc2385583cc11f4f0faa61120a6",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXPruned-bundle",
+    "frontend_selection": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXPruned-bundle/selection-provenance.json",
+    "status": "measured",
+    "n": 100,
+    "thread_cpu_median_ms": 1.1942205000000001,
+    "questions": [
+      3,
+      6,
+      7,
+      8
+    ],
+    "call_procedure": [
+      0,
+      1
+    ],
+    "call_requests": 95,
+    "call_fraction": 0.95,
+    "sdk_enabled_at_end_requests": 85,
+    "sdk_enabled_at_end_fraction": 0.85,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "create_tweet": {
+        "requests": 10,
+        "call_requests": 10,
+        "sdk_enabled_at_end_requests": 0
+      },
+      "feed_page": {
+        "requests": 85,
+        "call_requests": 85,
+        "sdk_enabled_at_end_requests": 85
+      },
+      "follow": {
+        "requests": 1,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      },
+      "like": {
+        "requests": 4,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/sp/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/sp/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/sp/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/sp/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/sp/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/sp/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "create_tweet": 12,
+        "feed_page": 93,
+        "like": 4,
+        "follow": 1
+      },
+      "measured": {
+        "create_tweet": 10,
+        "feed_page": 85,
+        "like": 4,
+        "follow": 1
+      }
+    },
+    "start_wall_ns": 1792560530139799411,
+    "end_wall_ns": 1792560573550093243,
+    "correctness": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/correctness.json",
+    "application_median_ms_secondary": 168.083868,
+    "application_p95_ms_secondary": 194.63261075,
+    "median_ms": 166.7393899988383,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/sp/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-15-latency/LittleXPruned/sp/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W3",
+    "operation": "30",
+    "tier": "t200",
+    "system": "LittleXPruned",
+    "phase": "baseline",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 110,
+    "measured_count_requested": 100,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W3-30-latency.json",
+    "plan_sha256": "e89cb95cce819e3d64467c7a65cd0d8faf7e76d7fa33794d7541e6b39e95d485",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": null,
+    "frontend_selection": null,
+    "status": "measured",
+    "n": 100,
+    "thread_cpu_median_ms": 0.8044739999999999,
+    "questions": [
+      6,
+      7,
+      8
+    ],
+    "call_procedure": [
+      0
+    ],
+    "call_requests": 0,
+    "call_fraction": 0.0,
+    "sdk_enabled_at_end_requests": 0,
+    "sdk_enabled_at_end_fraction": 0.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "create_tweet": {
+        "requests": 20,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      },
+      "feed_page": {
+        "requests": 70,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      },
+      "follow": {
+        "requests": 2,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      },
+      "like": {
+        "requests": 8,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/baseline/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/baseline/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/baseline/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/baseline/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/baseline/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/baseline/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "create_tweet": 23,
+        "feed_page": 77,
+        "like": 8,
+        "follow": 2
+      },
+      "measured": {
+        "create_tweet": 20,
+        "feed_page": 70,
+        "like": 8,
+        "follow": 2
+      }
+    },
+    "start_wall_ns": 1792560573676187656,
+    "end_wall_ns": 1792560611839795835,
+    "application_median_ms_secondary": 169.066093,
+    "application_p95_ms_secondary": 182.2694042,
+    "median_ms": 167.8059659898281,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/baseline/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/baseline/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W3",
+    "operation": "30",
+    "tier": "t200",
+    "system": "LittleXPruned + WeBridge",
+    "phase": "sp",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 110,
+    "measured_count_requested": 100,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t200-W3-30-latency.json",
+    "plan_sha256": "e89cb95cce819e3d64467c7a65cd0d8faf7e76d7fa33794d7541e6b39e95d485",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXPruned-bundle",
+    "frontend_selection": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXPruned-bundle/selection-provenance.json",
+    "status": "measured",
+    "n": 100,
+    "thread_cpu_median_ms": 1.2035185,
+    "questions": [
+      3,
+      6,
+      7,
+      8
+    ],
+    "call_procedure": [
+      0,
+      1
+    ],
+    "call_requests": 90,
+    "call_fraction": 0.9,
+    "sdk_enabled_at_end_requests": 70,
+    "sdk_enabled_at_end_fraction": 0.7,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "create_tweet": {
+        "requests": 20,
+        "call_requests": 20,
+        "sdk_enabled_at_end_requests": 0
+      },
+      "feed_page": {
+        "requests": 70,
+        "call_requests": 70,
+        "sdk_enabled_at_end_requests": 70
+      },
+      "follow": {
+        "requests": 2,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      },
+      "like": {
+        "requests": 8,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/sp/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/sp/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/sp/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/sp/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/sp/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/sp/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "create_tweet": 23,
+        "feed_page": 77,
+        "like": 8,
+        "follow": 2
+      },
+      "measured": {
+        "create_tweet": 20,
+        "feed_page": 70,
+        "like": 8,
+        "follow": 2
+      }
+    },
+    "start_wall_ns": 1792560611994794709,
+    "end_wall_ns": 1792560654411459123,
+    "correctness": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/correctness.json",
+    "application_median_ms_secondary": 166.96488399999998,
+    "application_p95_ms_secondary": 181.1415183,
+    "median_ms": 165.5699561815709,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/sp/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t200-LittleXPruned/delay-0ms/t200/W3-30-latency/LittleXPruned/sp/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  }
+]

@@ -1,0 +1,127 @@
+{
+  "g_n_profile_d2a57d": {
+    "columns": [
+      [
+        "id",
+        "uuid"
+      ],
+      [
+        "root_id",
+        "uuid"
+      ],
+      [
+        "acl_all",
+        "int2"
+      ],
+      [
+        "acl_spec",
+        "bool"
+      ],
+      [
+        "frag",
+        "text"
+      ],
+      [
+        "f_username",
+        "jsonb"
+      ],
+      [
+        "f_bio",
+        "jsonb"
+      ],
+      [
+        "f_created_at",
+        "jsonb"
+      ]
+    ],
+    "rows": 100,
+    "sha256": "4861b7a3c78c695643ed1dfe3d0ad38cba8a9594d5bbfa982c308d5fa092b85f",
+    "source_indexes": [
+      [
+        "g_n_profile_d2a57d_pkey",
+        "CREATE UNIQUE INDEX g_n_profile_d2a57d_pkey ON public.g_n_profile_d2a57d USING btree (id)"
+      ]
+    ],
+    "mysql_DDL": "CREATE TABLE `g_n_profile_d2a57d`(`id` CHAR(36) COLLATE utf8mb4_bin PRIMARY KEY,`root_id` CHAR(36) COLLATE utf8mb4_bin,`acl_all` BIGINT,`acl_spec` TINYINT,`frag` LONGTEXT,`f_username` LONGTEXT,`f_bio` LONGTEXT,`f_created_at` VARCHAR(100),KEY `idx_root_id`(`root_id`),KEY `idx_f_created_at`(`f_created_at`)) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;",
+    "sample": {
+      "id": "be88871d-b7c9-4cef-b134-df8946207f84",
+      "root_id": "a6aa67a9-a09f-4b90-87d2-b404400d176d",
+      "acl_all": 1,
+      "acl_spec": false,
+      "frag": "{\"bio\": \"\", \"_jac_id\": \"be88871db7c94cefb134df8946207f84\", \"username\": \"t20_sim_user_0\", \"_jac_type\": \"Profile\", \"created_at\": \"\", \"_jac_archetype\": \"node\"}",
+      "f_username": "t20_sim_user_0",
+      "f_bio": "",
+      "f_created_at": ""
+    }
+  },
+  "g_n_tweet_d2a57d": {
+    "columns": [
+      [
+        "id",
+        "uuid"
+      ],
+      [
+        "root_id",
+        "uuid"
+      ],
+      [
+        "acl_all",
+        "int2"
+      ],
+      [
+        "acl_spec",
+        "bool"
+      ],
+      [
+        "frag",
+        "text"
+      ],
+      [
+        "f_seed_id",
+        "jsonb"
+      ],
+      [
+        "f_content",
+        "jsonb"
+      ],
+      [
+        "f_author_username",
+        "jsonb"
+      ],
+      [
+        "f_created_at",
+        "jsonb"
+      ],
+      [
+        "f_likes",
+        "jsonb"
+      ],
+      [
+        "f_comments",
+        "jsonb"
+      ]
+    ],
+    "rows": 2000,
+    "sha256": "b92a76b83be222f949d68ae7158a5514bc76230105b8907a2e02e595b17985e6",
+    "source_indexes": [
+      [
+        "g_n_tweet_d2a57d_pkey",
+        "CREATE UNIQUE INDEX g_n_tweet_d2a57d_pkey ON public.g_n_tweet_d2a57d USING btree (id)"
+      ]
+    ],
+    "mysql_DDL": "CREATE TABLE `g_n_tweet_d2a57d`(`id` CHAR(36) COLLATE utf8mb4_bin PRIMARY KEY,`root_id` CHAR(36) COLLATE utf8mb4_bin,`acl_all` BIGINT,`acl_spec` TINYINT,`frag` LONGTEXT,`f_seed_id` LONGTEXT,`f_content` LONGTEXT,`f_author_username` LONGTEXT,`f_created_at` VARCHAR(100),`f_likes` LONGTEXT,`f_comments` LONGTEXT,KEY `idx_root_id`(`root_id`),KEY `idx_f_created_at`(`f_created_at`)) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;",
+    "sample": {
+      "id": "6cec63c8-b6a7-487c-8cc6-bcaa906be088",
+      "root_id": "a6aa67a9-a09f-4b90-87d2-b404400d176d",
+      "acl_all": 2,
+      "acl_spec": false,
+      "frag": "{\"likes\": [], \"_jac_id\": \"6cec63c8b6a7487c8cc6bcaa906be088\", \"content\": \"Just spent 3 hours debugging a pesky error and finally figured it out! Now I'm treating myself to an extra cup of coffee\", \"seed_id\": \"t20_tweet_0\", \"comments\": [], \"_jac_type\": \"Tweet\", \"created_at\": \"2026-06-01T12:00:00Z\", \"_jac_archetype\": \"node\", \"author_username\": \"t20_sim_user_0\"}",
+      "f_seed_id": "t20_tweet_0",
+      "f_content": "Just spent 3 hours debugging a pesky error and finally figured it out! Now I'm treating myself to an extra cup of coffee",
+      "f_author_username": "t20_sim_user_0",
+      "f_created_at": "2026-06-01T12:00:00Z",
+      "f_likes": [],
+      "f_comments": []
+    }
+  }
+}

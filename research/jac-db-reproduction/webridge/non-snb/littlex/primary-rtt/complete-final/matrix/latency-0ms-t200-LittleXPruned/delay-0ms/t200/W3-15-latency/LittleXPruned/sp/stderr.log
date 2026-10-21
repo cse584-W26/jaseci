@@ -1,0 +1,1331 @@
+[main] INFO webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Refreshing sp defs...
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Reading sp def[graph-LittleX_2ff90374d126_sp_1_ver0-SpDef.data], creationTime: 2026-10-21T03:01:43.000753Z, lastAccessTime: 2026-10-21T03:28:30.336842Z, lastModifiedTime: 2026-10-21T03:01:43.000753Z
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Reading sp def[graph-LittleX_2ff90374d126_sp_1_ver1-SpDef.data], creationTime: 2026-10-21T03:02:06.479446Z, lastAccessTime: 2026-10-21T03:28:30.359842Z, lastModifiedTime: 2026-10-21T03:02:06.479446Z
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Reading sp def[graph-LittleX_87db9a355936_sp_1_ver0-SpDef.data], creationTime: 2026-10-21T02:55:07.207968Z, lastAccessTime: 2026-10-21T03:28:30.361842Z, lastModifiedTime: 2026-10-21T02:55:07.207968Z
+[main] INFO webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Found 2 sp definitions
+[main] INFO webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Sp definitions: LittleX_2ff90374d126={LittleX_2ff90374d126_sp_1_ver1=webridge.wbridge.storedprocedure.SPDefinition@5a4aa2f2}|LittleX_87db9a355936={LittleX_87db9a355936_sp_1_ver0=webridge.wbridge.storedprocedure.SPDefinition@6591f517}
+[main] ERROR webridge.wbridge.storedprocedure.utils.SPUtils - unable to initialize hikari proxy connection class, proxy connection seems not using HikariProxyConnection
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvocationContext - java.lang.ClassNotFoundException: com.zaxxer.hikari.pool.ProxyConnection
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"b7b78fc4-382f-5e26-b4d3-b82830698931","root":"640ffb52-bd1a-4800-9b91-81bc98053e49","access":{"all":-1,"roots":{"anchors":{}}},"source":"a43a8f0b-a8b7-4f60-9ec5-14382ba03f9d","target":"036dcea8-9897-5c90-ade5-d55aa0dbe08f","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"036dcea8-9897-5c90-ade5-d55aa0dbe08f","root":"640ffb52-bd1a-4800-9b91-81bc98053e49","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t200_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@40ef3420: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('b7b78fc4-382f-5e26-b4d3-b82830698931','EdgeAnchor','Post','app','0257ab8108739b8f','640ffb52-bd1a-4800-9b91-81bc98053e49','a43a8f0b-a8b7-4f60-9ec5-14382ba03f9d','036dcea8-9897-5c90-ade5-d55aa0dbe08f','0','{"id":"b7b78fc4-382f-5e26-b4d3-b82830698931","root":"640ffb52-bd1a-4800-9b91-81bc98053e49","access":{"all":-1,"roots":{"anchors":{}}},"source":"a43a8f0b-a8b7-4f60-9ec5-14382ba03f9d","target":"036dcea8-9897-5c90-ade5-d55aa0dbe08f","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45305'),('036dcea8-9897-5c90-ade5-d55aa0dbe08f','NodeAnchor','Tweet','app','552e15e3e79578ff','640ffb52-bd1a-4800-9b91-81bc98053e49',null,null,'0','{"id":"036dcea8-9897-5c90-ade5-d55aa0dbe08f","root":"640ffb52-bd1a-4800-9b91-81bc98053e49","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t200_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45306') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"9163f37b-999b-5cf6-a44e-8f0033bd19ce","root":"86b5837a-adb4-4534-bc01-b3022b2f2959","access":{"all":-1,"roots":{"anchors":{}}},"source":"f766b188-9b9a-4b2a-aebe-c416ebb4057f","target":"dbaa2599-68f7-5382-bcb1-8ed0c04239f4","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"dbaa2599-68f7-5382-bcb1-8ed0c04239f4","root":"86b5837a-adb4-4534-bc01-b3022b2f2959","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -7 #bench","seed_id":"w2_-7","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000006Z","author_username":"t200_sim_user_14"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@52bf72b5: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('9163f37b-999b-5cf6-a44e-8f0033bd19ce','EdgeAnchor','Post','app','0257ab8108739b8f','86b5837a-adb4-4534-bc01-b3022b2f2959','f766b188-9b9a-4b2a-aebe-c416ebb4057f','dbaa2599-68f7-5382-bcb1-8ed0c04239f4','0','{"id":"9163f37b-999b-5cf6-a44e-8f0033bd19ce","root":"86b5837a-adb4-4534-bc01-b3022b2f2959","access":{"all":-1,"roots":{"anchors":{}}},"source":"f766b188-9b9a-4b2a-aebe-c416ebb4057f","target":"dbaa2599-68f7-5382-bcb1-8ed0c04239f4","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45317'),('dbaa2599-68f7-5382-bcb1-8ed0c04239f4','NodeAnchor','Tweet','app','552e15e3e79578ff','86b5837a-adb4-4534-bc01-b3022b2f2959',null,null,'0','{"id":"dbaa2599-68f7-5382-bcb1-8ed0c04239f4","root":"86b5837a-adb4-4534-bc01-b3022b2f2959","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -7 #bench","seed_id":"w2_-7","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000006Z","author_username":"t200_sim_user_14"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45318') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"b40cfedc-e02f-5f15-b555-f2d9e30bfb0f","root":"a416557a-3104-42e0-8f8f-73a627413302","access":{"all":-1,"roots":{"anchors":{}}},"source":"e487bbcd-5205-4628-a013-d396febb2c3f","target":"2ff96148-fdba-5fba-9a55-a5ae089d84a1","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"2ff96148-fdba-5fba-9a55-a5ae089d84a1","root":"a416557a-3104-42e0-8f8f-73a627413302","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -14 #bench","seed_id":"w2_-14","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000013Z","author_username":"t200_sim_user_20"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@6cf0e0ba: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('b40cfedc-e02f-5f15-b555-f2d9e30bfb0f','EdgeAnchor','Post','app','0257ab8108739b8f','a416557a-3104-42e0-8f8f-73a627413302','e487bbcd-5205-4628-a013-d396febb2c3f','2ff96148-fdba-5fba-9a55-a5ae089d84a1','0','{"id":"b40cfedc-e02f-5f15-b555-f2d9e30bfb0f","root":"a416557a-3104-42e0-8f8f-73a627413302","access":{"all":-1,"roots":{"anchors":{}}},"source":"e487bbcd-5205-4628-a013-d396febb2c3f","target":"2ff96148-fdba-5fba-9a55-a5ae089d84a1","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45331'),('2ff96148-fdba-5fba-9a55-a5ae089d84a1','NodeAnchor','Tweet','app','552e15e3e79578ff','a416557a-3104-42e0-8f8f-73a627413302',null,null,'0','{"id":"2ff96148-fdba-5fba-9a55-a5ae089d84a1","root":"a416557a-3104-42e0-8f8f-73a627413302","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -14 #bench","seed_id":"w2_-14","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000013Z","author_username":"t200_sim_user_20"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45332') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"b9c6ee00-d6fc-577c-8f85-1ea4a73673b9","root":"605128e0-c02c-496e-b79c-d11a29948de6","access":{"all":-1,"roots":{"anchors":{}}},"source":"5fd74610-b90b-40ed-8eee-6a63b1dab071","target":"09e24e43-6505-50d8-9871-a8f0445e7aad","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"09e24e43-6505-50d8-9871-a8f0445e7aad","root":"605128e0-c02c-496e-b79c-d11a29948de6","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -21 #bench","seed_id":"w2_-21","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000020Z","author_username":"t200_sim_user_27"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@3590fc5b: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('b9c6ee00-d6fc-577c-8f85-1ea4a73673b9','EdgeAnchor','Post','app','0257ab8108739b8f','605128e0-c02c-496e-b79c-d11a29948de6','5fd74610-b90b-40ed-8eee-6a63b1dab071','09e24e43-6505-50d8-9871-a8f0445e7aad','0','{"id":"b9c6ee00-d6fc-577c-8f85-1ea4a73673b9","root":"605128e0-c02c-496e-b79c-d11a29948de6","access":{"all":-1,"roots":{"anchors":{}}},"source":"5fd74610-b90b-40ed-8eee-6a63b1dab071","target":"09e24e43-6505-50d8-9871-a8f0445e7aad","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45345'),('09e24e43-6505-50d8-9871-a8f0445e7aad','NodeAnchor','Tweet','app','552e15e3e79578ff','605128e0-c02c-496e-b79c-d11a29948de6',null,null,'0','{"id":"09e24e43-6505-50d8-9871-a8f0445e7aad","root":"605128e0-c02c-496e-b79c-d11a29948de6","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -21 #bench","seed_id":"w2_-21","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000020Z","author_username":"t200_sim_user_27"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45346') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"022bc47e-003a-5c34-ae21-c77e71586a0c","root":"65a095a1-6efd-4665-a741-96372258a3c3","access":{"all":-1,"roots":{"anchors":{}}},"source":"b88f068e-1ea9-408c-beae-6bf5f533f987","target":"d7ec09d0-7af7-5333-8d24-3a2cfa7fd37f","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"d7ec09d0-7af7-5333-8d24-3a2cfa7fd37f","root":"65a095a1-6efd-4665-a741-96372258a3c3","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -27 #bench","seed_id":"w2_-27","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000026Z","author_username":"t200_sim_user_32"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@4c12331b: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('022bc47e-003a-5c34-ae21-c77e71586a0c','EdgeAnchor','Post','app','0257ab8108739b8f','65a095a1-6efd-4665-a741-96372258a3c3','b88f068e-1ea9-408c-beae-6bf5f533f987','d7ec09d0-7af7-5333-8d24-3a2cfa7fd37f','0','{"id":"022bc47e-003a-5c34-ae21-c77e71586a0c","root":"65a095a1-6efd-4665-a741-96372258a3c3","access":{"all":-1,"roots":{"anchors":{}}},"source":"b88f068e-1ea9-408c-beae-6bf5f533f987","target":"d7ec09d0-7af7-5333-8d24-3a2cfa7fd37f","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45357'),('d7ec09d0-7af7-5333-8d24-3a2cfa7fd37f','NodeAnchor','Tweet','app','552e15e3e79578ff','65a095a1-6efd-4665-a741-96372258a3c3',null,null,'0','{"id":"d7ec09d0-7af7-5333-8d24-3a2cfa7fd37f","root":"65a095a1-6efd-4665-a741-96372258a3c3","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -27 #bench","seed_id":"w2_-27","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000026Z","author_username":"t200_sim_user_32"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45358') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"59341a5d-2f76-5ef3-a2e8-e90607f38b3d","root":"e7c0edc0-5d1b-41c1-954b-7e65a0d1c44f","access":{"all":-1,"roots":{"anchors":{}}},"source":"b3bc50e7-6409-47fd-b7d1-b83c7837deb6","target":"ce2eb557-94a9-5e4d-900d-3fd2bda3ef66","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"ce2eb557-94a9-5e4d-900d-3fd2bda3ef66","root":"e7c0edc0-5d1b-41c1-954b-7e65a0d1c44f","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -34 #bench","seed_id":"w2_-34","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000033Z","author_username":"t200_sim_user_39"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@49438269: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('59341a5d-2f76-5ef3-a2e8-e90607f38b3d','EdgeAnchor','Post','app','0257ab8108739b8f','e7c0edc0-5d1b-41c1-954b-7e65a0d1c44f','b3bc50e7-6409-47fd-b7d1-b83c7837deb6','ce2eb557-94a9-5e4d-900d-3fd2bda3ef66','0','{"id":"59341a5d-2f76-5ef3-a2e8-e90607f38b3d","root":"e7c0edc0-5d1b-41c1-954b-7e65a0d1c44f","access":{"all":-1,"roots":{"anchors":{}}},"source":"b3bc50e7-6409-47fd-b7d1-b83c7837deb6","target":"ce2eb557-94a9-5e4d-900d-3fd2bda3ef66","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45371'),('ce2eb557-94a9-5e4d-900d-3fd2bda3ef66','NodeAnchor','Tweet','app','552e15e3e79578ff','e7c0edc0-5d1b-41c1-954b-7e65a0d1c44f',null,null,'0','{"id":"ce2eb557-94a9-5e4d-900d-3fd2bda3ef66","root":"e7c0edc0-5d1b-41c1-954b-7e65a0d1c44f","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -34 #bench","seed_id":"w2_-34","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000033Z","author_username":"t200_sim_user_39"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45372') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"580ea671-fb27-5c9f-be84-09ac675bd4cc","root":"95fab70b-2ad4-426e-a0cd-fc23110f5b43","access":{"all":-1,"roots":{"anchors":{}}},"source":"a330f15a-18a8-4b34-a707-74b469200a35","target":"0df121a2-6742-5476-afb4-23385fdbc5ce","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"0df121a2-6742-5476-afb4-23385fdbc5ce","root":"95fab70b-2ad4-426e-a0cd-fc23110f5b43","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -41 #bench","seed_id":"w2_-41","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000040Z","author_username":"t200_sim_user_45"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@c0c2f8d: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('580ea671-fb27-5c9f-be84-09ac675bd4cc','EdgeAnchor','Post','app','0257ab8108739b8f','95fab70b-2ad4-426e-a0cd-fc23110f5b43','a330f15a-18a8-4b34-a707-74b469200a35','0df121a2-6742-5476-afb4-23385fdbc5ce','0','{"id":"580ea671-fb27-5c9f-be84-09ac675bd4cc","root":"95fab70b-2ad4-426e-a0cd-fc23110f5b43","access":{"all":-1,"roots":{"anchors":{}}},"source":"a330f15a-18a8-4b34-a707-74b469200a35","target":"0df121a2-6742-5476-afb4-23385fdbc5ce","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45385'),('0df121a2-6742-5476-afb4-23385fdbc5ce','NodeAnchor','Tweet','app','552e15e3e79578ff','95fab70b-2ad4-426e-a0cd-fc23110f5b43',null,null,'0','{"id":"0df121a2-6742-5476-afb4-23385fdbc5ce","root":"95fab70b-2ad4-426e-a0cd-fc23110f5b43","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -41 #bench","seed_id":"w2_-41","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000040Z","author_username":"t200_sim_user_45"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45386') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"debaa1ab-484a-511d-b099-616ce8c02fff","root":"6748094c-c308-41ed-8233-3d37eeeba502","access":{"all":-1,"roots":{"anchors":{}}},"source":"79c84230-4ea3-4eba-8217-efc2b75cdc3c","target":"aa57aa12-2cc4-57db-96ef-793c3ed471e4","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"aa57aa12-2cc4-57db-96ef-793c3ed471e4","root":"6748094c-c308-41ed-8233-3d37eeeba502","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -47 #bench","seed_id":"w2_-47","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000046Z","author_username":"t200_sim_user_50"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@4c309d4d: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('debaa1ab-484a-511d-b099-616ce8c02fff','EdgeAnchor','Post','app','0257ab8108739b8f','6748094c-c308-41ed-8233-3d37eeeba502','79c84230-4ea3-4eba-8217-efc2b75cdc3c','aa57aa12-2cc4-57db-96ef-793c3ed471e4','0','{"id":"debaa1ab-484a-511d-b099-616ce8c02fff","root":"6748094c-c308-41ed-8233-3d37eeeba502","access":{"all":-1,"roots":{"anchors":{}}},"source":"79c84230-4ea3-4eba-8217-efc2b75cdc3c","target":"aa57aa12-2cc4-57db-96ef-793c3ed471e4","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45397'),('aa57aa12-2cc4-57db-96ef-793c3ed471e4','NodeAnchor','Tweet','app','552e15e3e79578ff','6748094c-c308-41ed-8233-3d37eeeba502',null,null,'0','{"id":"aa57aa12-2cc4-57db-96ef-793c3ed471e4","root":"6748094c-c308-41ed-8233-3d37eeeba502","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -47 #bench","seed_id":"w2_-47","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000046Z","author_username":"t200_sim_user_50"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45398') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"fcc17746-cbf2-5529-ab7c-99a57b7c47b7","root":"e03606d7-bfb7-4483-bf40-91e925869f9c","access":{"all":-1,"roots":{"anchors":{}}},"source":"5d117c0d-9ff6-4d0c-956f-92e8acfb10ab","target":"68bba54e-5317-500d-911d-c4096f8bde64","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"68bba54e-5317-500d-911d-c4096f8bde64","root":"e03606d7-bfb7-4483-bf40-91e925869f9c","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -54 #bench","seed_id":"w2_-54","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000053Z","author_username":"t200_sim_user_57"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@7c83dc97: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('fcc17746-cbf2-5529-ab7c-99a57b7c47b7','EdgeAnchor','Post','app','0257ab8108739b8f','e03606d7-bfb7-4483-bf40-91e925869f9c','5d117c0d-9ff6-4d0c-956f-92e8acfb10ab','68bba54e-5317-500d-911d-c4096f8bde64','0','{"id":"fcc17746-cbf2-5529-ab7c-99a57b7c47b7","root":"e03606d7-bfb7-4483-bf40-91e925869f9c","access":{"all":-1,"roots":{"anchors":{}}},"source":"5d117c0d-9ff6-4d0c-956f-92e8acfb10ab","target":"68bba54e-5317-500d-911d-c4096f8bde64","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45411'),('68bba54e-5317-500d-911d-c4096f8bde64','NodeAnchor','Tweet','app','552e15e3e79578ff','e03606d7-bfb7-4483-bf40-91e925869f9c',null,null,'0','{"id":"68bba54e-5317-500d-911d-c4096f8bde64","root":"e03606d7-bfb7-4483-bf40-91e925869f9c","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -54 #bench","seed_id":"w2_-54","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000053Z","author_username":"t200_sim_user_57"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45412') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"9bb26d07-2d90-500a-9604-d36be5922e0c","root":"79802adb-4783-4722-a5e9-4207963266a5","access":{"all":-1,"roots":{"anchors":{}}},"source":"6b0a25b3-b399-43fe-958b-e05cd3a5b819","target":"fc6c43b0-a817-57aa-8d60-ad087c849cab","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"fc6c43b0-a817-57aa-8d60-ad087c849cab","root":"79802adb-4783-4722-a5e9-4207963266a5","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -61 #bench","seed_id":"w2_-61","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000060Z","author_username":"t200_sim_user_63"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@44a7bfbc: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('9bb26d07-2d90-500a-9604-d36be5922e0c','EdgeAnchor','Post','app','0257ab8108739b8f','79802adb-4783-4722-a5e9-4207963266a5','6b0a25b3-b399-43fe-958b-e05cd3a5b819','fc6c43b0-a817-57aa-8d60-ad087c849cab','0','{"id":"9bb26d07-2d90-500a-9604-d36be5922e0c","root":"79802adb-4783-4722-a5e9-4207963266a5","access":{"all":-1,"roots":{"anchors":{}}},"source":"6b0a25b3-b399-43fe-958b-e05cd3a5b819","target":"fc6c43b0-a817-57aa-8d60-ad087c849cab","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45425'),('fc6c43b0-a817-57aa-8d60-ad087c849cab','NodeAnchor','Tweet','app','552e15e3e79578ff','79802adb-4783-4722-a5e9-4207963266a5',null,null,'0','{"id":"fc6c43b0-a817-57aa-8d60-ad087c849cab","root":"79802adb-4783-4722-a5e9-4207963266a5","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -61 #bench","seed_id":"w2_-61","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000060Z","author_username":"t200_sim_user_63"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45426') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"a7939582-6be2-5bf3-8224-db30afe90d87","root":"640ffb52-bd1a-4800-9b91-81bc98053e49","access":{"all":-1,"roots":{"anchors":{}}},"source":"a43a8f0b-a8b7-4f60-9ec5-14382ba03f9d","target":"d0b42593-e990-5939-8268-06c72f037669","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"d0b42593-e990-5939-8268-06c72f037669","root":"640ffb52-bd1a-4800-9b91-81bc98053e49","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -101 #bench","seed_id":"w2_-101","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000100Z","author_username":"t200_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@7d4f9aae: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('a7939582-6be2-5bf3-8224-db30afe90d87','EdgeAnchor','Post','app','0257ab8108739b8f','640ffb52-bd1a-4800-9b91-81bc98053e49','a43a8f0b-a8b7-4f60-9ec5-14382ba03f9d','d0b42593-e990-5939-8268-06c72f037669','0','{"id":"a7939582-6be2-5bf3-8224-db30afe90d87","root":"640ffb52-bd1a-4800-9b91-81bc98053e49","access":{"all":-1,"roots":{"anchors":{}}},"source":"a43a8f0b-a8b7-4f60-9ec5-14382ba03f9d","target":"d0b42593-e990-5939-8268-06c72f037669","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45505'),('d0b42593-e990-5939-8268-06c72f037669','NodeAnchor','Tweet','app','552e15e3e79578ff','640ffb52-bd1a-4800-9b91-81bc98053e49',null,null,'0','{"id":"d0b42593-e990-5939-8268-06c72f037669","root":"640ffb52-bd1a-4800-9b91-81bc98053e49","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -101 #bench","seed_id":"w2_-101","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000100Z","author_username":"t200_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45506') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"1514687d-2053-5020-89e1-a439d4f28c4a","root":"86b5837a-adb4-4534-bc01-b3022b2f2959","access":{"all":-1,"roots":{"anchors":{}}},"source":"f766b188-9b9a-4b2a-aebe-c416ebb4057f","target":"7fe23f8f-436d-579c-92c0-a78ad52644a2","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"7fe23f8f-436d-579c-92c0-a78ad52644a2","root":"86b5837a-adb4-4534-bc01-b3022b2f2959","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -107 #bench","seed_id":"w2_-107","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000106Z","author_username":"t200_sim_user_14"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@45099dd3: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('1514687d-2053-5020-89e1-a439d4f28c4a','EdgeAnchor','Post','app','0257ab8108739b8f','86b5837a-adb4-4534-bc01-b3022b2f2959','f766b188-9b9a-4b2a-aebe-c416ebb4057f','7fe23f8f-436d-579c-92c0-a78ad52644a2','0','{"id":"1514687d-2053-5020-89e1-a439d4f28c4a","root":"86b5837a-adb4-4534-bc01-b3022b2f2959","access":{"all":-1,"roots":{"anchors":{}}},"source":"f766b188-9b9a-4b2a-aebe-c416ebb4057f","target":"7fe23f8f-436d-579c-92c0-a78ad52644a2","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45517'),('7fe23f8f-436d-579c-92c0-a78ad52644a2','NodeAnchor','Tweet','app','552e15e3e79578ff','86b5837a-adb4-4534-bc01-b3022b2f2959',null,null,'0','{"id":"7fe23f8f-436d-579c-92c0-a78ad52644a2","root":"86b5837a-adb4-4534-bc01-b3022b2f2959","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -107 #bench","seed_id":"w2_-107","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000106Z","author_username":"t200_sim_user_14"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45518') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"3385763d-38b7-5b79-a47e-feed4b3d8e6a","root":"640ffb52-bd1a-4800-9b91-81bc98053e49","access":{"all":-1,"roots":{"anchors":{}}},"source":"a43a8f0b-a8b7-4f60-9ec5-14382ba03f9d","target":"0d8fbc58-0196-55f8-af7e-6db61b6bd150","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"0d8fbc58-0196-55f8-af7e-6db61b6bd150","root":"640ffb52-bd1a-4800-9b91-81bc98053e49","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 0 #bench","seed_id":"w2_0","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000110Z","author_username":"t200_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@2a265ea9: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('3385763d-38b7-5b79-a47e-feed4b3d8e6a','EdgeAnchor','Post','app','0257ab8108739b8f','640ffb52-bd1a-4800-9b91-81bc98053e49','a43a8f0b-a8b7-4f60-9ec5-14382ba03f9d','0d8fbc58-0196-55f8-af7e-6db61b6bd150','0','{"id":"3385763d-38b7-5b79-a47e-feed4b3d8e6a","root":"640ffb52-bd1a-4800-9b91-81bc98053e49","access":{"all":-1,"roots":{"anchors":{}}},"source":"a43a8f0b-a8b7-4f60-9ec5-14382ba03f9d","target":"0d8fbc58-0196-55f8-af7e-6db61b6bd150","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45525'),('0d8fbc58-0196-55f8-af7e-6db61b6bd150','NodeAnchor','Tweet','app','552e15e3e79578ff','640ffb52-bd1a-4800-9b91-81bc98053e49',null,null,'0','{"id":"0d8fbc58-0196-55f8-af7e-6db61b6bd150","root":"640ffb52-bd1a-4800-9b91-81bc98053e49","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 0 #bench","seed_id":"w2_0","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000110Z","author_username":"t200_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45526') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"f8136d0a-8d4a-56b1-bbcd-f82b7ae38d89","root":"86b5837a-adb4-4534-bc01-b3022b2f2959","access":{"all":-1,"roots":{"anchors":{}}},"source":"f766b188-9b9a-4b2a-aebe-c416ebb4057f","target":"e51323a4-23dc-5a34-b00a-fe94f33382ac","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"e51323a4-23dc-5a34-b00a-fe94f33382ac","root":"86b5837a-adb4-4534-bc01-b3022b2f2959","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 6 #bench","seed_id":"w2_6","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000116Z","author_username":"t200_sim_user_14"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@4be29ed9: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('f8136d0a-8d4a-56b1-bbcd-f82b7ae38d89','EdgeAnchor','Post','app','0257ab8108739b8f','86b5837a-adb4-4534-bc01-b3022b2f2959','f766b188-9b9a-4b2a-aebe-c416ebb4057f','e51323a4-23dc-5a34-b00a-fe94f33382ac','0','{"id":"f8136d0a-8d4a-56b1-bbcd-f82b7ae38d89","root":"86b5837a-adb4-4534-bc01-b3022b2f2959","access":{"all":-1,"roots":{"anchors":{}}},"source":"f766b188-9b9a-4b2a-aebe-c416ebb4057f","target":"e51323a4-23dc-5a34-b00a-fe94f33382ac","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45537'),('e51323a4-23dc-5a34-b00a-fe94f33382ac','NodeAnchor','Tweet','app','552e15e3e79578ff','86b5837a-adb4-4534-bc01-b3022b2f2959',null,null,'0','{"id":"e51323a4-23dc-5a34-b00a-fe94f33382ac","root":"86b5837a-adb4-4534-bc01-b3022b2f2959","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 6 #bench","seed_id":"w2_6","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000116Z","author_username":"t200_sim_user_14"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45538') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"a44b7e55-c115-57e4-9063-dae88e3e8c7d","root":"a416557a-3104-42e0-8f8f-73a627413302","access":{"all":-1,"roots":{"anchors":{}}},"source":"e487bbcd-5205-4628-a013-d396febb2c3f","target":"71894a62-ef1b-5e2f-b9f7-8c419e307fc1","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"71894a62-ef1b-5e2f-b9f7-8c419e307fc1","root":"a416557a-3104-42e0-8f8f-73a627413302","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 13 #bench","seed_id":"w2_13","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000123Z","author_username":"t200_sim_user_20"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@7ce69770: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('a44b7e55-c115-57e4-9063-dae88e3e8c7d','EdgeAnchor','Post','app','0257ab8108739b8f','a416557a-3104-42e0-8f8f-73a627413302','e487bbcd-5205-4628-a013-d396febb2c3f','71894a62-ef1b-5e2f-b9f7-8c419e307fc1','0','{"id":"a44b7e55-c115-57e4-9063-dae88e3e8c7d","root":"a416557a-3104-42e0-8f8f-73a627413302","access":{"all":-1,"roots":{"anchors":{}}},"source":"e487bbcd-5205-4628-a013-d396febb2c3f","target":"71894a62-ef1b-5e2f-b9f7-8c419e307fc1","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45551'),('71894a62-ef1b-5e2f-b9f7-8c419e307fc1','NodeAnchor','Tweet','app','552e15e3e79578ff','a416557a-3104-42e0-8f8f-73a627413302',null,null,'0','{"id":"71894a62-ef1b-5e2f-b9f7-8c419e307fc1","root":"a416557a-3104-42e0-8f8f-73a627413302","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 13 #bench","seed_id":"w2_13","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000123Z","author_username":"t200_sim_user_20"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45552') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"3d7546dc-babc-5110-ada1-fa207686695f","root":"605128e0-c02c-496e-b79c-d11a29948de6","access":{"all":-1,"roots":{"anchors":{}}},"source":"5fd74610-b90b-40ed-8eee-6a63b1dab071","target":"cadf2f91-5bfa-5e0a-a9bd-613352b6b16f","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"cadf2f91-5bfa-5e0a-a9bd-613352b6b16f","root":"605128e0-c02c-496e-b79c-d11a29948de6","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 20 #bench","seed_id":"w2_20","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000130Z","author_username":"t200_sim_user_27"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@4a8355dd: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('3d7546dc-babc-5110-ada1-fa207686695f','EdgeAnchor','Post','app','0257ab8108739b8f','605128e0-c02c-496e-b79c-d11a29948de6','5fd74610-b90b-40ed-8eee-6a63b1dab071','cadf2f91-5bfa-5e0a-a9bd-613352b6b16f','0','{"id":"3d7546dc-babc-5110-ada1-fa207686695f","root":"605128e0-c02c-496e-b79c-d11a29948de6","access":{"all":-1,"roots":{"anchors":{}}},"source":"5fd74610-b90b-40ed-8eee-6a63b1dab071","target":"cadf2f91-5bfa-5e0a-a9bd-613352b6b16f","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45565'),('cadf2f91-5bfa-5e0a-a9bd-613352b6b16f','NodeAnchor','Tweet','app','552e15e3e79578ff','605128e0-c02c-496e-b79c-d11a29948de6',null,null,'0','{"id":"cadf2f91-5bfa-5e0a-a9bd-613352b6b16f","root":"605128e0-c02c-496e-b79c-d11a29948de6","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 20 #bench","seed_id":"w2_20","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000130Z","author_username":"t200_sim_user_27"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45566') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"d1ee20b9-27f0-5254-8eb6-297574a9c7ea","root":"65a095a1-6efd-4665-a741-96372258a3c3","access":{"all":-1,"roots":{"anchors":{}}},"source":"b88f068e-1ea9-408c-beae-6bf5f533f987","target":"5357f819-fb4b-5ffb-830c-ab861cf46f6e","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"5357f819-fb4b-5ffb-830c-ab861cf46f6e","root":"65a095a1-6efd-4665-a741-96372258a3c3","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 26 #bench","seed_id":"w2_26","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000136Z","author_username":"t200_sim_user_32"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.GeneratedConstructorAccessor7.newInstance(Unknown Source)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@26abb146: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('d1ee20b9-27f0-5254-8eb6-297574a9c7ea','EdgeAnchor','Post','app','0257ab8108739b8f','65a095a1-6efd-4665-a741-96372258a3c3','b88f068e-1ea9-408c-beae-6bf5f533f987','5357f819-fb4b-5ffb-830c-ab861cf46f6e','0','{"id":"d1ee20b9-27f0-5254-8eb6-297574a9c7ea","root":"65a095a1-6efd-4665-a741-96372258a3c3","access":{"all":-1,"roots":{"anchors":{}}},"source":"b88f068e-1ea9-408c-beae-6bf5f533f987","target":"5357f819-fb4b-5ffb-830c-ab861cf46f6e","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45577'),('5357f819-fb4b-5ffb-830c-ab861cf46f6e','NodeAnchor','Tweet','app','552e15e3e79578ff','65a095a1-6efd-4665-a741-96372258a3c3',null,null,'0','{"id":"5357f819-fb4b-5ffb-830c-ab861cf46f6e","root":"65a095a1-6efd-4665-a741-96372258a3c3","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 26 #bench","seed_id":"w2_26","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000136Z","author_username":"t200_sim_user_32"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45578') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"2f4e0136-0af6-5dfe-85cf-e2563138a33c","root":"e7c0edc0-5d1b-41c1-954b-7e65a0d1c44f","access":{"all":-1,"roots":{"anchors":{}}},"source":"b3bc50e7-6409-47fd-b7d1-b83c7837deb6","target":"07d3d2b1-a869-5734-8305-d4de7c8d7be8","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"07d3d2b1-a869-5734-8305-d4de7c8d7be8","root":"e7c0edc0-5d1b-41c1-954b-7e65a0d1c44f","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 33 #bench","seed_id":"w2_33","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000143Z","author_username":"t200_sim_user_39"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.GeneratedConstructorAccessor7.newInstance(Unknown Source)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@5340477f: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('2f4e0136-0af6-5dfe-85cf-e2563138a33c','EdgeAnchor','Post','app','0257ab8108739b8f','e7c0edc0-5d1b-41c1-954b-7e65a0d1c44f','b3bc50e7-6409-47fd-b7d1-b83c7837deb6','07d3d2b1-a869-5734-8305-d4de7c8d7be8','0','{"id":"2f4e0136-0af6-5dfe-85cf-e2563138a33c","root":"e7c0edc0-5d1b-41c1-954b-7e65a0d1c44f","access":{"all":-1,"roots":{"anchors":{}}},"source":"b3bc50e7-6409-47fd-b7d1-b83c7837deb6","target":"07d3d2b1-a869-5734-8305-d4de7c8d7be8","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45591'),('07d3d2b1-a869-5734-8305-d4de7c8d7be8','NodeAnchor','Tweet','app','552e15e3e79578ff','e7c0edc0-5d1b-41c1-954b-7e65a0d1c44f',null,null,'0','{"id":"07d3d2b1-a869-5734-8305-d4de7c8d7be8","root":"e7c0edc0-5d1b-41c1-954b-7e65a0d1c44f","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 33 #bench","seed_id":"w2_33","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000143Z","author_username":"t200_sim_user_39"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45592') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"2af1c234-b77d-5bc6-97d9-ceb3807b8ff8","root":"95fab70b-2ad4-426e-a0cd-fc23110f5b43","access":{"all":-1,"roots":{"anchors":{}}},"source":"a330f15a-18a8-4b34-a707-74b469200a35","target":"5076e9b1-0989-5717-b4f1-e63686569c7d","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"5076e9b1-0989-5717-b4f1-e63686569c7d","root":"95fab70b-2ad4-426e-a0cd-fc23110f5b43","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 40 #bench","seed_id":"w2_40","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000150Z","author_username":"t200_sim_user_45"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.GeneratedConstructorAccessor7.newInstance(Unknown Source)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@49c90a9c: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('2af1c234-b77d-5bc6-97d9-ceb3807b8ff8','EdgeAnchor','Post','app','0257ab8108739b8f','95fab70b-2ad4-426e-a0cd-fc23110f5b43','a330f15a-18a8-4b34-a707-74b469200a35','5076e9b1-0989-5717-b4f1-e63686569c7d','0','{"id":"2af1c234-b77d-5bc6-97d9-ceb3807b8ff8","root":"95fab70b-2ad4-426e-a0cd-fc23110f5b43","access":{"all":-1,"roots":{"anchors":{}}},"source":"a330f15a-18a8-4b34-a707-74b469200a35","target":"5076e9b1-0989-5717-b4f1-e63686569c7d","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45605'),('5076e9b1-0989-5717-b4f1-e63686569c7d','NodeAnchor','Tweet','app','552e15e3e79578ff','95fab70b-2ad4-426e-a0cd-fc23110f5b43',null,null,'0','{"id":"5076e9b1-0989-5717-b4f1-e63686569c7d","root":"95fab70b-2ad4-426e-a0cd-fc23110f5b43","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 40 #bench","seed_id":"w2_40","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000150Z","author_username":"t200_sim_user_45"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45606') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"daeca5a5-bfb5-563d-9fb1-08992f38ca20","root":"6748094c-c308-41ed-8233-3d37eeeba502","access":{"all":-1,"roots":{"anchors":{}}},"source":"79c84230-4ea3-4eba-8217-efc2b75cdc3c","target":"899f3783-6637-5e75-97e4-0290ca81a211","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"899f3783-6637-5e75-97e4-0290ca81a211","root":"6748094c-c308-41ed-8233-3d37eeeba502","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 46 #bench","seed_id":"w2_46","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000156Z","author_username":"t200_sim_user_50"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.GeneratedConstructorAccessor7.newInstance(Unknown Source)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@5167f57d: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('daeca5a5-bfb5-563d-9fb1-08992f38ca20','EdgeAnchor','Post','app','0257ab8108739b8f','6748094c-c308-41ed-8233-3d37eeeba502','79c84230-4ea3-4eba-8217-efc2b75cdc3c','899f3783-6637-5e75-97e4-0290ca81a211','0','{"id":"daeca5a5-bfb5-563d-9fb1-08992f38ca20","root":"6748094c-c308-41ed-8233-3d37eeeba502","access":{"all":-1,"roots":{"anchors":{}}},"source":"79c84230-4ea3-4eba-8217-efc2b75cdc3c","target":"899f3783-6637-5e75-97e4-0290ca81a211","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45617'),('899f3783-6637-5e75-97e4-0290ca81a211','NodeAnchor','Tweet','app','552e15e3e79578ff','6748094c-c308-41ed-8233-3d37eeeba502',null,null,'0','{"id":"899f3783-6637-5e75-97e4-0290ca81a211","root":"6748094c-c308-41ed-8233-3d37eeeba502","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 46 #bench","seed_id":"w2_46","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000156Z","author_username":"t200_sim_user_50"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45618') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"90214136-d3d8-552e-820e-68e633cd0178","root":"e03606d7-bfb7-4483-bf40-91e925869f9c","access":{"all":-1,"roots":{"anchors":{}}},"source":"5d117c0d-9ff6-4d0c-956f-92e8acfb10ab","target":"e6832943-0bbd-5c7d-a78c-d1b3b2915cb4","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"e6832943-0bbd-5c7d-a78c-d1b3b2915cb4","root":"e03606d7-bfb7-4483-bf40-91e925869f9c","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 53 #bench","seed_id":"w2_53","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000163Z","author_username":"t200_sim_user_57"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.GeneratedConstructorAccessor7.newInstance(Unknown Source)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@47c81abf: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('90214136-d3d8-552e-820e-68e633cd0178','EdgeAnchor','Post','app','0257ab8108739b8f','e03606d7-bfb7-4483-bf40-91e925869f9c','5d117c0d-9ff6-4d0c-956f-92e8acfb10ab','e6832943-0bbd-5c7d-a78c-d1b3b2915cb4','0','{"id":"90214136-d3d8-552e-820e-68e633cd0178","root":"e03606d7-bfb7-4483-bf40-91e925869f9c","access":{"all":-1,"roots":{"anchors":{}}},"source":"5d117c0d-9ff6-4d0c-956f-92e8acfb10ab","target":"e6832943-0bbd-5c7d-a78c-d1b3b2915cb4","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45631'),('e6832943-0bbd-5c7d-a78c-d1b3b2915cb4','NodeAnchor','Tweet','app','552e15e3e79578ff','e03606d7-bfb7-4483-bf40-91e925869f9c',null,null,'0','{"id":"e6832943-0bbd-5c7d-a78c-d1b3b2915cb4","root":"e03606d7-bfb7-4483-bf40-91e925869f9c","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 53 #bench","seed_id":"w2_53","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000163Z","author_username":"t200_sim_user_57"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45632') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 9! expected={"id":"f23f297a-abd8-581e-8391-93e176fd6677","root":"79802adb-4783-4722-a5e9-4207963266a5","access":{"all":-1,"roots":{"anchors":{}}},"source":"6b0a25b3-b399-43fe-958b-e05cd3a5b819","target":"70129200-2a9f-58d7-bcff-44fe014d88a3","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, executed={"id":"173b653c-85d5-5292-9bef-8327e7d94f92","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":-1,"roots":{"anchors":{}}},"source":"be88871d-b7c9-4cef-b134-df8946207f84","target":"31608e37-3266-5b36-bb93-4b408d02c300","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 22! expected={"id":"70129200-2a9f-58d7-bcff-44fe014d88a3","root":"79802adb-4783-4722-a5e9-4207963266a5","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 60 #bench","seed_id":"w2_60","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000170Z","author_username":"t200_sim_user_63"},"__module__":"jaclang.jac0core.archetype","persistent":true}, executed={"id":"31608e37-3266-5b36-bb93-4b408d02c300","root":"a6aa67a9-a09f-4b90-87d2-b404400d176d","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet -1 #bench","seed_id":"w2_-1","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000000Z","author_username":"t20_sim_user_0"},"__module__":"jaclang.jac0core.archetype","persistent":true}, sqlTemplate=INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint	, root_id, src, dst, undirected, props	, src_type, dst_type, seq)VALUES (?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?),	(?, ?, ?, ?, ?		, ?, ?, ?, ?, ?		, ?, ?, ?)ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id), src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type), dst_type = COALESCE(VALUES(dst_type), dst_type)
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p1
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p1 does not exist
+	at sun.reflect.GeneratedConstructorAccessor7.newInstance(Unknown Source)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at LittleXGraph.update(LittleXGraph.java:53)
+	at LittleXGraph.upsert(LittleXGraph.java:56)
+	at LittleXGraph.write(LittleXGraph.java:68)
+	at LittleXGraph.request(LittleXGraph.java:73)
+	at LittleXPruned.request(LittleXPruned.java:4)
+	at sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at LittleXTiming.execute(LittleXTiming.java:17)
+	at LittleXTiming.main(LittleXTiming.java:22)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)
+Executed template: INSERT INTO anchors (id, kind, arch_type, arch_module, fingerprint
+	, root_id, src, dst, undirected, props
+	, src_type, dst_type, seq)
+VALUES (?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?),
+	(?, ?, ?, ?, ?
+		, ?, ?, ?, ?, ?
+		, ?, ?, ?)
+ON DUPLICATE KEY UPDATE kind = VALUES(kind), arch_type = VALUES(arch_type), arch_module = VALUES(arch_module), fingerprint = VALUES(fingerprint), root_id = VALUES(root_id)
+, src = VALUES(src), dst = VALUES(dst), undirected = VALUES(undirected), props = VALUES(props), src_type = COALESCE(VALUES(src_type), src_type)
+, dst_type = COALESCE(VALUES(dst_type), dst_type)]LittleX_87db9a355936, com.mysql.jdbc.JDBC42PreparedStatement@3eb91815: INSERT INTO anchors(id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props,src_type,dst_type,seq) VALUES ('f23f297a-abd8-581e-8391-93e176fd6677','EdgeAnchor','Post','app','0257ab8108739b8f','79802adb-4783-4722-a5e9-4207963266a5','6b0a25b3-b399-43fe-958b-e05cd3a5b819','70129200-2a9f-58d7-bcff-44fe014d88a3','0','{"id":"f23f297a-abd8-581e-8391-93e176fd6677","root":"79802adb-4783-4722-a5e9-4207963266a5","access":{"all":-1,"roots":{"anchors":{}}},"source":"6b0a25b3-b399-43fe-958b-e05cd3a5b819","target":"70129200-2a9f-58d7-bcff-44fe014d88a3","__type__":"EdgeAnchor","archetype":{"__type__":"Post","__module__":"app"},"__module__":"jaclang.jac0core.archetype","persistent":true,"is_undirected":false}','Profile','Tweet','45645'),('70129200-2a9f-58d7-bcff-44fe014d88a3','NodeAnchor','Tweet','app','552e15e3e79578ff','79802adb-4783-4722-a5e9-4207963266a5',null,null,'0','{"id":"70129200-2a9f-58d7-bcff-44fe014d88a3","root":"79802adb-4783-4722-a5e9-4207963266a5","access":{"all":2,"roots":{"anchors":{}}},"version":0,"__type__":"NodeAnchor","archetype":{"likes":[],"content":"write bench tweet 60 #bench","seed_id":"w2_60","__type__":"Tweet","comments":[],"__module__":"app","created_at":"2026-10-20T23:00:00.000170Z","author_username":"t200_sim_user_63"},"__module__":"jaclang.jac0core.archetype","persistent":true}',null,null,'45646') ON DUPLICATE KEY UPDATE kind=VALUES(kind),arch_type=VALUES(arch_type),arch_module=VALUES(arch_module),fingerprint=VALUES(fingerprint),root_id=VALUES(root_id),src=VALUES(src),dst=VALUES(dst),undirected=VALUES(undirected),props=VALUES(props),src_type=COALESCE(VALUES(src_type),src_type),dst_type=COALESCE(VALUES(dst_type),dst_type)
+[pool-1-thread-1] INFO webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Refreshing sp defs...
+[pool-1-thread-1] WARN webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Reading sp def[graph-LittleX_2ff90374d126_sp_1_ver0-SpDef.data], creationTime: 2026-10-21T03:01:43.000753Z, lastAccessTime: 2026-10-21T03:28:30.336842Z, lastModifiedTime: 2026-10-21T03:01:43.000753Z
+[pool-1-thread-1] WARN webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Reading sp def[graph-LittleX_2ff90374d126_sp_1_ver1-SpDef.data], creationTime: 2026-10-21T03:02:06.479446Z, lastAccessTime: 2026-10-21T03:28:30.359842Z, lastModifiedTime: 2026-10-21T03:02:06.479446Z
+[pool-1-thread-1] WARN webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Reading sp def[graph-LittleX_87db9a355936_sp_1_ver0-SpDef.data], creationTime: 2026-10-21T02:55:07.207968Z, lastAccessTime: 2026-10-21T03:28:30.361842Z, lastModifiedTime: 2026-10-21T02:55:07.207968Z
+[pool-1-thread-1] INFO webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Found 2 sp definitions
+[pool-1-thread-1] INFO webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Sp definitions: LittleX_2ff90374d126={LittleX_2ff90374d126_sp_1_ver1=webridge.wbridge.storedprocedure.SPDefinition@b58a628}|LittleX_87db9a355936={LittleX_87db9a355936_sp_1_ver0=webridge.wbridge.storedprocedure.SPDefinition@59f5933}

@@ -1,0 +1,510 @@
+[
+  {
+    "family": "littlex",
+    "workload": "W1",
+    "operation": "feed",
+    "tier": "t20",
+    "system": "LittleXSql",
+    "phase": "baseline",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 10,
+    "measured_count_requested": 30,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t20-W1-feed-latency.json",
+    "plan_sha256": "34de52fcf21837c3b1106debd6d8be36268eb52bb0f019cb00418bb7397cc5b3",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": null,
+    "frontend_selection": null,
+    "status": "measured",
+    "n": 30,
+    "thread_cpu_median_ms": 2.177931,
+    "questions": [
+      5
+    ],
+    "call_procedure": [
+      0
+    ],
+    "call_requests": 0,
+    "call_fraction": 0.0,
+    "sdk_enabled_at_end_requests": 0,
+    "sdk_enabled_at_end_fraction": 0.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "feed": {
+        "requests": 30,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/baseline/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/baseline/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/baseline/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/baseline/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/baseline/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/baseline/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "feed": 10
+      },
+      "measured": {
+        "feed": 30
+      }
+    },
+    "start_wall_ns": 1792558457849677649,
+    "end_wall_ns": 1792558462064796286,
+    "application_median_ms_secondary": 11.651240999999999,
+    "application_p95_ms_secondary": 14.83694485,
+    "median_ms": 9.516119142062962,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/baseline/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/baseline/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W1",
+    "operation": "feed",
+    "tier": "t20",
+    "system": "LittleXSql + WeBridge",
+    "phase": "sp",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 10,
+    "measured_count_requested": 30,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t20-W1-feed-latency.json",
+    "plan_sha256": "34de52fcf21837c3b1106debd6d8be36268eb52bb0f019cb00418bb7397cc5b3",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXSql-bundle",
+    "frontend_selection": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXSql-bundle/selection-provenance.json",
+    "status": "measured",
+    "n": 30,
+    "thread_cpu_median_ms": 4.382267000000001,
+    "questions": [
+      3
+    ],
+    "call_procedure": [
+      1
+    ],
+    "call_requests": 30,
+    "call_fraction": 1.0,
+    "sdk_enabled_at_end_requests": 30,
+    "sdk_enabled_at_end_fraction": 1.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "feed": {
+        "requests": 30,
+        "call_requests": 30,
+        "sdk_enabled_at_end_requests": 30
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/sp/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/sp/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/sp/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/sp/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/sp/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/sp/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "feed": 10
+      },
+      "measured": {
+        "feed": 30
+      }
+    },
+    "start_wall_ns": 1792558462072670872,
+    "end_wall_ns": 1792558467070210195,
+    "correctness": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/correctness.json",
+    "application_median_ms_secondary": 13.390230500000001,
+    "application_p95_ms_secondary": 22.23678355,
+    "median_ms": 9.180519380606711,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/sp/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W1-feed-latency/LittleXSql/sp/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W2",
+    "operation": "like",
+    "tier": "t20",
+    "system": "LittleXSql",
+    "phase": "baseline",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 10,
+    "measured_count_requested": 30,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t20-W2-like-latency.json",
+    "plan_sha256": "0ba64abaf7f0561643a5abd53e70707d3aaa0f740f9a0d8eeaa6269f87802ecd",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": null,
+    "frontend_selection": null,
+    "status": "measured",
+    "n": 30,
+    "thread_cpu_median_ms": 0.5642055,
+    "questions": [
+      6
+    ],
+    "call_procedure": [
+      0
+    ],
+    "call_requests": 0,
+    "call_fraction": 0.0,
+    "sdk_enabled_at_end_requests": 0,
+    "sdk_enabled_at_end_fraction": 0.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "like": {
+        "requests": 30,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/baseline/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/baseline/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/baseline/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/baseline/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/baseline/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/baseline/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "like": 10
+      },
+      "measured": {
+        "like": 30
+      }
+    },
+    "start_wall_ns": 1792558467078930999,
+    "end_wall_ns": 1792558470387162584,
+    "application_median_ms_secondary": 4.622479,
+    "application_p95_ms_secondary": 7.725653499999999,
+    "median_ms": 3.607029444538057,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/baseline/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/baseline/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W2",
+    "operation": "like",
+    "tier": "t20",
+    "system": "LittleXSql + WeBridge",
+    "phase": "sp",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 10,
+    "measured_count_requested": 30,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t20-W2-like-latency.json",
+    "plan_sha256": "0ba64abaf7f0561643a5abd53e70707d3aaa0f740f9a0d8eeaa6269f87802ecd",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXSql-bundle",
+    "frontend_selection": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXSql-bundle/selection-provenance.json",
+    "status": "measured",
+    "n": 30,
+    "thread_cpu_median_ms": 0.8689475,
+    "questions": [
+      3
+    ],
+    "call_procedure": [
+      1
+    ],
+    "call_requests": 30,
+    "call_fraction": 1.0,
+    "sdk_enabled_at_end_requests": 30,
+    "sdk_enabled_at_end_fraction": 1.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "like": {
+        "requests": 30,
+        "call_requests": 30,
+        "sdk_enabled_at_end_requests": 30
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/sp/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/sp/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/sp/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/sp/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/sp/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/sp/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "like": 10
+      },
+      "measured": {
+        "like": 30
+      }
+    },
+    "start_wall_ns": 1792558470400034868,
+    "end_wall_ns": 1792558474041799159,
+    "correctness": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/correctness.json",
+    "application_median_ms_secondary": 4.0448485000000005,
+    "application_p95_ms_secondary": 5.053860499999998,
+    "median_ms": 3.032015752978623,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/sp/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-like-latency/LittleXSql/sp/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W2",
+    "operation": "follow",
+    "tier": "t20",
+    "system": "LittleXSql",
+    "phase": "baseline",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 10,
+    "measured_count_requested": 30,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t20-W2-follow-latency.json",
+    "plan_sha256": "a823d4bc39ebc6736c80ab2ee3dab9f497f705255e1fef6a05ec0e6a21ee6b1b",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": null,
+    "frontend_selection": null,
+    "status": "measured",
+    "n": 30,
+    "thread_cpu_median_ms": 0.5328945,
+    "questions": [
+      5
+    ],
+    "call_procedure": [
+      0
+    ],
+    "call_requests": 0,
+    "call_fraction": 0.0,
+    "sdk_enabled_at_end_requests": 0,
+    "sdk_enabled_at_end_fraction": 0.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "follow": {
+        "requests": 30,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/baseline/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/baseline/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/baseline/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/baseline/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/baseline/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/baseline/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "follow": 10
+      },
+      "measured": {
+        "follow": 30
+      }
+    },
+    "start_wall_ns": 1792558474056373783,
+    "end_wall_ns": 1792558477357056330,
+    "application_median_ms_secondary": 4.4561815,
+    "application_p95_ms_secondary": 11.158873599999989,
+    "median_ms": 3.5557012306526303,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/baseline/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/baseline/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W2",
+    "operation": "follow",
+    "tier": "t20",
+    "system": "LittleXSql + WeBridge",
+    "phase": "sp",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 10,
+    "measured_count_requested": 30,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t20-W2-follow-latency.json",
+    "plan_sha256": "a823d4bc39ebc6736c80ab2ee3dab9f497f705255e1fef6a05ec0e6a21ee6b1b",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXSql-bundle",
+    "frontend_selection": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXSql-bundle/selection-provenance.json",
+    "status": "measured",
+    "n": 30,
+    "thread_cpu_median_ms": 0.8311085,
+    "questions": [
+      3
+    ],
+    "call_procedure": [
+      1
+    ],
+    "call_requests": 30,
+    "call_fraction": 1.0,
+    "sdk_enabled_at_end_requests": 30,
+    "sdk_enabled_at_end_fraction": 1.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "follow": {
+        "requests": 30,
+        "call_requests": 30,
+        "sdk_enabled_at_end_requests": 30
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/sp/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/sp/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/sp/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/sp/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/sp/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/sp/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "follow": 10
+      },
+      "measured": {
+        "follow": 30
+      }
+    },
+    "start_wall_ns": 1792558477374974303,
+    "end_wall_ns": 1792558489674999431,
+    "correctness": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/correctness.json",
+    "application_median_ms_secondary": 3.8639035,
+    "application_p95_ms_secondary": 4.554194699999999,
+    "median_ms": 3.037619055248797,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/sp/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-follow-latency/LittleXSql/sp/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W2",
+    "operation": "create_tweet",
+    "tier": "t20",
+    "system": "LittleXSql",
+    "phase": "baseline",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 10,
+    "measured_count_requested": 30,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t20-W2-create_tweet-latency.json",
+    "plan_sha256": "7446dfa8c755bc5bc337794729a00ad24fb4df1d2318586db280e09fc8d4a002",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": null,
+    "frontend_selection": null,
+    "status": "measured",
+    "n": 30,
+    "thread_cpu_median_ms": 0.7197285,
+    "questions": [
+      6
+    ],
+    "call_procedure": [
+      0
+    ],
+    "call_requests": 0,
+    "call_fraction": 0.0,
+    "sdk_enabled_at_end_requests": 0,
+    "sdk_enabled_at_end_fraction": 0.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "create_tweet": {
+        "requests": 30,
+        "call_requests": 0,
+        "sdk_enabled_at_end_requests": 0
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/baseline/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/baseline/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/baseline/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/baseline/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/baseline/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/baseline/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "create_tweet": 10
+      },
+      "measured": {
+        "create_tweet": 30
+      }
+    },
+    "start_wall_ns": 1792558489695382368,
+    "end_wall_ns": 1792558493019038067,
+    "application_median_ms_secondary": 4.079001,
+    "application_p95_ms_secondary": 5.8809401,
+    "median_ms": 3.297370974905789,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/baseline/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/baseline/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  },
+  {
+    "family": "littlex",
+    "workload": "W2",
+    "operation": "create_tweet",
+    "tier": "t20",
+    "system": "LittleXSql + WeBridge",
+    "phase": "sp",
+    "delay_ms": 0,
+    "method": "latency",
+    "warmup_count": 10,
+    "measured_count_requested": 30,
+    "plan": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/plans/t20-W2-create_tweet-latency.json",
+    "plan_sha256": "7446dfa8c755bc5bc337794729a00ad24fb4df1d2318586db280e09fc8d4a002",
+    "instrumentation": "compact-protocol-rtt-v1",
+    "primary_metric": "summed_db_call_rtt_ms",
+    "connection_compatibility": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility.json",
+    "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+    "webridge_bundle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXSql-bundle",
+    "frontend_selection": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/selected-cases/91f0ddf41f755243207c584fa60c161699b6302dc5d0f58361a4e9dec62dab98/LittleXSql-bundle/selection-provenance.json",
+    "status": "measured",
+    "n": 30,
+    "thread_cpu_median_ms": 1.020653,
+    "questions": [
+      3
+    ],
+    "call_procedure": [
+      1
+    ],
+    "call_requests": 30,
+    "call_fraction": 1.0,
+    "sdk_enabled_at_end_requests": 30,
+    "sdk_enabled_at_end_fraction": 1.0,
+    "sdk_flag_scope": "sp_enabled_at_end at request completion; for multi-region requests this is the final region flag",
+    "activation_by_operation": {
+      "create_tweet": {
+        "requests": 30,
+        "call_requests": 30,
+        "sdk_enabled_at_end_requests": 30
+      }
+    },
+    "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/sp/rows.jsonl",
+    "source_result_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/sp/source-oracle.json",
+    "independent_state_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/sp/independent-state-oracle.json",
+    "full_results_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/sp/full-results.jsonl.gz",
+    "initial_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/sp/before-state.json",
+    "final_state": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/sp/after-state.json",
+    "per_operation_counts": {
+      "warmup": {
+        "create_tweet": 10
+      },
+      "measured": {
+        "create_tweet": 30
+      }
+    },
+    "start_wall_ns": 1792558493044162872,
+    "end_wall_ns": 1792558496814874745,
+    "correctness": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/correctness.json",
+    "application_median_ms_secondary": 4.901917,
+    "application_p95_ms_secondary": 7.314384449999998,
+    "median_ms": 3.71430569794029,
+    "primary_rtt": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/sp/primary-rtt/summary.json",
+    "primary_rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-0ms-t20-LittleXSql/delay-0ms/t20/W2-create_tweet-latency/LittleXSql/sp/primary-rtt/rows.jsonl",
+    "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket"
+  }
+]

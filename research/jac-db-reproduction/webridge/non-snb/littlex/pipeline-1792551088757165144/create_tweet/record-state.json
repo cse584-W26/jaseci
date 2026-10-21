@@ -1,0 +1,12 @@
+{
+  "anchors": {
+    "rows": 9306,
+    "sha256": "490fdb75657f92722aea1e0b1aa0068a2a3b6604d2d48e0bd484cb08d765c822",
+    "SQL": "SELECT JSON_OBJECT('id',id,'kind',kind,'type',arch_type,'module',arch_module,'fingerprint',fingerprint,'root',root_id,'src',src,'dst',dst,'undirected',undirected,'props',CAST(props AS JSON),'src_type',src_type,'dst_type',dst_type,'seq',seq) FROM anchors ORDER BY id"
+  },
+  "graph_types": {
+    "rows": 6,
+    "sha256": "fb92553fd99224a8741f6daa02fdc5c6bbea48ff534c4199447931a57fa8123e",
+    "SQL": "SELECT JSON_OBJECT('type_name',type_name,'ancestor',ancestor) FROM graph_types ORDER BY type_name,ancestor"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "status": "PASS byte-preserving connection compatibility",
+  "build_snapshot": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/build-snapshots/98a79656fd9c1e6364278cc7a36d8637a76ccbba58b867940f51de1e5d7f4238",
+  "initialization_fix": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/connection-init-fix/1792555415641812389",
+  "business_source_excluding_connection_initialization_equal": true,
+  "cause": "Three-byte character_set_client caused four-byte emoji loss on prepared JSON UPSERT. Collation-only connection allowed INSERT but stored four question marks.",
+  "effective_charsets": {
+    "client": "utf8mb4",
+    "connection": "utf8mb4",
+    "results": "utf8mb4"
+  },
+  "control_sql": "SET NAMES utf8mb4 COLLATE utf8mb4_bin",
+  "scope": "Per connection initialization before API/request timer; exact initialization SQL list and six Questions plus two counter queries recorded in run/sql-mode.json. No business SQL/schema/data change.",
+  "byte_roundtrip": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/unicode-roundtrip/1792555295689936325/summary.json",
+  "independent_210_request_state_and_response_oracle": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/mixed-state-diagnostic/1792555448317311657/verification.json",
+  "superseded_collation_only_diagnostic": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/charset-compatibility-collation-only-diagnostic.json",
+  "wall_ns": 1792555552736555251
+}

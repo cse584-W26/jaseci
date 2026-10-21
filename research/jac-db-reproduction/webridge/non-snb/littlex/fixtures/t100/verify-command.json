@@ -1,0 +1,16 @@
+{
+  "command": [
+    "taskset",
+    "-c",
+    "9,19",
+    "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/java",
+    "-Dlittlex.url=jdbc:mysql://127.0.0.1:55337/jac_lx_t100_20261020?useSSL=false&useUnicode=true&characterEncoding=UTF-8",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/classes:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+    "VerifyLittleX",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/fixtures/t100"
+  ],
+  "returncode": 0,
+  "stdout": "{\"rows\":25304,\"business_fields\":13,\"expected_sha256\":\"936d06079572c6b8630f0bfca79ceccc9522ea4e6a9fdb4b68a0f382b8e310b5\",\"actual_sha256\":\"936d06079572c6b8630f0bfca79ceccc9522ea4e6a9fdb4b68a0f382b8e310b5\",\"exact_field_equality\":true}\n",
+  "stderr": ""
+}

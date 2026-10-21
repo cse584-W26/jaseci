@@ -1,0 +1,1724 @@
+{
+  "feed": {
+    "counts": [
+      14,
+      12,
+      12
+    ],
+    "requests": [
+      {
+        "log_path": "reproduction/webridge/non-snb/littlex/native/census/20261020T233449Z-final/feed/profile-0.log.gz",
+        "backend_pids": [
+          2973504
+        ],
+        "executed_commands": 14,
+        "categories": {
+          "transaction.begin": 1,
+          "transaction.setting": 1,
+          "hydration.full_anchor": 1,
+          "type_registry": 2,
+          "graph.other": 8,
+          "transaction.commit": 1
+        },
+        "operations": [
+          {
+            "pid": 2973504,
+            "execute_ms": 0.017,
+            "statement": null,
+            "sql": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+            "sql_sha256": "884b307eaf68c26c0ee2c95bfebc014c633d0d00e03a5e60391e7b2efc4dcd48",
+            "category": "transaction.begin"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.009,
+            "statement": null,
+            "sql": "SET LOCAL lock_timeout = '10s'",
+            "sql_sha256": "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4",
+            "category": "transaction.setting"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.016,
+            "statement": "<unnamed>",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{4e93ec38-3909-43d5-9e9d-98a3e63045d1}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.007,
+            "statement": "<unnamed>",
+            "sql": "SELECT type_name FROM graph_types WHERE ancestor = $1",
+            "sql_sha256": "6e816500e3df3bd8e404b071615b2b0283bbcb6158b557172873a614973e9304",
+            "category": "type_registry",
+            "parameters": "$1 = 'Profile'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.096,
+            "statement": "<unnamed>",
+            "sql": "SELECT 1 FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = $1 AND NOT EXISTS (SELECT 1 FROM g_n_profile_d2a57d m WHERE m.id = a.id) LIMIT 1",
+            "sql_sha256": "f2faa97a61ff05ede613842aa5c52587ec212c56c07711e6582ee2a99cc059f0",
+            "category": "graph.other",
+            "parameters": "$1 = 'Profile'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.162,
+            "statement": "<unnamed>",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = '4e93ec38-3909-43d5-9e9d-98a3e63045d1'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.074,
+            "statement": "<unnamed>",
+            "sql": "SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN g_n_profile_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($4 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($6 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "071b42a3dba9d7e50f52cff453c266c044f0d8d55cacd06d8e246e73a188f419",
+            "category": "graph.other",
+            "parameters": "$1 = '{4e93ec38-3909-43d5-9e9d-98a3e63045d1}', $2 = 'Profile', $3 = 'Profile', $4 = '4e93ec38-3909-43d5-9e9d-98a3e63045d1', $5 = '2dabd933-744f-4633-91a5-4ff2b369811b', $6 = '{}', $7 = '{}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.005,
+            "statement": "<unnamed>",
+            "sql": "SELECT type_name FROM graph_types WHERE ancestor = $1",
+            "sql_sha256": "6e816500e3df3bd8e404b071615b2b0283bbcb6158b557172873a614973e9304",
+            "category": "type_registry",
+            "parameters": "$1 = 'Tweet'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 3.305,
+            "statement": "<unnamed>",
+            "sql": "SELECT 1 FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = $1 AND NOT EXISTS (SELECT 1 FROM g_n_tweet_d2a57d m WHERE m.id = a.id) LIMIT 1",
+            "sql_sha256": "7968937855f38e2969bb63add062a65d9f65fc25f20d63546ee0f66342bf7fdb",
+            "category": "graph.other",
+            "parameters": "$1 = 'Tweet'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.15,
+            "statement": "<unnamed>",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = '4e93ec38-3909-43d5-9e9d-98a3e63045d1'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.155,
+            "statement": "<unnamed>",
+            "sql": "SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN g_n_tweet_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($4 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($6 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "2fb13221ae6fe4c3cdd0353025c4e9e0c53931228f59628399076cc882fa61dd",
+            "category": "graph.other",
+            "parameters": "$1 = '{a920f441-baa3-4cec-aad1-6f89665b11f0}', $2 = 'Tweet', $3 = 'Tweet', $4 = '4e93ec38-3909-43d5-9e9d-98a3e63045d1', $5 = '2dabd933-744f-4633-91a5-4ff2b369811b', $6 = '{}', $7 = '{}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.14,
+            "statement": "<unnamed>",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = '4e93ec38-3909-43d5-9e9d-98a3e63045d1'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 6.266,
+            "statement": "<unnamed>",
+            "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = $6 OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $6)))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = $7 OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $7)))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END AND CASE WHEN n2.root_id = CAST($8 AS uuid) THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = CAST($9 AS uuid) THEN true WHEN n2.root_id = ANY(CAST($10 AS uuid[])) THEN true WHEN n2.root_id = ANY(CAST($11 AS uuid[])) THEN false ELSE n2.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+            "sql_sha256": "f2c5cb3431ee8dc3c2b7e8aef35760b4abca981ae5830ffa25c3dc44efcf6916",
+            "category": "graph.other",
+            "parameters": "$1 = '{a920f441-baa3-4cec-aad1-6f89665b11f0}', $2 = 'Profile', $3 = 'Profile', $4 = 'Follow', $5 = 'Profile', $6 = 'Tweet', $7 = 'Tweet', $8 = '4e93ec38-3909-43d5-9e9d-98a3e63045d1', $9 = '2dabd933-744f-4633-91a5-4ff2b369811b', $10 = '{}', $11 = '{}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.033,
+            "statement": null,
+            "sql": "COMMIT",
+            "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+            "category": "transaction.commit"
+          }
+        ]
+      },
+      {
+        "log_path": "reproduction/webridge/non-snb/littlex/native/census/20261020T233449Z-final/feed/profile-1.log.gz",
+        "backend_pids": [
+          2973504
+        ],
+        "executed_commands": 12,
+        "categories": {
+          "transaction.begin": 1,
+          "transaction.setting": 1,
+          "hydration.full_anchor": 1,
+          "type_registry": 2,
+          "graph.other": 6,
+          "transaction.commit": 1
+        },
+        "operations": [
+          {
+            "pid": 2973504,
+            "execute_ms": 0.018,
+            "statement": null,
+            "sql": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+            "sql_sha256": "884b307eaf68c26c0ee2c95bfebc014c633d0d00e03a5e60391e7b2efc4dcd48",
+            "category": "transaction.begin"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.008,
+            "statement": null,
+            "sql": "SET LOCAL lock_timeout = '10s'",
+            "sql_sha256": "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4",
+            "category": "transaction.setting"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.017,
+            "statement": "<unnamed>",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{98bae35f-c091-447e-ac96-62adbd5e30e7}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.007,
+            "statement": "<unnamed>",
+            "sql": "SELECT type_name FROM graph_types WHERE ancestor = $1",
+            "sql_sha256": "6e816500e3df3bd8e404b071615b2b0283bbcb6158b557172873a614973e9304",
+            "category": "type_registry",
+            "parameters": "$1 = 'Profile'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.153,
+            "statement": "<unnamed>",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = '98bae35f-c091-447e-ac96-62adbd5e30e7'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.078,
+            "statement": "<unnamed>",
+            "sql": "SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN g_n_profile_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($4 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($6 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "071b42a3dba9d7e50f52cff453c266c044f0d8d55cacd06d8e246e73a188f419",
+            "category": "graph.other",
+            "parameters": "$1 = '{98bae35f-c091-447e-ac96-62adbd5e30e7}', $2 = 'Profile', $3 = 'Profile', $4 = '98bae35f-c091-447e-ac96-62adbd5e30e7', $5 = '2dabd933-744f-4633-91a5-4ff2b369811b', $6 = '{}', $7 = '{}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.007,
+            "statement": "_pg3_0",
+            "sql": "SELECT type_name FROM graph_types WHERE ancestor = $1",
+            "sql_sha256": "6e816500e3df3bd8e404b071615b2b0283bbcb6158b557172873a614973e9304",
+            "category": "type_registry",
+            "parameters": "$1 = 'Tweet'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.152,
+            "statement": "<unnamed>",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = '98bae35f-c091-447e-ac96-62adbd5e30e7'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.197,
+            "statement": "<unnamed>",
+            "sql": "SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN g_n_tweet_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($4 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($6 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "2fb13221ae6fe4c3cdd0353025c4e9e0c53931228f59628399076cc882fa61dd",
+            "category": "graph.other",
+            "parameters": "$1 = '{ed128b2d-ca7f-4f87-ab8c-cc2f75560955}', $2 = 'Tweet', $3 = 'Tweet', $4 = '98bae35f-c091-447e-ac96-62adbd5e30e7', $5 = '2dabd933-744f-4633-91a5-4ff2b369811b', $6 = '{}', $7 = '{}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.142,
+            "statement": "_pg3_1",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = '98bae35f-c091-447e-ac96-62adbd5e30e7'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 6.487,
+            "statement": "<unnamed>",
+            "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = $6 OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $6)))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = $7 OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $7)))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END AND CASE WHEN n2.root_id = CAST($8 AS uuid) THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = CAST($9 AS uuid) THEN true WHEN n2.root_id = ANY(CAST($10 AS uuid[])) THEN true WHEN n2.root_id = ANY(CAST($11 AS uuid[])) THEN false ELSE n2.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+            "sql_sha256": "f2c5cb3431ee8dc3c2b7e8aef35760b4abca981ae5830ffa25c3dc44efcf6916",
+            "category": "graph.other",
+            "parameters": "$1 = '{ed128b2d-ca7f-4f87-ab8c-cc2f75560955}', $2 = 'Profile', $3 = 'Profile', $4 = 'Follow', $5 = 'Profile', $6 = 'Tweet', $7 = 'Tweet', $8 = '98bae35f-c091-447e-ac96-62adbd5e30e7', $9 = '2dabd933-744f-4633-91a5-4ff2b369811b', $10 = '{}', $11 = '{}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.025,
+            "statement": null,
+            "sql": "COMMIT",
+            "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+            "category": "transaction.commit"
+          }
+        ]
+      },
+      {
+        "log_path": "reproduction/webridge/non-snb/littlex/native/census/20261020T233449Z-final/feed/profile-2.log.gz",
+        "backend_pids": [
+          2973504
+        ],
+        "executed_commands": 12,
+        "categories": {
+          "transaction.begin": 1,
+          "transaction.setting": 1,
+          "hydration.full_anchor": 1,
+          "type_registry": 2,
+          "graph.other": 6,
+          "transaction.commit": 1
+        },
+        "operations": [
+          {
+            "pid": 2973504,
+            "execute_ms": 0.019,
+            "statement": null,
+            "sql": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+            "sql_sha256": "884b307eaf68c26c0ee2c95bfebc014c633d0d00e03a5e60391e7b2efc4dcd48",
+            "category": "transaction.begin"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.009,
+            "statement": null,
+            "sql": "SET LOCAL lock_timeout = '10s'",
+            "sql_sha256": "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4",
+            "category": "transaction.setting"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.019,
+            "statement": "<unnamed>",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{b5942335-828d-45fc-98b5-4edd0e4754db}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.006,
+            "statement": "_pg3_0",
+            "sql": "SELECT type_name FROM graph_types WHERE ancestor = $1",
+            "sql_sha256": "6e816500e3df3bd8e404b071615b2b0283bbcb6158b557172873a614973e9304",
+            "category": "type_registry",
+            "parameters": "$1 = 'Profile'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.157,
+            "statement": "_pg3_1",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = 'b5942335-828d-45fc-98b5-4edd0e4754db'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.078,
+            "statement": "<unnamed>",
+            "sql": "SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN g_n_profile_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($4 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($6 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "071b42a3dba9d7e50f52cff453c266c044f0d8d55cacd06d8e246e73a188f419",
+            "category": "graph.other",
+            "parameters": "$1 = '{b5942335-828d-45fc-98b5-4edd0e4754db}', $2 = 'Profile', $3 = 'Profile', $4 = 'b5942335-828d-45fc-98b5-4edd0e4754db', $5 = '2dabd933-744f-4633-91a5-4ff2b369811b', $6 = '{}', $7 = '{}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.007,
+            "statement": "_pg3_0",
+            "sql": "SELECT type_name FROM graph_types WHERE ancestor = $1",
+            "sql_sha256": "6e816500e3df3bd8e404b071615b2b0283bbcb6158b557172873a614973e9304",
+            "category": "type_registry",
+            "parameters": "$1 = 'Tweet'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.148,
+            "statement": "_pg3_1",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = 'b5942335-828d-45fc-98b5-4edd0e4754db'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.179,
+            "statement": "<unnamed>",
+            "sql": "SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN g_n_tweet_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($4 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($6 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "2fb13221ae6fe4c3cdd0353025c4e9e0c53931228f59628399076cc882fa61dd",
+            "category": "graph.other",
+            "parameters": "$1 = '{00ebd928-497c-46a9-b2b8-aa127ee0438f}', $2 = 'Tweet', $3 = 'Tweet', $4 = 'b5942335-828d-45fc-98b5-4edd0e4754db', $5 = '2dabd933-744f-4633-91a5-4ff2b369811b', $6 = '{}', $7 = '{}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.145,
+            "statement": "_pg3_1",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = 'b5942335-828d-45fc-98b5-4edd0e4754db'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 6.312,
+            "statement": "<unnamed>",
+            "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at::text FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)) JOIN anchors e2 ON e2.kind = 'EdgeAnchor' AND ((e2.src = n1.id AND (e2.dst_type IS NULL OR (e2.dst_type = $6 OR e2.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $6)))) OR (e2.undirected AND (e2.dst = n1.id AND (e2.src_type IS NULL OR (e2.src_type = $7 OR e2.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $7)))))) JOIN g_n_tweet_d2a57d n2 ON n2.id = CASE WHEN e2.src = n1.id THEN e2.dst ELSE e2.src END AND CASE WHEN n2.root_id = CAST($8 AS uuid) THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = CAST($9 AS uuid) THEN true WHEN n2.root_id = ANY(CAST($10 AS uuid[])) THEN true WHEN n2.root_id = ANY(CAST($11 AS uuid[])) THEN false ELSE n2.acl_all >= 0 END ORDER BY f0.ord, e1.seq, e1.id, e2.seq, e2.id",
+            "sql_sha256": "f2c5cb3431ee8dc3c2b7e8aef35760b4abca981ae5830ffa25c3dc44efcf6916",
+            "category": "graph.other",
+            "parameters": "$1 = '{00ebd928-497c-46a9-b2b8-aa127ee0438f}', $2 = 'Profile', $3 = 'Profile', $4 = 'Follow', $5 = 'Profile', $6 = 'Tweet', $7 = 'Tweet', $8 = 'b5942335-828d-45fc-98b5-4edd0e4754db', $9 = '2dabd933-744f-4633-91a5-4ff2b369811b', $10 = '{}', $11 = '{}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.024,
+            "statement": null,
+            "sql": "COMMIT",
+            "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+            "category": "transaction.commit"
+          }
+        ]
+      }
+    ]
+  },
+  "feed_page": {
+    "counts": [
+      13,
+      12,
+      12
+    ],
+    "requests": [
+      {
+        "log_path": "reproduction/webridge/non-snb/littlex/native/census/20261020T233449Z-final/feed_page/profile-0.log.gz",
+        "backend_pids": [
+          2973504
+        ],
+        "executed_commands": 13,
+        "categories": {
+          "transaction.begin": 1,
+          "transaction.setting": 1,
+          "hydration.full_anchor": 1,
+          "type_registry": 2,
+          "graph.other": 7,
+          "transaction.commit": 1
+        },
+        "operations": [
+          {
+            "pid": 2973504,
+            "execute_ms": 0.005,
+            "statement": "_pg3_3",
+            "sql": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+            "sql_sha256": "884b307eaf68c26c0ee2c95bfebc014c633d0d00e03a5e60391e7b2efc4dcd48",
+            "category": "transaction.begin"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.003,
+            "statement": "_pg3_4",
+            "sql": "SET LOCAL lock_timeout = '10s'",
+            "sql_sha256": "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4",
+            "category": "transaction.setting"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.018,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{4e93ec38-3909-43d5-9e9d-98a3e63045d1}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.007,
+            "statement": "_pg3_0",
+            "sql": "SELECT type_name FROM graph_types WHERE ancestor = $1",
+            "sql_sha256": "6e816500e3df3bd8e404b071615b2b0283bbcb6158b557172873a614973e9304",
+            "category": "type_registry",
+            "parameters": "$1 = 'Profile'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.237,
+            "statement": "_pg3_1",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = '4e93ec38-3909-43d5-9e9d-98a3e63045d1'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.074,
+            "statement": "<unnamed>",
+            "sql": "SELECT * FROM (SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text, f0.ord AS _tk1, e1.seq AS _tk2, e1.id AS _tk3 FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN g_n_profile_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($4 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($6 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY n1.f_created_at DESC, f0.ord, e1.seq, e1.id LIMIT $8) _topk ORDER BY _tk1, _tk2, _tk3",
+            "sql_sha256": "8ad9bb82821f8c2f5a570085886b36ac46c7371859af5aafc9724a60ab41aed4",
+            "category": "graph.other",
+            "parameters": "$1 = '{4e93ec38-3909-43d5-9e9d-98a3e63045d1}', $2 = 'Profile', $3 = 'Profile', $4 = '4e93ec38-3909-43d5-9e9d-98a3e63045d1', $5 = '2dabd933-744f-4633-91a5-4ff2b369811b', $6 = '{}', $7 = '{}', $8 = '28'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.005,
+            "statement": "_pg3_0",
+            "sql": "SELECT type_name FROM graph_types WHERE ancestor = $1",
+            "sql_sha256": "6e816500e3df3bd8e404b071615b2b0283bbcb6158b557172873a614973e9304",
+            "category": "type_registry",
+            "parameters": "$1 = 'Tweet'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.185,
+            "statement": "_pg3_1",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = '4e93ec38-3909-43d5-9e9d-98a3e63045d1'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 5.342,
+            "statement": "<unnamed>",
+            "sql": "SELECT 1 FROM anchors e WHERE e.kind = 'EdgeAnchor' AND e.arch_type = $1 AND e.dst IS NOT NULL AND NOT EXISTS (SELECT 1 FROM g_n_tweet_d2a57d m WHERE m.id = e.dst AND m.src_endpoint = e.src) LIMIT 1",
+            "sql_sha256": "f3e9253a7d2ee65539b4698782159b27ca037e690d73c58700e96cd7121e7a4e",
+            "category": "graph.other",
+            "parameters": "$1 = 'Post'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.1,
+            "statement": "<unnamed>",
+            "sql": "SELECT * FROM (SELECT t1.id, t1.root_id, t1.acl_all, t1.acl_spec, t1.frag, t1.f_created_at, f0.ord AS _tk1, t1._eid AS _tk2 FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN LATERAL (SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text, n1.f_created_at AS _ordcol, n1.id AS _eid FROM g_n_tweet_d2a57d n1 WHERE n1.src_endpoint = f0.id AND CASE WHEN n1.root_id = CAST($2 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($3 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($4 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($5 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY n1.f_created_at DESC LIMIT $6) t1 ON true ORDER BY t1._ordcol DESC, f0.ord, t1._eid LIMIT $7) _topk ORDER BY _tk1, _tk2",
+            "sql_sha256": "9c4c1581bfdedd98bc339856f3989cf89df89cb181a577e6e6729d4eee744012",
+            "category": "graph.other",
+            "parameters": "$1 = '{a920f441-baa3-4cec-aad1-6f89665b11f0}', $2 = '4e93ec38-3909-43d5-9e9d-98a3e63045d1', $3 = '2dabd933-744f-4633-91a5-4ff2b369811b', $4 = '{}', $5 = '{}', $6 = '28', $7 = '28'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.153,
+            "statement": "_pg3_1",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = '4e93ec38-3909-43d5-9e9d-98a3e63045d1'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 1.138,
+            "statement": "<unnamed>",
+            "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at::text FROM g_n_tweet_d2a57d n2 WHERE n2.src_endpoint = ANY(ARRAY(SELECT n1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)))) AND CASE WHEN n2.root_id = CAST($6 AS uuid) THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = CAST($7 AS uuid) THEN true WHEN n2.root_id = ANY(CAST($8 AS uuid[])) THEN true WHEN n2.root_id = ANY(CAST($9 AS uuid[])) THEN false ELSE n2.acl_all >= 0 END ORDER BY n2.f_created_at DESC LIMIT $10",
+            "sql_sha256": "2d401df7ca39fd749203c078de0c66f13126dfd868cb85b4226a9b08d5b0d034",
+            "category": "graph.other",
+            "parameters": "$1 = '{a920f441-baa3-4cec-aad1-6f89665b11f0}', $2 = 'Profile', $3 = 'Profile', $4 = 'Follow', $5 = 'Profile', $6 = '4e93ec38-3909-43d5-9e9d-98a3e63045d1', $7 = '2dabd933-744f-4633-91a5-4ff2b369811b', $8 = '{}', $9 = '{}', $10 = '28'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.009,
+            "statement": "_pg3_5",
+            "sql": "COMMIT",
+            "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+            "category": "transaction.commit"
+          }
+        ]
+      },
+      {
+        "log_path": "reproduction/webridge/non-snb/littlex/native/census/20261020T233449Z-final/feed_page/profile-1.log.gz",
+        "backend_pids": [
+          2973504
+        ],
+        "executed_commands": 12,
+        "categories": {
+          "transaction.begin": 1,
+          "transaction.setting": 1,
+          "hydration.full_anchor": 1,
+          "type_registry": 2,
+          "graph.other": 6,
+          "transaction.commit": 1
+        },
+        "operations": [
+          {
+            "pid": 2973504,
+            "execute_ms": 0.007,
+            "statement": "_pg3_3",
+            "sql": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+            "sql_sha256": "884b307eaf68c26c0ee2c95bfebc014c633d0d00e03a5e60391e7b2efc4dcd48",
+            "category": "transaction.begin"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.004,
+            "statement": "_pg3_4",
+            "sql": "SET LOCAL lock_timeout = '10s'",
+            "sql_sha256": "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4",
+            "category": "transaction.setting"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.032,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{98bae35f-c091-447e-ac96-62adbd5e30e7}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.008,
+            "statement": "_pg3_0",
+            "sql": "SELECT type_name FROM graph_types WHERE ancestor = $1",
+            "sql_sha256": "6e816500e3df3bd8e404b071615b2b0283bbcb6158b557172873a614973e9304",
+            "category": "type_registry",
+            "parameters": "$1 = 'Profile'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.152,
+            "statement": "_pg3_1",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = '98bae35f-c091-447e-ac96-62adbd5e30e7'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.073,
+            "statement": "<unnamed>",
+            "sql": "SELECT * FROM (SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text, f0.ord AS _tk1, e1.seq AS _tk2, e1.id AS _tk3 FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN g_n_profile_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($4 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($6 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY n1.f_created_at DESC, f0.ord, e1.seq, e1.id LIMIT $8) _topk ORDER BY _tk1, _tk2, _tk3",
+            "sql_sha256": "8ad9bb82821f8c2f5a570085886b36ac46c7371859af5aafc9724a60ab41aed4",
+            "category": "graph.other",
+            "parameters": "$1 = '{98bae35f-c091-447e-ac96-62adbd5e30e7}', $2 = 'Profile', $3 = 'Profile', $4 = '98bae35f-c091-447e-ac96-62adbd5e30e7', $5 = '2dabd933-744f-4633-91a5-4ff2b369811b', $6 = '{}', $7 = '{}', $8 = '28'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.007,
+            "statement": "_pg3_0",
+            "sql": "SELECT type_name FROM graph_types WHERE ancestor = $1",
+            "sql_sha256": "6e816500e3df3bd8e404b071615b2b0283bbcb6158b557172873a614973e9304",
+            "category": "type_registry",
+            "parameters": "$1 = 'Tweet'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.146,
+            "statement": "_pg3_1",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = '98bae35f-c091-447e-ac96-62adbd5e30e7'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.107,
+            "statement": "<unnamed>",
+            "sql": "SELECT * FROM (SELECT t1.id, t1.root_id, t1.acl_all, t1.acl_spec, t1.frag, t1.f_created_at, f0.ord AS _tk1, t1._eid AS _tk2 FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN LATERAL (SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text, n1.f_created_at AS _ordcol, n1.id AS _eid FROM g_n_tweet_d2a57d n1 WHERE n1.src_endpoint = f0.id AND CASE WHEN n1.root_id = CAST($2 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($3 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($4 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($5 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY n1.f_created_at DESC LIMIT $6) t1 ON true ORDER BY t1._ordcol DESC, f0.ord, t1._eid LIMIT $7) _topk ORDER BY _tk1, _tk2",
+            "sql_sha256": "9c4c1581bfdedd98bc339856f3989cf89df89cb181a577e6e6729d4eee744012",
+            "category": "graph.other",
+            "parameters": "$1 = '{ed128b2d-ca7f-4f87-ab8c-cc2f75560955}', $2 = '98bae35f-c091-447e-ac96-62adbd5e30e7', $3 = '2dabd933-744f-4633-91a5-4ff2b369811b', $4 = '{}', $5 = '{}', $6 = '28', $7 = '28'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.138,
+            "statement": "_pg3_1",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = '98bae35f-c091-447e-ac96-62adbd5e30e7'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 1.231,
+            "statement": "<unnamed>",
+            "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at::text FROM g_n_tweet_d2a57d n2 WHERE n2.src_endpoint = ANY(ARRAY(SELECT n1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)))) AND CASE WHEN n2.root_id = CAST($6 AS uuid) THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = CAST($7 AS uuid) THEN true WHEN n2.root_id = ANY(CAST($8 AS uuid[])) THEN true WHEN n2.root_id = ANY(CAST($9 AS uuid[])) THEN false ELSE n2.acl_all >= 0 END ORDER BY n2.f_created_at DESC LIMIT $10",
+            "sql_sha256": "2d401df7ca39fd749203c078de0c66f13126dfd868cb85b4226a9b08d5b0d034",
+            "category": "graph.other",
+            "parameters": "$1 = '{ed128b2d-ca7f-4f87-ab8c-cc2f75560955}', $2 = 'Profile', $3 = 'Profile', $4 = 'Follow', $5 = 'Profile', $6 = '98bae35f-c091-447e-ac96-62adbd5e30e7', $7 = '2dabd933-744f-4633-91a5-4ff2b369811b', $8 = '{}', $9 = '{}', $10 = '28'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.007,
+            "statement": "_pg3_5",
+            "sql": "COMMIT",
+            "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+            "category": "transaction.commit"
+          }
+        ]
+      },
+      {
+        "log_path": "reproduction/webridge/non-snb/littlex/native/census/20261020T233449Z-final/feed_page/profile-2.log.gz",
+        "backend_pids": [
+          2973504
+        ],
+        "executed_commands": 12,
+        "categories": {
+          "transaction.begin": 1,
+          "transaction.setting": 1,
+          "hydration.full_anchor": 1,
+          "type_registry": 2,
+          "graph.other": 6,
+          "transaction.commit": 1
+        },
+        "operations": [
+          {
+            "pid": 2973504,
+            "execute_ms": 0.007,
+            "statement": "_pg3_3",
+            "sql": "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY",
+            "sql_sha256": "884b307eaf68c26c0ee2c95bfebc014c633d0d00e03a5e60391e7b2efc4dcd48",
+            "category": "transaction.begin"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.004,
+            "statement": "_pg3_4",
+            "sql": "SET LOCAL lock_timeout = '10s'",
+            "sql_sha256": "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4",
+            "category": "transaction.setting"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.017,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{b5942335-828d-45fc-98b5-4edd0e4754db}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.008,
+            "statement": "_pg3_0",
+            "sql": "SELECT type_name FROM graph_types WHERE ancestor = $1",
+            "sql_sha256": "6e816500e3df3bd8e404b071615b2b0283bbcb6158b557172873a614973e9304",
+            "category": "type_registry",
+            "parameters": "$1 = 'Profile'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.152,
+            "statement": "_pg3_1",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = 'b5942335-828d-45fc-98b5-4edd0e4754db'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.071,
+            "statement": "<unnamed>",
+            "sql": "SELECT * FROM (SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text, f0.ord AS _tk1, e1.seq AS _tk2, e1.id AS _tk3 FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN g_n_profile_d2a57d n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND CASE WHEN n1.root_id = CAST($4 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($5 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($6 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($7 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY n1.f_created_at DESC, f0.ord, e1.seq, e1.id LIMIT $8) _topk ORDER BY _tk1, _tk2, _tk3",
+            "sql_sha256": "8ad9bb82821f8c2f5a570085886b36ac46c7371859af5aafc9724a60ab41aed4",
+            "category": "graph.other",
+            "parameters": "$1 = '{b5942335-828d-45fc-98b5-4edd0e4754db}', $2 = 'Profile', $3 = 'Profile', $4 = 'b5942335-828d-45fc-98b5-4edd0e4754db', $5 = '2dabd933-744f-4633-91a5-4ff2b369811b', $6 = '{}', $7 = '{}', $8 = '28'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.006,
+            "statement": "_pg3_0",
+            "sql": "SELECT type_name FROM graph_types WHERE ancestor = $1",
+            "sql_sha256": "6e816500e3df3bd8e404b071615b2b0283bbcb6158b557172873a614973e9304",
+            "category": "type_registry",
+            "parameters": "$1 = 'Tweet'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.154,
+            "statement": "_pg3_1",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = 'b5942335-828d-45fc-98b5-4edd0e4754db'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.085,
+            "statement": "<unnamed>",
+            "sql": "SELECT * FROM (SELECT t1.id, t1.root_id, t1.acl_all, t1.acl_spec, t1.frag, t1.f_created_at, f0.ord AS _tk1, t1._eid AS _tk2 FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN LATERAL (SELECT n1.id, n1.root_id, n1.acl_all, n1.acl_spec, n1.frag, n1.f_created_at::text, n1.f_created_at AS _ordcol, n1.id AS _eid FROM g_n_tweet_d2a57d n1 WHERE n1.src_endpoint = f0.id AND CASE WHEN n1.root_id = CAST($2 AS uuid) THEN true WHEN n1.acl_spec THEN true WHEN n1.root_id = CAST($3 AS uuid) THEN true WHEN n1.root_id = ANY(CAST($4 AS uuid[])) THEN true WHEN n1.root_id = ANY(CAST($5 AS uuid[])) THEN false ELSE n1.acl_all >= 0 END ORDER BY n1.f_created_at DESC LIMIT $6) t1 ON true ORDER BY t1._ordcol DESC, f0.ord, t1._eid LIMIT $7) _topk ORDER BY _tk1, _tk2",
+            "sql_sha256": "9c4c1581bfdedd98bc339856f3989cf89df89cb181a577e6e6729d4eee744012",
+            "category": "graph.other",
+            "parameters": "$1 = '{00ebd928-497c-46a9-b2b8-aa127ee0438f}', $2 = 'b5942335-828d-45fc-98b5-4edd0e4754db', $3 = '2dabd933-744f-4633-91a5-4ff2b369811b', $4 = '{}', $5 = '{}', $6 = '28', $7 = '28'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.141,
+            "statement": "_pg3_1",
+            "sql": "SELECT a.id, CASE WHEN jsonb_typeof(a.props->'access'->'roots'->'anchors'->CAST($1 AS text)) = 'number' THEN (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text))::int END, CASE WHEN jsonb_typeof(a.props->'access'->'all') = 'number' THEN (a.props->'access'->>'all')::int ELSE -1 END FROM anchors a WHERE a.kind = 'NodeAnchor' AND a.arch_type = 'Root' AND (a.props->'access'->'roots'->'anchors'->>CAST($1 AS text) IS NOT NULL OR jsonb_typeof(a.props->'access'->'all') = 'number')",
+            "sql_sha256": "ad12e46311c341d6e1f1489fd094025499273e5a1c6e5ef213574fe297da4df2",
+            "category": "graph.other",
+            "parameters": "$1 = 'b5942335-828d-45fc-98b5-4edd0e4754db'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 1.216,
+            "statement": "<unnamed>",
+            "sql": "SELECT n2.id, n2.root_id, n2.acl_all, n2.acl_spec, n2.frag, n2.f_created_at::text FROM g_n_tweet_d2a57d n2 WHERE n2.src_endpoint = ANY(ARRAY(SELECT n1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)))) AND CASE WHEN n2.root_id = CAST($6 AS uuid) THEN true WHEN n2.acl_spec THEN true WHEN n2.root_id = CAST($7 AS uuid) THEN true WHEN n2.root_id = ANY(CAST($8 AS uuid[])) THEN true WHEN n2.root_id = ANY(CAST($9 AS uuid[])) THEN false ELSE n2.acl_all >= 0 END ORDER BY n2.f_created_at DESC LIMIT $10",
+            "sql_sha256": "2d401df7ca39fd749203c078de0c66f13126dfd868cb85b4226a9b08d5b0d034",
+            "category": "graph.other",
+            "parameters": "$1 = '{00ebd928-497c-46a9-b2b8-aa127ee0438f}', $2 = 'Profile', $3 = 'Profile', $4 = 'Follow', $5 = 'Profile', $6 = 'b5942335-828d-45fc-98b5-4edd0e4754db', $7 = '2dabd933-744f-4633-91a5-4ff2b369811b', $8 = '{}', $9 = '{}', $10 = '28'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.007,
+            "statement": "_pg3_5",
+            "sql": "COMMIT",
+            "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+            "category": "transaction.commit"
+          }
+        ]
+      }
+    ]
+  },
+  "like": {
+    "counts": [
+      10,
+      10,
+      10
+    ],
+    "requests": [
+      {
+        "log_path": "reproduction/webridge/non-snb/littlex/native/census/20261020T233449Z-final/like/profile-0.log.gz",
+        "backend_pids": [
+          2973504
+        ],
+        "executed_commands": 10,
+        "categories": {
+          "transaction.begin": 1,
+          "transaction.setting": 1,
+          "hydration.full_anchor": 4,
+          "traversal.generic": 1,
+          "write.anchor_insert": 1,
+          "type_registry": 1,
+          "transaction.commit": 1
+        },
+        "operations": [
+          {
+            "pid": 2973504,
+            "execute_ms": 0.018,
+            "statement": null,
+            "sql": "BEGIN ISOLATION LEVEL SERIALIZABLE",
+            "sql_sha256": "547004d6c33e887b6fe478e1d23004ef14c3fa1c8c4756ec52aea4a3933e7fb0",
+            "category": "transaction.begin"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.004,
+            "statement": "_pg3_4",
+            "sql": "SET LOCAL lock_timeout = '10s'",
+            "sql_sha256": "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4",
+            "category": "transaction.setting"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.035,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{4e93ec38-3909-43d5-9e9d-98a3e63045d1}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.076,
+            "statement": "<unnamed>",
+            "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $4 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "bfcfd7b4fe33d76450f35d82fae711e9bb08b57ce71459416544d5a962362cb9",
+            "category": "traversal.generic",
+            "parameters": "$1 = '{4e93ec38-3909-43d5-9e9d-98a3e63045d1}', $2 = 'Profile', $3 = 'Profile', $4 = 'Profile'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.013,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{a920f441-baa3-4cec-aad1-6f89665b11f0}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.028,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{e0b21460-3234-4da4-9e2b-1c2e90d74573}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.032,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{79e461e5-bb6b-44f5-b289-5eb12c76985f}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.301,
+            "statement": "<unnamed>",
+            "sql": "INSERT INTO anchors\n\t            (id, kind, arch_type, arch_module, fingerprint, root_id,\n\t             src, dst, undirected, props, format_version, updated_at,\n\t             src_type, dst_type)\n\t        SELECT id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, $1, now(),\n\t               src_type, dst_type\n\t        FROM unnest(\n\t            CAST($2 AS uuid[]), CAST($3 AS text[]),\n\t            CAST($4 AS text[]), CAST($5 AS text[]),\n\t            CAST($6 AS text[]), CAST($7 AS uuid[]),\n\t            CAST($8 AS uuid[]), CAST($9 AS uuid[]),\n\t            CAST($10 AS boolean[]), CAST($11 AS jsonb[]),\n\t            CAST($12 AS text[]), CAST($13 AS text[])\n\t        ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, src_type, dst_type)\n\t        ON CONFLICT (id) DO UPDATE SET\n\t            kind = EXCLUDED.kind,\n\t            arch_type = EXCLUDED.arch_type,\n\t            arch_module = EXCLUDED.arch_module,\n\t            fingerprint = EXCLUDED.fingerprint,\n\t            root_id = EXCLUDED.root_id,\n\t            src = EXCLUDED.src,\n\t            dst = EXCLUDED.dst,\n\t            undirected = EXCLUDED.undirected,\n\t            props = EXCLUDED.props,\n\t            format_version = EXCLUDED.format_version,\n\t            updated_at = now(),\n\t            -- an edge re-saved while its endpoints are unpopulated stubs\n\t            -- carries NULL types; keep whatever was recorded earlier\n\t            src_type = COALESCE(EXCLUDED.src_type, anchors.src_type),\n\t            dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)",
+            "sql_sha256": "4855fb2ba01bec28652be8fcd457edce7f0706d9763468e4ce252655168f07ab",
+            "category": "write.anchor_insert",
+            "parameters": "$1 = '1', $2 = '{e0b21460-3234-4da4-9e2b-1c2e90d74573}', $3 = '{NodeAnchor}', $4 = '{Tweet}', $5 = '{app}', $6 = '{552e15e3e79578ff}', $7 = '{79e461e5-bb6b-44f5-b289-5eb12c76985f}', $8 = '{NULL}', $9 = '{NULL}', $10 = '{f}', $11 = '{\"{\\\"id\\\": \\\"e0b21460-3234-4da4-9e2b-1c2e90d74573\\\", \\\"root\\\": \\\"79e461e5-bb6b-44f5-b289-5eb12c76985f\\\", \\\"access\\\": {\\\"all\\\": 2, \\\"roots\\\": {\\\"anchors\\\": {}}}, \\\"version\\\": 0, \\\"__type__\\\": \\\"NodeAnchor\\\", \\\"archetype\\\": {\\\"likes\\\": [\\\"t20_sim_user_1\\\"], \\\"content\\\": \\\"Let''s all take a deep breath and remember that it''s okay to not have all the answers\\\", \\\"seed_id\\\": \\\"t20_tweet_1030\\\", \\\"__type__\\\": \\\"Tweet\\\", \\\"comments\\\": [], \\\"__module__\\\": \\\"app\\\", \\\"created_at\\\": \\\"2026-06-01T13:27:35Z\\\", \\\"author_username\\\": \\\"t20_sim_user_51\\\"}, \\\"__module__\\\": \\\"jaclang.jac0core.archetype\\\", \\\"persistent\\\": true}\"}', $12 = '{NULL}', $13 = '{NULL}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.019,
+            "statement": "<unnamed>",
+            "sql": "INSERT INTO graph_types (type_name, ancestor)\n\t            SELECT * FROM unnest(CAST($1 AS text[]), CAST($2 AS text[]))\n\t            ON CONFLICT DO NOTHING",
+            "sql_sha256": "6f4a7467eb89bf738701ebeee6ca214957a36fc4863dd0e48d8fb3cf949a6d18",
+            "category": "type_registry",
+            "parameters": "$1 = '{Tweet}', $2 = '{Tweet}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.968,
+            "statement": "_pg3_5",
+            "sql": "COMMIT",
+            "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+            "category": "transaction.commit"
+          }
+        ]
+      },
+      {
+        "log_path": "reproduction/webridge/non-snb/littlex/native/census/20261020T233449Z-final/like/profile-1.log.gz",
+        "backend_pids": [
+          2973504
+        ],
+        "executed_commands": 10,
+        "categories": {
+          "transaction.begin": 1,
+          "transaction.setting": 1,
+          "hydration.full_anchor": 4,
+          "traversal.generic": 1,
+          "write.anchor_insert": 1,
+          "type_registry": 1,
+          "transaction.commit": 1
+        },
+        "operations": [
+          {
+            "pid": 2973504,
+            "execute_ms": 0.031,
+            "statement": null,
+            "sql": "BEGIN ISOLATION LEVEL SERIALIZABLE",
+            "sql_sha256": "547004d6c33e887b6fe478e1d23004ef14c3fa1c8c4756ec52aea4a3933e7fb0",
+            "category": "transaction.begin"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.01,
+            "statement": "_pg3_4",
+            "sql": "SET LOCAL lock_timeout = '10s'",
+            "sql_sha256": "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4",
+            "category": "transaction.setting"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.064,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{98bae35f-c091-447e-ac96-62adbd5e30e7}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.147,
+            "statement": "<unnamed>",
+            "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $4 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "bfcfd7b4fe33d76450f35d82fae711e9bb08b57ce71459416544d5a962362cb9",
+            "category": "traversal.generic",
+            "parameters": "$1 = '{98bae35f-c091-447e-ac96-62adbd5e30e7}', $2 = 'Profile', $3 = 'Profile', $4 = 'Profile'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.033,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{ed128b2d-ca7f-4f87-ab8c-cc2f75560955}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.06,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{c835f2f4-a033-40a9-8158-416a32add50f}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.062,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{0ce7e38b-2f74-49a3-be9f-2852c8eabac9}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.638,
+            "statement": "<unnamed>",
+            "sql": "INSERT INTO anchors\n\t            (id, kind, arch_type, arch_module, fingerprint, root_id,\n\t             src, dst, undirected, props, format_version, updated_at,\n\t             src_type, dst_type)\n\t        SELECT id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, $1, now(),\n\t               src_type, dst_type\n\t        FROM unnest(\n\t            CAST($2 AS uuid[]), CAST($3 AS text[]),\n\t            CAST($4 AS text[]), CAST($5 AS text[]),\n\t            CAST($6 AS text[]), CAST($7 AS uuid[]),\n\t            CAST($8 AS uuid[]), CAST($9 AS uuid[]),\n\t            CAST($10 AS boolean[]), CAST($11 AS jsonb[]),\n\t            CAST($12 AS text[]), CAST($13 AS text[])\n\t        ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, src_type, dst_type)\n\t        ON CONFLICT (id) DO UPDATE SET\n\t            kind = EXCLUDED.kind,\n\t            arch_type = EXCLUDED.arch_type,\n\t            arch_module = EXCLUDED.arch_module,\n\t            fingerprint = EXCLUDED.fingerprint,\n\t            root_id = EXCLUDED.root_id,\n\t            src = EXCLUDED.src,\n\t            dst = EXCLUDED.dst,\n\t            undirected = EXCLUDED.undirected,\n\t            props = EXCLUDED.props,\n\t            format_version = EXCLUDED.format_version,\n\t            updated_at = now(),\n\t            -- an edge re-saved while its endpoints are unpopulated stubs\n\t            -- carries NULL types; keep whatever was recorded earlier\n\t            src_type = COALESCE(EXCLUDED.src_type, anchors.src_type),\n\t            dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)",
+            "sql_sha256": "4855fb2ba01bec28652be8fcd457edce7f0706d9763468e4ce252655168f07ab",
+            "category": "write.anchor_insert",
+            "parameters": "$1 = '1', $2 = '{c835f2f4-a033-40a9-8158-416a32add50f}', $3 = '{NodeAnchor}', $4 = '{Tweet}', $5 = '{app}', $6 = '{552e15e3e79578ff}', $7 = '{0ce7e38b-2f74-49a3-be9f-2852c8eabac9}', $8 = '{NULL}', $9 = '{NULL}', $10 = '{f}', $11 = '{\"{\\\"id\\\": \\\"c835f2f4-a033-40a9-8158-416a32add50f\\\", \\\"root\\\": \\\"0ce7e38b-2f74-49a3-be9f-2852c8eabac9\\\", \\\"access\\\": {\\\"all\\\": 2, \\\"roots\\\": {\\\"anchors\\\": {}}}, \\\"version\\\": 0, \\\"__type__\\\": \\\"NodeAnchor\\\", \\\"archetype\\\": {\\\"likes\\\": [\\\"t20_sim_user_10\\\"], \\\"content\\\": \\\"Who else is tired of people asking \\\\\\\"What''s a graph?\\\\\\\" like it''s a simple concept?\\\", \\\"seed_id\\\": \\\"t20_tweet_1064\\\", \\\"__type__\\\": \\\"Tweet\\\", \\\"comments\\\": [], \\\"__module__\\\": \\\"app\\\", \\\"created_at\\\": \\\"2026-06-01T12:37:45Z\\\", \\\"author_username\\\": \\\"t20_sim_user_53\\\"}, \\\"__module__\\\": \\\"jaclang.jac0core.archetype\\\", \\\"persistent\\\": true}\"}', $12 = '{NULL}', $13 = '{NULL}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.044,
+            "statement": "<unnamed>",
+            "sql": "INSERT INTO graph_types (type_name, ancestor)\n\t            SELECT * FROM unnest(CAST($1 AS text[]), CAST($2 AS text[]))\n\t            ON CONFLICT DO NOTHING",
+            "sql_sha256": "6f4a7467eb89bf738701ebeee6ca214957a36fc4863dd0e48d8fb3cf949a6d18",
+            "category": "type_registry",
+            "parameters": "$1 = '{Tweet}', $2 = '{Tweet}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 1.15,
+            "statement": "_pg3_5",
+            "sql": "COMMIT",
+            "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+            "category": "transaction.commit"
+          }
+        ]
+      },
+      {
+        "log_path": "reproduction/webridge/non-snb/littlex/native/census/20261020T233449Z-final/like/profile-2.log.gz",
+        "backend_pids": [
+          2973504
+        ],
+        "executed_commands": 10,
+        "categories": {
+          "transaction.begin": 1,
+          "transaction.setting": 1,
+          "hydration.full_anchor": 4,
+          "traversal.generic": 1,
+          "write.anchor_insert": 1,
+          "type_registry": 1,
+          "transaction.commit": 1
+        },
+        "operations": [
+          {
+            "pid": 2973504,
+            "execute_ms": 0.03,
+            "statement": null,
+            "sql": "BEGIN ISOLATION LEVEL SERIALIZABLE",
+            "sql_sha256": "547004d6c33e887b6fe478e1d23004ef14c3fa1c8c4756ec52aea4a3933e7fb0",
+            "category": "transaction.begin"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.01,
+            "statement": "_pg3_4",
+            "sql": "SET LOCAL lock_timeout = '10s'",
+            "sql_sha256": "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4",
+            "category": "transaction.setting"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.058,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{b5942335-828d-45fc-98b5-4edd0e4754db}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.13,
+            "statement": "_pg3_6",
+            "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $4 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "bfcfd7b4fe33d76450f35d82fae711e9bb08b57ce71459416544d5a962362cb9",
+            "category": "traversal.generic",
+            "parameters": "$1 = '{b5942335-828d-45fc-98b5-4edd0e4754db}', $2 = 'Profile', $3 = 'Profile', $4 = 'Profile'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.032,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{00ebd928-497c-46a9-b2b8-aa127ee0438f}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.056,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{ba4314fd-aece-4f75-83a6-738509829945}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.049,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{f1470707-48c4-4a1f-8915-ab664b65e446}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.651,
+            "statement": "<unnamed>",
+            "sql": "INSERT INTO anchors\n\t            (id, kind, arch_type, arch_module, fingerprint, root_id,\n\t             src, dst, undirected, props, format_version, updated_at,\n\t             src_type, dst_type)\n\t        SELECT id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, $1, now(),\n\t               src_type, dst_type\n\t        FROM unnest(\n\t            CAST($2 AS uuid[]), CAST($3 AS text[]),\n\t            CAST($4 AS text[]), CAST($5 AS text[]),\n\t            CAST($6 AS text[]), CAST($7 AS uuid[]),\n\t            CAST($8 AS uuid[]), CAST($9 AS uuid[]),\n\t            CAST($10 AS boolean[]), CAST($11 AS jsonb[]),\n\t            CAST($12 AS text[]), CAST($13 AS text[])\n\t        ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, src_type, dst_type)\n\t        ON CONFLICT (id) DO UPDATE SET\n\t            kind = EXCLUDED.kind,\n\t            arch_type = EXCLUDED.arch_type,\n\t            arch_module = EXCLUDED.arch_module,\n\t            fingerprint = EXCLUDED.fingerprint,\n\t            root_id = EXCLUDED.root_id,\n\t            src = EXCLUDED.src,\n\t            dst = EXCLUDED.dst,\n\t            undirected = EXCLUDED.undirected,\n\t            props = EXCLUDED.props,\n\t            format_version = EXCLUDED.format_version,\n\t            updated_at = now(),\n\t            -- an edge re-saved while its endpoints are unpopulated stubs\n\t            -- carries NULL types; keep whatever was recorded earlier\n\t            src_type = COALESCE(EXCLUDED.src_type, anchors.src_type),\n\t            dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)",
+            "sql_sha256": "4855fb2ba01bec28652be8fcd457edce7f0706d9763468e4ce252655168f07ab",
+            "category": "write.anchor_insert",
+            "parameters": "$1 = '1', $2 = '{ba4314fd-aece-4f75-83a6-738509829945}', $3 = '{NodeAnchor}', $4 = '{Tweet}', $5 = '{app}', $6 = '{552e15e3e79578ff}', $7 = '{f1470707-48c4-4a1f-8915-ab664b65e446}', $8 = '{NULL}', $9 = '{NULL}', $10 = '{f}', $11 = '{\"{\\\"id\\\": \\\"ba4314fd-aece-4f75-83a6-738509829945\\\", \\\"root\\\": \\\"f1470707-48c4-4a1f-8915-ab664b65e446\\\", \\\"access\\\": {\\\"all\\\": 2, \\\"roots\\\": {\\\"anchors\\\": {}}}, \\\"version\\\": 0, \\\"__type__\\\": \\\"NodeAnchor\\\", \\\"archetype\\\": {\\\"likes\\\": [\\\"t20_sim_user_11\\\"], \\\"content\\\": \\\"Why do we need decentralized social media? To reclaim our online presence and fight surveillance capitalism! #decentralizedsocialmedia #dataprivacy\\\", \\\"seed_id\\\": \\\"t20_tweet_1098\\\", \\\"__type__\\\": \\\"Tweet\\\", \\\"comments\\\": [], \\\"__module__\\\": \\\"app\\\", \\\"created_at\\\": \\\"2026-06-01T14:34:30Z\\\", \\\"author_username\\\": \\\"t20_sim_user_54\\\"}, \\\"__module__\\\": \\\"jaclang.jac0core.archetype\\\", \\\"persistent\\\": true}\"}', $12 = '{NULL}', $13 = '{NULL}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.045,
+            "statement": "<unnamed>",
+            "sql": "INSERT INTO graph_types (type_name, ancestor)\n\t            SELECT * FROM unnest(CAST($1 AS text[]), CAST($2 AS text[]))\n\t            ON CONFLICT DO NOTHING",
+            "sql_sha256": "6f4a7467eb89bf738701ebeee6ca214957a36fc4863dd0e48d8fb3cf949a6d18",
+            "category": "type_registry",
+            "parameters": "$1 = '{Tweet}', $2 = '{Tweet}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 1.231,
+            "statement": "_pg3_5",
+            "sql": "COMMIT",
+            "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+            "category": "transaction.commit"
+          }
+        ]
+      }
+    ]
+  },
+  "follow": {
+    "counts": [
+      11,
+      11,
+      11
+    ],
+    "requests": [
+      {
+        "log_path": "reproduction/webridge/non-snb/littlex/native/census/20261020T233449Z-final/follow/profile-0.log.gz",
+        "backend_pids": [
+          2973504
+        ],
+        "executed_commands": 11,
+        "categories": {
+          "transaction.begin": 1,
+          "transaction.setting": 1,
+          "hydration.full_anchor": 4,
+          "traversal.generic": 2,
+          "write.anchor_insert": 1,
+          "type_registry": 1,
+          "transaction.commit": 1
+        },
+        "operations": [
+          {
+            "pid": 2973504,
+            "execute_ms": 0.005,
+            "statement": "_pg3_7",
+            "sql": "BEGIN ISOLATION LEVEL SERIALIZABLE",
+            "sql_sha256": "547004d6c33e887b6fe478e1d23004ef14c3fa1c8c4756ec52aea4a3933e7fb0",
+            "category": "transaction.begin"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.004,
+            "statement": "_pg3_4",
+            "sql": "SET LOCAL lock_timeout = '10s'",
+            "sql_sha256": "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4",
+            "category": "transaction.setting"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.027,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{4e93ec38-3909-43d5-9e9d-98a3e63045d1}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.047,
+            "statement": "_pg3_6",
+            "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $4 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "bfcfd7b4fe33d76450f35d82fae711e9bb08b57ce71459416544d5a962362cb9",
+            "category": "traversal.generic",
+            "parameters": "$1 = '{4e93ec38-3909-43d5-9e9d-98a3e63045d1}', $2 = 'Profile', $3 = 'Profile', $4 = 'Profile'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.016,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{a920f441-baa3-4cec-aad1-6f89665b11f0}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.022,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{be88871d-b7c9-4cef-b134-df8946207f84}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.017,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{a6aa67a9-a09f-4b90-87d2-b404400d176d}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.277,
+            "statement": "<unnamed>",
+            "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)) AND n1.id = ANY(CAST($6 AS uuid[])) ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "f2a0f5808bb79659e9c9aee7b4f744bac171dddf192192b438086ec15132581b",
+            "category": "traversal.generic",
+            "parameters": "$1 = '{a920f441-baa3-4cec-aad1-6f89665b11f0}', $2 = 'Profile', $3 = 'Profile', $4 = 'Follow', $5 = 'Profile', $6 = '{be88871d-b7c9-4cef-b134-df8946207f84}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.132,
+            "statement": "_pg3_8",
+            "sql": "INSERT INTO anchors\n\t            (id, kind, arch_type, arch_module, fingerprint, root_id,\n\t             src, dst, undirected, props, format_version, updated_at,\n\t             src_type, dst_type)\n\t        SELECT id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, $1, now(),\n\t               src_type, dst_type\n\t        FROM unnest(\n\t            CAST($2 AS uuid[]), CAST($3 AS text[]),\n\t            CAST($4 AS text[]), CAST($5 AS text[]),\n\t            CAST($6 AS text[]), CAST($7 AS uuid[]),\n\t            CAST($8 AS uuid[]), CAST($9 AS uuid[]),\n\t            CAST($10 AS boolean[]), CAST($11 AS jsonb[]),\n\t            CAST($12 AS text[]), CAST($13 AS text[])\n\t        ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, src_type, dst_type)\n\t        ON CONFLICT (id) DO UPDATE SET\n\t            kind = EXCLUDED.kind,\n\t            arch_type = EXCLUDED.arch_type,\n\t            arch_module = EXCLUDED.arch_module,\n\t            fingerprint = EXCLUDED.fingerprint,\n\t            root_id = EXCLUDED.root_id,\n\t            src = EXCLUDED.src,\n\t            dst = EXCLUDED.dst,\n\t            undirected = EXCLUDED.undirected,\n\t            props = EXCLUDED.props,\n\t            format_version = EXCLUDED.format_version,\n\t            updated_at = now(),\n\t            -- an edge re-saved while its endpoints are unpopulated stubs\n\t            -- carries NULL types; keep whatever was recorded earlier\n\t            src_type = COALESCE(EXCLUDED.src_type, anchors.src_type),\n\t            dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)",
+            "sql_sha256": "4855fb2ba01bec28652be8fcd457edce7f0706d9763468e4ce252655168f07ab",
+            "category": "write.anchor_insert",
+            "parameters": "$1 = '1', $2 = '{c21b4274-2398-46b7-8860-bfddb901ed8d}', $3 = '{EdgeAnchor}', $4 = '{Follow}', $5 = '{app}', $6 = '{48457a3fa45ae05d}', $7 = '{4e93ec38-3909-43d5-9e9d-98a3e63045d1}', $8 = '{a920f441-baa3-4cec-aad1-6f89665b11f0}', $9 = '{be88871d-b7c9-4cef-b134-df8946207f84}', $10 = '{f}', $11 = '{\"{\\\"id\\\": \\\"c21b4274-2398-46b7-8860-bfddb901ed8d\\\", \\\"root\\\": \\\"4e93ec38-3909-43d5-9e9d-98a3e63045d1\\\", \\\"access\\\": {\\\"all\\\": -1, \\\"roots\\\": {\\\"anchors\\\": {}}}, \\\"source\\\": \\\"a920f441-baa3-4cec-aad1-6f89665b11f0\\\", \\\"target\\\": \\\"be88871d-b7c9-4cef-b134-df8946207f84\\\", \\\"__type__\\\": \\\"EdgeAnchor\\\", \\\"archetype\\\": {\\\"__type__\\\": \\\"Follow\\\", \\\"__module__\\\": \\\"app\\\"}, \\\"__module__\\\": \\\"jaclang.jac0core.archetype\\\", \\\"persistent\\\": true, \\\"is_undirected\\\": false}\"}', $12 = '{Profile}', $13 = '{Profile}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.022,
+            "statement": "_pg3_9",
+            "sql": "INSERT INTO graph_types (type_name, ancestor)\n\t            SELECT * FROM unnest(CAST($1 AS text[]), CAST($2 AS text[]))\n\t            ON CONFLICT DO NOTHING",
+            "sql_sha256": "6f4a7467eb89bf738701ebeee6ca214957a36fc4863dd0e48d8fb3cf949a6d18",
+            "category": "type_registry",
+            "parameters": "$1 = '{Follow}', $2 = '{Follow}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 1.012,
+            "statement": "_pg3_5",
+            "sql": "COMMIT",
+            "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+            "category": "transaction.commit"
+          }
+        ]
+      },
+      {
+        "log_path": "reproduction/webridge/non-snb/littlex/native/census/20261020T233449Z-final/follow/profile-1.log.gz",
+        "backend_pids": [
+          2973504
+        ],
+        "executed_commands": 11,
+        "categories": {
+          "transaction.begin": 1,
+          "transaction.setting": 1,
+          "hydration.full_anchor": 4,
+          "traversal.generic": 2,
+          "write.anchor_insert": 1,
+          "type_registry": 1,
+          "transaction.commit": 1
+        },
+        "operations": [
+          {
+            "pid": 2973504,
+            "execute_ms": 0.011,
+            "statement": "_pg3_7",
+            "sql": "BEGIN ISOLATION LEVEL SERIALIZABLE",
+            "sql_sha256": "547004d6c33e887b6fe478e1d23004ef14c3fa1c8c4756ec52aea4a3933e7fb0",
+            "category": "transaction.begin"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.009,
+            "statement": "_pg3_4",
+            "sql": "SET LOCAL lock_timeout = '10s'",
+            "sql_sha256": "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4",
+            "category": "transaction.setting"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.039,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{98bae35f-c091-447e-ac96-62adbd5e30e7}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.09,
+            "statement": "_pg3_6",
+            "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $4 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "bfcfd7b4fe33d76450f35d82fae711e9bb08b57ce71459416544d5a962362cb9",
+            "category": "traversal.generic",
+            "parameters": "$1 = '{98bae35f-c091-447e-ac96-62adbd5e30e7}', $2 = 'Profile', $3 = 'Profile', $4 = 'Profile'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.034,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{ed128b2d-ca7f-4f87-ab8c-cc2f75560955}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.049,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{a920f441-baa3-4cec-aad1-6f89665b11f0}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.037,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{4e93ec38-3909-43d5-9e9d-98a3e63045d1}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.57,
+            "statement": "<unnamed>",
+            "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)) AND n1.id = ANY(CAST($6 AS uuid[])) ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "f2a0f5808bb79659e9c9aee7b4f744bac171dddf192192b438086ec15132581b",
+            "category": "traversal.generic",
+            "parameters": "$1 = '{ed128b2d-ca7f-4f87-ab8c-cc2f75560955}', $2 = 'Profile', $3 = 'Profile', $4 = 'Follow', $5 = 'Profile', $6 = '{a920f441-baa3-4cec-aad1-6f89665b11f0}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.37,
+            "statement": "_pg3_8",
+            "sql": "INSERT INTO anchors\n\t            (id, kind, arch_type, arch_module, fingerprint, root_id,\n\t             src, dst, undirected, props, format_version, updated_at,\n\t             src_type, dst_type)\n\t        SELECT id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, $1, now(),\n\t               src_type, dst_type\n\t        FROM unnest(\n\t            CAST($2 AS uuid[]), CAST($3 AS text[]),\n\t            CAST($4 AS text[]), CAST($5 AS text[]),\n\t            CAST($6 AS text[]), CAST($7 AS uuid[]),\n\t            CAST($8 AS uuid[]), CAST($9 AS uuid[]),\n\t            CAST($10 AS boolean[]), CAST($11 AS jsonb[]),\n\t            CAST($12 AS text[]), CAST($13 AS text[])\n\t        ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, src_type, dst_type)\n\t        ON CONFLICT (id) DO UPDATE SET\n\t            kind = EXCLUDED.kind,\n\t            arch_type = EXCLUDED.arch_type,\n\t            arch_module = EXCLUDED.arch_module,\n\t            fingerprint = EXCLUDED.fingerprint,\n\t            root_id = EXCLUDED.root_id,\n\t            src = EXCLUDED.src,\n\t            dst = EXCLUDED.dst,\n\t            undirected = EXCLUDED.undirected,\n\t            props = EXCLUDED.props,\n\t            format_version = EXCLUDED.format_version,\n\t            updated_at = now(),\n\t            -- an edge re-saved while its endpoints are unpopulated stubs\n\t            -- carries NULL types; keep whatever was recorded earlier\n\t            src_type = COALESCE(EXCLUDED.src_type, anchors.src_type),\n\t            dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)",
+            "sql_sha256": "4855fb2ba01bec28652be8fcd457edce7f0706d9763468e4ce252655168f07ab",
+            "category": "write.anchor_insert",
+            "parameters": "$1 = '1', $2 = '{78fe4e20-3ab0-45db-99f4-e107a074c939}', $3 = '{EdgeAnchor}', $4 = '{Follow}', $5 = '{app}', $6 = '{48457a3fa45ae05d}', $7 = '{98bae35f-c091-447e-ac96-62adbd5e30e7}', $8 = '{ed128b2d-ca7f-4f87-ab8c-cc2f75560955}', $9 = '{a920f441-baa3-4cec-aad1-6f89665b11f0}', $10 = '{f}', $11 = '{\"{\\\"id\\\": \\\"78fe4e20-3ab0-45db-99f4-e107a074c939\\\", \\\"root\\\": \\\"98bae35f-c091-447e-ac96-62adbd5e30e7\\\", \\\"access\\\": {\\\"all\\\": -1, \\\"roots\\\": {\\\"anchors\\\": {}}}, \\\"source\\\": \\\"ed128b2d-ca7f-4f87-ab8c-cc2f75560955\\\", \\\"target\\\": \\\"a920f441-baa3-4cec-aad1-6f89665b11f0\\\", \\\"__type__\\\": \\\"EdgeAnchor\\\", \\\"archetype\\\": {\\\"__type__\\\": \\\"Follow\\\", \\\"__module__\\\": \\\"app\\\"}, \\\"__module__\\\": \\\"jaclang.jac0core.archetype\\\", \\\"persistent\\\": true, \\\"is_undirected\\\": false}\"}', $12 = '{Profile}', $13 = '{Profile}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.056,
+            "statement": "_pg3_9",
+            "sql": "INSERT INTO graph_types (type_name, ancestor)\n\t            SELECT * FROM unnest(CAST($1 AS text[]), CAST($2 AS text[]))\n\t            ON CONFLICT DO NOTHING",
+            "sql_sha256": "6f4a7467eb89bf738701ebeee6ca214957a36fc4863dd0e48d8fb3cf949a6d18",
+            "category": "type_registry",
+            "parameters": "$1 = '{Follow}', $2 = '{Follow}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 1.523,
+            "statement": "_pg3_5",
+            "sql": "COMMIT",
+            "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+            "category": "transaction.commit"
+          }
+        ]
+      },
+      {
+        "log_path": "reproduction/webridge/non-snb/littlex/native/census/20261020T233449Z-final/follow/profile-2.log.gz",
+        "backend_pids": [
+          2973504
+        ],
+        "executed_commands": 11,
+        "categories": {
+          "transaction.begin": 1,
+          "transaction.setting": 1,
+          "hydration.full_anchor": 4,
+          "traversal.generic": 2,
+          "write.anchor_insert": 1,
+          "type_registry": 1,
+          "transaction.commit": 1
+        },
+        "operations": [
+          {
+            "pid": 2973504,
+            "execute_ms": 0.007,
+            "statement": "_pg3_7",
+            "sql": "BEGIN ISOLATION LEVEL SERIALIZABLE",
+            "sql_sha256": "547004d6c33e887b6fe478e1d23004ef14c3fa1c8c4756ec52aea4a3933e7fb0",
+            "category": "transaction.begin"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.005,
+            "statement": "_pg3_4",
+            "sql": "SET LOCAL lock_timeout = '10s'",
+            "sql_sha256": "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4",
+            "category": "transaction.setting"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.021,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{b5942335-828d-45fc-98b5-4edd0e4754db}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.039,
+            "statement": "_pg3_6",
+            "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $4 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "bfcfd7b4fe33d76450f35d82fae711e9bb08b57ce71459416544d5a962362cb9",
+            "category": "traversal.generic",
+            "parameters": "$1 = '{b5942335-828d-45fc-98b5-4edd0e4754db}', $2 = 'Profile', $3 = 'Profile', $4 = 'Profile'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.014,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{00ebd928-497c-46a9-b2b8-aa127ee0438f}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.016,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{a920f441-baa3-4cec-aad1-6f89665b11f0}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.016,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{4e93ec38-3909-43d5-9e9d-98a3e63045d1}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.219,
+            "statement": "<unnamed>",
+            "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) AND (e1.arch_type = $4 OR e1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $5 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $5)) AND n1.id = ANY(CAST($6 AS uuid[])) ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "f2a0f5808bb79659e9c9aee7b4f744bac171dddf192192b438086ec15132581b",
+            "category": "traversal.generic",
+            "parameters": "$1 = '{00ebd928-497c-46a9-b2b8-aa127ee0438f}', $2 = 'Profile', $3 = 'Profile', $4 = 'Follow', $5 = 'Profile', $6 = '{a920f441-baa3-4cec-aad1-6f89665b11f0}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.111,
+            "statement": "_pg3_8",
+            "sql": "INSERT INTO anchors\n\t            (id, kind, arch_type, arch_module, fingerprint, root_id,\n\t             src, dst, undirected, props, format_version, updated_at,\n\t             src_type, dst_type)\n\t        SELECT id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, $1, now(),\n\t               src_type, dst_type\n\t        FROM unnest(\n\t            CAST($2 AS uuid[]), CAST($3 AS text[]),\n\t            CAST($4 AS text[]), CAST($5 AS text[]),\n\t            CAST($6 AS text[]), CAST($7 AS uuid[]),\n\t            CAST($8 AS uuid[]), CAST($9 AS uuid[]),\n\t            CAST($10 AS boolean[]), CAST($11 AS jsonb[]),\n\t            CAST($12 AS text[]), CAST($13 AS text[])\n\t        ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, src_type, dst_type)\n\t        ON CONFLICT (id) DO UPDATE SET\n\t            kind = EXCLUDED.kind,\n\t            arch_type = EXCLUDED.arch_type,\n\t            arch_module = EXCLUDED.arch_module,\n\t            fingerprint = EXCLUDED.fingerprint,\n\t            root_id = EXCLUDED.root_id,\n\t            src = EXCLUDED.src,\n\t            dst = EXCLUDED.dst,\n\t            undirected = EXCLUDED.undirected,\n\t            props = EXCLUDED.props,\n\t            format_version = EXCLUDED.format_version,\n\t            updated_at = now(),\n\t            -- an edge re-saved while its endpoints are unpopulated stubs\n\t            -- carries NULL types; keep whatever was recorded earlier\n\t            src_type = COALESCE(EXCLUDED.src_type, anchors.src_type),\n\t            dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)",
+            "sql_sha256": "4855fb2ba01bec28652be8fcd457edce7f0706d9763468e4ce252655168f07ab",
+            "category": "write.anchor_insert",
+            "parameters": "$1 = '1', $2 = '{23aa42b4-47fe-47a2-afff-70fcabd40c5a}', $3 = '{EdgeAnchor}', $4 = '{Follow}', $5 = '{app}', $6 = '{48457a3fa45ae05d}', $7 = '{b5942335-828d-45fc-98b5-4edd0e4754db}', $8 = '{00ebd928-497c-46a9-b2b8-aa127ee0438f}', $9 = '{a920f441-baa3-4cec-aad1-6f89665b11f0}', $10 = '{f}', $11 = '{\"{\\\"id\\\": \\\"23aa42b4-47fe-47a2-afff-70fcabd40c5a\\\", \\\"root\\\": \\\"b5942335-828d-45fc-98b5-4edd0e4754db\\\", \\\"access\\\": {\\\"all\\\": -1, \\\"roots\\\": {\\\"anchors\\\": {}}}, \\\"source\\\": \\\"00ebd928-497c-46a9-b2b8-aa127ee0438f\\\", \\\"target\\\": \\\"a920f441-baa3-4cec-aad1-6f89665b11f0\\\", \\\"__type__\\\": \\\"EdgeAnchor\\\", \\\"archetype\\\": {\\\"__type__\\\": \\\"Follow\\\", \\\"__module__\\\": \\\"app\\\"}, \\\"__module__\\\": \\\"jaclang.jac0core.archetype\\\", \\\"persistent\\\": true, \\\"is_undirected\\\": false}\"}', $12 = '{Profile}', $13 = '{Profile}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.017,
+            "statement": "_pg3_9",
+            "sql": "INSERT INTO graph_types (type_name, ancestor)\n\t            SELECT * FROM unnest(CAST($1 AS text[]), CAST($2 AS text[]))\n\t            ON CONFLICT DO NOTHING",
+            "sql_sha256": "6f4a7467eb89bf738701ebeee6ca214957a36fc4863dd0e48d8fb3cf949a6d18",
+            "category": "type_registry",
+            "parameters": "$1 = '{Follow}', $2 = '{Follow}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 1.688,
+            "statement": "_pg3_5",
+            "sql": "COMMIT",
+            "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+            "category": "transaction.commit"
+          }
+        ]
+      }
+    ]
+  },
+  "create_tweet": {
+    "counts": [
+      8,
+      8,
+      8
+    ],
+    "requests": [
+      {
+        "log_path": "reproduction/webridge/non-snb/littlex/native/census/20261020T233449Z-final/create_tweet/profile-0.log.gz",
+        "backend_pids": [
+          2973504
+        ],
+        "executed_commands": 8,
+        "categories": {
+          "transaction.begin": 1,
+          "transaction.setting": 1,
+          "hydration.full_anchor": 2,
+          "traversal.generic": 1,
+          "write.anchor_insert": 1,
+          "type_registry": 1,
+          "transaction.commit": 1
+        },
+        "operations": [
+          {
+            "pid": 2973504,
+            "execute_ms": 0.006,
+            "statement": "_pg3_7",
+            "sql": "BEGIN ISOLATION LEVEL SERIALIZABLE",
+            "sql_sha256": "547004d6c33e887b6fe478e1d23004ef14c3fa1c8c4756ec52aea4a3933e7fb0",
+            "category": "transaction.begin"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.004,
+            "statement": "_pg3_4",
+            "sql": "SET LOCAL lock_timeout = '10s'",
+            "sql_sha256": "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4",
+            "category": "transaction.setting"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.02,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{4e93ec38-3909-43d5-9e9d-98a3e63045d1}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.039,
+            "statement": "_pg3_6",
+            "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $4 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "bfcfd7b4fe33d76450f35d82fae711e9bb08b57ce71459416544d5a962362cb9",
+            "category": "traversal.generic",
+            "parameters": "$1 = '{4e93ec38-3909-43d5-9e9d-98a3e63045d1}', $2 = 'Profile', $3 = 'Profile', $4 = 'Profile'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.011,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{a920f441-baa3-4cec-aad1-6f89665b11f0}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.359,
+            "statement": "_pg3_8",
+            "sql": "INSERT INTO anchors\n\t            (id, kind, arch_type, arch_module, fingerprint, root_id,\n\t             src, dst, undirected, props, format_version, updated_at,\n\t             src_type, dst_type)\n\t        SELECT id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, $1, now(),\n\t               src_type, dst_type\n\t        FROM unnest(\n\t            CAST($2 AS uuid[]), CAST($3 AS text[]),\n\t            CAST($4 AS text[]), CAST($5 AS text[]),\n\t            CAST($6 AS text[]), CAST($7 AS uuid[]),\n\t            CAST($8 AS uuid[]), CAST($9 AS uuid[]),\n\t            CAST($10 AS boolean[]), CAST($11 AS jsonb[]),\n\t            CAST($12 AS text[]), CAST($13 AS text[])\n\t        ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, src_type, dst_type)\n\t        ON CONFLICT (id) DO UPDATE SET\n\t            kind = EXCLUDED.kind,\n\t            arch_type = EXCLUDED.arch_type,\n\t            arch_module = EXCLUDED.arch_module,\n\t            fingerprint = EXCLUDED.fingerprint,\n\t            root_id = EXCLUDED.root_id,\n\t            src = EXCLUDED.src,\n\t            dst = EXCLUDED.dst,\n\t            undirected = EXCLUDED.undirected,\n\t            props = EXCLUDED.props,\n\t            format_version = EXCLUDED.format_version,\n\t            updated_at = now(),\n\t            -- an edge re-saved while its endpoints are unpopulated stubs\n\t            -- carries NULL types; keep whatever was recorded earlier\n\t            src_type = COALESCE(EXCLUDED.src_type, anchors.src_type),\n\t            dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)",
+            "sql_sha256": "4855fb2ba01bec28652be8fcd457edce7f0706d9763468e4ce252655168f07ab",
+            "category": "write.anchor_insert",
+            "parameters": "$1 = '1', $2 = '{6a21c8d1-1f85-4a55-bd08-afb9ae85bf95,4a6fcb9a-4bc0-4926-997a-358edd17ed0a}', $3 = '{EdgeAnchor,NodeAnchor}', $4 = '{Post,Tweet}', $5 = '{app,app}', $6 = '{0257ab8108739b8f,552e15e3e79578ff}', $7 = '{4e93ec38-3909-43d5-9e9d-98a3e63045d1,4e93ec38-3909-43d5-9e9d-98a3e63045d1}', $8 = '{a920f441-baa3-4cec-aad1-6f89665b11f0,NULL}', $9 = '{4a6fcb9a-4bc0-4926-997a-358edd17ed0a,NULL}', $10 = '{f,f}', $11 = '{\"{\\\"id\\\": \\\"6a21c8d1-1f85-4a55-bd08-afb9ae85bf95\\\", \\\"root\\\": \\\"4e93ec38-3909-43d5-9e9d-98a3e63045d1\\\", \\\"access\\\": {\\\"all\\\": -1, \\\"roots\\\": {\\\"anchors\\\": {}}}, \\\"source\\\": \\\"a920f441-baa3-4cec-aad1-6f89665b11f0\\\", \\\"target\\\": \\\"4a6fcb9a-4bc0-4926-997a-358edd17ed0a\\\", \\\"__type__\\\": \\\"EdgeAnchor\\\", \\\"archetype\\\": {\\\"__type__\\\": \\\"Post\\\", \\\"__module__\\\": \\\"app\\\"}, \\\"__module__\\\": \\\"jaclang.jac0core.archetype\\\", \\\"persistent\\\": true, \\\"is_undirected\\\": false}\",\"{\\\"id\\\": \\\"4a6fcb9a-4bc0-4926-997a-358edd17ed0a\\\", \\\"root\\\": \\\"4e93ec38-3909-43d5-9e9d-98a3e63045d1\\\", \\\"access\\\": {\\\"all\\\": 2, \\\"roots\\\": {\\\"anchors\\\": {}}}, \\\"version\\\": 0, \\\"__type__\\\": \\\"NodeAnchor\\\", \\\"archetype\\\": {\\\"likes\\\": [], \\\"content\\\": \\\"write bench tweet 1 #bench\\\", \\\"seed_id\\\": \\\"w2_census_20261020T233449Z_1\\\", \\\"__type__\\\": \\\"Tweet\\\", \\\"comments\\\": [], \\\"__module__\\\": \\\"app\\\", \\\"created_at\\\": \\\"2026-10-20T23:46:38.056506Z\\\", \\\"author_username\\\": \\\"t20_sim_user_1\\\"}, \\\"__module__\\\": \\\"jaclang.jac0core.archetype\\\", \\\"persistent\\\": true}\"}', $12 = '{Profile,NULL}', $13 = '{Tweet,NULL}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.018,
+            "statement": "_pg3_9",
+            "sql": "INSERT INTO graph_types (type_name, ancestor)\n\t            SELECT * FROM unnest(CAST($1 AS text[]), CAST($2 AS text[]))\n\t            ON CONFLICT DO NOTHING",
+            "sql_sha256": "6f4a7467eb89bf738701ebeee6ca214957a36fc4863dd0e48d8fb3cf949a6d18",
+            "category": "type_registry",
+            "parameters": "$1 = '{Post,Tweet}', $2 = '{Post,Tweet}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 1.461,
+            "statement": "_pg3_5",
+            "sql": "COMMIT",
+            "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+            "category": "transaction.commit"
+          }
+        ]
+      },
+      {
+        "log_path": "reproduction/webridge/non-snb/littlex/native/census/20261020T233449Z-final/create_tweet/profile-1.log.gz",
+        "backend_pids": [
+          2973504
+        ],
+        "executed_commands": 8,
+        "categories": {
+          "transaction.begin": 1,
+          "transaction.setting": 1,
+          "hydration.full_anchor": 2,
+          "traversal.generic": 1,
+          "write.anchor_insert": 1,
+          "type_registry": 1,
+          "transaction.commit": 1
+        },
+        "operations": [
+          {
+            "pid": 2973504,
+            "execute_ms": 0.006,
+            "statement": "_pg3_7",
+            "sql": "BEGIN ISOLATION LEVEL SERIALIZABLE",
+            "sql_sha256": "547004d6c33e887b6fe478e1d23004ef14c3fa1c8c4756ec52aea4a3933e7fb0",
+            "category": "transaction.begin"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.004,
+            "statement": "_pg3_4",
+            "sql": "SET LOCAL lock_timeout = '10s'",
+            "sql_sha256": "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4",
+            "category": "transaction.setting"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.019,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{98bae35f-c091-447e-ac96-62adbd5e30e7}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.038,
+            "statement": "_pg3_6",
+            "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $4 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "bfcfd7b4fe33d76450f35d82fae711e9bb08b57ce71459416544d5a962362cb9",
+            "category": "traversal.generic",
+            "parameters": "$1 = '{98bae35f-c091-447e-ac96-62adbd5e30e7}', $2 = 'Profile', $3 = 'Profile', $4 = 'Profile'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.014,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{ed128b2d-ca7f-4f87-ab8c-cc2f75560955}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.283,
+            "statement": "_pg3_8",
+            "sql": "INSERT INTO anchors\n\t            (id, kind, arch_type, arch_module, fingerprint, root_id,\n\t             src, dst, undirected, props, format_version, updated_at,\n\t             src_type, dst_type)\n\t        SELECT id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, $1, now(),\n\t               src_type, dst_type\n\t        FROM unnest(\n\t            CAST($2 AS uuid[]), CAST($3 AS text[]),\n\t            CAST($4 AS text[]), CAST($5 AS text[]),\n\t            CAST($6 AS text[]), CAST($7 AS uuid[]),\n\t            CAST($8 AS uuid[]), CAST($9 AS uuid[]),\n\t            CAST($10 AS boolean[]), CAST($11 AS jsonb[]),\n\t            CAST($12 AS text[]), CAST($13 AS text[])\n\t        ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, src_type, dst_type)\n\t        ON CONFLICT (id) DO UPDATE SET\n\t            kind = EXCLUDED.kind,\n\t            arch_type = EXCLUDED.arch_type,\n\t            arch_module = EXCLUDED.arch_module,\n\t            fingerprint = EXCLUDED.fingerprint,\n\t            root_id = EXCLUDED.root_id,\n\t            src = EXCLUDED.src,\n\t            dst = EXCLUDED.dst,\n\t            undirected = EXCLUDED.undirected,\n\t            props = EXCLUDED.props,\n\t            format_version = EXCLUDED.format_version,\n\t            updated_at = now(),\n\t            -- an edge re-saved while its endpoints are unpopulated stubs\n\t            -- carries NULL types; keep whatever was recorded earlier\n\t            src_type = COALESCE(EXCLUDED.src_type, anchors.src_type),\n\t            dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)",
+            "sql_sha256": "4855fb2ba01bec28652be8fcd457edce7f0706d9763468e4ce252655168f07ab",
+            "category": "write.anchor_insert",
+            "parameters": "$1 = '1', $2 = '{dc40ffa9-dcb1-4311-9f2b-605337df6192,b7379a9c-1070-4533-9c7b-7ff1af2b6cfc}', $3 = '{EdgeAnchor,NodeAnchor}', $4 = '{Post,Tweet}', $5 = '{app,app}', $6 = '{0257ab8108739b8f,552e15e3e79578ff}', $7 = '{98bae35f-c091-447e-ac96-62adbd5e30e7,98bae35f-c091-447e-ac96-62adbd5e30e7}', $8 = '{ed128b2d-ca7f-4f87-ab8c-cc2f75560955,NULL}', $9 = '{b7379a9c-1070-4533-9c7b-7ff1af2b6cfc,NULL}', $10 = '{f,f}', $11 = '{\"{\\\"id\\\": \\\"dc40ffa9-dcb1-4311-9f2b-605337df6192\\\", \\\"root\\\": \\\"98bae35f-c091-447e-ac96-62adbd5e30e7\\\", \\\"access\\\": {\\\"all\\\": -1, \\\"roots\\\": {\\\"anchors\\\": {}}}, \\\"source\\\": \\\"ed128b2d-ca7f-4f87-ab8c-cc2f75560955\\\", \\\"target\\\": \\\"b7379a9c-1070-4533-9c7b-7ff1af2b6cfc\\\", \\\"__type__\\\": \\\"EdgeAnchor\\\", \\\"archetype\\\": {\\\"__type__\\\": \\\"Post\\\", \\\"__module__\\\": \\\"app\\\"}, \\\"__module__\\\": \\\"jaclang.jac0core.archetype\\\", \\\"persistent\\\": true, \\\"is_undirected\\\": false}\",\"{\\\"id\\\": \\\"b7379a9c-1070-4533-9c7b-7ff1af2b6cfc\\\", \\\"root\\\": \\\"98bae35f-c091-447e-ac96-62adbd5e30e7\\\", \\\"access\\\": {\\\"all\\\": 2, \\\"roots\\\": {\\\"anchors\\\": {}}}, \\\"version\\\": 0, \\\"__type__\\\": \\\"NodeAnchor\\\", \\\"archetype\\\": {\\\"likes\\\": [], \\\"content\\\": \\\"write bench tweet 2 #bench\\\", \\\"seed_id\\\": \\\"w2_census_20261020T233449Z_2\\\", \\\"__type__\\\": \\\"Tweet\\\", \\\"comments\\\": [], \\\"__module__\\\": \\\"app\\\", \\\"created_at\\\": \\\"2026-10-20T23:46:38.186781Z\\\", \\\"author_username\\\": \\\"t20_sim_user_10\\\"}, \\\"__module__\\\": \\\"jaclang.jac0core.archetype\\\", \\\"persistent\\\": true}\"}', $12 = '{Profile,NULL}', $13 = '{Tweet,NULL}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.022,
+            "statement": "_pg3_9",
+            "sql": "INSERT INTO graph_types (type_name, ancestor)\n\t            SELECT * FROM unnest(CAST($1 AS text[]), CAST($2 AS text[]))\n\t            ON CONFLICT DO NOTHING",
+            "sql_sha256": "6f4a7467eb89bf738701ebeee6ca214957a36fc4863dd0e48d8fb3cf949a6d18",
+            "category": "type_registry",
+            "parameters": "$1 = '{Post,Tweet}', $2 = '{Post,Tweet}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 1.786,
+            "statement": "_pg3_5",
+            "sql": "COMMIT",
+            "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+            "category": "transaction.commit"
+          }
+        ]
+      },
+      {
+        "log_path": "reproduction/webridge/non-snb/littlex/native/census/20261020T233449Z-final/create_tweet/profile-2.log.gz",
+        "backend_pids": [
+          2973504
+        ],
+        "executed_commands": 8,
+        "categories": {
+          "transaction.begin": 1,
+          "transaction.setting": 1,
+          "hydration.full_anchor": 2,
+          "traversal.generic": 1,
+          "write.anchor_insert": 1,
+          "type_registry": 1,
+          "transaction.commit": 1
+        },
+        "operations": [
+          {
+            "pid": 2973504,
+            "execute_ms": 0.013,
+            "statement": "_pg3_7",
+            "sql": "BEGIN ISOLATION LEVEL SERIALIZABLE",
+            "sql_sha256": "547004d6c33e887b6fe478e1d23004ef14c3fa1c8c4756ec52aea4a3933e7fb0",
+            "category": "transaction.begin"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.009,
+            "statement": "_pg3_4",
+            "sql": "SET LOCAL lock_timeout = '10s'",
+            "sql_sha256": "e7b550770798107fb825a3826ebbb050a540358e905b1a751b9e8f736ebfd7d4",
+            "category": "transaction.setting"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.044,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{b5942335-828d-45fc-98b5-4edd0e4754db}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.081,
+            "statement": "_pg3_6",
+            "sql": "SELECT n1.id, e1.id FROM unnest(CAST($1 AS uuid[])) WITH ORDINALITY AS f0(id, ord) LEFT JOIN anchors s1 ON s1.id = f0.id JOIN anchors e1 ON e1.kind = 'EdgeAnchor' AND ((e1.src = f0.id AND (e1.dst_type IS NULL OR (e1.dst_type = $2 OR e1.dst_type IN (SELECT type_name FROM graph_types WHERE ancestor = $2)))) OR (e1.undirected AND (e1.dst = f0.id AND (e1.src_type IS NULL OR (e1.src_type = $3 OR e1.src_type IN (SELECT type_name FROM graph_types WHERE ancestor = $3)))))) JOIN anchors n1 ON n1.id = CASE WHEN e1.src = f0.id THEN e1.dst ELSE e1.src END AND n1.kind = 'NodeAnchor' AND (n1.arch_type = $4 OR n1.arch_type IN (SELECT type_name FROM graph_types WHERE ancestor = $4)) ORDER BY f0.ord, e1.seq, e1.id",
+            "sql_sha256": "bfcfd7b4fe33d76450f35d82fae711e9bb08b57ce71459416544d5a962362cb9",
+            "category": "traversal.generic",
+            "parameters": "$1 = '{b5942335-828d-45fc-98b5-4edd0e4754db}', $2 = 'Profile', $3 = 'Profile', $4 = 'Profile'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.032,
+            "statement": "_pg3_2",
+            "sql": "SELECT a.id, a.kind, a.arch_type, a.arch_module, a.fingerprint,\n\t               a.root_id, a.src, a.dst, a.undirected, a.props, a.xmin::text\n\t        FROM anchors a WHERE a.id = ANY(CAST($1 AS uuid[]))",
+            "sql_sha256": "4e92b5a8eea970889d91f4efcae3cde9f949b7871dda4fca78df548252deb25a",
+            "category": "hydration.full_anchor",
+            "parameters": "$1 = '{00ebd928-497c-46a9-b2b8-aa127ee0438f}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.546,
+            "statement": "_pg3_8",
+            "sql": "INSERT INTO anchors\n\t            (id, kind, arch_type, arch_module, fingerprint, root_id,\n\t             src, dst, undirected, props, format_version, updated_at,\n\t             src_type, dst_type)\n\t        SELECT id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, $1, now(),\n\t               src_type, dst_type\n\t        FROM unnest(\n\t            CAST($2 AS uuid[]), CAST($3 AS text[]),\n\t            CAST($4 AS text[]), CAST($5 AS text[]),\n\t            CAST($6 AS text[]), CAST($7 AS uuid[]),\n\t            CAST($8 AS uuid[]), CAST($9 AS uuid[]),\n\t            CAST($10 AS boolean[]), CAST($11 AS jsonb[]),\n\t            CAST($12 AS text[]), CAST($13 AS text[])\n\t        ) AS t(id, kind, arch_type, arch_module, fingerprint, root_id,\n\t               src, dst, undirected, props, src_type, dst_type)\n\t        ON CONFLICT (id) DO UPDATE SET\n\t            kind = EXCLUDED.kind,\n\t            arch_type = EXCLUDED.arch_type,\n\t            arch_module = EXCLUDED.arch_module,\n\t            fingerprint = EXCLUDED.fingerprint,\n\t            root_id = EXCLUDED.root_id,\n\t            src = EXCLUDED.src,\n\t            dst = EXCLUDED.dst,\n\t            undirected = EXCLUDED.undirected,\n\t            props = EXCLUDED.props,\n\t            format_version = EXCLUDED.format_version,\n\t            updated_at = now(),\n\t            -- an edge re-saved while its endpoints are unpopulated stubs\n\t            -- carries NULL types; keep whatever was recorded earlier\n\t            src_type = COALESCE(EXCLUDED.src_type, anchors.src_type),\n\t            dst_type = COALESCE(EXCLUDED.dst_type, anchors.dst_type)",
+            "sql_sha256": "4855fb2ba01bec28652be8fcd457edce7f0706d9763468e4ce252655168f07ab",
+            "category": "write.anchor_insert",
+            "parameters": "$1 = '1', $2 = '{5a8da75e-03b3-4a49-93f1-019e458ab065,931bd294-658f-43b9-9956-f361daa4f5e5}', $3 = '{EdgeAnchor,NodeAnchor}', $4 = '{Post,Tweet}', $5 = '{app,app}', $6 = '{0257ab8108739b8f,552e15e3e79578ff}', $7 = '{b5942335-828d-45fc-98b5-4edd0e4754db,b5942335-828d-45fc-98b5-4edd0e4754db}', $8 = '{00ebd928-497c-46a9-b2b8-aa127ee0438f,NULL}', $9 = '{931bd294-658f-43b9-9956-f361daa4f5e5,NULL}', $10 = '{f,f}', $11 = '{\"{\\\"id\\\": \\\"5a8da75e-03b3-4a49-93f1-019e458ab065\\\", \\\"root\\\": \\\"b5942335-828d-45fc-98b5-4edd0e4754db\\\", \\\"access\\\": {\\\"all\\\": -1, \\\"roots\\\": {\\\"anchors\\\": {}}}, \\\"source\\\": \\\"00ebd928-497c-46a9-b2b8-aa127ee0438f\\\", \\\"target\\\": \\\"931bd294-658f-43b9-9956-f361daa4f5e5\\\", \\\"__type__\\\": \\\"EdgeAnchor\\\", \\\"archetype\\\": {\\\"__type__\\\": \\\"Post\\\", \\\"__module__\\\": \\\"app\\\"}, \\\"__module__\\\": \\\"jaclang.jac0core.archetype\\\", \\\"persistent\\\": true, \\\"is_undirected\\\": false}\",\"{\\\"id\\\": \\\"931bd294-658f-43b9-9956-f361daa4f5e5\\\", \\\"root\\\": \\\"b5942335-828d-45fc-98b5-4edd0e4754db\\\", \\\"access\\\": {\\\"all\\\": 2, \\\"roots\\\": {\\\"anchors\\\": {}}}, \\\"version\\\": 0, \\\"__type__\\\": \\\"NodeAnchor\\\", \\\"archetype\\\": {\\\"likes\\\": [], \\\"content\\\": \\\"write bench tweet 3 #bench\\\", \\\"seed_id\\\": \\\"w2_census_20261020T233449Z_3\\\", \\\"__type__\\\": \\\"Tweet\\\", \\\"comments\\\": [], \\\"__module__\\\": \\\"app\\\", \\\"created_at\\\": \\\"2026-10-20T23:46:38.370726Z\\\", \\\"author_username\\\": \\\"t20_sim_user_11\\\"}, \\\"__module__\\\": \\\"jaclang.jac0core.archetype\\\", \\\"persistent\\\": true}\"}', $12 = '{Profile,NULL}', $13 = '{Tweet,NULL}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 0.022,
+            "statement": "_pg3_9",
+            "sql": "INSERT INTO graph_types (type_name, ancestor)\n\t            SELECT * FROM unnest(CAST($1 AS text[]), CAST($2 AS text[]))\n\t            ON CONFLICT DO NOTHING",
+            "sql_sha256": "6f4a7467eb89bf738701ebeee6ca214957a36fc4863dd0e48d8fb3cf949a6d18",
+            "category": "type_registry",
+            "parameters": "$1 = '{Post,Tweet}', $2 = '{Post,Tweet}'"
+          },
+          {
+            "pid": 2973504,
+            "execute_ms": 1.024,
+            "statement": "_pg3_5",
+            "sql": "COMMIT",
+            "sql_sha256": "79663c1d3b43ceaf9ee728e501c64b57ae2e4d6cb36ff5c65eddcda1de27342f",
+            "category": "transaction.commit"
+          }
+        ]
+      }
+    ]
+  }
+}

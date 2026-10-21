@@ -1,0 +1,17 @@
+{
+  "lx_profiles": {
+    "rows": 100,
+    "sha256": "e401fecc01b3b724a501753390ebca50a062a1fb06f0b14cd46a2c799acdf2e1",
+    "SQL": "SELECT JSON_OBJECT('id',id,'username',username) FROM lx_profiles ORDER BY id"
+  },
+  "lx_follows": {
+    "rows": 5001,
+    "sha256": "3119ee9f7a5e0840530c3a6e7ad85030ce83bcb3fdb19684a37cefcaa99592b6",
+    "SQL": "SELECT JSON_OBJECT('follower_id',follower_id,'followee_id',followee_id) FROM lx_follows ORDER BY follower_id,followee_id"
+  },
+  "lx_tweets": {
+    "rows": 2000,
+    "sha256": "ea0bac10b79b91bb565722c1533522e2690f846e766ec5ea92fb3a9e53fa1359",
+    "SQL": "SELECT JSON_OBJECT('id',id,'seed_id',seed_id,'author_id',author_id,'content',content,'created_at',created_at,'likes',likes,'comments',comments) FROM lx_tweets ORDER BY id"
+  }
+}

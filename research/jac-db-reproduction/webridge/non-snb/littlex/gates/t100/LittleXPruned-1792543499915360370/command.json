@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "taskset",
+    "-c",
+    "9,19",
+    "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/java",
+    "-Xmx2g",
+    "-Dlittlex.url=jdbc:mysql://127.0.0.1:55337/jac_lx_t100_20261020?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true",
+    "-Dlittlex.implementation=LittleXPruned",
+    "-Dlittlex.templates=/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/native-templates.json",
+    "-cp",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/classes:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+    "LittleXGraphGate",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/t100-graph-gate-inputs.json",
+    "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/gates/t100/LittleXPruned-1792543499915360370/results"
+  ],
+  "cpu_affinity": "9,19",
+  "utc": "20261021T004507541416Z",
+  "timeout_s": 600
+}

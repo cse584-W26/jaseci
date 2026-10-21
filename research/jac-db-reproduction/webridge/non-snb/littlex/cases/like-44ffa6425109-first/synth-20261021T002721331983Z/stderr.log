@@ -1,0 +1,11 @@
+webridge.wbridge.exception.NotImplementedException: Not implemented yet
+	at webridge.wbridge.sql.ast.SQLAstVisitor.handleWhere(SQLAstVisitor.java:460)
+	at webridge.wbridge.sql.ast.SQLAstVisitor.endVisit(SQLAstVisitor.java:117)
+	at com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlUpdateStatement.accept0(MySqlUpdateStatement.java:72)
+	at com.alibaba.druid.sql.dialect.mysql.ast.statement.MySqlUpdateStatement.accept0(MySqlUpdateStatement.java:58)
+	at com.alibaba.druid.sql.ast.SQLObjectImpl.accept(SQLObjectImpl.java:40)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.parseFromRecordedJSON(StoredProcedureManager.java:793)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.generateStoredProcedure(StoredProcedureManager.java:934)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.run(StoredProcedureManager.java:925)
+	at LittleXWeBridge.execute(LittleXWeBridge.java:25)
+	at LittleXWeBridge.main(LittleXWeBridge.java:48)

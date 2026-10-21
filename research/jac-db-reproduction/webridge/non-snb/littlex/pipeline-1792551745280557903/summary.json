@@ -1,0 +1,49 @@
+[
+  {
+    "family": "littlex",
+    "tier": "t20",
+    "operation": "feed",
+    "implementation": "LittleXPruned",
+    "region": "",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-f84348a4ad38-final-sdk-genuine-batch-1792545279155873050-feed/baseline-20261021T030614646156Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551745280557903/feed/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-f84348a4ad38-final-sdk-genuine-batch-1792545279155873050-feed/record-20261021T030617585337Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551745280557903/feed/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-f84348a4ad38-final-sdk-genuine-batch-1792545279155873050-feed/replay-20261021T030625804653Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551745280557903/feed/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 124,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-f84348a4ad38-final-sdk-genuine-batch-1792545279155873050-feed/synth-20261021T030642777877Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551745280557903/feed/synth"
+      },
+      {
+        "stage": "synth-frontend-fix",
+        "returncode": 124,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-f84348a4ad38-final-sdk-genuine-batch-1792545279155873050-feed/synth-20261021T031142955384Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792551745280557903/feed/synth-frontend-fix"
+      }
+    ],
+    "status": "failed-stage",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-f84348a4ad38-final-sdk-genuine-batch-1792545279155873050-feed",
+    "frontend_repair": {
+      "original_failure": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed-f84348a4ad38-final-sdk-genuine-batch-1792545279155873050-feed/synth-20261021T030642777877Z",
+      "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/e51966e0c4a82870907a7ef053bfc4562ee33721fd7d4dc894f7c7ff48337128/classes",
+      "scope": "explicit compatibility repair; original business SQL unchanged"
+    },
+    "failed_stage": "synth"
+  }
+]

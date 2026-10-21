@@ -1,0 +1,14 @@
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:0 -> 0
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:0 -> 0
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:0 -> 0
+java.lang.IllegalArgumentException: Cannot infer SQL expression type: JSON_LENGTH(likes)
+	at webridge.wbridge.sql.ast.SQLAstVisitor.expressionType(SQLAstVisitor.java:611)
+	at webridge.wbridge.sql.ast.SQLAstVisitor.registerProjection(SQLAstVisitor.java:624)
+	at webridge.wbridge.sql.ast.SQLAstVisitor.endVisit(SQLAstVisitor.java:468)
+	at com.alibaba.druid.sql.ast.statement.SQLSelectStatement.accept0(SQLSelectStatement.java:67)
+	at com.alibaba.druid.sql.ast.SQLObjectImpl.accept(SQLObjectImpl.java:40)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.parseFromRecordedJSON(StoredProcedureManager.java:793)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.generateStoredProcedure(StoredProcedureManager.java:934)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.run(StoredProcedureManager.java:925)
+	at LittleXWeBridge.execute(LittleXWeBridge.java:26)
+	at LittleXWeBridge.main(LittleXWeBridge.java:51)

@@ -1,0 +1,231 @@
+{
+  "source": {
+    "seed": "/home/baichuan/jaseci/reproduction/littlex/dataset/uniform_seed.json",
+    "seed_sha256": "2aab7a50cec9d197c7f5507701c25fd90aad5d57ddd6eb1ff9961cffc1bd05ea",
+    "historical_snapshot": "lx_repro_snapshot_t50_28ab256ed845",
+    "fixture_manifest": "/home/baichuan/jaseci/reproduction/littlex/fixtures/t50/28ab256ed845/fixture.json",
+    "fixture_manifest_sha256": "fb308bf131bf4bcb4159bdd28caee231ad2f34be8269241ae78fdfcc6df11396",
+    "profiles": 100,
+    "follows": 5000,
+    "tweets": 5000,
+    "likes": 0,
+    "feed_counts": [
+      2550
+    ],
+    "oracle_payload_sha256": "060e964fd187f3d79154f1da7c7d97164b5742eeaafeea263956c52ed121f513"
+  },
+  "clone_database": "jac_wb_lx_t50_20261020",
+  "started_utc": "20261020T231451Z",
+  "tables": {
+    "anchors": {
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/fixtures/t50/anchors.tsv",
+      "rows": 15304,
+      "bytes": 9901508,
+      "sha256": "677a71042646e10db1a3d4a5f5cfa1e5aa66bfc7a3b973b3cf76448057c48240",
+      "query": "SELECT id,kind,arch_type,arch_module,fingerprint,root_id,src,dst,undirected,props::text,xmin::text,seq,src_type,dst_type FROM anchors ORDER BY id",
+      "source_columns": [
+        [
+          "id",
+          "uuid",
+          "uuid"
+        ],
+        [
+          "kind",
+          "text",
+          "text"
+        ],
+        [
+          "arch_type",
+          "text",
+          "text"
+        ],
+        [
+          "arch_module",
+          "text",
+          "text"
+        ],
+        [
+          "fingerprint",
+          "text",
+          "text"
+        ],
+        [
+          "root_id",
+          "uuid",
+          "uuid"
+        ],
+        [
+          "src",
+          "uuid",
+          "uuid"
+        ],
+        [
+          "dst",
+          "uuid",
+          "uuid"
+        ],
+        [
+          "undirected",
+          "boolean",
+          "bool"
+        ],
+        [
+          "props",
+          "jsonb",
+          "jsonb"
+        ],
+        [
+          "format_version",
+          "integer",
+          "int4"
+        ],
+        [
+          "updated_at",
+          "timestamp with time zone",
+          "timestamptz"
+        ],
+        [
+          "seq",
+          "bigint",
+          "int8"
+        ],
+        [
+          "src_type",
+          "text",
+          "text"
+        ],
+        [
+          "dst_type",
+          "text",
+          "text"
+        ],
+        [
+          "g_tweet_author_username",
+          "text",
+          "text"
+        ]
+      ]
+    },
+    "graph_types": {
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/fixtures/t50/graph_types.tsv",
+      "rows": 6,
+      "bytes": 86,
+      "sha256": "76b759689722afb14dfc850635fa04b7bb172b19419b8b5ef8aa7d545d0a4e8f",
+      "query": "SELECT type_name,ancestor FROM graph_types ORDER BY 1,2",
+      "source_columns": [
+        [
+          "type_name",
+          "text",
+          "text"
+        ],
+        [
+          "ancestor",
+          "text",
+          "text"
+        ]
+      ]
+    },
+    "identity_users": {
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/fixtures/t50/identity_users.tsv",
+      "rows": 103,
+      "bytes": 62440,
+      "sha256": "c9b4c8fdbb5638e048eb412dc9ea9b2c759d1478d3fbf43347ff40e2acfecdae",
+      "query": "SELECT * FROM identity_users ORDER BY 1",
+      "source_columns": [
+        [
+          "user_id",
+          "text",
+          "text"
+        ],
+        [
+          "doc",
+          "jsonb",
+          "jsonb"
+        ]
+      ]
+    },
+    "identity_lookups": {
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/fixtures/t50/identity_lookups.tsv",
+      "rows": 103,
+      "bytes": 4628,
+      "sha256": "df7c40715a77cb15ea315c9cde40e92b8310722ae61b919f9d792d899b9366a6",
+      "query": "SELECT * FROM identity_lookups ORDER BY 1",
+      "source_columns": [
+        [
+          "value_normalized",
+          "text",
+          "text"
+        ],
+        [
+          "user_id",
+          "text",
+          "text"
+        ]
+      ]
+    },
+    "kv_state": {
+      "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/fixtures/t50/kv_state.tsv",
+      "rows": 1,
+      "bytes": 78,
+      "sha256": "95749de193c9bdd8790c64e5243c0a98d846cb81ad2fe5299d95bd2f9febe855",
+      "query": "SELECT * FROM kv_state ORDER BY 1",
+      "source_columns": [
+        [
+          "key",
+          "text",
+          "text"
+        ],
+        [
+          "value",
+          "text",
+          "text"
+        ],
+        [
+          "expires_at",
+          "timestamp with time zone",
+          "timestamptz"
+        ],
+        [
+          "updated_at",
+          "timestamp with time zone",
+          "timestamptz"
+        ]
+      ]
+    }
+  },
+  "types": [
+    [
+      "EdgeAnchor",
+      "Follow",
+      5000
+    ],
+    [
+      "EdgeAnchor",
+      "GenericEdge",
+      100
+    ],
+    [
+      "EdgeAnchor",
+      "Post",
+      5000
+    ],
+    [
+      "NodeAnchor",
+      "Profile",
+      100
+    ],
+    [
+      "NodeAnchor",
+      "Root",
+      104
+    ],
+    [
+      "NodeAnchor",
+      "Tweet",
+      5000
+    ]
+  ],
+  "root_orphans": 0,
+  "edge_orphans": 0,
+  "ended_utc": "2026-10-20T23:20:06Z"
+}

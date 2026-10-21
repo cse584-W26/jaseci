@@ -1,0 +1,22 @@
+[
+  "/usr/bin/time",
+  "-v",
+  "-o",
+  "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/gates/t200/LittleXFull-1792543251486393189/resource-usage.txt",
+  "taskset",
+  "-c",
+  "9,19",
+  "taskset",
+  "-c",
+  "9,19",
+  "/home/baichuan/jaseci/webridge/SourceCode/openjdk8-webridge/build/linux-x86_64-normal-server-release/images/j2sdk-image/bin/java",
+  "-Xmx2g",
+  "-Dlittlex.url=jdbc:mysql://127.0.0.1:55337/jac_lx_t200_20261020?useSSL=false&useUnicode=true&characterEncoding=UTF-8&useServerPrepStmts=false&useLocalSessionState=true",
+  "-Dlittlex.implementation=LittleXFull",
+  "-Dlittlex.templates=/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/native-templates.json",
+  "-cp",
+  "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/classes:/home/baichuan/jaseci/reproduction/webridge/integration/builds/20261020T191632842468Z/classes:/home/baichuan/jaseci/reproduction/webridge/deps/mysql-driver-extended.jar:/home/baichuan/jaseci/reproduction/webridge/deps/basic-components.jar:/home/baichuan/jaseci/reproduction/webridge/deps/*",
+  "LittleXGraphGate",
+  "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/t200-graph-gate-inputs.json",
+  "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/gates/t200/LittleXFull-1792543251486393189/results"
+]

@@ -1,0 +1,53 @@
+{
+  "status": "PASS",
+  "metric": "per-request sum of top-level MySQL command received at proxy to complete response delivered/drained to client socket",
+  "unit": "ms",
+  "scope": "Every command inside exact timer SHOW SESSION STATUS bounds on the uniquely identified owned JDBC connection; connection initialization and status counters excluded. CALL contributes one outer response, with all result sets consumed by protocol parser. One application connection is certified by the driver connection receipt.",
+  "n": 100,
+  "total_requests": 210,
+  "median_ms": 404.03163083828986,
+  "command_counts": {
+    "10": 20,
+    "20": 70,
+    "12": 8,
+    "13": 2
+  },
+  "call_requests": 0,
+  "trace": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-10ms-t200-LittleXFull/delay-10ms/compact-protocol.jsonl.gz",
+  "timer_rows": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-10ms-t200-LittleXFull/delay-10ms/t200/W3-30-latency/LittleXFull/baseline/rows.jsonl",
+  "rows_path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-10ms-t200-LittleXFull/delay-10ms/t200/W3-30-latency/LittleXFull/baseline/primary-rtt/rows.jsonl",
+  "sql_catalog": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/primary-rtt/complete-final/matrix/latency-10ms-t200-LittleXFull/delay-10ms/t200/W3-30-latency/LittleXFull/baseline/primary-rtt/sql-catalog.json",
+  "initialization_excluded": {
+    "original_session": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+    "effective_session": "ONLY_FULL_GROUP_BY,NO_UNSIGNED_SUBTRACTION,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+    "global_mode_before": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+    "global_mode_after": "ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION",
+    "global_unchanged": true,
+    "original_charsets": {
+      "client": "utf8",
+      "connection": "utf8mb4",
+      "results": "SQL NULL",
+      "collation": "utf8mb4_bin"
+    },
+    "effective_charsets": {
+      "client": "utf8mb4",
+      "connection": "utf8mb4",
+      "results": "utf8mb4",
+      "collation": "utf8mb4_bin"
+    },
+    "initialization_sql": [
+      "SELECT @@character_set_client,@@character_set_connection,@@character_set_results,@@collation_connection",
+      "SET NAMES utf8mb4 COLLATE utf8mb4_bin",
+      "SELECT @@session.sql_mode,@@global.sql_mode",
+      "SET SESSION sql_mode=CONCAT(@@session.sql_mode,',NO_UNSIGNED_SUBTRACTION')",
+      "SELECT @@session.sql_mode,@@global.sql_mode",
+      "SELECT @@character_set_client,@@character_set_connection,@@character_set_results,@@collation_connection"
+    ],
+    "initialization_questions_excluding_two_counter_queries": 6,
+    "counter_queries": 2,
+    "scope": "per JDBC connection initialization before API/request timer; strict flags retained; explicit initialization SQL and Questions recorded",
+    "transaction_dialect": "SET TRANSACTION characteristics, JDBC setAutoCommit(false/true)"
+  },
+  "connection": 9,
+  "mysql_connection_id": 23110
+}

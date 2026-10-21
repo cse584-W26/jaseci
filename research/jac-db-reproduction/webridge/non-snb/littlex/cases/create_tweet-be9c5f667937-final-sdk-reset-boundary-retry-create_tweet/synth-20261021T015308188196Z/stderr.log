@@ -1,0 +1,14 @@
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:0 -> 0
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:0 -> 0
+[main] INFO webridge.wbridge.symbc.numeric.PathCondition - ComputeNoRedundantPC #no redundant pcs:0 -> 0
+java.util.MissingFormatArgumentException: Format specifier '%s'
+	at java.util.Formatter.format(Formatter.java:2519)
+	at java.util.Formatter.format(Formatter.java:2455)
+	at java.lang.String.format(String.java:2940)
+	at webridge.wbridge.sql.SymbolicSQLTemplate.getConcreteSql(SymbolicSQLTemplate.java:185)
+	at webridge.wbridge.graph.SQLNode.of(SQLNode.java:36)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.parseFromRecordedJSON(StoredProcedureManager.java:877)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.generateStoredProcedure(StoredProcedureManager.java:934)
+	at webridge.wbridge.storedprocedure.StoredProcedureManager.run(StoredProcedureManager.java:925)
+	at LittleXWeBridge.execute(LittleXWeBridge.java:26)
+	at LittleXWeBridge.main(LittleXWeBridge.java:51)

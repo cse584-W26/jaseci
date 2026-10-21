@@ -1,0 +1,1 @@
+CREATE TABLE `g_n_profile_d2a57d`(`id` CHAR(36) COLLATE utf8mb4_bin PRIMARY KEY,`root_id` CHAR(36) COLLATE utf8mb4_bin,`acl_all` BIGINT,`acl_spec` TINYINT,`frag` LONGTEXT,`f_username` LONGTEXT,`f_bio` LONGTEXT,`f_created_at` VARCHAR(100),KEY `idx_root_id`(`root_id`),KEY `idx_f_created_at`(`f_created_at`)) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;

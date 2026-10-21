@@ -1,0 +1,17 @@
+{
+  "profiles": {
+    "rows": 100,
+    "sha256": "644e5b4f1ac063b6722d3f406e766d3ffd27ce85540a498f61f828636eccc4f5",
+    "query": "SELECT id,JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.username')) FROM anchors WHERE kind='NodeAnchor' AND arch_type='Profile' ORDER BY id"
+  },
+  "follows": {
+    "rows": 5002,
+    "sha256": "64211ed7dd23a08ee000ba571d193f8dfe0e34f91532521f5662a4e54ba5f9b2",
+    "query": "SELECT src,dst FROM anchors WHERE kind='EdgeAnchor' AND arch_type='Follow' ORDER BY src,dst"
+  },
+  "tweets": {
+    "rows": 20022,
+    "sha256": "1451d493678a2bd9c483d531c9f4b3f42b95191546132b45e66d090835ce3886",
+    "query": "SELECT id,JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.seed_id')),JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.content')),JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.author_username')),JSON_UNQUOTE(JSON_EXTRACT(props,'$.archetype.created_at')),JSON_EXTRACT(props,'$.archetype.likes'),JSON_EXTRACT(props,'$.archetype.comments') FROM anchors WHERE kind='NodeAnchor' AND arch_type='Tweet' ORDER BY id"
+  }
+}

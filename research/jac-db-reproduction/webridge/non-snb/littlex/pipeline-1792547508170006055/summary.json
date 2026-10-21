@@ -1,0 +1,82 @@
+[
+  {
+    "family": "littlex",
+    "tier": "t20",
+    "operation": "create_tweet",
+    "implementation": "LittleXSql",
+    "region": "",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/create_tweet-be9c5f667937-final-sdk-reset-boundary-retry-create_tweet/baseline-20261021T015258895745Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547508170006055/create_tweet/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/create_tweet-be9c5f667937-final-sdk-reset-boundary-retry-create_tweet/record-20261021T015301526855Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547508170006055/create_tweet/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/create_tweet-be9c5f667937-final-sdk-reset-boundary-retry-create_tweet/replay-20261021T015304340318Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547508170006055/create_tweet/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/create_tweet-be9c5f667937-final-sdk-reset-boundary-retry-create_tweet/synth-20261021T015308188196Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547508170006055/create_tweet/synth"
+      },
+      {
+        "stage": "synth-frontend-fix",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/create_tweet-be9c5f667937-final-sdk-reset-boundary-retry-create_tweet/synth-20261021T015308875867Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547508170006055/create_tweet/synth-frontend-fix"
+      },
+      {
+        "stage": "install",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547508170006055/create_tweet/install",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547508170006055/create_tweet/install"
+      },
+      {
+        "stage": "optimized",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/create_tweet-be9c5f667937-final-sdk-reset-boundary-retry-create_tweet/optimized-20261021T015310023797Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547508170006055/create_tweet/optimized"
+      }
+    ],
+    "status": "success with frontend fix",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/create_tweet-be9c5f667937-final-sdk-reset-boundary-retry-create_tweet",
+    "frontend_repair": {
+      "original_failure": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/create_tweet-be9c5f667937-final-sdk-reset-boundary-retry-create_tweet/synth-20261021T015308188196Z",
+      "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/e51966e0c4a82870907a7ef053bfc4562ee33721fd7d4dc894f7c7ff48337128/classes",
+      "scope": "explicit compatibility repair; original business SQL unchanged"
+    },
+    "activation": {
+      "region": {
+        "selected_region": "",
+        "calls_before": 2,
+        "sp_enabled_at_start": true,
+        "source_calls": 4,
+        "sp_enabled_at_end": true
+      },
+      "status_delta": {
+        "Bytes_received": 475,
+        "Bytes_sent": 1600,
+        "Com_begin": 0,
+        "Com_call_procedure": 1,
+        "Com_commit": 0,
+        "Com_select": 3,
+        "Com_stmt_execute": 0,
+        "Queries": 41,
+        "Questions": 4
+      },
+      "server_questions": 3
+    },
+    "correctness": "Identical result and normalized complete business state after independent initial resets"
+  }
+]

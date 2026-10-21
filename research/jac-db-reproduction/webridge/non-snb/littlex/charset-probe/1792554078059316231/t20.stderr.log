@@ -1,0 +1,21 @@
+[main] ERROR webridge.wbridge.storedprocedure.utils.SPUtils - unable to initialize hikari proxy connection class, proxy connection seems not using HikariProxyConnection
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - java.sql.SQLException: Incorrect string value: '\xF0\x9F\x8C\x8E"}...' for column 'props' at row 1
+Exception in thread "main" java.lang.RuntimeException: java.sql.SQLException: Incorrect string value: '\xF0\x9F\x8C\x8E"}...' for column 'props' at row 1
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:290)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at CharsetProbe.main(CharsetProbe.java:3)
+Caused by: java.sql.SQLException: Incorrect string value: '\xF0\x9F\x8C\x8E"}...' for column 'props' at row 1
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:965)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.executeUpdateInternal(PreparedStatement.java:2101)
+	at com.mysql.jdbc.PreparedStatement.executeUpdateInternal(PreparedStatement.java:2035)
+	at com.mysql.jdbc.PreparedStatement.executeLargeUpdate(PreparedStatement.java:5166)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2020)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:242)
+	... 3 more

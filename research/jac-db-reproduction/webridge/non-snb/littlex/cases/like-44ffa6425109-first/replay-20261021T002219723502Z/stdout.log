@@ -1,0 +1,35 @@
+Adding disable concolic handler for class com/fasterxml/jackson/core/json/UTF8JsonGenerator
+Adding disable concolic handler for class com/fasterxml/jackson/databind/ser/BeanPropertyWriter
+Adding disable concolic handler for class net/sf/jsqlparser/parser/CCJSqlParser
+Adding disable concolic handler for class freemarker/core/FMParserTokenManager
+Adding disable concolic handler for class org/apache/ibatis/ognl/OgnlParser
+Adding disable concolic handler for class org/apache/ibatis/ognl/Ognl
+Adding disable concolic handler for class org/attoparser/MarkupParser
+Adding disable concolic handler for class org/thymeleaf/TemplateEngine
+Adding disable concolic handler for class org/apache/http/impl/execchain/ProtocolExec
+Starting concolic execution
+Symbolize!
+Symbolize!
+Symbolize!
+Symbolize!
+Symbolize!
+SymStmt.invoke_method_helper: Invoking setString
+SymStmt.invoke_method_helper: Invoking setString
+SymStmt.invoke_method_helper: Invoking executeUpdate
+SymStmt.invoke_method_helper: Invoking close
+[SymbolicStatement] close unhandled by SymStmt
+SymStmt.invoke_method_helper: Invoking setString
+SymStmt.invoke_method_helper: Invoking executeQuery
+SymResSet.invoke_method_helper: Invoking next for rs: 0x7989fc979c00
+SymResSet.invoke_method_helper: Invoking next for rs: 0x7989fc979c00
+SymStmt.invoke_method_helper: Invoking close
+[SymbolicStatement] close unhandled by SymStmt
+[WeBridge] Received 2 SQL Statements
+SQL 0 used 0.016000 ms to serialize
+SQL 1 used 0.004000 ms to serialize
+[WeBridge] Finished serialization
+[WeBridge] Saving result to tmp location:/tmp/webridgeMngr.tmp.sp.string
+[WeBridge] Successfully Saved result to tmp location:/tmp/webridgeMngr.tmp.sp.string
+Cleaning 59 dangling expressions
+Checking memory leaks for Expression, 0 remains...
+{"mode":"replay","result":{"success":true,"likes_count":1},"ms":741.140369,"jdbc_calls":5,"categories":["START TRANSACTION","SET SESSION innodb_lock_wait_timeout=10","UPDATE lx_tweets t JOIN lx_profiles p ON p.id=? SET t.likes=JSON_ARRAY_APPEND(t.likes,'$',p.username) WHERE t.id=? AND NOT JSON_CONTAINS(t.likes,JSON_QUOTE(p.username))","SELECT JSON_LENGTH(likes) AS likes_count FROM lx_tweets WHERE id=?","COMMIT"],"region":{"calls_before":2,"started_wall_ms":1792542375333,"source_calls":2,"recorded_results_consumed":2},"session_status_delta":{"Bytes_received":256,"Bytes_sent":374,"Com_begin":1,"Com_call_procedure":0,"Com_commit":1,"Com_select":0,"Com_stmt_execute":0,"Queries":4,"Questions":4},"server_questions":3}

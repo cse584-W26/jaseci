@@ -1,0 +1,28 @@
+{
+  "status": "failed; inspect preserved stage logs",
+  "events": [
+    {
+      "stage": "emitted-artifact-recovery",
+      "status": "PASS",
+      "start_ns": 1792552605614378278,
+      "returncode": 0,
+      "end_ns": 1792552798927663103
+    },
+    {
+      "stage": "collect-cases",
+      "status": "PASS",
+      "start_ns": 1792552798927981039,
+      "returncode": 0,
+      "end_ns": 1792552799037973844
+    },
+    {
+      "stage": "matrix-and-references",
+      "status": "failed",
+      "start_ns": 1792552799038417380,
+      "returncode": -9,
+      "end_ns": 1792554707532916031
+    }
+  ],
+  "wall_ns": 1792554707533224257,
+  "error": "AssertionError(('matrix-and-references', -9))"
+}

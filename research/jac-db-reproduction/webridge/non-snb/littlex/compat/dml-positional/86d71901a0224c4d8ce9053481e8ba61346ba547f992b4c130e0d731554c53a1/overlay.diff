@@ -1,0 +1,81 @@
+--- /home/baichuan/jaseci/reproduction/webridge/integration/recorded-bind-types/src/webridge/wbridge/sql/ast/SQLAstVisitor.java
++++ /home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/86d71901a0224c4d8ce9053481e8ba61346ba547f992b4c130e0d731554c53a1/src/webridge/wbridge/sql/ast/SQLAstVisitor.java
+@@ -78,18 +78,14 @@
+ 
+   @Override
+   public void endVisit(MySqlDeleteStatement x) {
+-    final SQLExpr where = x.getWhere();
+-    handleWhere(where);
+-    sqlType = SqlType.DELETE;
+     super.endVisit(x);
++    registerDmlParameters(x, SqlType.DELETE);
+   }
+ 
+   @Override
+   public void endVisit(MySqlInsertStatement x) {
+-    List<SQLExpr> insertColumns = x.getColumns();
+-    x.getValuesList().forEach(valuesClause -> handleInsertItem(valuesClause, insertColumns));
+-    sqlType = SqlType.INSERT;
+     super.endVisit(x);
++    registerDmlParameters(x, SqlType.INSERT);
+   }
+ 
+   private void handleInsertItem(
+@@ -112,11 +108,8 @@
+ 
+   @Override
+   public void endVisit(MySqlUpdateStatement x) {
+-    final SQLExpr where = x.getWhere();
+-    x.getItems().forEach(this::handleUpdateSetItem);
+-    handleWhere(where);
+-    sqlType = SqlType.UPDATE;
+     super.endVisit(x);
++    registerDmlParameters(x, SqlType.UPDATE);
+   }
+ 
+   private void handleUpdateSetItem(SQLUpdateSetItem item) {
+@@ -466,6 +459,7 @@
+   @Override
+   public void endVisit(SQLSelectStatement statement) {
+     super.endVisit(statement);
++    for(SQLObject parent=statement.getParent();parent!=null;parent=parent.getParent())if(parent instanceof SQLInsertStatement)return;
+     retValNameTypeMap.clear(); retValNameAliasMap.clear();
+     argExprLst.clear(); argTypeLst.clear(); argParentExprLst.clear();
+     SQLSelectQuery query = statement.getSelect().getQuery();
+@@ -492,6 +486,36 @@
+     sqlType = SqlType.SELECT;
+   }
+ 
++
++  private String dmlColumnType(SQLExpr expression) {
++    SQLColumnDefinition column=null;
++    if(expression instanceof SQLIdentifierExpr)column=((SQLIdentifierExpr)expression).getResolvedColumn();
++    if(expression instanceof SQLPropertyExpr)column=((SQLPropertyExpr)expression).getResolvedColumn();
++    if(column==null)return null;
++    String type=normalType(column.getDataType().toString());
++    if(type.equalsIgnoreCase("NUMERIC"))return "DECIMAL";
++    if(type.toUpperCase().startsWith("NUMERIC("))return "DECIMAL"+type.substring(7);
++    return type;
++  }
++  private String dmlParameterType(SQLVariantRefExpr parameter) {
++    for(SQLObject parent=parameter.getParent();parent!=null;parent=parent.getParent()) {
++      if(parent instanceof SQLUpdateSetItem){String t=dmlColumnType(((SQLUpdateSetItem)parent).getColumn());if(t!=null)return t;}
++      if(parent instanceof SQLBinaryOpExpr){SQLBinaryOpExpr b=(SQLBinaryOpExpr)parent;if(b.getOperator()==SQLBinaryOperator.BooleanAnd||b.getOperator()==SQLBinaryOperator.BooleanOr)continue;String t=dmlColumnType(contains(b.getLeft(),parameter)?b.getRight():b.getLeft());if(t!=null)return t;}
++      if(parent instanceof SQLInsertStatement.ValuesClause){SQLInsertStatement.ValuesClause v=(SQLInsertStatement.ValuesClause)parent;SQLObject owner=parent.getParent();if(owner instanceof SQLInsertStatement){List<SQLExpr>cols=((SQLInsertStatement)owner).getColumns();for(int i=0;i<v.getValues().size()&&i<cols.size();i++)if(contains(v.getValues().get(i),parameter)){String t=dmlColumnType(cols.get(i));if(t!=null)return t;}}}
++    }
++    String recorded=recordedParameterSqlType(parameter.getIndex());
++    if(recorded==null)throw new IllegalArgumentException("DML parameter requires resolved column or recorded JDBC type: "+parameter.getIndex());
++    // JDBC String has no 512-character limit. LONGTEXT preserves JSON/long content.
++    return recorded.equals("VARCHAR(512)")?"LONGTEXT":recorded;
++  }
++  private void registerDmlParameters(SQLStatement statement,SqlType kind) {
++    argExprLst.clear();argTypeLst.clear();argParentExprLst.clear();retValNameTypeMap.clear();retValNameAliasMap.clear();
++    final TreeMap<Integer,SQLVariantRefExpr> ordered=new TreeMap<>();
++    statement.accept(new com.alibaba.druid.sql.dialect.mysql.visitor.MySqlASTVisitorAdapter(){@Override public boolean visit(SQLVariantRefExpr p){if(!PLACE_HOLDER.equals(p.getName()))return true;if(p.getIndex()<0||ordered.put(p.getIndex(),p)!=null)throw new IllegalArgumentException("Nonunique DML placeholder index");return true;}});
++    int expected=0;for(Map.Entry<Integer,SQLVariantRefExpr>entry:ordered.entrySet()){if(entry.getKey()!=expected++)throw new IllegalArgumentException("Noncontiguous DML placeholder index");SQLVariantRefExpr p=entry.getValue();argExprLst.add(Pair.of("parameter_"+p.getIndex(),PLACE_HOLDER));argTypeLst.add(SQLVarType.of(dmlParameterType(p)));}
++    sqlType=kind;
++  }
++
+   private String normalType(String type) {
+     if (type.equalsIgnoreCase("SIGNED") || type.equalsIgnoreCase("SIGNED INTEGER")) return "BIGINT";
+     if (type.equalsIgnoreCase("UNSIGNED")) return "BIGINT";

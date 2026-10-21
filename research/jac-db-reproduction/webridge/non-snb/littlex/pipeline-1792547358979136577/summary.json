@@ -1,0 +1,71 @@
+[
+  {
+    "family": "littlex",
+    "tier": "t200",
+    "operation": "feed_page",
+    "implementation": "LittleXSql",
+    "region": "",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-9eff172912a8-final-sdk-genuine-batch-1792545279155873050-feed_page/baseline-20261021T015154113897Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547358979136577/feed_page/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-9eff172912a8-final-sdk-genuine-batch-1792545279155873050-feed_page/record-20261021T015159939737Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547358979136577/feed_page/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-9eff172912a8-final-sdk-genuine-batch-1792545279155873050-feed_page/replay-20261021T015205679490Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547358979136577/feed_page/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-9eff172912a8-final-sdk-genuine-batch-1792545279155873050-feed_page/synth-20261021T015221476606Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547358979136577/feed_page/synth"
+      },
+      {
+        "stage": "install",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547358979136577/feed_page/install",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547358979136577/feed_page/install"
+      },
+      {
+        "stage": "optimized",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-9eff172912a8-final-sdk-genuine-batch-1792545279155873050-feed_page/optimized-20261021T015222600101Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792547358979136577/feed_page/optimized"
+      }
+    ],
+    "status": "success",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/feed_page-9eff172912a8-final-sdk-genuine-batch-1792545279155873050-feed_page",
+    "activation": {
+      "region": {
+        "selected_region": "",
+        "calls_before": 2,
+        "sp_enabled_at_start": true,
+        "source_calls": 3,
+        "sp_enabled_at_end": true
+      },
+      "status_delta": {
+        "Bytes_received": 366,
+        "Bytes_sent": 4738,
+        "Com_begin": 0,
+        "Com_call_procedure": 1,
+        "Com_commit": 0,
+        "Com_select": 2,
+        "Com_stmt_execute": 0,
+        "Queries": 24,
+        "Questions": 4
+      },
+      "server_questions": 3
+    },
+    "correctness": "Identical result and normalized complete business state after independent initial resets"
+  }
+]

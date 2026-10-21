@@ -1,0 +1,82 @@
+[
+  {
+    "family": "littlex",
+    "tier": "t20",
+    "operation": "follow",
+    "implementation": "LittleXSql",
+    "region": "",
+    "stages": [
+      {
+        "stage": "baseline",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/follow-81c23bf22da8-final-sdk-genuine-batch-1792545279155873050-follow/baseline-20261021T011847482411Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792545447642255378/follow/baseline"
+      },
+      {
+        "stage": "record",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/follow-81c23bf22da8-final-sdk-genuine-batch-1792545279155873050-follow/record-20261021T012645313770Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792545447642255378/follow/record"
+      },
+      {
+        "stage": "replay",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/follow-81c23bf22da8-final-sdk-genuine-batch-1792545279155873050-follow/replay-20261021T013205900776Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792545447642255378/follow/replay"
+      },
+      {
+        "stage": "synth",
+        "returncode": 1,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/follow-81c23bf22da8-final-sdk-genuine-batch-1792545279155873050-follow/synth-20261021T013331225784Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792545447642255378/follow/synth"
+      },
+      {
+        "stage": "synth-frontend-fix",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/follow-81c23bf22da8-final-sdk-genuine-batch-1792545279155873050-follow/synth-20261021T013331921412Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792545447642255378/follow/synth-frontend-fix"
+      },
+      {
+        "stage": "install",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792545447642255378/follow/install",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792545447642255378/follow/install"
+      },
+      {
+        "stage": "optimized",
+        "returncode": 0,
+        "path": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/follow-81c23bf22da8-final-sdk-genuine-batch-1792545279155873050-follow/optimized-20261021T013921358774Z",
+        "logs": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/pipeline-1792545447642255378/follow/optimized"
+      }
+    ],
+    "status": "success with frontend fix",
+    "case": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/follow-81c23bf22da8-final-sdk-genuine-batch-1792545279155873050-follow",
+    "frontend_repair": {
+      "original_failure": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/cases/follow-81c23bf22da8-final-sdk-genuine-batch-1792545279155873050-follow/synth-20261021T013331225784Z",
+      "overlay": "/home/baichuan/jaseci/reproduction/webridge/non-snb/littlex/compat/dml-positional/e51966e0c4a82870907a7ef053bfc4562ee33721fd7d4dc894f7c7ff48337128/classes",
+      "scope": "explicit compatibility repair; original business SQL unchanged"
+    },
+    "activation": {
+      "region": {
+        "selected_region": "",
+        "calls_before": 2,
+        "sp_enabled_at_start": true,
+        "source_calls": 3,
+        "sp_enabled_at_end": true
+      },
+      "status_delta": {
+        "Bytes_received": 404,
+        "Bytes_sent": 784,
+        "Com_begin": 0,
+        "Com_call_procedure": 1,
+        "Com_commit": 0,
+        "Com_select": 2,
+        "Com_stmt_execute": 0,
+        "Queries": 26,
+        "Questions": 4
+      },
+      "server_questions": 3
+    },
+    "correctness": "Identical result and normalized complete business state after independent initial resets"
+  }
+]
