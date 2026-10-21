@@ -1,0 +1,46 @@
+[main] INFO webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Refreshing sp defs...
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Reading sp def[graph-Tpcc_76f2a04f23aa_sp_1_ver0-SpDef.data], creationTime: 2026-10-21T00:54:20.03669Z, lastAccessTime: 2026-10-21T00:54:26.303609Z, lastModifiedTime: 2026-10-21T00:54:20.03669Z
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Reading sp def[graph-Tpcc_ad8afad4201f_sp_1_ver0-SpDef.data], creationTime: 2026-10-21T00:51:16.817051Z, lastAccessTime: 2026-10-21T00:51:23.017971Z, lastModifiedTime: 2026-10-21T00:51:16.817051Z
+[main] INFO webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Found 2 sp definitions
+[main] INFO webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Sp definitions: Tpcc_ad8afad4201f={Tpcc_ad8afad4201f_sp_1_ver0=webridge.wbridge.storedprocedure.SPDefinition@64d2d351}|Tpcc_76f2a04f23aa={Tpcc_76f2a04f23aa_sp_1_ver0=webridge.wbridge.storedprocedure.SPDefinition@1b68b9a4}
+[main] ERROR webridge.wbridge.storedprocedure.utils.SPUtils - unable to initialize hikari proxy connection class, proxy connection seems not using HikariProxyConnection
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvocationContext - java.lang.ClassNotFoundException: com.zaxxer.hikari.pool.ProxyConnection
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPSQLValidator - Parameter mismatch at position 4! expected=2700, executed=270, sqlTemplate=UPDATE customerSET c_balance = c_balance - ?, c_ytd_payment = c_ytd_payment + ?, c_payment_cnt = c_payment_cnt + 1WHERE c_w_id = ?	AND c_d_id = ?	AND c_id = ?
+
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p2
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p2 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:283)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteUpdate(SPInvokeManager.java:204)
+	at com.mysql.jdbc.PreparedStatement.executeUpdate(PreparedStatement.java:2014)
+	at TpccSql.update(TpccSql.java:15)
+	at TpccSql.body(TpccSql.java:55)
+	at TpccSql.request(TpccSql.java:76)
+	at TpccMixed.execute(TpccMixed.java:25)
+	at TpccMixed.main(TpccMixed.java:32)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [Wrong SQL] Executed wrong sql: [webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Type: ParamMismatch
+Expected template: UPDATE customer
+SET c_balance = c_balance - ?, c_ytd_payment = c_ytd_payment + ?, c_payment_cnt = c_payment_cnt + 1
+WHERE c_w_id = ?
+	AND c_d_id = ?
+	AND c_id = ?
+Executed template: UPDATE customer
+SET c_balance = c_balance - ?, c_ytd_payment = c_ytd_payment + ?, c_payment_cnt = c_payment_cnt + 1
+WHERE c_w_id = ?
+	AND c_d_id = ?
+	AND c_id = ?]Tpcc_ad8afad4201f, com.mysql.jdbc.JDBC42PreparedStatement@1bb5a082: UPDATE customer SET c_balance=c_balance-2432.68,c_ytd_payment=c_ytd_payment+2432.68,c_payment_cnt=c_payment_cnt+1 WHERE c_w_id=1 AND c_d_id=7 AND c_id=2700

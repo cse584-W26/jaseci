@@ -1,0 +1,42 @@
+[main] INFO webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Refreshing sp defs...
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Reading sp def[graph-Tpcc_0c6ac380f82e_sp_1_ver0-SpDef.data], creationTime: 2026-10-21T02:44:36.520122Z, lastAccessTime: 2026-10-21T02:44:42.506045Z, lastModifiedTime: 2026-10-21T02:44:36.520122Z
+[main] INFO webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Found 1 sp definitions
+[main] INFO webridge.wbridge.storedprocedure.invocation.SPMetadataContainer - Sp definitions: Tpcc_0c6ac380f82e={Tpcc_0c6ac380f82e_sp_1_ver0=webridge.wbridge.storedprocedure.SPDefinition@64d2d351}
+[main] ERROR webridge.wbridge.storedprocedure.utils.SPUtils - unable to initialize hikari proxy connection class, proxy connection seems not using HikariProxyConnection
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvocationContext - java.lang.ClassNotFoundException: com.zaxxer.hikari.pool.ProxyConnection
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Partial rollback with ROLLBACK TO trace0_p4
+[main] WARN webridge.wbridge.storedprocedure.invocation.SPInvokeManager - Error executing partial rollback
+com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException: SAVEPOINT trace0_p4 does not exist
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)
+	at com.mysql.jdbc.Util.getInstance(Util.java:408)
+	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:944)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3976)
+	at com.mysql.jdbc.MysqlIO.checkErrorPacket(MysqlIO.java:3912)
+	at com.mysql.jdbc.MysqlIO.sendCommand(MysqlIO.java:2530)
+	at com.mysql.jdbc.MysqlIO.sqlQueryDirect(MysqlIO.java:2683)
+	at com.mysql.jdbc.ConnectionImpl.execSQL(ConnectionImpl.java:2544)
+	at com.mysql.jdbc.PreparedStatement.executeInternal(PreparedStatement.java:1861)
+	at com.mysql.jdbc.PreparedStatement.execute(PreparedStatement.java:1201)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecutePartialRollback(SPInvokeManager.java:550)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteQuery(SPInvokeManager.java:175)
+	at com.mysql.jdbc.PreparedStatement.executeQuery(PreparedStatement.java:1926)
+	at TpccSql.paymentCustomers(TpccSql.java:15)
+	at TpccSql.body(TpccSql.java:53)
+	at TpccSql.request(TpccSql.java:78)
+	at TpccMixed.execute(TpccMixed.java:25)
+	at TpccMixed.main(TpccMixed.java:32)
+webridge.wbridge.storedprocedure.invocation.WrongSQLException: Executed wrong SQL: Too few rows in the ResultSet
+	at webridge.wbridge.storedprocedure.invocation.SPInvocationContext.getSelectSQLResultSet(SPInvocationContext.java:186)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.nextResultSetFromSpCtx(SPInvokeManager.java:72)
+	at webridge.wbridge.storedprocedure.invocation.SPInvokeManager.doExecuteQuery(SPInvokeManager.java:168)
+	at com.mysql.jdbc.PreparedStatement.executeQuery(PreparedStatement.java:1926)
+	at TpccSql.paymentCustomers(TpccSql.java:15)
+	at TpccSql.body(TpccSql.java:53)
+	at TpccSql.request(TpccSql.java:78)
+	at TpccMixed.execute(TpccMixed.java:25)
+	at TpccMixed.main(TpccMixed.java:32)
+[main] ERROR webridge.wbridge.storedprocedure.invocation.SPInvokeManager - [WrongSQL] A new path need to compile: Tpcc_0c6ac380f82e, com.mysql.jdbc.JDBC42PreparedStatement@78123e82: SELECT c_id,c_credit,c_data FROM customer WHERE c_w_id=1 AND c_d_id=1 AND c_last='OUGHTOUGHTOUGHT' ORDER BY c_first
