@@ -6,6 +6,8 @@ Reproduce the colleague's database experiments on clarity3, starting 2026-10-19.
 
 **TPC-C / littleX DB-call RTT comparison:** [English PDF](webridge/non-snb/jac-webridge-tpcc-littlex-comparison.pdf), [report](webridge/non-snb/REPORT.md), [RTT and SQL-count matrix](webridge/non-snb/results.csv). The compact-proxy RTT metric sums complete database calls per request.
 
+**Research overview using historical data:** [English PDF](historical-overview/jac-db-programming-historical-overview.pdf), [sources and measurement definitions](historical-overview/README.md).
+
 **Main report:** [REPORT.md](REPORT.md). **Stage status:** [scripts/STATUS.md](scripts/STATUS.md).
 
 ## Targets
