@@ -1,0 +1,149 @@
+[
+  {
+    "id": "urweb-2015",
+    "focus": "Typed persistence and atomic backend operations",
+    "mechanism": "Source table declarations, typed embedded SQL and modules connect persistent rows with language types. Remote calls execute atomically; managed channel sends are released at commit, and serialization failures trigger rollback/retry.",
+    "evidence": "\u00a7\u00a72.1\u20132.1.1, 3.1\u20133.2. \u00a74 reports framework benchmarks, deployed applications and developer feedback. Developers explicitly specify SQL reads and writes.",
+    "connection": "Jac question: which query, transaction and effect-management responsibilities should the language absorb? Ur/Web is the closest collected backend language/database co-design reference."
+  },
+  {
+    "id": "links-2007",
+    "focus": "Tables, query values and mutation in one language",
+    "mechanism": "A typed language spans browser, server and database. Mutable table handles are distinct from lists; a query view supports comprehensions, filters, ordering and take/drop that compile to SQL.",
+    "evidence": "\u00a72 Database subsection; \u00a74 query compilation. Worked applications and translation rules explain the design. Table mutation is integrated with the source language.",
+    "connection": "Jac question: distinguish a persistent graph handle, a deferred query and a materialized result. Their types and execution boundaries affect both usability and optimization."
+  },
+  {
+    "id": "linq-2006",
+    "focus": "Composable queries plus object/relational integration",
+    "mechanism": "Standard query operators express traversal and filtering inside the host language. DLinq translates expression trees and object navigation into SQL, maps rows into objects and tracks updates.",
+    "evidence": "Complete one-page system overview, p. 706, especially DLinq. It establishes an architecture; follow-up work supplies detailed semantics and evaluation.",
+    "connection": "Jac question: what work remains after query composition, mappings and change tracking are already provided? Compare specific programmer tasks against a capable ORM/query provider."
+  },
+  {
+    "id": "practical-linq-2013",
+    "focus": "Composition needs a predictable compilation boundary",
+    "mechanism": "Quotation retains query bodies; antiquotation composes predicates/functions. Normalization removes supported abstraction before SQL generation. A restricted typed fragment has a single-query guarantee.",
+    "evidence": "\u00a72; \u00a75.3 Proposition 4; \u00a79 evaluation. The formal core covers flat final results and excludes recursion, sorting, grouping and aggregation; practical coverage is broader.",
+    "connection": "Compiler background: define which Jac helpers retain query structure and which materialize results. Query-count guarantees require an explicit fragment; cost still needs separate evaluation."
+  },
+  {
+    "id": "query-shredding-2014",
+    "focus": "Nested results without a query per parent",
+    "mechanism": "Normalize a query returning nested multisets, shred it into flat SQL queries, retain indexing information and stitch the results back into nested values.",
+    "evidence": "Abstract, \u00a71 and Fig. 1; mechanism in \u00a7\u00a74\u20135; evaluation in \u00a78. Query count depends on result/query structure rather than the number of parent records.",
+    "connection": "Jac question: can nested graph-shaped results retain a convenient interface while compilation handles batching and reconstruction? Preserve duplicates and specify ordering."
+  },
+  {
+    "id": "qbs-2013",
+    "focus": "Recover relational intent from application loops",
+    "mechanism": "Synthesis produces loop invariants and postconditions in a theory of ordered relations; the resulting specifications translate into SQL for supported imperative fragments.",
+    "evidence": "Abstract and \u00a71. The program-to-query problem includes joins, aggregates and output order. Existing library coverage introduces the mechanism.",
+    "connection": "Jac question: which relational facts follow directly from typed graph operations, and which still require general program reasoning or synthesis? Test equivalent tasks and semantic edge cases."
+  },
+  {
+    "id": "equivalent-sql-2016",
+    "focus": "Variable lineage and folds expose relational computation",
+    "mechanism": "D-IR tracks equivalent expressions and variable definitions; F-IR represents cursor loops as folds. Relational rewrites replace a selected computation with SQL and remove redundant code.",
+    "evidence": "\u00a7\u00a72\u20134, Fig. 6 and Appendix B. The maximum-score example preserves the initial accumulator on empty/all-negative input. Goals include fewer queries and less transferred data.",
+    "connection": "Jac question: use a dependency representation across supported statements/abilities, then derive aggregation. Preserve initial state, multiplicity, ordering, exceptions and effects."
+  },
+  {
+    "id": "froid-2017",
+    "focus": "Imperative scalar functions become relational regions",
+    "mechanism": "UDF variables become columns; regions become relational expressions composed with APPLY. Inlining into the caller exposes the combined computation to the database optimizer.",
+    "evidence": "\u00a7\u00a73\u20135. The evaluated implementation disables prototype cursor-loop support (\u00a74.2.1). \u00a78.3 Fig. 13 reports about 3,300 versus nearly 5 million logical reads for its total-price example.",
+    "connection": "Jac question: can ability inputs/outputs become explicit region interfaces? Compare supported control flow and traversals. Froid and Equivalent SQL share composition and branching capabilities."
+  },
+  {
+    "id": "compiling-plsql-away-2019",
+    "focus": "Loops can target recursive SQL",
+    "mechanism": "Compile procedural functions into SQL subqueries; iteration becomes SQL-level recursion so the surrounding SQL query and function can execute together.",
+    "evidence": "Abstract and \u00a71 of the 2019 arXiv version. The motivating problem is procedural/SQL context switching inside the database.",
+    "connection": "Jac question: represent loop-carried state and termination explicitly when compiling cyclic traversal. Compare recursive SQL with retained application execution on the actual workload."
+  },
+  {
+    "id": "batched-bindings-2008",
+    "focus": "Repeated calls become a batch of parameter bindings",
+    "mechanism": "Rewrite repeated query/procedure invocations into a batched call and rewrite the callee to accept a set of input parameters instead of one parameter at a time.",
+    "evidence": "Abstract and first-page example. The target includes repeated query and stored-procedure/UDF calls; dependence and side-effect conditions determine legal rewrites.",
+    "connection": "Jac question: batch a frontier of traversal inputs across ability invocations and correlate every result with its input. Repeated arrivals and duplicates require defined behavior."
+  },
+  {
+    "id": "sloth-2014",
+    "focus": "Delay execution to discover larger batches",
+    "mechanism": "Extended lazy evaluation exposes batching opportunities during execution, including across loops, branches and method boundaries, until a value is demanded.",
+    "evidence": "Abstract and introduction. The paper evaluates more than 100 benchmarks from two applications and reports up to 3\u00d7 page-load reduction under its conditions.",
+    "connection": "Jac question: compare static fusion with runtime deferral. Identify the exact demand that forces a query and whether a dependency can instead execute in the database."
+  },
+  {
+    "id": "webridge-2024",
+    "focus": "Dependent access paths become stored procedures",
+    "mechanism": "Record and replay hot paths using concolic execution, recover SQL control/data dependencies, synthesize procedures and intercept application database calls. Unseen paths use interactive execution.",
+    "evidence": "\u00a7\u00a71, 3\u20136. \u00a710 explains complementary optimizations within generated database work. Procedure synthesis and relational rewriting can both reduce communication.",
+    "connection": "Jac question: can language semantics make cross-ability regions easier to identify and support? Compare matched workloads, generated work, fallback coverage and command counts."
+  },
+  {
+    "id": "pyxis-2012",
+    "focus": "Choose where application code executes",
+    "mechanism": "Profile the application/server loads and analyze dependencies to partition code between application and database servers, reducing control transfers and transferred data.",
+    "evidence": "Abstract and \u00a71; evaluation uses TPC-C and TPC-W. The application/database placement decision incorporates resource load.",
+    "connection": "Jac question: after proving a region movable, choose its placement. Deployment support and database load are part of the execution decision."
+  },
+  {
+    "id": "cobra-2018",
+    "focus": "Choose among equivalent whole-program strategies",
+    "mechanism": "A Region DAG retains equivalent imperative/relational alternatives. A cost-based search compares SQL joins, prefetch/local lookup and retained application computation.",
+    "evidence": "\u00a7\u00a7II\u2013VI. Fig. 12: at one million orders/73,000 customers, join vs prefetch is 6,047 vs 3,467 seconds on the slow network; 16 vs 12 seconds on the fast network.",
+    "connection": "Jac question: separate eligibility from profitability. Model round trips, row duplication/transfer, database execution, application work and available memory."
+  },
+  {
+    "id": "eliom-2016",
+    "focus": "Reusable behavior across explicit execution locations",
+    "mechanism": "OCaml annotations interleave client/server/shared code. Typed client fragments and cross-tier communication support components with behavior on both sides.",
+    "evidence": "\u00a72 examples; \u00a7\u00a73\u20135 type system, execution and compilation. Placement and communication are explicit language choices.",
+    "connection": "Broader design lesson: modular source boundaries can span execution boundaries. For JacDB, test whether reusable query helpers/abilities remain analyzable when composed."
+  },
+  {
+    "id": "hop-2006",
+    "focus": "Package related logic while exposing execution levels",
+    "mechanism": "A two-level language packages application logic and GUI behavior together; function calls and event loops connect execution levels.",
+    "evidence": "Abstract; \u00a7\u00a72\u20134 constructs and execution; \u00a76 implementation. Database access is supplied through libraries.",
+    "connection": "Broader design lesson: make execution boundaries understandable to programmers. A Jac query API should explain when construction becomes database interaction."
+  },
+  {
+    "id": "scalaloci-2018",
+    "focus": "Placement types and generated communication",
+    "mechanism": "Values are associated with peers using placement types. Architecture definitions and distributed reactive flows drive communication and data conversion.",
+    "evidence": "\u00a72 mechanisms; \u00a78 case studies and runtime measurements. Table 1 counts LOC, callbacks, imperative state updates and remote accesses.",
+    "connection": "Evaluation lesson: measure specific responsibilities removed from source alongside runtime costs. Query execution and programmer effort need distinct evidence."
+  },
+  {
+    "id": "multitier-modules-2019",
+    "focus": "Separate modularity from deployment topology",
+    "mechanism": "Modules encapsulate cross-peer functionality over abstract peer types, allowing composition and distribution to vary independently.",
+    "evidence": "Abstract and \u00a71; \u00a75 case studies include algorithms, distributed data structures and Flink task distribution.",
+    "connection": "Broader design lesson: changing query placement should preserve a useful module interface. Study which Jac ability summaries allow analysis across reusable modules."
+  },
+  {
+    "id": "orleans-2014",
+    "focus": "Runtime responsibilities support a simpler object model",
+    "mechanism": "Virtual actors let the runtime handle activation, location and distributed resource management while application code uses logical actor identities.",
+    "evidence": "\u00a7\u00a72\u20133 programming/runtime model; \u00a7\u00a74\u20135 applications and performance. This is the 2014 MSR technical report.",
+    "connection": "Broader design lesson: identify each responsibility moved into the runtime and its consistency contract. Apply that accounting to Jac object loading, identity and query execution."
+  },
+  {
+    "id": "kappa-2020",
+    "focus": "Compiler/runtime support absorbs infrastructure work",
+    "mechanism": "Checkpointing handles serverless timeouts, while concurrency mechanisms support parallel computation and coordination from a programming framework.",
+    "evidence": "Abstract; \u00a73 mechanisms; \u00a75 evaluation; \u00a76 programmer requirements. The abstraction comes with checkpoint/runtime constraints.",
+    "connection": "Broader design lesson: simplicity has a runtime cost and an effect boundary. Evaluate programmer obligations and execution overhead together."
+  },
+  {
+    "id": "interdisciplinary-pl-design-2018",
+    "focus": "Evaluate the programmer-facing claim directly",
+    "mechanism": "Combine formal/performance methods with interviews, user experiments, case studies and iterative prototyping throughout language design.",
+    "evidence": "Fig. 1, Table 1 and \u00a74. The paper describes complementary design/evaluation methods, including human-centered approaches.",
+    "connection": "Jac evaluation: use representative query/modification tasks, comparable training and correctness tests. Measure completion, time, errors and required concepts alongside source metrics."
+  }
+]
